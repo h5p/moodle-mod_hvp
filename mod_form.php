@@ -12,7 +12,7 @@ class mod_hvp_mod_form extends moodleform_mod {
  
         $mform =& $this->_form;
  
-        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('accepted_types' => '*.h5p'));
+        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('accepted_types' => '*'));
         $mform->addRule('h5pfile', null, 'required', null, 'client');
  
         $this->standard_coursemodule_elements();
