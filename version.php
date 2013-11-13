@@ -16,7 +16,7 @@
  
 /**
  * @package    mod
- * @subpackage h5p
+ * @subpackage hvp
  * @copyright  Amendor
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version   = 2013111200;
 $plugin->requires  = 2013051403;
 $plugin->cron      = 0;
-$plugin->component = 'mod_h5p';
+$plugin->component = 'mod_hvp';
 $plugin->maturity  = MATURITY_ALPHA;
 $plugin->release   = '0.x';

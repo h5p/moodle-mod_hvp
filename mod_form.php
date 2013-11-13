@@ -5,14 +5,14 @@ if (!defined('MOODLE_INTERNAL')) {
 
 require_once ($CFG->dirroot.'/course/moodleform_mod.php');
 
-class mod_h5p_mod_form extends moodleform_mod {
+class mod_hvp_mod_form extends moodleform_mod {
 
     function definition() {
         global $CFG, $DB, $OUTPUT;
  
         $mform =& $this->_form;
  
-        $mform->addElement('text', 'name', get_string('h5p', 'teststring'), array('size'=>'64'));
+        $mform->addElement('text', 'name', get_string('teststring', 'hvp'), array('size'=>'64'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
  

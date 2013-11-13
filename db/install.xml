@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/h5p/db" VERSION="20131113" COMMENT="XMLDB file for Moodle mod/h5p"
+<XMLDB PATH="mod/hvp/db" VERSION="20131113" COMMENT="XMLDB file for Moodle mod/hvp"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="h5p_libraries" COMMENT="Stores information about libraries.">
+    <TABLE NAME="hvp_libraries" COMMENT="Stores information about libraries.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="machine_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
@@ -27,7 +27,7 @@
         <INDEX NAME="meta" UNIQUE="false" FIELDS="machine_name, major_version, minor_version, patch_version, runnable"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="h5p_libraries_libraries" COMMENT="Library dependencies">
+    <TABLE NAME="hvp_libraries_libraries" COMMENT="Library dependencies">
       <FIELDS>
         <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="required_library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The dependency to load"/>
@@ -37,7 +37,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="library_id, required_library_id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="h5p_libraries_languages" COMMENT="Translations for libraries">
+    <TABLE NAME="hvp_libraries_languages" COMMENT="Translations for libraries">
       <FIELDS>
         <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="language_code" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
@@ -47,7 +47,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="library_id, language_code"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="h5p_contents" COMMENT="Data for h5p content">
+    <TABLE NAME="hvp_contents" COMMENT="Data for hvp content">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="content" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Start params stored in JSON."/>
@@ -66,7 +66,7 @@
         <INDEX NAME="library_id" UNIQUE="false" FIELDS="library_id"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="h5p_contents_libraries" COMMENT="Store which content uses which libraries.">
+    <TABLE NAME="hvp_contents_libraries" COMMENT="Store which content uses which libraries.">
       <FIELDS>
         <FIELD NAME="content_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    mod_h5p
+ * @package    mod_hvp
  * @copyright  2013 Amendor
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -24,7 +24,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
 
-    'mod/h5p:addinstance' => array(
+    'mod/hvp:addinstance' => array(
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',

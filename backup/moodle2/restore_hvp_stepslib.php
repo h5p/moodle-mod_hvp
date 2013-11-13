@@ -29,8 +29,8 @@
 /**
  * Structure step to restore one choice activity
  */
-class restore_choice_activity_structure_step extends restore_activity_structure_step {
-
+class restore_hvp_activity_structure_step extends restore_activity_structure_step {
+/*
     protected function define_structure() {
 
         $paths = array();
@@ -95,4 +95,5 @@ class restore_choice_activity_structure_step extends restore_activity_structure_
         // Add choice related files, no need to match by itemname (just internally handled context)
         $this->add_related_files('mod_choice', 'intro', null);
     }
+    */
 }

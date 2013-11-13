@@ -29,7 +29,7 @@
 /**
  * Define the complete choice structure for backup, with file and id annotations
  */
-class backup_h5p_activity_structure_step extends backup_activity_structure_step {
+class backup_hvp_activity_structure_step extends backup_activity_structure_step {
 
     protected function define_structure() {
 /*

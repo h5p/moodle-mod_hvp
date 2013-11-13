@@ -17,11 +17,11 @@
 
 /**
  * @package    mod
- * @subpackage h5p
+ * @subpackage hvp
  * @copyright  2013 Amendor
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-//function h5p_add_instance($h5p);
-//function h5p_update_instance($h5p);
-//function h5p_delete_instance($id);
+//function hvp_add_instance($hvp);
+//function hvp_update_instance($hvp);
+//function hvp_delete_instance($id);
