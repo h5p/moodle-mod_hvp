@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/h5p/db" VERSION="20131113" COMMENT="XMLDB file for Moodle mod/h5p"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="h5p_libraries" COMMENT="Stores information about libraries.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="machine_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The human readable label for the library."/>
+        <FIELD NAME="major_version" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="minor_version" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="patch_version" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="runnable" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Can this library be started by the module? i.e. not a dependency."/>
+        <FIELD NAME="fullscreen" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Display fullscreen button"/>
+        <FIELD NAME="embed_types" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="preloaded_js" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Comma separated list of scripts to load."/>
+        <FIELD NAME="preloaded_css" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Comma separated list of stylesheets to load."/>
+        <FIELD NAME="drop_library_css" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="List of libraries that should not have CSS included if this library is used. Comma separated list."/>
+        <FIELD NAME="semantics" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The semantics definition in json format"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="meta" UNIQUE="false" FIELDS="machine_name, major_version, minor_version, patch_version, runnable"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="h5p_libraries_libraries" COMMENT="Library dependencies">
+      <FIELDS>
+        <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="required_library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The dependency to load"/>
+        <FIELD NAME="dependency_type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="library_id, required_library_id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="h5p_libraries_languages" COMMENT="Translations for libraries">
+      <FIELDS>
+        <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="language_code" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="translation" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="JSON"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="library_id, language_code"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="h5p_contents" COMMENT="Data for h5p content">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="content" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Start params stored in JSON."/>
+        <FIELD NAME="embed_type" TYPE="char" LENGTH="127" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="author" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="license" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="keywords" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="library_id" UNIQUE="false" FIELDS="library_id"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="h5p_contents_libraries" COMMENT="Store which content uses which libraries.">
+      <FIELDS>
+        <FIELD NAME="content_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="preloaded" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 = preload dependency, 0 = load it self"/>
+        <FIELD NAME="drop_css" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 = do not load css"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="content_id, library_id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="meta" UNIQUE="false" FIELDS="preloaded, drop_css"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
