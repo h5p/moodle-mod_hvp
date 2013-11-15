@@ -4,6 +4,35 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
+    <TABLE NAME="hvp" COMMENT="Activity data">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="hvp_contents" COMMENT="H5P Content Data">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="content" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Start params stored in JSON."/>
+        <FIELD NAME="embed_type" TYPE="char" LENGTH="127" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="author" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="license" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="keywords" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="library_id" UNIQUE="false" FIELDS="library_id"/>
+      </INDEXES>
+    </TABLE>
     <TABLE NAME="hvp_libraries" COMMENT="Stores information about libraries.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
@@ -29,52 +58,33 @@
     </TABLE>
     <TABLE NAME="hvp_libraries_libraries" COMMENT="Library dependencies">
       <FIELDS>
-        <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="required_library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The dependency to load"/>
         <FIELD NAME="dependency_type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="library_id, required_library_id"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id, required_library_id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="hvp_libraries_languages" COMMENT="Translations for libraries">
       <FIELDS>
-        <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="language_code" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="translation" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="JSON"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="library_id, language_code"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id, language_code"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="hvp_contents" COMMENT="Data for hvp content">
+    <TABLE NAME="hvp_contents_libraries" COMMENT="Store which library is used in which content.">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="content" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Start params stored in JSON."/>
-        <FIELD NAME="embed_type" TYPE="char" LENGTH="127" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="type" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="author" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="license" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="keywords" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="library_id" UNIQUE="false" FIELDS="library_id"/>
-      </INDEXES>
-    </TABLE>
-    <TABLE NAME="hvp_contents_libraries" COMMENT="Store which content uses which libraries.">
-      <FIELDS>
-        <FIELD NAME="content_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="preloaded" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 = preload dependency, 0 = load it self"/>
         <FIELD NAME="drop_css" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 = do not load css"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="content_id, library_id"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id, library_id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="meta" UNIQUE="false" FIELDS="preloaded, drop_css"/>
