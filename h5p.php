@@ -10,7 +10,7 @@ function hvp_get_instance($type) {
   static $interface, $core;
 
   if (!isset($interface)) {    
-    $interface = new H5PDrupal();
+    $interface = new H5PMoodle();
     $core = new H5PCore($interface);
   }
 
@@ -28,7 +28,7 @@ function hvp_get_instance($type) {
   }
 }
 
-class H5PDrupal implements H5PFrameworkInterface {
+class H5PMoodle implements H5PFrameworkInterface {
   /**
    * Implements setErrorMessage
    */
