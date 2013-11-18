@@ -33,7 +33,7 @@ class H5PDrupal implements H5PFrameworkInterface {
    * Implements setErrorMessage
    */
   public function setErrorMessage($message) {
-    // TODO; Change core, do not send in translated error messages.
+    // TODO: Change core, do not send in translated error messages.
     debugging($message, DEBUG_DEVELOPER);
     //print_error($message, 'hvp');
   }
@@ -42,6 +42,7 @@ class H5PDrupal implements H5PFrameworkInterface {
    * Implements setInfoMessage
    */
   public function setInfoMessage($message) {
+    // TODO: Use $OUTPUT->notification(get_string('choicesaved', 'choice'),'notifysuccess'); ???
     echo $message;
   }
 
