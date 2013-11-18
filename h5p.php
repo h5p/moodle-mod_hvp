@@ -403,4 +403,20 @@ class H5PDrupal implements H5PFrameworkInterface {
   private function getSemanticsFromFile($machineName, $majorVersion, $minorVersion) {
     // TODO
   }
+  
+  /**
+   * Implements getExportData
+   **/
+  public function getExportData($contentId, $title, $language) {
+    return NULL;
+  }
+  
+  /**
+   * Check if h5p export is enabled.
+   *
+   * @return bool
+   */
+  public function isExportEnabled() {
+    return FALSE;
+  }
 }
