@@ -10,11 +10,24 @@ if (window.parent !== window) {
 
 YUI().use('node', function(Y) {
   Y.on('domready', function () {
-    H5PIntegration.fullscreenText = M.util.get_string('fullscreen', 'hvp');
+    // Not sure if these actually work, mostly used in the editor i belive.
     H5P.loadedJs = hvp !== undefined && hvp.loadedJs !== undefined ? hvp.loadedJs : [];
     H5P.loadedCss = hvp !== undefined && hvp.loadedCss !== undefined ? hvp.loadedCss : [];
   }); 
 });
+
+if (Object.defineProperty) {
+  // Define translations using getters since jquery ready runs before YUI. (a bit hacky yes)
+  Object.defineProperty(H5PIntegration, 'fullscreenText', {
+    get: function () {
+       return M.util.get_string('fullscreen', 'hvp');
+    }
+  });
+}
+else {
+  // Fallback for those who do not support defining properties 
+  H5PIntegration.fullscreenText = 'Fullscreen';
+}
 
 H5PIntegration.getJsonContent = function (contentId) {
   return hvp.content['cid-' + contentId].jsonContent;
