@@ -5,13 +5,12 @@ var H5P = H5P || {};
 if (window.parent !== window) {
   hvp = window.parent.hvp;
   YUI = window.parent.YUI;
+  M = window.parent.M;
 }
 
 YUI().use('node', function(Y) {
   Y.on('domready', function () {
-    if (M !== undefined) {
-      H5PIntegration.fullscreenText =  M.util.get_string('fullscreen', 'hvp');
-    }
+    H5PIntegration.fullscreenText = M.util.get_string('fullscreen', 'hvp');
     H5P.loadedJs = hvp !== undefined && hvp.loadedJs !== undefined ? hvp.loadedJs : [];
     H5P.loadedCss = hvp !== undefined && hvp.loadedCss !== undefined ? hvp.loadedCss : [];
   }); 
@@ -22,10 +21,9 @@ H5PIntegration.getJsonContent = function (contentId) {
 };
 
 // Window parent is always available.
-var locationOrigin = window.parent.location.protocol + "//" + window.parent.location.host;
 H5PIntegration.getContentPath = function (contentId) {
   if (hvp !== undefined && contentId !== undefined) {
-    return locationOrigin + hvp.contentPath + contentId + '/';
+    return hvp.contentPath + contentId + '/';
   }
   else if (hvpeditor !== undefined)  {
     return hvpeditor.filesPath + '/h5peditor/';
@@ -62,7 +60,7 @@ H5PIntegration.getFullscreen = function (contentId) {
  * @returns {String} HTML
  */
 H5PIntegration.getHeadTags = function (contentId) {
-  var basePath = window.location.protocol + '//' + window.location.host + '/';
+  var basePath = M.cfg.wwwroot;
 
   var createStyleTags = function (styles) {
     var tags = '';

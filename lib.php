@@ -157,32 +157,32 @@ function hvp_add_scripts_and_styles($hvp, $embedtype) {
                 'fullScreen' => $hvp->fullscreen
             ),
         ),
-        'contentPath' => '/mod/hvp/files/content/',
+        'contentPath' => $CFG->wwwroot . '/mod/hvp/files/content/',
         'exportEnabled' => FALSE,
-        'libraryPath' => '/mod/hvp/files/libraries/',
+        'libraryPath' => $CFG->wwwroot . '/mod/hvp/files/libraries/',
     );
     
     $filepaths = hvp_get_file_paths($hvp);
     foreach ($filepaths['preloadedJs'] as $script) {
         $PAGE->requires->js($script, true);
-        $settings['loadedJs'][] = $script;
+        $settings['loadedJs'][] = $CFG->wwwroot . $script;
     }
     
     if ($embedtype === 'div') {
         foreach ($filepaths['preloadedCss'] as $style) {
             $PAGE->requires->css($style);
-            $settings['loadedCss'][] = $style;
+            $settings['loadedCss'][] = $CFG->wwwroot . $style;
         }
     }
     else {
         $settings['core']['scripts'] = array();
         $settings['core']['styles'] = array();
         foreach (H5PCore::$styles as $style) {
-            $settings['core']['styles'][] = 'mod/hvp/library/' . $style;
+            $settings['core']['styles'][] = '/mod/hvp/library/' . $style;
         }
-        $settings['core']['scripts'][] = 'mod/hvp/hvp.js';
+        $settings['core']['scripts'][] = '/mod/hvp/hvp.js';
         foreach (H5PCore::$scripts as $script) {
-            $settings['core']['scripts'][] = 'mod/hvp/library/' . $script;
+            $settings['core']['scripts'][] = '/mod/hvp/library/' . $script;
         }
         
 
