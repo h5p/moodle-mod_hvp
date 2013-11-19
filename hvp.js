@@ -8,8 +8,10 @@ if (window.parent !== window) {
 }
 
 YUI().use('node', function(Y) {
-  Y.on("domready", function(){
-    H5PIntegration.fullscreenText =  M.util.get_string('fullscreen', 'hvp');
+  Y.on('domready', function () {
+    if (M !== undefined) {
+      H5PIntegration.fullscreenText =  M.util.get_string('fullscreen', 'hvp');
+    }
     H5P.loadedJs = hvp !== undefined && hvp.loadedJs !== undefined ? hvp.loadedJs : [];
     H5P.loadedCss = hvp !== undefined && hvp.loadedCss !== undefined ? hvp.loadedCss : [];
   }); 
@@ -23,7 +25,7 @@ H5PIntegration.getJsonContent = function (contentId) {
 var locationOrigin = window.parent.location.protocol + "//" + window.parent.location.host;
 H5PIntegration.getContentPath = function (contentId) {
   if (hvp !== undefined && contentId !== undefined) {
-    return locationOrigin + hvp.jsonContentPath + contentId + '/';
+    return locationOrigin + hvp.contentPath + contentId + '/';
   }
   else if (hvpeditor !== undefined)  {
     return hvpeditor.filesPath + '/h5peditor/';
@@ -79,7 +81,7 @@ H5PIntegration.getHeadTags = function (contentId) {
   };
 
   return createStyleTags(hvp.core.styles)
-       + createStyleTags(hvp['cid-' + contentId].styles)
+       + createStyleTags(hvp.content['cid-' + contentId].styles)
        + createScriptTags(hvp.core.scripts)
-       + createScriptTags(hvp['cid-' + contentId].scripts);
+       + createScriptTags(hvp.content['cid-' + contentId].scripts);
 };

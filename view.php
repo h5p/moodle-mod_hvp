@@ -41,7 +41,7 @@ if ($embedtype === 'div') {
 }
 else {
     echo '<div class="h5p-iframe-wrapper" id="iframe-wrapper-' . $hvp->id . '">';
-    echo '<iframe id="iframe-' . $hvp->id . '" class="h5p-iframe" data-class="' . $hvp->machine_name . '" data-content-id="##h5pId##" style="width: 100%; height: 400px; border: none;" src="about:blank" frameBorder="0"></iframe>';
+    echo '<iframe id="iframe-' . $hvp->id . '" class="h5p-iframe" data-class="' . $hvp->machine_name . '" data-content-id="' . $hvp->id . '" style="width: 100%; height: 400px; border: none;" src="about:blank" frameBorder="0"></iframe>';
     echo '</div>';
 }
 

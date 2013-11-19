@@ -141,8 +141,6 @@ function hvp_get_file_paths($hvp) {
 function hvp_add_scripts_and_styles($hvp, $embedtype) {
     global $CFG, $PAGE;
 
-    $modulepath = $CFG->httpswwwroot . '/mod/hvp';
-
     foreach (H5PCore::$styles as $style) {
         $PAGE->requires->css('/mod/hvp/library/' . $style);
     }
@@ -159,36 +157,37 @@ function hvp_add_scripts_and_styles($hvp, $embedtype) {
                 'fullScreen' => $hvp->fullscreen
             ),
         ),
-        'contentPath' => $modulepath . '/files/content/',
+        'contentPath' => '/mod/hvp/files/content/',
         'exportEnabled' => FALSE,
-        'libraryPath' => $modulepath . '/files/libraries/',
+        'libraryPath' => '/mod/hvp/files/libraries/',
     );
     
     $filepaths = hvp_get_file_paths($hvp);
     foreach ($filepaths['preloadedJs'] as $script) {
         $PAGE->requires->js($script, true);
-        $settings['hvp']['loadedJs'][] = $script;
+        $settings['loadedJs'][] = $script;
     }
     
     if ($embedtype === 'div') {
         foreach ($filepaths['preloadedCss'] as $style) {
             $PAGE->requires->css($style);
-            $settings['hvp']['loadedCss'][] = $style;
+            $settings['loadedCss'][] = $style;
         }
     }
     else {
-        $settings['hvp']['core']['scripts'] = array();
-        $settings['hvp']['core']['styles'] = array();
+        $settings['core']['scripts'] = array();
+        $settings['core']['styles'] = array();
         foreach (H5PCore::$styles as $style) {
-            $settings['hvp']['core']['styles'][] = $modulepath . '/library/' . $style;
+            $settings['core']['styles'][] = 'mod/hvp/library/' . $style;
         }
-        $settings['hvp']['core']['scripts'][] = $modulepath . '/h5p.js';
+        $settings['core']['scripts'][] = 'mod/hvp/hvp.js';
         foreach (H5PCore::$scripts as $script) {
-            $settings['hvp']['core']['scripts'][] = $modulepath . '/library/' . $script;
+            $settings['core']['scripts'][] = 'mod/hvp/library/' . $script;
         }
+        
 
-        $settings['hvp']['cid-' . $hvp->id]['scripts'] = $filepaths['preloadedJs'];
-        $settings['hvp']['cid-' . $hvp->id]['styles'] = $filepaths['preloadedCss'];
+        $settings['content']['cid-' . $hvp->id]['scripts'] = $filepaths['preloadedJs'];
+        $settings['content']['cid-' . $hvp->id]['styles'] = $filepaths['preloadedCss'];
     }
     
     $PAGE->requires->data_for_js('hvp', $settings, true);
