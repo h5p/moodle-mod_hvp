@@ -46,10 +46,9 @@ function hvp_add_instance($hvp) {
     
     $hvp->id = $DB->insert_record('hvp', $hvp);
     
-    $h5pCore = hvp_get_instance('storage');
-    $library_updated = $h5pCore->savePackage($hvp->id);
+    $h5pStorage = hvp_get_instance('storage');
+    $library_updated = $h5pStorage->savePackage($hvp->id);
   
-    debugging('Added h5p ' . $hvp->id . ': ' . $library_updated , DEBUG_DEVELOPER);
     return $hvp->id;
 }
 
@@ -59,9 +58,9 @@ function hvp_update_instance($hvp) {
     $hvp->id = $hvp->instance;
     $result = $DB->update_record('hvp', $hvp);
     
-    // TODO: Update other datas.
+    $h5pStorage = hvp_get_instance('storage');
+    $library_updated = $h5pStorage->updatePackage($hvp->id);
     
-    debugging('Updated h5p ' . $hvp->id . ': ' . $result, DEBUG_DEVELOPER);
     return $result;
 }
 
@@ -74,7 +73,8 @@ function hvp_delete_instance($id) {
 
     $result = true;
 
-    // TODO: Delete other datas.
+    $h5pStorage = hvp_get_instance('storage');
+    $h5pStorage->deletePackage($hvp->id);
 
     if (! $DB->delete_records('hvp', array('id' => "$hvp->id"))) {
         $result = false;

@@ -42,15 +42,16 @@ class H5PMoodle implements H5PFrameworkInterface {
    * Implements setInfoMessage
    */
   public function setInfoMessage($message) {
-    // TODO: Use $OUTPUT->notification(get_string('choicesaved', 'choice'),'notifysuccess'); ???
-    echo $message;
+    // TODO: ???
+    //$OUTPUT->notification($message, 'notifysuccess');
+    //echo $message;
   }
 
   /**
    * Implements t
    */
   public function t($message, $replacements = array()) {
-    // TODO; Change core, use keywords for translation.
+    // TODO: Change core, use keywords for translation.
     return str_replace(array_keys($replacements), $replacements, $message);
     //debugging($message, DEBUG_DEVELOPER);
     //return get_string($message, 'hvp', $replacements);
