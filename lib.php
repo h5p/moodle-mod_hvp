@@ -21,7 +21,6 @@
  * @copyright  2013 Amendor
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
 require_once ($CFG->dirroot . '/mod/hvp/hvp.php');
 
 function hvp_supports($feature) {
@@ -41,15 +40,33 @@ function hvp_supports($feature) {
     }
 }
 
-function hvp_add_instance($hvp) {
+/**
+ * Implements Moodle's MODULENAME_add_instance()
+ *
+ * When a new activity is added on a course, Moodle creates course module,
+ * module instance, add the module to the correct section. Moodle calls
+ * this function to create the module instance.
+ *
+ * @param object $moduleinfo the module data
+ * @return int $cmid Course module instance id (id of 'hvp' table)
+ */
+function hvp_add_instance($moduleinfo) {
     global $DB;
-    
-    $hvp->id = $DB->insert_record('hvp', $hvp);
-    
+
+    // Moodle expects the MODULENAME_add_instance() to return the id, so we
+    // need to save the data here manually because savePackage() does not
+    // return the id.
+    $cmid = $DB->insert_record('hvp', (object) array(
+        'name' => $moduleinfo->name,
+        'course' => $moduleinfo->course,
+        'json_content' => '',
+        'main_library_id' => '',
+    ));
+
     $h5pStorage = hvp_get_instance('storage');
-    $library_updated = $h5pStorage->savePackage($hvp->id);
-  
-    return $hvp->id;
+    $h5pStorage->savePackage(array('id' => $cmid));
+
+    return $cmid;
 }
 
 function hvp_update_instance($hvp) {
@@ -57,10 +74,10 @@ function hvp_update_instance($hvp) {
 
     $hvp->id = $hvp->instance;
     $result = $DB->update_record('hvp', $hvp);
-    
+
     $h5pStorage = hvp_get_instance('storage');
     $library_updated = $h5pStorage->updatePackage($hvp->id);
-    
+
     return $result;
 }
 
@@ -87,31 +104,49 @@ function hvp_delete_instance($id) {
 function hvp_get_hvp($hvpid) {
     global $DB;
 
-    $hvp = $DB->get_record_sql('SELECT h.id, h.name, hc.content, hc.embed_type, hc.library_id, hl.machine_name, hl.major_version, hl.minor_version, hl.embed_types, hl.fullscreen
-                                FROM {hvp} h
-                                JOIN {hvp_contents} hc ON hc.id = h.id
-                                JOIN {hvp_libraries} hl ON hl.id = hc.library_id
-                                WHERE hc.id = ?', array($hvpid));
+    $hvp = $DB->get_record_sql('
+      SELECT
+        h.id,
+        h.name,
+        h.json_content,
+        h.embed_type,
+        h.main_library_id,
+        hl.machine_name,
+        hl.major_version,
+        hl.minor_version,
+        hl.embed_types,
+        hl.fullscreen
+      FROM {hvp} h
+      JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
+      WHERE h.id = ?', array($hvpid));
 
     if ($hvp) {
         return $hvp;
     }
-    
+
     return false;
 }
 
 function hvp_get_file_paths($hvp) {
     global $CFG, $DB;
-    
+
     $filepaths = array(
         'preloadedJs' => array(),
         'preloadedCss' => array(),
     );
 
-    $libraries = $DB->get_records_sql('SELECT hl.id, hl.machine_name, hl.major_version, hl.minor_version, hl.preloaded_css, hl.preloaded_js, hcl.drop_css
-                                       FROM {hvp_contents_libraries} hcl
-                                       JOIN {hvp_libraries} hl ON hcl.library_id = hl.id
-                                       WHERE hcl.id = ? AND hcl.preloaded = 1', array($hvp->id));
+    $libraries = $DB->get_records_sql(
+      'SELECT
+        hl.id,
+        hl.machine_name,
+        hl.major_version,
+        hl.minor_version,
+        hl.preloaded_css,
+        hl.preloaded_js,
+        hcl.drop_css
+      FROM {hvp_contents_libraries} hcl
+      JOIN {hvp_libraries} hl ON hcl.library_id = hl.id
+      WHERE hcl.id = ?', array($hvp->id));
 
     $path = '/mod/hvp/files';
     $h5pcore = hvp_get_instance('core');
@@ -125,16 +160,16 @@ function hvp_get_file_paths($hvp) {
         if (!empty($library->preloaded_js)) {
             foreach (explode(',', $library->preloaded_js) as $scriptpath) {
                 $filepaths['preloadedJs'][] = $path . '/libraries/' . $h5pcore->libraryToString($librarydata, TRUE) . '/' . trim($scriptpath);
-            } 
+            }
         }
         if (!empty($library->preloaded_css) && !$library->drop_css) {
             foreach (explode(',', $library->preloaded_css) as $stylepath) {
                 $filepaths['preloadedCss'][] = $path . '/libraries/' . $h5pcore->libraryToString($librarydata, TRUE) . '/' . trim($stylepath);
             }
         }
-    
+
     }
-  
+
     return $filepaths;
 }
 
@@ -153,7 +188,7 @@ function hvp_add_scripts_and_styles($hvp, $embedtype) {
     $settings = array(
         'content' => array(
             'cid-' . $hvp->id => array(
-                'jsonContent' => $hvp->content,
+                'jsonContent' => $hvp->json_content,
                 'fullScreen' => $hvp->fullscreen
             ),
         ),
@@ -161,13 +196,13 @@ function hvp_add_scripts_and_styles($hvp, $embedtype) {
         'exportEnabled' => FALSE,
         'libraryPath' => $CFG->wwwroot . '/mod/hvp/files/libraries/',
     );
-    
+
     $filepaths = hvp_get_file_paths($hvp);
     foreach ($filepaths['preloadedJs'] as $script) {
         $PAGE->requires->js($script, true);
         $settings['loadedJs'][] = $CFG->wwwroot . $script;
     }
-    
+
     if ($embedtype === 'div') {
         foreach ($filepaths['preloadedCss'] as $style) {
             $PAGE->requires->css($style);
@@ -184,11 +219,11 @@ function hvp_add_scripts_and_styles($hvp, $embedtype) {
         foreach (H5PCore::$scripts as $script) {
             $settings['core']['scripts'][] = '/mod/hvp/library/' . $script;
         }
-        
+
 
         $settings['content']['cid-' . $hvp->id]['scripts'] = $filepaths['preloadedJs'];
         $settings['content']['cid-' . $hvp->id]['styles'] = $filepaths['preloadedCss'];
     }
-    
+
     $PAGE->requires->data_for_js('hvp', $settings, true);
 }
