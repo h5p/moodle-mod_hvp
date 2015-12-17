@@ -232,7 +232,7 @@ class H5PMoodle implements H5PFrameworkInterface {
    * Implements isInDevMode
    */
   public function isInDevMode() {
-    return FALSE; // Not supported
+    return FALSE; // Not supported (Files in moodle not editable)
   }
 
   /**
@@ -531,20 +531,14 @@ class H5PMoodle implements H5PFrameworkInterface {
   public function loadLibrarySemantics($name, $majorVersion, $minorVersion) {
     global $DB;
 
-    if ($this->isInDevMode()) {
-      $semantics = $this->getSemanticsFromFile($name, $majorVersion, $minorVersion);
-      // TODO: Could we get this into core somehow?
-    }
-    else {
-      $semantics = $DB->get_field_sql(
-          "SELECT semantics
-          FROM {hvp_libraries}
-          WHERE name = %s
-          AND major_version = %d
-          AND minor_version = %d",
-          array($name, $majorVersion, $minorVersion)
-        );
-    }
+    $semantics = $DB->get_field_sql(
+        "SELECT semantics
+        FROM {hvp_libraries}
+        WHERE name = %s
+        AND major_version = %d
+        AND minor_version = %d",
+        array($name, $majorVersion, $minorVersion)
+      );
 
     return ($semantics === FALSE ? NULL : $semantics);
   }
@@ -692,30 +686,22 @@ class H5PMoodle implements H5PFrameworkInterface {
     global $DB;
 
     $dropLibraryCssList = array();
-    foreach ($librariesInUse as $machineName => $library) {
-      if (!empty($library['library']['dropLibraryCss'])) {
-        $dropLibraryCssList = array_merge($dropLibraryCssList, explode(', ', $library['library']['dropLibraryCss']));
+    foreach ($librariesInUse as $dependency) {
+      if (!empty($dependency['library']['dropLibraryCss'])) {
+        $dropLibraryCssList = array_merge($dropLibraryCssList, explode(', ', $dependency['library']['dropLibraryCss']));
       }
     }
-    foreach ($librariesInUse as $machineName => $library) {
-      $conditions = array(
-        'id' => $contentId,
-        'library_id' => $library['library']['libraryId']
-      );
+    // TODO: Consider moving the above code to core. Same for all impl.
 
-      $contentLibrary = $DB->get_record('hvp_contents_libraries', $conditions);
-
-      if (!$contentLibrary) {
-        $contentLibrary = $conditions;
-      }
-      else {
-        $contentLibrary = (array) $contentLibrary;
-      }
-
-      $contentLibrary['preloaded'] = $library['preloaded'];
-      $contentLibrary['drop_css'] = in_array($machineName, $dropLibraryCssList) ? 1 : 0;
-
-      $DB->insert_record_raw('hvp_contents_libraries', $contentLibrary, false, false, true);
+    foreach ($librariesInUse as $dependency) {
+      $dropCss = in_array($dependency['library']['machineName'], $dropLibraryCssList) ? 1 : 0;
+      $DB->insert_record('h5p_contents_libraries', array(
+        'content_id' => $contentId,
+        'library_id' => $dependency['library']['libraryId'],
+        'dependency_type' => $dependency['type'],
+        'drop_css' => $dropCss,
+        'weight' => $dependency['weight']
+      ));
     }
   }
 
@@ -759,53 +745,8 @@ class H5PMoodle implements H5PFrameworkInterface {
       );
     }
 
-    if ($this->isInDevMode()) {
-      // TODO: Get semantics from file.
-    }
-
     return $libraryData;
   }
-
-  /**
-   * Implements getLibrarySemantics
-   *
-   * Calls modules implementing hook_alter_h5p_semantics().
-   */
-  public function getLibrarySemantics($machineName, $majorVersion, $minorVersion) {
-    if ($this->isInDevMode()) {
-      // TODO: Get semantics from file.
-    }
-    else {
-      $library = $DB->get_record('hvp_libraries', array(
-        'machine_name' => $machineName,
-        'major_version' => $majorVersion,
-        'minor_version' => $minorVersion
-      ));
-      $semantics = $library->semantics;
-    }
-    return json_decode($semantics);
-  }
-
-  private function getSemanticsFromFile($machineName, $majorVersion, $minorVersion) {
-    // TODO
-  }
-
-  /**
-   * Implements getExportData
-   **/
-  public function getExportData($contentId, $title, $language) {
-    return NULL;
-  }
-
-  /**
-   * Check if h5p export is enabled.
-   *
-   * @return bool
-   */
-  public function isExportEnabled() {
-    return FALSE;
-  }
-
 
   /**
    * Implements clearFilteredParameters().
@@ -813,12 +754,7 @@ class H5PMoodle implements H5PFrameworkInterface {
   public function clearFilteredParameters($library_id) {
     global $DB;
 
-    $contents = $DB->get_records('hvp', array('main_library_id' => $library_id));
-
-    foreach ($contents as $content) {
-      $content->filtered = NULL;
-      $DB->update_record('hvp', $content);
-    }
+    $DB->execute("UPDATE {hvp} SET filtered = NULL WHERE main_library_id = ?", array($library_id));
   }
 
   /**
@@ -850,6 +786,7 @@ class H5PMoodle implements H5PFrameworkInterface {
    */
   public function isContentSlugAvailable($slug) {
     global $DB;
+
     return !$DB->get_field_sql("SELECT slug FROM {hvp}", array('slug' => $slug));
   }
 }
