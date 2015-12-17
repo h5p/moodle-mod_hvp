@@ -25,20 +25,6 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="hvp_points" COMMENT="Stores user statistics">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="hvp_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of hvp content in the 'hvp' table"/>
-        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The id for the user answering this H5P"/>
-        <FIELD NAME="started" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="When the user started on the interaction"/>
-        <FIELD NAME="finished" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="When the user submitted the result"/>
-        <FIELD NAME="points" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The users score"/>
-        <FIELD NAME="max_points" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The maximum score for this test"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
     <TABLE NAME="hvp_content_user_data" COMMENT="Stores user data about the content">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
