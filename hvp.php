@@ -1,4 +1,8 @@
 <?php
+
+// Implementation of the H5P Framework Interface
+// TODO: Can we rename this file to something more suiting? Possible confusion
+
 if (!defined('MOODLE_INTERNAL')) {
   die('Direct access to this script is forbidden.');
 }
@@ -263,7 +267,7 @@ class H5PMoodle implements H5PFrameworkInterface {
         "SELECT COUNT(distinct c.id)
         FROM {hvp_libraries} l
         JOIN {hvp_contents_libraries} cl ON l.id = cl.library_id
-        JOIN {hvp} c ON cl.content_id = c.id
+        JOIN {hvp} c ON cl.hvp_id = c.id
         WHERE l.id = $id"
       ));
     }
@@ -496,10 +500,11 @@ class H5PMoodle implements H5PFrameworkInterface {
     global $DB;
 
     // Reset user data for this content
-    $DB->execute("UPDATE {hvp_contents_user_data}
+    /*$DB->execute("UPDATE {hvp_content_user_data}
       SET data = 'RESET'
-      WHERE content_id = ? AND invalidate = 1", array($contentId)
-    );
+      WHERE hvp_id = ? AND delete_on_content_change = 1", array($contentId)
+    );*/
+    // TODO: Fix table def. See WP
   }
 
   /**
@@ -597,11 +602,11 @@ class H5PMoodle implements H5PFrameworkInterface {
               , hcl.dependency_type AS dependencyType
         FROM {hvp_contents_libraries} hcl
         JOIN {hvp_libraries} hl ON hcl.library_id = hl.id
-        WHERE hcl.content_id = %d";
+        WHERE hcl.hvp_id = ?";
     $queryArgs = array($id);
 
     if ($type !== NULL) {
-      $query .= " AND hcl.dependency_type = %s";
+      $query .= " AND hcl.dependency_type = ?";
       $queryArgs[] = $type;
     }
 
@@ -613,7 +618,7 @@ class H5PMoodle implements H5PFrameworkInterface {
    * Implements getOption().
    */
   public function getOption($name, $default = FALSE) {
-    $value = get_config('hvp', $name).
+    $value = get_config('hvp', $name);
     if ($value === FALSE) {
       return $default;
     }
@@ -624,7 +629,7 @@ class H5PMoodle implements H5PFrameworkInterface {
    * Implements setOption().
    */
   public function setOption($name, $value) {
-    set_config($name, $value, 'hvp').
+    set_config($name, $value, 'hvp');
   }
 
   /**
@@ -696,7 +701,7 @@ class H5PMoodle implements H5PFrameworkInterface {
     foreach ($librariesInUse as $dependency) {
       $dropCss = in_array($dependency['library']['machineName'], $dropLibraryCssList) ? 1 : 0;
       $DB->insert_record('h5p_contents_libraries', array(
-        'content_id' => $contentId,
+        'hvp_id' => $contentId,
         'library_id' => $dependency['library']['libraryId'],
         'dependency_type' => $dependency['type'],
         'drop_css' => $dropCss,

@@ -173,57 +173,94 @@ function hvp_get_file_paths($hvp) {
     return $filepaths;
 }
 
-function hvp_add_scripts_and_styles($hvp, $embedtype) {
-    global $CFG, $PAGE;
+/**
+ * TODO: Document
+ */
+function hvp_get_core_settings() {
+  global $USER, $CFG;
 
-    foreach (H5PCore::$styles as $style) {
-        $PAGE->requires->css('/mod/hvp/library/' . $style);
-    }
-    $PAGE->requires->js('/mod/hvp/hvp.js', true);
-    $PAGE->requires->string_for_js('fullscreen', 'hvp');
-    foreach (H5PCore::$scripts as $script) {
-        $PAGE->requires->js('/mod/hvp/library/' . $script, true);
-    }
+  $basePath = '/'; // TODO: Unsure about this, can we get it from somewhere?
+  $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
 
-    $settings = array(
-        'content' => array(
-            'cid-' . $hvp->id => array(
-                'jsonContent' => $hvp->json_content,
-                'fullScreen' => $hvp->fullscreen
-            ),
-        ),
-        'contentPath' => $CFG->wwwroot . '/mod/hvp/files/content/',
-        'exportEnabled' => FALSE,
-        'libraryPath' => $CFG->wwwroot . '/mod/hvp/files/libraries/',
-    );
+  $settings = array(
+    'baseUrl' => $basePath,
+    'url' => $CFG->wwwroot,
+    'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
+    'ajaxPath' => $ajaxPath,
+    'ajax' => array(
+      'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
+    ),
+    'saveFreq' => FALSE, // TODO: Add when user state settings are added
+    'siteUrl' => $CFG->wwwroot,
+    'l10n' => array(
+      'H5P' => array(
+        'fullscreen' => get_string('fullscreen', 'hvp'),
+        'disableFullscreen' => get_string('disablefullscreen', 'hvp'),
+        'download' => get_string('download', 'hvp'),
+        'copyrights' => get_string('copyright', 'hvp'),
+        'embed' => get_string('embed', 'hvp'),
+        'size' => get_string('size', 'hvp'),
+        'showAdvanced' => get_string('showadvanced', 'hvp'),
+        'hideAdvanced' => get_string('hideadvanced', 'hvp'), // TODO: Remove embed func?
+        'advancedHelp' => get_string('resizescript', 'hvp'),
+        'copyrightInformation' => get_string('copyright', 'hvp'), // TODO: Why do we need this multiple times?
+        'close' => get_string('close', 'hvp'),
+        'title' => get_string('title', 'hvp'),
+        'author' => get_string('author', 'hvp'),
+        'year' => get_string('year', 'hvp'),
+        'source' => get_string('source', 'hvp'),
+        'license' => get_string('license', 'hvp'),
+        'thumbnail' => get_string('thumbnail', 'hvp'),
+        'noCopyrights' =>  get_string('nocopyright', 'hvp'),
+        'downloadDescription' => get_string('downloadtitle', 'hvp'),
+        'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
+        'embedDescription' => get_string('embedtitle', 'hvp'),
+        'h5pDescription' => get_string('h5ptitle', 'hvp'),
+        'contentChanged' => get_string('contentchanged', 'hvp'),
+        'startingOver' => get_string('startingover', 'hvp'),
+        'user' => array(
+          'name' => $USER->firstname . ' ' . $USER->lastname,
+          'mail' => $USER->email
+        )
+      )
+    )
+  );
 
-    $filepaths = hvp_get_file_paths($hvp);
-    foreach ($filepaths['preloadedJs'] as $script) {
-        $PAGE->requires->js($script, true);
-        $settings['loadedJs'][] = $CFG->wwwroot . $script;
-    }
+  return $settings;
+}
 
-    if ($embedtype === 'div') {
-        foreach ($filepaths['preloadedCss'] as $style) {
-            $PAGE->requires->css($style);
-            $settings['loadedCss'][] = $CFG->wwwroot . $style;
-        }
-    }
-    else {
-        $settings['core']['scripts'] = array();
-        $settings['core']['styles'] = array();
-        foreach (H5PCore::$styles as $style) {
-            $settings['core']['styles'][] = '/mod/hvp/library/' . $style;
-        }
-        $settings['core']['scripts'][] = '/mod/hvp/hvp.js';
-        foreach (H5PCore::$scripts as $script) {
-            $settings['core']['scripts'][] = '/mod/hvp/library/' . $script;
-        }
+/**
+ * TODO: Document
+ */
+function hvp_get_core_assets() {
+  global $CFG, $PAGE;
 
+  // Get core settings
+  $settings = hvp_get_core_settings();
+  $settings['core'] = array(
+    'styles' => array(),
+    'scripts' => array()
+  );
+  $settings['loadedJs'] = array();
+  $settings['loadedCss'] = array();
 
-        $settings['content']['cid-' . $hvp->id]['scripts'] = $filepaths['preloadedJs'];
-        $settings['content']['cid-' . $hvp->id]['styles'] = $filepaths['preloadedCss'];
-    }
+  // Make sure files are reloaded for each plugin update
+  $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
 
-    $PAGE->requires->data_for_js('hvp', $settings, true);
+  // Use relative URL to support both http and https.
+  $lib_url = $CFG->wwwroot . '/mod/hvp/library/';
+  $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
+
+  // Add core stylesheets
+  foreach (H5PCore::$styles as $style) {
+    $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
+    $PAGE->requires->css('/mod/hvp/library/' . $style);
+  }
+  // Add core JavaScript
+  foreach (H5PCore::$scripts as $script) {
+    $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
+    $PAGE->requires->js('/mod/hvp/library/' . $script, true);
+  }
+
+  return $settings;
 }
