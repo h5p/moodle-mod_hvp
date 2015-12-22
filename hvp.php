@@ -539,9 +539,9 @@ class H5PMoodle implements H5PFrameworkInterface {
     $semantics = $DB->get_field_sql(
         "SELECT semantics
         FROM {hvp_libraries}
-        WHERE name = %s
-        AND major_version = %d
-        AND minor_version = %d",
+        WHERE machine_name = ?
+        AND major_version = ?
+        AND minor_version = ?",
         array($name, $majorVersion, $minorVersion)
       );
 
@@ -561,24 +561,41 @@ class H5PMoodle implements H5PFrameworkInterface {
   public function loadContent($id) {
     global $DB;
 
-    // TODO: Verify that this work with other databases than MySQL. I suspect
-    // that camelCase won't work for e.g. PostgreSQL
-    $content = $DB->get_record_sql(
+    $data = $DB->get_record_sql(
         "SELECT hc.id
-              , hc.json_content AS params
+              , hc.name
+              , hc.json_content
               , hc.filtered
               , hc.slug
-              , hc.embed_type AS embedType
+              , hc.embed_type
               , hc.disable
-              , hl.id AS libraryId
-              , hl.machine_name AS libraryName
-              , hl.major_version AS libraryMajorVersion
-              , hl.minor_version AS libraryMinorVersion
-              , hl.embed_types AS libraryEmbedTypes
-              , hl.fullscreen AS libraryFullscreen
+              , hl.id AS library_id
+              , hl.machine_name
+              , hl.major_version
+              , hl.minor_version
+              , hl.embed_types
+              , hl.fullscreen
         FROM {hvp} hc
         JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
         WHERE hc.id = ?", array($id)
+    );
+
+    // Some databases do not support camelCase, so we need to manually
+    // map the values to the camelCase names used by the H5P core.
+    $content = array(
+        'id' => $data->id,
+        'title' => $data->name,
+        'params' => $data->json_content,
+        'filtered' => $data->filtered,
+        'slug' => $data->slug,
+        'embedType' => $data->embed_type,
+        'disable' => $data->disable,
+        'libraryId' => $data->library_id,
+        'libraryName' => $data->machine_name,
+        'libraryMajorVersion' => $data->major_version,
+        'libraryMinorVersion' => $data->minor_version,
+        'libraryEmbedTypes' => $data->embed_types,
+        'libraryFullscreen' => $data->fullscreen,
     );
 
     return $content;
@@ -592,14 +609,14 @@ class H5PMoodle implements H5PFrameworkInterface {
 
     $query =
         "SELECT hl.id
-              , hl.machine_name AS machineName
-              , hl.major_version AS majorVersion
-              , hl.minor_version AS minorVersion
-              , hl.patch_version AS patchVersion
-              , hl.preloaded_css AS preloadedCss
-              , hl.preloaded_js AS preloadedJs
-              , hcl.drop_css AS dropCss
-              , hcl.dependency_type AS dependencyType
+              , hl.machine_name
+              , hl.major_version
+              , hl.minor_version
+              , hl.patch_version
+              , hl.preloaded_css
+              , hl.preloaded_js
+              , hcl.drop_css
+              , hcl.dependency_type
         FROM {hvp_contents_libraries} hcl
         JOIN {hvp_libraries} hl ON hcl.library_id = hl.id
         WHERE hcl.hvp_id = ?";
@@ -611,7 +628,14 @@ class H5PMoodle implements H5PFrameworkInterface {
     }
 
     $query .= " ORDER BY hcl.weight";
-    return $DB->get_records_sql($query, $queryArgs);
+    $data = $DB->get_records_sql($query, $queryArgs);
+
+    $dependencies = array();
+    foreach ($data as $dependency) {
+      $dependencies[] = H5PCore::snakeToCamel($dependency);
+    }
+
+    return $dependencies;
   }
 
   /**
@@ -639,6 +663,8 @@ class H5PMoodle implements H5PFrameworkInterface {
     global $DB;
 
     $content = new stdClass();
+    $content->id = $id;
+
     foreach ($fields as $name => $value) {
         $content->$name = $value;
         // TODO: Verify that this works, we might have to convert $name from
@@ -700,7 +726,7 @@ class H5PMoodle implements H5PFrameworkInterface {
 
     foreach ($librariesInUse as $dependency) {
       $dropCss = in_array($dependency['library']['machineName'], $dropLibraryCssList) ? 1 : 0;
-      $DB->insert_record('h5p_contents_libraries', array(
+      $DB->insert_record('hvp_contents_libraries', array(
         'hvp_id' => $contentId,
         'library_id' => $dependency['library']['libraryId'],
         'dependency_type' => $dependency['type'],
