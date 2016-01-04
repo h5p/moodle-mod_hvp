@@ -48,8 +48,7 @@ else {
   $hvp->disable |= $core->getGlobalDisable();
 }
 
-// TODO: Create Content!
-throw new coding_exception('Create proper $content before filtering parameters');
+$content = $core->loadContent($cm->instance);
 
 // Filter content parameters
 $safe_parameters = $core->filterParameters($content);
@@ -75,6 +74,8 @@ $settings['contents'][$cid] = array(
 
 // Get assets for this content
 $preloaded_dependencies = $core->loadContentDependencies($hvp->id, 'preloaded');
+$preloaded_dependencies = $core->loadContentDependencies($cm->instance, 'preloaded');
+
 $files = $core->getDependenciesFiles($preloaded_dependencies);
 // TODO:Insert hook/event for altering assets?
 
