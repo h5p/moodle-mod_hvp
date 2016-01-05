@@ -48,7 +48,7 @@ else {
   $hvp->disable |= $core->getGlobalDisable();
 }
 
-$content = $core->loadContent($cm->instance);
+$content = $core->loadContent($hvp->id);
 
 // Filter content parameters
 $safe_parameters = $core->filterParameters($content);
