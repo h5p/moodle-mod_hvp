@@ -580,6 +580,11 @@ class H5PMoodle implements H5PFrameworkInterface {
         WHERE hc.id = ?", array($id)
     );
 
+    // Return NULL if not found
+    if ($data === false) {
+      return NULL;
+    }
+
     // Some databases do not support camelCase, so we need to manually
     // map the values to the camelCase names used by the H5P core.
     $content = array(
