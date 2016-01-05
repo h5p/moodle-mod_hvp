@@ -135,11 +135,6 @@ function hvp_get_core_settings() {
         'disableFullscreen' => get_string('disablefullscreen', 'hvp'),
         'download' => get_string('download', 'hvp'),
         'copyrights' => get_string('copyright', 'hvp'),
-        'embed' => get_string('embed', 'hvp'),
-        'size' => get_string('size', 'hvp'),
-        'showAdvanced' => get_string('showadvanced', 'hvp'),
-        'hideAdvanced' => get_string('hideadvanced', 'hvp'), // TODO: Remove embed func?
-        'advancedHelp' => get_string('resizescript', 'hvp'),
         'copyrightInformation' => get_string('copyright', 'hvp'), // TODO: Why do we need this multiple times?
         'close' => get_string('close', 'hvp'),
         'title' => get_string('title', 'hvp'),
@@ -151,7 +146,6 @@ function hvp_get_core_settings() {
         'noCopyrights' =>  get_string('nocopyright', 'hvp'),
         'downloadDescription' => get_string('downloadtitle', 'hvp'),
         'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
-        'embedDescription' => get_string('embedtitle', 'hvp'),
         'h5pDescription' => get_string('h5ptitle', 'hvp'),
         'contentChanged' => get_string('contentchanged', 'hvp'),
         'startingOver' => get_string('startingover', 'hvp'),

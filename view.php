@@ -44,6 +44,9 @@ else {
   $content['disable'] |= $core->getGlobalDisable();
 }
 
+// Embed is not supported in Moodle
+$content['disable'] |= H5PCore::DISABLE_EMBED;
+
 // Filter content parameters
 $safe_parameters = $core->filterParameters($content);
 
