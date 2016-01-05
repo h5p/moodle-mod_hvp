@@ -22,7 +22,7 @@ function hvp_get_instance($type) {
 
     $language = current_language();
 
-    $export = isset($CFG->mod_h5p_export) ? $CFG->mod_h5p_export : true;
+    $export = (isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === FALSE ? FALSE : TRUE);
 
     $core = new H5PCore($interface, $path, $url, $language, $export);
   }

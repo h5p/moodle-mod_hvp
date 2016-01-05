@@ -55,7 +55,7 @@ $settings['contents'][$cid] = array(
     'library' => H5PCore::libraryToString($content['library']),
     'jsonContent' => $safe_parameters,
     'fullScreen' => $content['library']['fullscreen'],
-    'exportUrl' => '', // TODO: Fix export
+    'exportUrl' => (isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === FALSE ? '' : $CFG->wwwroot . '/mod/hvp/files/exports/' . ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p'),
     'title' => $content['title'],
     'disable' => $content['disable'],
     'contentUserData' => array(
