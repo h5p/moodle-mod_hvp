@@ -462,7 +462,9 @@ class H5PMoodle implements H5PFrameworkInterface {
     global $DB;
 
     if (!isset($content['disable'])) {
-        $content['disable'] = 0; // TODO: Needed?
+        $content['disable'] = 0;
+        // TODO: Can be removed when this has been fixed:
+        // https://github.com/h5p/h5p-moodle-plugin/issues/16
     }
 
     $data = array(
@@ -473,10 +475,8 @@ class H5PMoodle implements H5PFrameworkInterface {
       'filtered' => '',
       'disable' => $content['disable'],
     );
-    // TODO: Timestamps?
 
     if (!isset($content['id'])) {
-      // TODO: Add user_id / Author?
       $data['slug'] = '';
       return $DB->insert_record('hvp', $data);
     }
@@ -527,7 +527,8 @@ class H5PMoodle implements H5PFrameworkInterface {
     $libraryUsage->id = $contentId;
     $DB->insert_record_raw('hvp_contents_libraries', (array)$libraryUsage, false, false, true);
 
-    // TODO: Verify that this is correct
+    // TODO: This must be verified at a later time.
+    // Currently in Moodle copyLibraryUsage() will never be called.
   }
 
   /**
@@ -672,8 +673,6 @@ class H5PMoodle implements H5PFrameworkInterface {
 
     foreach ($fields as $name => $value) {
         $content->$name = $value;
-        // TODO: Verify that this works, we might have to convert $name from
-        // camelCase to snake_case.
     }
 
     $DB->update_record('hvp', $content);
@@ -702,8 +701,6 @@ class H5PMoodle implements H5PFrameworkInterface {
 
     // Remove user data for content
     $DB->delete_records('hvp_content_user_data', array('hvp_id' => "$contentId"));
-
-    // TODO: Remove Grades when implemented ?
   }
 
   /**
