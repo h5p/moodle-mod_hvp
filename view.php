@@ -50,8 +50,6 @@ $content['disable'] |= H5PCore::DISABLE_EMBED;
 // Filter content parameters
 $safe_parameters = $core->filterParameters($content);
 
-// TODO: Insert hook/event to alter safe_parameters?
-
 // Add JavaScript settings for this content
 $cid = 'cid-' . $content['id'];
 $settings['contents'][$cid] = array(
@@ -67,12 +65,10 @@ $settings['contents'][$cid] = array(
       )
     )
 );
-// TODO: Load preloaded content user data state?
 
 // Get assets for this content
 $preloaded_dependencies = $core->loadContentDependencies($content['id'], 'preloaded');
 $files = $core->getDependenciesFiles($preloaded_dependencies);
-// TODO:Insert hook/event for altering assets?
 
 // Detemine embed type
 $embedtype = H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);

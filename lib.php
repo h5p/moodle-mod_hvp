@@ -116,7 +116,7 @@ function hvp_delete_instance($id) {
 function hvp_get_core_settings() {
   global $USER, $CFG;
 
-  $basePath = '/'; // TODO: Unsure about this, can we get it from somewhere?
+  $basePath = '/';
   $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
 
   $settings = array(
@@ -135,7 +135,7 @@ function hvp_get_core_settings() {
         'disableFullscreen' => get_string('disablefullscreen', 'hvp'),
         'download' => get_string('download', 'hvp'),
         'copyrights' => get_string('copyright', 'hvp'),
-        'copyrightInformation' => get_string('copyright', 'hvp'), // TODO: Why do we need this multiple times?
+        'copyrightInformation' => get_string('copyright', 'hvp'),
         'close' => get_string('close', 'hvp'),
         'title' => get_string('title', 'hvp'),
         'author' => get_string('author', 'hvp'),
