@@ -184,7 +184,7 @@ function hvp_get_core_settings() {
 
   $settings = array(
     'baseUrl' => $basePath,
-    'url' => $CFG->wwwroot,
+    'url' => $CFG->wwwroot . '/mod/hvp/files', // TODO: Update when files are read from Moodle
     'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
     'ajaxPath' => $ajaxPath,
     'ajax' => array(
