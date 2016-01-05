@@ -74,7 +74,6 @@ $settings['contents'][$cid] = array(
 
 // Get assets for this content
 $preloaded_dependencies = $core->loadContentDependencies($hvp->id, 'preloaded');
-$preloaded_dependencies = $core->loadContentDependencies($cm->instance, 'preloaded');
 
 $files = $core->getDependenciesFiles($preloaded_dependencies);
 // TODO:Insert hook/event for altering assets?
