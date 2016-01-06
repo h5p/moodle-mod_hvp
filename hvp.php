@@ -769,7 +769,7 @@ class H5PMoodle implements H5PFrameworkInterface {
     $dependencies = $DB->get_records_sql('SELECT hl.machine_name, hl.major_version, hl.minor_version, hll.dependency_type
                                           FROM {hvp_libraries_libraries} hll
                                           JOIN {hvp_libraries} hl ON hll.required_library_id = hl.id
-                                          WHERE hll.id = ?', array("$library->id"));
+                                          WHERE hll.library_id = ?', array("$library->id"));
     foreach ($dependencies as $dependency) {
       $libraryData[$dependency->dependency_type . 'Dependencies'][] = array(
         'machineName' => $dependency->machine_name,
