@@ -210,7 +210,7 @@ class H5PMoodle implements H5PFrameworkInterface {
   public function isPatchedLibrary($library) {
     global $DB, $CFG;
 
-    if ($CFG->h5pdev === TRUE) {
+    if (isset($CFG->h5pdev) && $CFG->h5pdev === TRUE) {
       // Makes sure libraries are updated, patch version does not matter.
       return TRUE;
     }
@@ -820,6 +820,6 @@ class H5PMoodle implements H5PFrameworkInterface {
   public function isContentSlugAvailable($slug) {
     global $DB;
 
-    return !$DB->get_field_sql("SELECT slug FROM {hvp}", array('slug' => $slug));
+    return !$DB->get_field_sql("SELECT slug FROM {hvp} WHERE slug = ?", array($slug));
   }
 }
