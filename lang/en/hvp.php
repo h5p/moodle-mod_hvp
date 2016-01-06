@@ -1,8 +1,22 @@
 <?php
 
 $string['modulename'] = 'H5P';
-$string['modulename_help'] = 'Help me, help you!';
-$string['modulename_link'] = 'mod/hvp/view';
+$string['modulename_help'] = 'The H5P activity module enables you to create interactive content such as interactive videos, question sets, drag and drop questions, multichoice questions, presentations and much more.
+
+In addition to being an authoring tool for rich content, H5P enables you to import and export H5P files for effective reusage and sharing of content.
+
+User interactions and scores are tracked using xAPI and are available through the Moodle grade system.
+
+H5P is:
+
+* Open Source
+* Free to Use
+* HTML5
+* Responsive
+* Trackable
+
+More content types can be found at by following the link:';
+$string['modulename_link'] = 'https://h5p.org/content-types-and-applications';
 $string['modulenameplural'] = 'H5Ps';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
