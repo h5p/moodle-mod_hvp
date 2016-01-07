@@ -24,7 +24,10 @@
 require_once ($CFG->dirroot . '/mod/hvp/hvp.php');
 
 /**
- * TODO: Document
+ * Checks whether hvp supports a specified feature.
+ *
+ * @param string $feature Feature code (FEATURE_xx constant)
+ * @return mixed Feature result (true if supported, false if not, null if unknown feature)
  */
 function hvp_supports($feature) {
     switch($feature) {
@@ -44,11 +47,7 @@ function hvp_supports($feature) {
 }
 
 /**
- * Implements Moodle's MODULENAME_add_instance()
- *
- * When a new activity is added on a course, Moodle creates course module,
- * module instance, add the module to the correct section. Moodle calls
- * this function to create the module instance.
+ * Create a hvp instance, executed when user creates a hvp instance.
  *
  * @param object $moduleinfo the module data
  * @return int $cmid Course module instance id (id of 'hvp' table)
@@ -72,9 +71,12 @@ function hvp_add_instance($moduleinfo) {
     return $cmid;
 }
 
-/**
- * TODO: Document
- */
+  /**
+   * Update a hvp instance, executed when user has edited a hvp instance.
+   *
+   * @param object $hvp Hvp instance
+   * @return bool $result Success
+   */
 function hvp_update_instance($hvp) {
     global $DB;
 
@@ -87,9 +89,12 @@ function hvp_update_instance($hvp) {
     return $result;
 }
 
-/**
- * TODO: Document
- */
+  /**
+   * Delete a hvp instance, executed when user has deleted a hvp instance.
+   *
+   * @param int $id Hvp instance id
+   * @return bool $result Success
+   */
 function hvp_delete_instance($id) {
     global $DB;
 
@@ -108,90 +113,4 @@ function hvp_delete_instance($id) {
 
     debugging('Deleted h5p ' . $hvp->id . ': ' . $result, DEBUG_DEVELOPER);
     return $result;
-}
-
-/**
- * TODO: Document
- */
-function hvp_get_core_settings() {
-  global $USER, $CFG;
-
-  $basePath = '/';
-  $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
-
-  $settings = array(
-    'baseUrl' => $basePath,
-    'url' => $CFG->wwwroot . '/mod/hvp/files', // TODO: Update when files are read from Moodle
-    'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
-    'ajaxPath' => $ajaxPath,
-    'ajax' => array(
-      'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
-    ),
-    'saveFreq' => FALSE, // TODO: Add when user state settings are added
-    'siteUrl' => $CFG->wwwroot,
-    'l10n' => array(
-      'H5P' => array(
-        'fullscreen' => get_string('fullscreen', 'hvp'),
-        'disableFullscreen' => get_string('disablefullscreen', 'hvp'),
-        'download' => get_string('download', 'hvp'),
-        'copyrights' => get_string('copyright', 'hvp'),
-        'copyrightInformation' => get_string('copyright', 'hvp'),
-        'close' => get_string('close', 'hvp'),
-        'title' => get_string('title', 'hvp'),
-        'author' => get_string('author', 'hvp'),
-        'year' => get_string('year', 'hvp'),
-        'source' => get_string('source', 'hvp'),
-        'license' => get_string('license', 'hvp'),
-        'thumbnail' => get_string('thumbnail', 'hvp'),
-        'noCopyrights' =>  get_string('nocopyright', 'hvp'),
-        'downloadDescription' => get_string('downloadtitle', 'hvp'),
-        'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
-        'h5pDescription' => get_string('h5ptitle', 'hvp'),
-        'contentChanged' => get_string('contentchanged', 'hvp'),
-        'startingOver' => get_string('startingover', 'hvp'),
-        'user' => array(
-          'name' => $USER->firstname . ' ' . $USER->lastname,
-          'mail' => $USER->email
-        )
-      )
-    )
-  );
-
-  return $settings;
-}
-
-/**
- * TODO: Document
- */
-function hvp_get_core_assets() {
-  global $CFG, $PAGE;
-
-  // Get core settings
-  $settings = hvp_get_core_settings();
-  $settings['core'] = array(
-    'styles' => array(),
-    'scripts' => array()
-  );
-  $settings['loadedJs'] = array();
-  $settings['loadedCss'] = array();
-
-  // Make sure files are reloaded for each plugin update
-  $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
-
-  // Use relative URL to support both http and https.
-  $lib_url = $CFG->wwwroot . '/mod/hvp/library/';
-  $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
-
-  // Add core stylesheets
-  foreach (H5PCore::$styles as $style) {
-    $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
-    $PAGE->requires->css('/mod/hvp/library/' . $style);
-  }
-  // Add core JavaScript
-  foreach (H5PCore::$scripts as $script) {
-    $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
-    $PAGE->requires->js('/mod/hvp/library/' . $script, true);
-  }
-
-  return $settings;
 }

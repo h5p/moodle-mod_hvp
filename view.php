@@ -70,7 +70,7 @@ $settings['contents'][$cid] = array(
 $preloaded_dependencies = $core->loadContentDependencies($content['id'], 'preloaded');
 $files = $core->getDependenciesFiles($preloaded_dependencies);
 
-// Detemine embed type
+// Determine embed type
 $embedtype = H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
 if ($embedtype === 'div') {
   // Schedule JavaScripts for loading through Moodle

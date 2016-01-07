@@ -1,6 +1,12 @@
 <?php
 
-// Implementation of the H5P Framework Interface
+/**
+ * Hvp specific lib functions and H5P Framework Interface implementation.
+ *
+ * @package    mod
+ * @subpackage hvp
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 // TODO: Can we rename this file to something more suiting? Possible confusion
 
 if (!defined('MOODLE_INTERNAL')) {
@@ -10,6 +16,12 @@ if (!defined('MOODLE_INTERNAL')) {
 require_once ($CFG->dirroot . '/mod/hvp/library/h5p.classes.php');
 require_once ($CFG->dirroot . '/mod/hvp/library/h5p-development.class.php');
 
+/**
+ * Get type of hvp instance
+ *
+ * @param string $type Type of hvp instance to get
+ * @return \H5PContentValidator|\H5PCore|\H5PMoodle|\H5PStorage|\H5PValidator
+ */
 function hvp_get_instance($type) {
   global $CFG;
   static $interface, $core;
@@ -41,6 +53,99 @@ function hvp_get_instance($type) {
   }
 }
 
+/**
+ * Get array with settings for hvp core
+ *
+ * @return array Settings
+ */
+function hvp_get_core_settings() {
+  global $USER, $CFG;
+
+  $basePath = '/';
+  $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
+
+  $settings = array(
+    'baseUrl' => $basePath,
+    'url' => $CFG->wwwroot . '/mod/hvp/files', // TODO: Update when files are read from Moodle
+    'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
+    'ajaxPath' => $ajaxPath,
+    'ajax' => array(
+      'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
+    ),
+    'saveFreq' => FALSE, // TODO: Add when user state settings are added
+    'siteUrl' => $CFG->wwwroot,
+    'l10n' => array(
+      'H5P' => array(
+        'fullscreen' => get_string('fullscreen', 'hvp'),
+        'disableFullscreen' => get_string('disablefullscreen', 'hvp'),
+        'download' => get_string('download', 'hvp'),
+        'copyrights' => get_string('copyright', 'hvp'),
+        'copyrightInformation' => get_string('copyright', 'hvp'),
+        'close' => get_string('close', 'hvp'),
+        'title' => get_string('title', 'hvp'),
+        'author' => get_string('author', 'hvp'),
+        'year' => get_string('year', 'hvp'),
+        'source' => get_string('source', 'hvp'),
+        'license' => get_string('license', 'hvp'),
+        'thumbnail' => get_string('thumbnail', 'hvp'),
+        'noCopyrights' =>  get_string('nocopyright', 'hvp'),
+        'downloadDescription' => get_string('downloadtitle', 'hvp'),
+        'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
+        'h5pDescription' => get_string('h5ptitle', 'hvp'),
+        'contentChanged' => get_string('contentchanged', 'hvp'),
+        'startingOver' => get_string('startingover', 'hvp'),
+        'user' => array(
+          'name' => $USER->firstname . ' ' . $USER->lastname,
+          'mail' => $USER->email
+        )
+      )
+    )
+  );
+
+  return $settings;
+}
+
+/**
+ * Get assets (scripts and styles) for hvp core.
+ *
+ * @return array
+ */
+function hvp_get_core_assets() {
+  global $CFG, $PAGE;
+
+  // Get core settings
+  $settings = hvp_get_core_settings();
+  $settings['core'] = array(
+    'styles' => array(),
+    'scripts' => array()
+  );
+  $settings['loadedJs'] = array();
+  $settings['loadedCss'] = array();
+
+  // Make sure files are reloaded for each plugin update
+  $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
+
+  // Use relative URL to support both http and https.
+  $lib_url = $CFG->wwwroot . '/mod/hvp/library/';
+  $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
+
+  // Add core stylesheets
+  foreach (H5PCore::$styles as $style) {
+    $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
+    $PAGE->requires->css('/mod/hvp/library/' . $style);
+  }
+  // Add core JavaScript
+  foreach (H5PCore::$scripts as $script) {
+    $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
+    $PAGE->requires->js('/mod/hvp/library/' . $script, true);
+  }
+
+  return $settings;
+}
+
+/**
+ * Implementation of the H5P framework interface.
+ */
 class H5PMoodle implements H5PFrameworkInterface {
   /**
    * Implements getPlatformInfo
@@ -57,6 +162,9 @@ class H5PMoodle implements H5PFrameworkInterface {
 
   /**
    * Implements fetchExternalData
+   *
+   * @param $url file url starting with http(s)://
+   * @return bool|null|\stdClass|string Data object if successful fetch
    */
   public function fetchExternalData($url) {
     $data = download_file_content($url);
@@ -68,8 +176,8 @@ class H5PMoodle implements H5PFrameworkInterface {
    *
    * Set the tutorial URL for a library. All versions of the library is set
    *
-   * @param string $machineName
-   * @param string $tutorialUrl
+   * @param string $library_name
+   * @param string $url
    */
   public function setLibraryTutorialUrl($library_name, $url) {
     global $DB;
@@ -79,6 +187,8 @@ class H5PMoodle implements H5PFrameworkInterface {
 
   /**
    * Implements setErrorMessage
+   *
+   * @param string $message translated error message
    */
   public function setErrorMessage($message) {
     // TODO: Change core, do not send in translated error messages.
