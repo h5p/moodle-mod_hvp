@@ -17,16 +17,16 @@ if ($ADMIN->fulltree) {
     // Settings is stored on the global $CFG object
 
     // Content state
-    $settings->add(new admin_setting_configcheckbox('enable_save_content_state', get_string('enable_save_content_state', 'hvp'),
+    $settings->add(new admin_setting_configcheckbox('hvp/enable_save_content_state', get_string('enable_save_content_state', 'hvp'),
         get_string('content_state_description', 'hvp'), 1));
-    $settings->add(new admin_setting_configtext('content_state_frequency', get_string('content_state_frequency', 'hvp'),
+    $settings->add(new admin_setting_configtext('hvp/content_state_frequency', get_string('content_state_frequency', 'hvp'),
         get_string('content_state_frequency_description', 'hvp'), 30, PARAM_INT));
 
     // Display options for H5P frame
-    $settings->add(new admin_setting_heading('display_options', get_string('display_options', 'hvp'), ''));
-    $settings->add(new admin_setting_configcheckbox('enable_frame', get_string('enable_frame', 'hvp'), '', 1));
-    $settings->add(new admin_setting_configcheckbox('enable_download', get_string('enable_download', 'hvp'), '', 1));
-    $settings->add(new admin_setting_configcheckbox('enable_embed', get_string('enable_embed', 'hvp'), '', 1));
-    $settings->add(new admin_setting_configcheckbox('enable_copyright', get_string('enable_copyright', 'hvp'), '', 1));
-    $settings->add(new admin_setting_configcheckbox('enable_about', get_string('enable_about', 'hvp'), '', 1));
+    $settings->add(new admin_setting_heading('hvp/display_options', get_string('display_options', 'hvp'), ''));
+    $settings->add(new admin_setting_configcheckbox('hvp/frame', get_string('enable_frame', 'hvp'), '', 1));
+    $settings->add(new admin_setting_configcheckbox('hvp/export', get_string('enable_download', 'hvp'), '', 1));
+    //$settings->add(new admin_setting_configcheckbox('hvp/embed', get_string('enable_embed', 'hvp'), '', 1));
+    $settings->add(new admin_setting_configcheckbox('hvp/copyright', get_string('enable_copyright', 'hvp'), '', 1));
+    $settings->add(new admin_setting_configcheckbox('hvp/icon', get_string('enable_about', 'hvp'), '', 1));
 }

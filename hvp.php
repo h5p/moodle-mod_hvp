@@ -73,7 +73,7 @@ function hvp_get_core_settings() {
     'ajax' => array(
       'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
     ),
-    'saveFreq' => $CFG->enable_save_content_state ? $CFG->content_state_frequency : FALSE,
+    'saveFreq' => get_config('hvp', 'enable_save_content_state') ? get_config('hvp', 'content_state_frequency') : FALSE,
     'siteUrl' => $CFG->wwwroot,
     'l10n' => array(
       'H5P' => array(
@@ -571,12 +571,6 @@ class H5PMoodle implements H5PFrameworkInterface {
    */
   public function updateContent($content, $contentMainId = NULL) {
     global $DB;
-
-    if (!isset($content['disable'])) {
-        $content['disable'] = 0;
-        // TODO: Can be removed when this has been fixed:
-        // https://github.com/h5p/h5p-moodle-plugin/issues/16
-    }
 
     $data = array(
       'id' => $content['id'],
