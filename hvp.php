@@ -15,6 +15,7 @@ if (!defined('MOODLE_INTERNAL')) {
 
 require_once ($CFG->dirroot . '/mod/hvp/library/h5p.classes.php');
 require_once ($CFG->dirroot . '/mod/hvp/library/h5p-development.class.php');
+require_once(__DIR__ . '/classes/content_user_data.php');
 
 /**
  * Get type of hvp instance

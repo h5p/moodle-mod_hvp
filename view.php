@@ -61,8 +61,8 @@ $settings['contents'][$cid] = array(
     'disable' => $content['disable'],
     'contentUserData' => array(
       0 => array(
-        'state' => '{}'
-      )
+        'state' => \mod_hvp\Content_User_Data::load_user_data($content['id'])
+        )
     )
 );
 

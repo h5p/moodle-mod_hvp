@@ -11,12 +11,18 @@
 namespace mod_hvp;
 
 /**
- * Class content_user_data handles user data operations.
+ * Class Content_User_Data handles user data and corresponding db operations.
  *
  * @package mod_hvp
  */
 class Content_User_Data {
 
+    /**
+     * Retrieves ajax parameters for content and update or delete
+     * user data depending on params.
+     *
+     * @throws \coding_exception
+     */
     public static function handle_ajax() {
         // Query String Parameters
         $content_id = required_param('content_id', PARAM_INT);
@@ -28,12 +34,8 @@ class Content_User_Data {
         $pre_load = optional_param('preload', NULL, PARAM_INT);
         $invalidate = optional_param('invalidate', NULL, PARAM_INT);
 
-        if ($content_id === NULL ||
-            $data_id === NULL ||
-            $sub_content_id === NULL ||
-            $data === NULL ||
-            $invalidate === NULL ||
-            $pre_load === NULL) {
+        if ($content_id === NULL || $data_id === NULL || $sub_content_id === NULL ||
+            $data === NULL || $invalidate === NULL || $pre_load === NULL) {
             return; // Missing parameters
         }
 
@@ -54,6 +56,16 @@ class Content_User_Data {
         exit;
     }
 
+    /**
+     * Save user data for specific content in database.
+     *
+     * @param $content_id
+     * @param $sub_content_id
+     * @param $data_id
+     * @param $pre_load
+     * @param $invalidate
+     * @param $data
+     */
     public static function save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data) {
         global $DB, $USER;
 
@@ -95,6 +107,13 @@ class Content_User_Data {
         }
     }
 
+    /**
+     * Delete user data with specific content from database
+     *
+     * @param $content_id
+     * @param $sub_content_id
+     * @param $data_id
+     */
     public static function delete_user_data($content_id, $sub_content_id, $data_id) {
         global $DB, $USER;
 
@@ -104,5 +123,22 @@ class Content_User_Data {
             'sub_content_id' => $sub_content_id,
             'data_id' => $data_id
         ));
+    }
+
+    /**
+     * Load user data for specific content
+     *
+     * @param $content_id
+     * @return mixed User data for specific content
+     */
+    public static function load_user_data($content_id) {
+        global $DB;
+
+        $result = $DB->get_record('hvp_content_user_data', array(
+            'hvp_id' => $content_id
+        ));
+
+
+        return $result->data;
     }
 }
