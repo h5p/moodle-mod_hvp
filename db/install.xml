@@ -32,6 +32,7 @@
         <FIELD NAME="hvp_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of hvp content in the 'hvp' table"/>
         <FIELD NAME="sub_content_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Subcontent id of hvp content, 0 if this is not subcontent"/>
         <FIELD NAME="data_id" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="The data type identifier"/>
+        <FIELD NAME="data" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="The actual user data that was stored."/>
         <FIELD NAME="preloaded" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="delete_on_content_change" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>

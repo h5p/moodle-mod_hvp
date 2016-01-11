@@ -9,10 +9,7 @@ $action = required_param('action', PARAM_ALPHA);
 
 switch($action) {
     case 'contentsuserdata':
-        $contentId = required_param('content_id', PARAM_INT);
-        $dataType = required_param('data_type', PARAM_ALPHA);
-        $subContentId = required_param('sub_content_id', PARAM_INT);
-        \mod_hvp\Content_User_Data::save_user_data($contentId, $dataType, $subContentId);
+        \mod_hvp\Content_User_Data::handle_ajax();
         break;
     default:
         throw new coding_exception('Unhandled AJAX');
