@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/hvp/db" VERSION="20131113" COMMENT="XMLDB file for Moodle mod/hvp"
+<XMLDB PATH="mod/hvp/db" VERSION="20160111" COMMENT="XMLDB file for Moodle mod/hvp"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -11,7 +11,7 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="json_content" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The content in json format"/>
         <FIELD NAME="embed_type" TYPE="char" LENGTH="127" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="disable" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="disable" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="main_library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The library we first instanciate for this node"/>
         <FIELD NAME="content_type" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="Content type as defined in h5p.json"/>
         <FIELD NAME="author" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="Author as defined in h5p.json"/>
@@ -30,9 +30,10 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id for the user answering this H5P"/>
         <FIELD NAME="hvp_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of hvp content in the 'hvp' table"/>
-        <FIELD NAME="data_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The data type identifier"/>
-        <FIELD NAME="preloaded" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT=""/>
-        <FIELD NAME="delete_on_content_change" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT=""/>
+        <FIELD NAME="sub_content_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Subcontent id of hvp content, 0 if this is not subcontent"/>
+        <FIELD NAME="data_id" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="The data type identifier"/>
+        <FIELD NAME="preloaded" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="delete_on_content_change" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -47,7 +48,7 @@
         <FIELD NAME="minor_version" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="patch_version" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="runnable" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Can this library be started by the module? i.e. not a dependency."/>
-        <FIELD NAME="fullscreen" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" SEQUENCE="false" COMMENT="Display fullscreen button"/>
+        <FIELD NAME="fullscreen" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Display fullscreen button"/>
         <FIELD NAME="embed_types" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="preloaded_js" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Comma separated list of scripts to load."/>
         <FIELD NAME="preloaded_css" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Comma separated list of stylesheets to load."/>
@@ -90,7 +91,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="hvp_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Identifier for a content found from the 'hvp' table"/>
         <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The identifier of a H5P library this content uses"/>
-        <FIELD NAME="dependency_type" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="dynamic, preloaded or editor" />
+        <FIELD NAME="dependency_type" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="dynamic, preloaded or editor"/>
         <FIELD NAME="drop_css" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 if the preloaded css from the dependency is to be excluded"/>
         <FIELD NAME="weight" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Determines the order in which the preloaded libraries will be loaded"/>
       </FIELDS>

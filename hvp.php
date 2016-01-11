@@ -61,7 +61,7 @@ function hvp_get_instance($type) {
 function hvp_get_core_settings() {
   global $USER, $CFG;
 
-  $basePath = '/';
+  $basePath = $CFG->sessioncookiepath;
   $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
 
   $settings = array(
@@ -72,7 +72,7 @@ function hvp_get_core_settings() {
     'ajax' => array(
       'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
     ),
-    'saveFreq' => FALSE, // TODO: Add when user state settings are added
+    'saveFreq' => $CFG->enable_save_content_state ? $CFG->content_state_frequency : FALSE,
     'siteUrl' => $CFG->wwwroot,
     'l10n' => array(
       'H5P' => array(
@@ -93,12 +93,12 @@ function hvp_get_core_settings() {
         'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
         'h5pDescription' => get_string('h5ptitle', 'hvp'),
         'contentChanged' => get_string('contentchanged', 'hvp'),
-        'startingOver' => get_string('startingover', 'hvp'),
-        'user' => array(
-          'name' => $USER->firstname . ' ' . $USER->lastname,
-          'mail' => $USER->email
-        )
+        'startingOver' => get_string('startingover', 'hvp')
       )
+    ),
+    'user' => array(
+      'name' => $USER->firstname . ' ' . $USER->lastname,
+      'mail' => $USER->email
     )
   );
 
