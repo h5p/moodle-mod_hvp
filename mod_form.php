@@ -8,7 +8,7 @@ require_once ($CFG->dirroot . '/course/moodleform_mod.php');
 class mod_hvp_mod_form extends moodleform_mod {
 
     function definition() {
-        global $CFG, $DB, $OUTPUT;
+        global $CFG, $DB, $OUTPUT, $COURSE;
 
         $mform =& $this->_form;
 
@@ -19,8 +19,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         // H5P
-        // TODO: Use $course->maxbytes ?
-        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('maxbytes' => $CFG->maxbytes, 'accepted_types' => '*'));
+        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
         $mform->addRule('h5pfile', null, 'required', null, 'client');
 
         $this->standard_coursemodule_elements();
@@ -55,7 +54,7 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         $interface = hvp_get_instance('interface');
 
-        $path = $CFG->dirroot . '/mod/hvp/files/tmp/' . uniqid('hvp-');
+        $path = $CFG->tempdir . uniqid('/hvp-');
         $interface->getUploadedH5pFolderPath($path);
         $path .= '.h5p';
         $interface->getUploadedH5pPath($path);

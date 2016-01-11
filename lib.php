@@ -82,7 +82,7 @@ function hvp_update_instance($hvp) {
     $result = $DB->update_record('hvp', $hvp);
 
     $h5pStorage = hvp_get_instance('storage');
-    $library_updated = $h5pStorage->updatePackage($hvp->id);
+    $h5pStorage->savePackage(array('id' => $hvp->id));
 
     return $result;
 }
@@ -98,7 +98,6 @@ function hvp_delete_instance($id) {
     }
 
     $result = true;
-
     $h5pStorage = hvp_get_instance('storage');
     $h5pStorage->deletePackage($hvp->id);
 
@@ -114,14 +113,15 @@ function hvp_delete_instance($id) {
  * TODO: Document
  */
 function hvp_get_core_settings() {
-  global $USER, $CFG;
+  global $USER, $CFG, $COURSE;
 
   $basePath = '/';
   $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
 
+  $context = \context_course::instance($COURSE->id);
   $settings = array(
     'baseUrl' => $basePath,
-    'url' => $CFG->wwwroot . '/mod/hvp/files', // TODO: Update when files are read from Moodle
+    'url' => "/pluginfile.php/{$context->id}/mod_hvp",
     'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
     'ajaxPath' => $ajaxPath,
     'ajax' => array(
@@ -194,4 +194,55 @@ function hvp_get_core_assets() {
   }
 
   return $settings;
+}
+
+/**
+ * TODO: Doc hook
+ */
+function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = array()) {
+  switch ($filearea) {
+    default:
+      return false; // Invalid file area
+
+    case 'libraries':
+      if ($context->contextlevel != CONTEXT_SYSTEM) {
+        return false; // Invalid context
+      }
+
+      // TODO: Check permissions?
+
+      $itemid = 0;
+      break;
+
+    case 'content':
+      if ($context->contextlevel != CONTEXT_COURSE) {
+        return false; // Invalid context
+      }
+
+      // TODO: Check permissions?
+
+      $itemid = array_shift($args);
+      break;
+
+    case 'exports':
+      if ($context->contextlevel != CONTEXT_COURSE) {
+        return false; // Invalid context
+      }
+
+      // TODO: Check permissions?
+
+      $itemid = 0;
+      break;
+  }
+
+  $filename = array_pop($args);
+  $filepath = (!$args ? '/' : '/' .implode('/', $args) . '/');
+
+  $fs = get_file_storage();
+  $file = $fs->get_file($context->id, 'mod_hvp', $filearea, $itemid, $filepath, $filename);
+  if (!$file) {
+    return false; // No such file
+  }
+
+  send_stored_file($file, 86400, 0, $forcedownload, $options);
 }
