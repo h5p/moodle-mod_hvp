@@ -70,8 +70,8 @@ $settings['contents'][$cid] = array(
     'disable' => $content['disable'],
     'contentUserData' => array(
       0 => array(
-        'state' => '{}'
-      )
+        'state' => \mod_hvp\Content_User_Data::load_user_data($content['id'])
+        )
     )
 );
 
@@ -80,7 +80,7 @@ $preloaded_dependencies = $core->loadContentDependencies($content['id'], 'preloa
 $files = $core->getDependenciesFiles($preloaded_dependencies);
 // TODO: Should the above function aggregate the files for production environments ?
 
-// Detemine embed type
+// Determine embed type
 $embedtype = H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
 if ($embedtype === 'div') {
   $context = \context_system::instance();

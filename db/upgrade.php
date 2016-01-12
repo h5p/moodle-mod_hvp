@@ -20,6 +20,20 @@
 // Please do not forget to use upgrade_set_timeout()
 // before any action that may take longer time to finish.
 
+/**
+ * Upgrade definitions for the hvp module.
+ *
+ * @package    mod_hvp
+ * @copyright  2013 Amendor
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/**
+ * Hvp module upgrade function.
+ *
+ * @param string $oldversion The version we are upgrading from
+ * @return bool Success
+ */
 function xmldb_hvp_upgrade($oldversion) {
     global $CFG, $DB;
 
