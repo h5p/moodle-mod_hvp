@@ -200,6 +200,99 @@ class file_storage implements \H5P\FileStorage {
     }
   }
 
+  /**
+   * Will concatenate all JavaScrips and Stylesheets into two files in order
+   * to improve page performance.
+   *
+   * @param array $files
+   *  A set of all the assets required for content to display
+   * @param string $key
+   *  Hashed key for cached asset
+   */
+  public function cacheAssets(&$files, $key) {
+    $context = \context_system::instance();
+    $fs = get_file_storage();
+
+    foreach ($files as $type => $assets) {
+      $content = '';
+
+      foreach ($assets as $asset) {
+        // Find location of asset
+        $location = array();
+        preg_match('/^\/(libraries|development)(.+\/)([^\/]+)$/', $asset->path, $location);
+
+        // Locate file
+        $file = $fs->get_file($context->id, 'mod_hvp', $location[1], 0, $location[2], $location[3]);
+
+        // Get file content and concatenate
+        if ($type === 'scripts') {
+          $content .= $file->get_content() . ";\n";
+        }
+        else {
+          // Rewrite relative URLs used inside stylesheets
+          $content .= preg_replace_callback(
+              '/url\([\'"]?([^"\')]+)[\'"]?\)/i',
+              function ($matches) use ($location) {
+                return substr($matches[1], 0, 3) !== '../' ? $matches[0] : 'url("../' . $location[1] . $location[2] . $matches[1] . '")';
+              },
+              $file->get_content()
+          ) . "\n";
+        }
+      }
+
+      // Create new file for cached assets
+      $fileinfo = array(
+        'contextid' => $context->id,
+        'component' => 'mod_hvp',
+        'filearea' => 'cachedassets',
+        'itemid' => 0,
+        'filepath' => '/',
+        'filename' => $key.'.'.($type === 'scripts' ? 'js' : 'css'));
+
+      // Store concatenated content
+      $fs->create_file_from_string($fileinfo, $content);
+    }
+
+    // Use the newly created cache
+    $files = self::formatCachedAssets($key);
+  }
+
+  /**
+   * Will check if there are cache assets available for content.
+   *
+   * @param string $key
+   *  Hashed key for cached asset
+   * @return array
+   */
+  public function getCachedAssets($key) {
+    $context = \context_system::instance();
+    $fs = get_file_storage();
+
+    $js = $fs->get_file($context->id, 'mod_hvp', 'cachedassets', 0, '/', "{$key}.js");
+    $css = $fs->get_file($context->id, 'mod_hvp', 'cachedassets', 0, '/', "{$key}.css");
+
+    return (!$js || !$css ? NULL : self::formatCachedAssets($key));
+  }
+
+  /**
+   * Format the cached assets data the way it's supposed to be.
+   *
+   * @param string $key
+   *  Hashed key for cached asset
+   * @return array
+   */
+  private static function formatCachedAssets($key) {
+    return array(
+      'scripts' => array((object) array(
+        'path' => "/cachedassets/{$key}.js",
+        'version' => ''
+      )),
+      'styles' => array((object) array(
+        'path' => "/cachedassets/{$key}.css",
+        'version' => ''
+      ))
+    );
+  }
 
   /**
    * Copies files from tmp folder to Moodle storage.

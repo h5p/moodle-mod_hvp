@@ -124,6 +124,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
       return false; // Invalid file area
 
     case 'libraries':
+    case 'cachedassets':
       if ($context->contextlevel != CONTEXT_SYSTEM) {
         return false; // Invalid context
       }
