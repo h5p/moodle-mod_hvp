@@ -13,11 +13,10 @@ if (!defined('MOODLE_INTERNAL')) {
   die('Direct access to this script is forbidden.');
 }
 
-require_once ($CFG->dirroot . '/mod/hvp/library/h5p-file-storage.interface.php');
-require_once ($CFG->dirroot . '/mod/hvp/classes/file_storage.php');
-//require_once ($CFG->dirroot . '/mod/hvp/library/h5p-default-storage.class.php');
-require_once ($CFG->dirroot . '/mod/hvp/library/h5p.classes.php');
-require_once ($CFG->dirroot . '/mod/hvp/library/h5p-development.class.php');
+require_once($CFG->dirroot . '/mod/hvp/library/h5p-file-storage.interface.php');
+require_once($CFG->dirroot . '/mod/hvp/classes/file_storage.php');
+require_once($CFG->dirroot . '/mod/hvp/library/h5p.classes.php');
+require_once($CFG->dirroot . '/mod/hvp/library/h5p-development.class.php');
 require_once(__DIR__ . '/classes/content_user_data.php');
 
 /**
@@ -33,8 +32,7 @@ function hvp_get_instance($type) {
   if (!isset($interface)) {
     $interface = new H5PMoodle();
 
-    $path = $CFG->dirroot . '/mod/hvp/files'; // TODO: Test first & then remove
-    $url = $CFG->wwwroot . '/mod/hvp/files'; // TODO: ?
+    $fs = new \mod_hvp\file_storage();
 
     $context = \context_system::instance();
     $url = "/pluginfile.php/{$context->id}/mod_hvp";
@@ -43,7 +41,6 @@ function hvp_get_instance($type) {
 
     $export = (isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === FALSE ? FALSE : TRUE);
 
-    $fs = new \mod_hvp\file_storage();
     $core = new H5PCore($interface, $fs, $url, $language, $export);
   }
 
