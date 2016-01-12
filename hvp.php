@@ -34,8 +34,6 @@ function hvp_get_instance($type) {
     $core = new H5PCore($interface, $fs, $url, $language, $export);
   }
 
-//  $core->fs->deleteContent(32);
-
   switch ($type) {
     case 'validator':
       return new H5PValidator($interface, $core);

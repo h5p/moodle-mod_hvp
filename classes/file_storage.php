@@ -164,7 +164,7 @@ class file_storage implements \H5P\FileStorage {
     global $COURSE;
 
     // Remove old export
-    $this->removeExport($filename);
+    $this->deleteExport($filename);
 
     // Create record
     $context = \context_course::instance($COURSE->id);
@@ -187,7 +187,7 @@ class file_storage implements \H5P\FileStorage {
    *
    * @param string $filename
    */
-  public function removeExport($filename) {
+  public function deleteExport($filename) {
     global $COURSE;
     $context = \context_course::instance($COURSE->id);
 
@@ -275,20 +275,23 @@ class file_storage implements \H5P\FileStorage {
    * Delete file tree
    */
   private static function deleteFileTree($contextid, $filearea, $filepath, $itemid = 0) {
-    // Look up files
     $fs = get_file_storage();
+    if ($filepath === '/') {
+      // Remove complete file area
+      $fs->delete_area_files($contextid, 'mod_hvp', $filearea, $itemid);
+      return;
+    }
+
+    // Look up files and remove
     $files = $fs->get_directory_files($contextid, 'mod_hvp', $filearea, $itemid, $filepath, true);
     foreach ($files as $file) {
-      if ($file->get_filepath() === $filepath && $file->get_filename() === '.') {
-        $root = $file;
-      }
-      else {
-        var_dump($file->get_filename());
-        $file->delete();
-      }
+      $file->delete();
     }
-    if (isset($root)) {
-      $root->delete();
+
+    // Remove root dir
+    $file = $fs->get_file($contextid, 'mod_hvp', $filearea, $itemid, $filepath, '.');
+    if ($file) {
+      $file->delete();
     }
   }
 }

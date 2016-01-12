@@ -99,7 +99,7 @@ function hvp_delete_instance($id) {
 
     $result = true;
     $h5pStorage = hvp_get_instance('storage');
-    $h5pStorage->deletePackage($hvp->id);
+    $h5pStorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug));
 
     if (! $DB->delete_records('hvp', array('id' => "$hvp->id"))) {
         $result = false;
