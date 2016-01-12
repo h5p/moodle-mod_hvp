@@ -129,7 +129,7 @@ class Content_User_Data {
      * Load user data for specific content
      *
      * @param $content_id
-     * @return mixed User data for specific content
+     * @return mixed User data for specific content if found, else NULL
      */
     public static function load_user_data($content_id) {
         global $DB;
@@ -138,7 +138,6 @@ class Content_User_Data {
             'hvp_id' => $content_id
         ));
 
-
-        return $result->data;
+        return $result ? $result->data : NULL;
     }
 }

@@ -18,7 +18,7 @@ if ($ADMIN->fulltree) {
 
     // Content state
     $settings->add(new admin_setting_configcheckbox('hvp/enable_save_content_state', get_string('enable_save_content_state', 'hvp'),
-        get_string('content_state_description', 'hvp'), 1));
+        get_string('content_state_description', 'hvp'), 0));
     $settings->add(new admin_setting_configtext('hvp/content_state_frequency', get_string('content_state_frequency', 'hvp'),
         get_string('content_state_frequency_description', 'hvp'), 30, PARAM_INT));
 
