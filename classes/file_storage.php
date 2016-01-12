@@ -250,7 +250,9 @@ class file_storage implements \H5P\FileStorage {
    */
   private static function exportFileTree($target, $contextid, $filearea, $filepath, $itemid = 0) {
     // Make sure target folder exists
-    mkdir($target, 0777, true);
+    if (!file_exists($target)) {
+      mkdir($target, 0777, true);
+    }
 
     // Read source files
     $fs = get_file_storage();
@@ -262,7 +264,10 @@ class file_storage implements \H5P\FileStorage {
 
       if ($file->is_directory()) {
         // Create directory
-        mkdir(rtrim($path, '/'), 0777, true);
+        $path = rtrim($path, '/');
+        if (!file_exists($path)) {
+          mkdir($path, 0777, true);
+        }
       }
       else {
         // Copy file
