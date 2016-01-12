@@ -78,7 +78,6 @@ $settings['contents'][$cid] = array(
 // Get assets for this content
 $preloaded_dependencies = $core->loadContentDependencies($content['id'], 'preloaded');
 $files = $core->getDependenciesFiles($preloaded_dependencies);
-// TODO: Should the above function aggregate the files for production environments ?
 
 // Determine embed type
 $embedtype = H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
@@ -88,16 +87,16 @@ if ($embedtype === 'div') {
 
   // Schedule JavaScripts for loading through Moodle
   foreach ($files['scripts'] as $script) {
-    $url = "{$hvp_path}{$script->path}{$script->version}";
+    $url = "{$CFG->httpswwwroot}{$hvp_path}{$script->path}{$script->version}";
     $settings['loadedJs'][] = $url;
-    $PAGE->requires->js($url, true); // TODO: Will not work if debugging is enabled
+    $PAGE->requires->js(new moodle_url($url), true);
   }
 
   // Schedule stylesheets for loading through Moodle
   foreach ($files['styles'] as $style) {
-    $url = "{$hvp_path}{$style->path}{$style->version}";
+    $url = "{$CFG->httpswwwroot}{$hvp_path}{$style->path}{$style->version}";
     $settings['loadedCss'][] = $url;
-    $PAGE->requires->css($url);
+    $PAGE->requires->css(new moodle_url($url));
   }
 }
 else {
