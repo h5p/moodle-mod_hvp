@@ -134,18 +134,18 @@ function hvp_get_core_assets() {
   $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
 
   // Use relative URL to support both http and https.
-  $lib_url = $CFG->wwwroot . '/mod/hvp/library/';
+  $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';
   $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
 
   // Add core stylesheets
   foreach (H5PCore::$styles as $style) {
     $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
-    $PAGE->requires->css('/mod/hvp/library/' . $style);
+    $PAGE->requires->css(new moodle_url($lib_url . $style . $cache_buster));
   }
   // Add core JavaScript
   foreach (H5PCore::$scripts as $script) {
     $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
-    $PAGE->requires->js('/mod/hvp/library/' . $script, true);
+    $PAGE->requires->js(new moodle_url($lib_url . $script . $cache_buster), true);
   }
 
   return $settings;
