@@ -68,7 +68,7 @@ function hvp_supports($feature) {
  * will create a new instance and return the id number
  * of the new instance.
  *
- * @param stdClass $newmodule Submitted data from the form in mod_form.php
+ * @param stdClass $moduleinfo Submitted data from the form in mod_form.php
  * @return int The id of the newly inserted newmodule record
  */
 function hvp_add_instance($moduleinfo) {
@@ -101,25 +101,25 @@ function hvp_add_instance($moduleinfo) {
  * (defined by the form in mod_form.php) this function
  * will update an existing instance with new data.
  *
- * @param stdClass $newmodule An object from the form in mod_form.php
+ * @param stdClass $hvp An object from the form in mod_form.php
  */
 function hvp_update_instance($hvp) {
-    $disable_settings = array(
-        H5PCore::$disable[H5PCore::DISABLE_FRAME] => isset($hvp->frame) ? $hvp->frame: 0,
-        H5PCore::$disable[H5PCore::DISABLE_DOWNLOAD] => isset($hvp->download) ? $hvp->download: 0,
-        H5PCore::$disable[H5PCore::DISABLE_COPYRIGHT] => isset($hvp->copyright) ? $hvp->copyright: 0
-    );
+  $disable_settings = array(
+    H5PCore::$disable[H5PCore::DISABLE_FRAME] => isset($hvp->frame) ? $hvp->frame: 0,
+    H5PCore::$disable[H5PCore::DISABLE_DOWNLOAD] => isset($hvp->download) ? $hvp->download: 0,
+    H5PCore::$disable[H5PCore::DISABLE_COPYRIGHT] => isset($hvp->copyright) ? $hvp->copyright: 0
+  );
 
-    $core = hvp_get_instance('core');
-    $default_disable_value = 0;
-    $disable_value = $core->getDisable($disable_settings, $default_disable_value);
+  $core = hvp_get_instance('core');
+  $default_disable_value = 0;
+  $disable_value = $core->getDisable($disable_settings, $default_disable_value);
 
-    // Updated $hvp values used in $DB
-    $hvp->disable = $disable_value;
-    $hvp->id = $hvp->instance;
+  // Updated $hvp values used in $DB
+  $hvp->disable = $disable_value;
+  $hvp->id = $hvp->instance;
 
-    $h5pStorage = hvp_get_instance('storage');
-    $h5pStorage->savePackage((array)$hvp);
+  $h5pStorage = hvp_get_instance('storage');
+  $h5pStorage->savePackage((array)$hvp);
 }
 
 /**
