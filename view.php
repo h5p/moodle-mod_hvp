@@ -88,16 +88,16 @@ if ($embedtype === 'div') {
 
   // Schedule JavaScripts for loading through Moodle
   foreach ($files['scripts'] as $script) {
-    $url = "{$hvp_path}{$script->path}{$script->version}";
+    $url = $hvp_path . $script->path . $script->version;
     $settings['loadedJs'][] = $url;
-    $PAGE->requires->js(new moodle_url($url), true);
+    $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . $url), true);
   }
 
   // Schedule stylesheets for loading through Moodle
   foreach ($files['styles'] as $style) {
-    $url = "{$hvp_path}{$style->path}{$style->version}";
+    $url = $hvp_path . $style->path . $style->version;
     $settings['loadedCss'][] = $url;
-    $PAGE->requires->css(new moodle_url($url));
+    $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . $url));
   }
 }
 else {

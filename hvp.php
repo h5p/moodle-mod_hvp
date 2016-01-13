@@ -39,9 +39,10 @@ function hvp_get_instance($type) {
 
     $language = current_language();
 
-    $export = (isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === FALSE ? FALSE : TRUE);
+    $export = !(isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === '0');
 
     $core = new H5PCore($interface, $fs, $url, $language, $export);
+    $core->aggregateAssets = !(isset($CFG->mod_hvp_aggregate_assets) && $CFG->mod_hvp_aggregate_assets === '0');
   }
 
   switch ($type) {
@@ -69,10 +70,12 @@ function hvp_get_core_settings() {
   $basePath = $CFG->sessioncookiepath;
   $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
 
-  $context = \context_course::instance($COURSE->id);
+  $system_context = \context_system::instance();
+  $course_context = \context_course::instance($COURSE->id);
   $settings = array(
     'baseUrl' => $basePath,
-    'url' => $basePath . "pluginfile.php/{$context->id}/mod_hvp",
+    'url' => "{$basePath}pluginfile.php/{$course_context->id}/mod_hvp",
+    'libraryUrl' => "{$basePath}pluginfile.php/{$system_context->id}/mod_hvp/libraries",
     'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
     'ajaxPath' => $ajaxPath,
     'ajax' => array(
@@ -132,18 +135,18 @@ function hvp_get_core_assets() {
   $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
 
   // Use relative URL to support both http and https.
-  $lib_url = $CFG->wwwroot . '/mod/hvp/library/';
+  $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';
   $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
 
   // Add core stylesheets
   foreach (H5PCore::$styles as $style) {
     $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
-    $PAGE->requires->css('/mod/hvp/library/' . $style);
+    $PAGE->requires->css(new moodle_url($lib_url . $style . $cache_buster));
   }
   // Add core JavaScript
   foreach (H5PCore::$scripts as $script) {
     $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
-    $PAGE->requires->js('/mod/hvp/library/' . $script, true);
+    $PAGE->requires->js(new moodle_url($lib_url . $script . $cache_buster), true);
   }
 
   return $settings;
@@ -326,7 +329,7 @@ class H5PMoodle implements H5PFrameworkInterface {
   public function isPatchedLibrary($library) {
     global $DB, $CFG;
 
-    if (isset($CFG->h5pdev) && $CFG->h5pdev === TRUE) {
+    if (isset($CFG->mod_hvp_dev) && $CFG->mod_hvp_dev) {
       // Makes sure libraries are updated, patch version does not matter.
       return TRUE;
     }
@@ -435,6 +438,9 @@ class H5PMoodle implements H5PFrameworkInterface {
 
     $library = (object) array(
         'title' => $libraryData['title'],
+        'machine_name' = $libraryData['machineName'];
+        'major_version' = $libraryData['majorVersion'];
+        'minor_version' = $libraryData['minorVersion'];
         'patch_version' => $libraryData['patchVersion'],
         'runnable' => $libraryData['runnable'],
         'fullscreen' => $libraryData['fullscreen'],
@@ -446,31 +452,27 @@ class H5PMoodle implements H5PFrameworkInterface {
     );
 
     if ($new) {
-      // Create new library
-      $library['machine_name'] = $libraryData['machineName'];
-      $library['major_version'] = $libraryData['majorVersion'];
-      $library['minor_version'] = $libraryData['minorVersion'];
-
-      // Save new library and keep track of id
+      // Create new library and keep track of id
       $library->id = $DB->insert_record('hvp_libraries', $library);
       $libraryData['libraryId'] = $library->id;
     }
     else {
       // Update library data
+      $library['id'] = $libraryData['libraryId'];
 
       // Save library data
       $DB->update_record('hvp_libraries', (object) $library);
 
       // Remove old dependencies
-      $this->deleteLibraryDependencies($library['libraryId']);
+      $this->deleteLibraryDependencies($libraryData['libraryId']);
     }
 
     // Update library translations
-    $DB->delete_records('hvp_libraries_languages', array('library_id' => $library->id));
+    $DB->delete_records('hvp_libraries_languages', array('library_id' => $libraryData['libraryId']));
     if (isset($libraryData['language'])) {
       foreach ($libraryData['language'] as $languageCode => $languageJson) {
         $DB->insert_record('hvp_libraries_languages', array(
-          'library_id' => $library->id,
+          'library_id' => $libraryData['libraryId'],
           'language_code' => $languageCode,
           'language_json' => $languageJson,
         ));
@@ -572,7 +574,7 @@ class H5PMoodle implements H5PFrameworkInterface {
     global $DB;
 
     if (!isset($content['disable'])) {
-      $content['disable'] = 0;
+      $content['disable'] = H5PCore::DISABLE_NONE;
     }
 
     $data = array(
@@ -690,6 +692,7 @@ class H5PMoodle implements H5PFrameworkInterface {
         JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
         WHERE hc.id = ?", array($id)
     );
+    // TODO: We cannot use the AS keyword ! !
 
     // Return NULL if not found
     if ($data === false) {
@@ -931,5 +934,41 @@ class H5PMoodle implements H5PFrameworkInterface {
     global $DB;
 
     return !$DB->get_field_sql("SELECT slug FROM {hvp} WHERE slug = ?", array($slug));
+  }
+
+  /**
+   * Implements saveCachedAssets
+   */
+  public function saveCachedAssets($key, $libraries) {
+    global $DB;
+
+    foreach ($libraries as $library) {
+      $cachedAsset = (object) array(
+        'library_id' => $library['id'],
+        'hash' => $key
+      );
+      $DB->insert_record('hvp_libraries_cachedassets', $cachedAsset);
+    }
+  }
+
+  /**
+   * Implements deleteCachedAssets
+   */
+  public function deleteCachedAssets($library_id) {
+    global $DB;
+
+    // Get all the keys so we can remove the files
+    $results = $DB->get_records_sql(
+      'SELECT hash FROM {hvp_libraries_cachedassets} WHERE library_id = ?',
+      array("$library_id"));
+
+    // Remove all invalid keys
+    $hashes = array();
+    foreach ($results as $key) {
+      $hashes[] = $key->hash;
+      $DB->delete_records('hvp_libraries_cachedassets', array('hash' => $key->hash));
+    }
+
+    return $hashes;
   }
 }
