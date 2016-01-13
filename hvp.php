@@ -969,13 +969,13 @@ class H5PMoodle implements H5PFrameworkInterface {
     $results = $DB->get_records_sql(
       'SELECT hash FROM {hvp_libraries_cachedassets} WHERE library_id = ?',
       array("$library_id"));
+
+    // Remove all invalid keys
     $hashes = array();
     foreach ($results as $key) {
       $hashes[] = $key->hash;
+      $DB->delete_records('hvp_libraries_cachedassets', array('hash' => $key->hash));
     }
-
-    // Remove all invalid keys
-    $DB->delete_records('hvp_libraries_cachedassets', array('library_id' => $library_id));
 
     return $hashes;
   }
