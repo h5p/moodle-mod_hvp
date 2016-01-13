@@ -438,9 +438,9 @@ class H5PMoodle implements H5PFrameworkInterface {
 
     $library = (object) array(
         'title' => $libraryData['title'],
-        'machine_name' = $libraryData['machineName'];
-        'major_version' = $libraryData['majorVersion'];
-        'minor_version' = $libraryData['minorVersion'];
+        'machine_name' => $libraryData['machineName'],
+        'major_version' => $libraryData['majorVersion'],
+        'minor_version' => $libraryData['minorVersion'],
         'patch_version' => $libraryData['patchVersion'],
         'runnable' => $libraryData['runnable'],
         'fullscreen' => $libraryData['fullscreen'],
