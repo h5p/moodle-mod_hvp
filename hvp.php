@@ -69,10 +69,12 @@ function hvp_get_core_settings() {
   $basePath = $CFG->sessioncookiepath;
   $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
 
-  $context = \context_course::instance($COURSE->id);
+  $system_context = \context_system::instance();
+  $course_context = \context_course::instance($COURSE->id);
   $settings = array(
     'baseUrl' => $basePath,
-    'url' => "/pluginfile.php/{$context->id}/mod_hvp",
+    'url' => "{$basePath}pluginfile.php/{$course_context->id}/mod_hvp",
+    'libraryUrl' => "{$basePath}pluginfile.php/{$system_context->id}/mod_hvp/libraries",
     'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
     'ajaxPath' => $ajaxPath,
     'ajax' => array(
