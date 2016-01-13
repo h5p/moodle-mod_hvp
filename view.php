@@ -54,9 +54,10 @@ $export = '';
 if (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === TRUE) {
   // Find course context
   $context = \context_course::instance($course->id);
+  $hvp_path = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
 
   $export_filename = ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p';
-  $export = "/pluginfile.php/{$context->id}/mod_hvp/exports/{$export_filename}";
+  $export = "{$hvp_path}/exports/{$export_filename}";
 }
 
 // Add JavaScript settings for this content
@@ -83,18 +84,18 @@ $files = $core->getDependenciesFiles($preloaded_dependencies);
 $embedtype = H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
 if ($embedtype === 'div') {
   $context = \context_system::instance();
-  $hvp_path = "/pluginfile.php/{$context->id}/mod_hvp";
+  $hvp_path = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
 
   // Schedule JavaScripts for loading through Moodle
   foreach ($files['scripts'] as $script) {
-    $url = "{$CFG->httpswwwroot}{$hvp_path}{$script->path}{$script->version}";
+    $url = "{$hvp_path}{$script->path}{$script->version}";
     $settings['loadedJs'][] = $url;
     $PAGE->requires->js(new moodle_url($url), true);
   }
 
   // Schedule stylesheets for loading through Moodle
   foreach ($files['styles'] as $style) {
-    $url = "{$CFG->httpswwwroot}{$hvp_path}{$style->path}{$style->version}";
+    $url = "{$hvp_path}{$style->path}{$style->version}";
     $settings['loadedCss'][] = $url;
     $PAGE->requires->css(new moodle_url($url));
   }
