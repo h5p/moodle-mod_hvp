@@ -35,7 +35,7 @@ function hvp_get_instance($type) {
     $fs = new \mod_hvp\file_storage();
 
     $context = \context_system::instance();
-    $url = "/pluginfile.php/{$context->id}/mod_hvp";
+    $url = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
 
     $language = current_language();
 
@@ -436,11 +436,9 @@ class H5PMoodle implements H5PFrameworkInterface {
     // implementations. Perhaps core can update the data objects before calling
     // this function?
 
-    if ($new) {
-      // Create new library
-      $library = (object) array(
-        'machine_name' => $libraryData['machineName'],
+    $library = (object) array(
         'title' => $libraryData['title'],
+        'machine_name' => $libraryData['machineName'],
         'major_version' => $libraryData['majorVersion'],
         'minor_version' => $libraryData['minorVersion'],
         'patch_version' => $libraryData['patchVersion'],
@@ -451,24 +449,16 @@ class H5PMoodle implements H5PFrameworkInterface {
         'preloaded_css' => $preloadedCss,
         'drop_library_css' => $dropLibraryCss,
         'semantics' => $libraryData['semantics'],
-      );
+    );
 
-      // Save new library and keep track of id
+    if ($new) {
+      // Create new library and keep track of id
       $library->id = $DB->insert_record('hvp_libraries', $library);
       $libraryData['libraryId'] = $library->id;
     }
     else {
       // Update library data
       $library['id'] = $libraryData['libraryId'];
-      $library['title'] = $libraryData['title'];
-      $library['patch_version'] = $libraryData['patchVersion'];
-      $library['runnable'] = $libraryData['runnable'];
-      $library['fullscreen'] = $libraryData['fullscreen'];
-      $library['embed_types'] = $embedTypes;
-      $library['preloaded_js'] = $preloadedJs;
-      $library['preloaded_css'] = $preloadedCss;
-      $library['drop_library_css'] = $dropLibraryCss;
-      $library['semantics'] = $libraryData['semantics'];
 
       // Save library data
       $DB->update_record('hvp_libraries', (object) $library);
@@ -577,18 +567,19 @@ class H5PMoodle implements H5PFrameworkInterface {
    *     - libraryId: The id of the main library for this content
    * @param int $contentMainId
    *   Main id for the content if this is a system that supports versioning
+   *
+   * @return bool|int
    */
   public function updateContent($content, $contentMainId = NULL) {
     global $DB;
 
     if (!isset($content['disable'])) {
       $content['disable'] = H5PCore::DISABLE_NONE;
-      // TODO: Can be removed when this has been fixed:
-      // https://github.com/h5p/h5p-moodle-plugin/issues/16
     }
 
     $data = array(
-      'id' => $content['id'],
+      'name' => $content['name'],
+      'course' => $content['course'],
       'json_content' => $content['params'],
       'embed_type' => 'div',
       'main_library_id' => $content['library']['libraryId'],
@@ -601,6 +592,7 @@ class H5PMoodle implements H5PFrameworkInterface {
       return $DB->insert_record('hvp', $data);
     }
     else {
+      $data['id'] = $content['id'];
       $DB->update_record('hvp', $data);
       return $data['id'];
     }

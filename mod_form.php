@@ -22,6 +22,21 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
         $mform->addRule('h5pfile', null, 'required', null, 'client');
 
+        // Display options group.
+        $mform->addElement('header', 'displayoptions', get_string('display_options', 'hvp'));
+
+        $mform->addElement('checkbox', 'frame', get_string('enable_frame', 'hvp'));
+        $mform->setType('frame', PARAM_BOOL);
+        $mform->setDefault('frame', true);
+
+        $mform->addElement('checkbox', 'download', get_string('enable_download', 'hvp'));
+        $mform->setType('download', PARAM_BOOL);
+        $mform->setDefault('download', true);
+
+        $mform->addElement('checkbox', 'copyright', get_string('enable_copyright', 'hvp'));
+        $mform->setType('copyright', PARAM_BOOL);
+        $mform->setDefault('copyright', true);
+
         $this->standard_coursemodule_elements();
 
         $this->add_action_buttons();
@@ -32,6 +47,21 @@ class mod_hvp_mod_form extends moodleform_mod {
         $draftitemid = file_get_submitted_draft_itemid('h5pfile');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_hvp', 'package', 0);
         $default_values['h5pfile'] = $draftitemid;
+
+        // Individual display options are not stored, must be extracted from disable.
+        if (isset($default_values['disable'])) {
+            // Extract disable options
+            foreach (H5PCore::$disable as $bit => $option) {
+                if ($default_values['disable'] & $bit) {
+                    // Disable
+                    $default_values[$option] = 0;
+                }
+                else {
+                    // Enable
+                    $default_values[$option] = 1;
+                }
+            }
+        }
     }
 
     function validation($data, $files) {

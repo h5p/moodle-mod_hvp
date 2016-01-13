@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -67,26 +68,30 @@ function hvp_supports($feature) {
  * will create a new instance and return the id number
  * of the new instance.
  *
- * @param stdClass $newmodule Submitted data from the form in mod_form.php
+ * @param stdClass $moduleinfo Submitted data from the form in mod_form.php
  * @return int The id of the newly inserted newmodule record
  */
 function hvp_add_instance($moduleinfo) {
-  global $DB;
+    $disable_settings = array(
+        H5PCore::$disable[H5PCore::DISABLE_FRAME] => isset($moduleinfo->frame) ? $moduleinfo->frame: 0,
+        H5PCore::$disable[H5PCore::DISABLE_DOWNLOAD] => isset($moduleinfo->download) ? $moduleinfo->download : 0,
+        H5PCore::$disable[H5PCore::DISABLE_COPYRIGHT] => isset($moduleinfo->copyright) ? $moduleinfo->copyright: 0
+    );
 
-  // Moodle expects the MODULENAME_add_instance() to return the id, so we
-  // need to save the data here manually because savePackage() does not
-  // return the id.
-  $cmid = $DB->insert_record('hvp', (object) array(
-    'name' => $moduleinfo->name,
-    'course' => $moduleinfo->course,
-    'json_content' => '',
-    'main_library_id' => '',
-  ));
+    $core = hvp_get_instance('core');
+    $default_disable_value = 0;
+    $disable_value = $core->getDisable($disable_settings, $default_disable_value);
 
-  $h5pStorage = hvp_get_instance('storage');
-  $h5pStorage->savePackage(array('id' => $cmid));
+    $cmcontent = array(
+        'name' => $moduleinfo->name,
+        'course' => $moduleinfo->course,
+        'disable' => $disable_value
+    );
 
-  return $cmid;
+    $h5pStorage = hvp_get_instance('storage');
+    $h5pStorage->savePackage($cmcontent);
+
+    return $h5pStorage->contentId;
 }
 
 /**
@@ -96,19 +101,25 @@ function hvp_add_instance($moduleinfo) {
  * (defined by the form in mod_form.php) this function
  * will update an existing instance with new data.
  *
- * @param stdClass $newmodule An object from the form in mod_form.php
- * @return boolean Success/Fail
+ * @param stdClass $hvp An object from the form in mod_form.php
  */
 function hvp_update_instance($hvp) {
-  global $DB;
+  $disable_settings = array(
+    H5PCore::$disable[H5PCore::DISABLE_FRAME] => isset($hvp->frame) ? $hvp->frame: 0,
+    H5PCore::$disable[H5PCore::DISABLE_DOWNLOAD] => isset($hvp->download) ? $hvp->download: 0,
+    H5PCore::$disable[H5PCore::DISABLE_COPYRIGHT] => isset($hvp->copyright) ? $hvp->copyright: 0
+  );
 
+  $core = hvp_get_instance('core');
+  $default_disable_value = 0;
+  $disable_value = $core->getDisable($disable_settings, $default_disable_value);
+
+  // Updated $hvp values used in $DB
+  $hvp->disable = $disable_value;
   $hvp->id = $hvp->instance;
-  $result = $DB->update_record('hvp', $hvp);
 
   $h5pStorage = hvp_get_instance('storage');
-  $h5pStorage->savePackage(array('id' => $hvp->id));
-
-  return $result;
+  $h5pStorage->savePackage((array)$hvp);
 }
 
 /**

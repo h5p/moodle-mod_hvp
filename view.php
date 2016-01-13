@@ -54,9 +54,10 @@ $export = '';
 if (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === TRUE) {
   // Find course context
   $context = \context_course::instance($course->id);
+  $hvp_path = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
 
   $export_filename = ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p';
-  $export = "/pluginfile.php/{$context->id}/mod_hvp/exports/{$export_filename}";
+  $export = "{$hvp_path}/exports/{$export_filename}";
 }
 
 // Add JavaScript settings for this content
