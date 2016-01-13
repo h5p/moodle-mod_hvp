@@ -459,6 +459,7 @@ class H5PMoodle implements H5PFrameworkInterface {
     }
     else {
       // Update library data
+      $library['id'] = $libraryData['libraryId'];
       $library['title'] = $libraryData['title'];
       $library['patch_version'] = $libraryData['patchVersion'];
       $library['runnable'] = $libraryData['runnable'];
@@ -467,21 +468,21 @@ class H5PMoodle implements H5PFrameworkInterface {
       $library['preloaded_js'] = $preloadedJs;
       $library['preloaded_css'] = $preloadedCss;
       $library['drop_library_css'] = $dropLibraryCss;
-      $library['semantics'] = $library['semantics'];
+      $library['semantics'] = $libraryData['semantics'];
 
       // Save library data
       $DB->update_record('hvp_libraries', (object) $library);
 
       // Remove old dependencies
-      $this->deleteLibraryDependencies($library['libraryId']);
+      $this->deleteLibraryDependencies($libraryData['libraryId']);
     }
 
     // Update library translations
-    $DB->delete_records('hvp_libraries_languages', array('library_id' => $library->id));
+    $DB->delete_records('hvp_libraries_languages', array('library_id' => $libraryData['libraryId']));
     if (isset($libraryData['language'])) {
       foreach ($libraryData['language'] as $languageCode => $languageJson) {
         $DB->insert_record('hvp_libraries_languages', array(
-          'library_id' => $library->id,
+          'library_id' => $libraryData['libraryId'],
           'language_code' => $languageCode,
           'language_json' => $languageJson,
         ));
@@ -579,6 +580,12 @@ class H5PMoodle implements H5PFrameworkInterface {
    */
   public function updateContent($content, $contentMainId = NULL) {
     global $DB;
+
+    if (!isset($content['disable'])) {
+      $content['disable'] = H5PCore::DISABLE_NONE;
+      // TODO: Can be removed when this has been fixed:
+      // https://github.com/h5p/h5p-moodle-plugin/issues/16
+    }
 
     $data = array(
       'id' => $content['id'],
