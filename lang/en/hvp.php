@@ -48,6 +48,8 @@ $string['h5ptitle'] = 'Visit H5P.org to check out more cool content.';
 $string['contentchanged'] = 'This content has changed since you last used it.';
 $string['startingover'] = "You'll be starting over.";
 
+$string['lookforupdates'] = 'Look for H5P updates';
+
 // Admin settings
 $string['display_options'] = 'Display Options';
 $string['enable_frame'] = 'Display action bar and frame';
