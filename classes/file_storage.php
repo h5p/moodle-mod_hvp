@@ -275,6 +275,26 @@ class file_storage implements \H5P\FileStorage {
   }
 
   /**
+   * Remove the aggregated cache files.
+   *
+   * @param array $keys
+   *   The hash keys of removed files
+   */
+  public function deleteCachedAssets($keys) {
+    $context = \context_system::instance();
+    $fs = get_file_storage();
+
+    foreach ($keys as $hash) {
+      foreach (array('js', 'css') as $type) {
+        $cachedasset = $fs->get_file($context->id, 'mod_hvp', 'cachedassets', 0, '/', "{$hash}.{$type}");
+        if ($cachedasset) {
+          $cachedasset->delete();
+        }
+      }
+    }
+  }
+
+  /**
    * Format the cached assets data the way it's supposed to be.
    *
    * @param string $key

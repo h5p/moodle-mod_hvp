@@ -39,9 +39,10 @@ function hvp_get_instance($type) {
 
     $language = current_language();
 
-    $export = (isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === FALSE ? FALSE : TRUE);
+    $export = !(isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === '0');
 
     $core = new H5PCore($interface, $fs, $url, $language, $export);
+    $core->aggregateAssets = !(isset($CFG->mod_hvp_aggregate_assets) && $CFG->mod_hvp_aggregate_assets === '0');
   }
 
   switch ($type) {
@@ -328,7 +329,7 @@ class H5PMoodle implements H5PFrameworkInterface {
   public function isPatchedLibrary($library) {
     global $DB, $CFG;
 
-    if (isset($CFG->h5pdev) && $CFG->h5pdev === TRUE) {
+    if (isset($CFG->mod_hvp_dev) && $CFG->mod_hvp_dev) {
       // Makes sure libraries are updated, patch version does not matter.
       return TRUE;
     }
@@ -692,6 +693,7 @@ class H5PMoodle implements H5PFrameworkInterface {
         JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
         WHERE hc.id = ?", array($id)
     );
+    // TODO: We cannot use the AS keyword ! !
 
     // Return NULL if not found
     if ($data === false) {
@@ -933,5 +935,41 @@ class H5PMoodle implements H5PFrameworkInterface {
     global $DB;
 
     return !$DB->get_field_sql("SELECT slug FROM {hvp} WHERE slug = ?", array($slug));
+  }
+
+  /**
+   * Implements saveCachedAssets
+   */
+  public function saveCachedAssets($key, $libraries) {
+    global $DB;
+
+    foreach ($libraries as $library) {
+      $cachedAsset = (object) array(
+        'library_id' => $library['id'],
+        'hash' => $key
+      );
+      $DB->insert_record('hvp_libraries_cachedassets', $cachedAsset);
+    }
+  }
+
+  /**
+   * Implements deleteCachedAssets
+   */
+  public function deleteCachedAssets($library_id) {
+    global $DB;
+
+    // Get all the keys so we can remove the files
+    $results = $DB->get_records_sql(
+      'SELECT hash FROM {hvp_libraries_cachedassets} WHERE library_id = ?',
+      array("$library_id"));
+    $hashes = array();
+    foreach ($results as $key) {
+      $hashes[] = $key->hash;
+    }
+
+    // Remove all invalid keys
+    $DB->delete_records('hvp_libraries_cachedassets', array('library_id' => $library_id));
+
+    return $hashes;
   }
 }
