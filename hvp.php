@@ -769,7 +769,7 @@ class H5PMoodle implements H5PFrameworkInterface {
    * Implements getOption().
    */
   public function getOption($name, $default = FALSE) {
-    $value = get_config('hvp', $name);
+    $value = get_config('mod_hvp', $name);
     if ($value === FALSE) {
       return $default;
     }
@@ -780,7 +780,7 @@ class H5PMoodle implements H5PFrameworkInterface {
    * Implements setOption().
    */
   public function setOption($name, $value) {
-    set_config($name, $value, 'hvp');
+    set_config($name, $value, 'mod_hvp');
   }
 
   /**
