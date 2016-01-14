@@ -100,6 +100,7 @@ function hvp_add_instance($moduleinfo) {
  * will update an existing instance with new data.
  *
  * @param stdClass $hvp An object from the form in mod_form.php
+ * @return boolean Success/Fail
  */
 function hvp_update_instance($hvp) {
   $disable_settings = array(
