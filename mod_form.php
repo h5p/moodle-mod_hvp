@@ -51,7 +51,8 @@ class mod_hvp_mod_form extends moodleform_mod {
         // Individual display options are not stored, must be extracted from disable.
         if (isset($default_values['disable'])) {
             // Extract disable options
-            foreach (H5PCore::$disable as $bit => $option) {
+            \mod_hvp\framework::instance();
+            foreach (\H5PCore::$disable as $bit => $option) {
                 if ($default_values['disable'] & $bit) {
                     // Disable
                     $default_values[$option] = 0;
