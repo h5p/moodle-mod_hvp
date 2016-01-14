@@ -23,17 +23,17 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addRule('h5pfile', null, 'required', null, 'client');
 
         // Display options group.
-        $mform->addElement('header', 'displayoptions', get_string('display_options', 'hvp'));
+        $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'hvp'));
 
-        $mform->addElement('checkbox', 'frame', get_string('enable_frame', 'hvp'));
+        $mform->addElement('checkbox', 'frame', get_string('enableframe', 'hvp'));
         $mform->setType('frame', PARAM_BOOL);
         $mform->setDefault('frame', true);
 
-        $mform->addElement('checkbox', 'download', get_string('enable_download', 'hvp'));
+        $mform->addElement('checkbox', 'download', get_string('enabledownload', 'hvp'));
         $mform->setType('download', PARAM_BOOL);
         $mform->setDefault('download', true);
 
-        $mform->addElement('checkbox', 'copyright', get_string('enable_copyright', 'hvp'));
+        $mform->addElement('checkbox', 'copyright', get_string('enablecopyright', 'hvp'));
         $mform->setType('copyright', PARAM_BOOL);
         $mform->setDefault('copyright', true);
 
