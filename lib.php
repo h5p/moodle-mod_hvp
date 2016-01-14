@@ -118,6 +118,8 @@ function hvp_update_instance($hvp) {
 
   $h5pStorage = \mod_hvp\framework::instance('storage');
   $h5pStorage->savePackage((array)$hvp);
+
+  return TRUE;
 }
 
 /**
