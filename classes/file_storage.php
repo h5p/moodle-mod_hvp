@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2016 Joubel AS
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class file_storage implements \H5P\FileStorage {
+class file_storage implements \H5PFileStorage {
 
   /**
    * Store the library folder.
