@@ -576,11 +576,11 @@ class framework implements \H5PFrameworkInterface {
         global $DB;
 
         // Reset user data for this content
-        /*$DB->execute("UPDATE {hvp_content_user_data}
-          SET data = 'RESET'
-          WHERE hvp_id = ? AND delete_on_content_change = 1", array($contentId)
-        );*/
-        // TODO: Fix table def. See WP
+        $DB->execute("UPDATE {hvp_content_user_data}
+                         SET data = 'RESET'
+                       WHERE hvp_id = ?
+                         AND delete_on_content_change = 1",
+                     array($contentId));
     }
 
     /**
