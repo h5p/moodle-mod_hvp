@@ -60,3 +60,9 @@ $string['enable_save_content_state'] = 'Save content state';
 $string['content_state_description'] = 'Automatically save the current state of interactive content for each user. This means that the user may pick up where he left off.';
 $string['content_state_frequency'] = 'Save content state frequency';
 $string['content_state_frequency_description'] = 'In seconds, how often do you wish the user to auto save their progress. Increase this number if you\'re having issues with many ajax requests';
+
+// Admin menu
+$string['settings'] = 'H5P Settings';
+$string['libraries'] = 'H5P Libraries';
+
+// H5P admin page
