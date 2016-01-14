@@ -20,7 +20,7 @@
  * logic, should go here. Never include this file from your lib.php!
  *
  * @package    mod_hvp
- * @copyright  2016 Joubel AS
+ * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
@@ -31,53 +31,53 @@ defined('MOODLE_INTERNAL') || die();
  * @return array Settings
  */
 function hvp_get_core_settings() {
-  global $USER, $CFG, $COURSE;
+    global $USER, $CFG, $COURSE;
 
-  $basePath = $CFG->sessioncookiepath;
-  $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
+    $basePath = $CFG->sessioncookiepath;
+    $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
 
-  $system_context = \context_system::instance();
-  $course_context = \context_course::instance($COURSE->id);
-  $settings = array(
-    'baseUrl' => $basePath,
-    'url' => "{$basePath}pluginfile.php/{$course_context->id}/mod_hvp",
-    'libraryUrl' => "{$basePath}pluginfile.php/{$system_context->id}/mod_hvp/libraries",
-    'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
-    'ajaxPath' => $ajaxPath,
-    'ajax' => array(
-      'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
-    ),
-    'saveFreq' => get_config('hvp', 'enable_save_content_state') ? get_config('hvp', 'content_state_frequency') : FALSE,
-    'siteUrl' => $CFG->wwwroot,
-    'l10n' => array(
-      'H5P' => array(
-        'fullscreen' => get_string('fullscreen', 'hvp'),
-        'disableFullscreen' => get_string('disablefullscreen', 'hvp'),
-        'download' => get_string('download', 'hvp'),
-        'copyrights' => get_string('copyright', 'hvp'),
-        'copyrightInformation' => get_string('copyright', 'hvp'),
-        'close' => get_string('close', 'hvp'),
-        'title' => get_string('title', 'hvp'),
-        'author' => get_string('author', 'hvp'),
-        'year' => get_string('year', 'hvp'),
-        'source' => get_string('source', 'hvp'),
-        'license' => get_string('license', 'hvp'),
-        'thumbnail' => get_string('thumbnail', 'hvp'),
-        'noCopyrights' =>  get_string('nocopyright', 'hvp'),
-        'downloadDescription' => get_string('downloadtitle', 'hvp'),
-        'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
-        'h5pDescription' => get_string('h5ptitle', 'hvp'),
-        'contentChanged' => get_string('contentchanged', 'hvp'),
-        'startingOver' => get_string('startingover', 'hvp')
-      )
-    ),
-    'user' => array(
-      'name' => $USER->firstname . ' ' . $USER->lastname,
-      'mail' => $USER->email
-    )
-  );
+    $system_context = \context_system::instance();
+    $course_context = \context_course::instance($COURSE->id);
+    $settings = array(
+        'baseUrl' => $basePath,
+        'url' => "{$basePath}pluginfile.php/{$course_context->id}/mod_hvp",
+        'libraryUrl' => "{$basePath}pluginfile.php/{$system_context->id}/mod_hvp/libraries",
+        'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
+        'ajaxPath' => $ajaxPath,
+        'ajax' => array(
+            'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
+        ),
+        'saveFreq' => get_config('hvp', 'enable_save_content_state') ? get_config('hvp', 'content_state_frequency') : FALSE,
+        'siteUrl' => $CFG->wwwroot,
+        'l10n' => array(
+            'H5P' => array(
+                'fullscreen' => get_string('fullscreen', 'hvp'),
+                'disableFullscreen' => get_string('disablefullscreen', 'hvp'),
+                'download' => get_string('download', 'hvp'),
+                'copyrights' => get_string('copyright', 'hvp'),
+                'copyrightInformation' => get_string('copyright', 'hvp'),
+                'close' => get_string('close', 'hvp'),
+                'title' => get_string('title', 'hvp'),
+                'author' => get_string('author', 'hvp'),
+                'year' => get_string('year', 'hvp'),
+                'source' => get_string('source', 'hvp'),
+                'license' => get_string('license', 'hvp'),
+                'thumbnail' => get_string('thumbnail', 'hvp'),
+                'noCopyrights' =>  get_string('nocopyright', 'hvp'),
+                'downloadDescription' => get_string('downloadtitle', 'hvp'),
+                'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
+                'h5pDescription' => get_string('h5ptitle', 'hvp'),
+                'contentChanged' => get_string('contentchanged', 'hvp'),
+                'startingOver' => get_string('startingover', 'hvp')
+            )
+        ),
+        'user' => array(
+            'name' => $USER->firstname . ' ' . $USER->lastname,
+            'mail' => $USER->email
+        )
+    );
 
-  return $settings;
+    return $settings;
 }
 
 /**
@@ -86,34 +86,34 @@ function hvp_get_core_settings() {
  * @return array
  */
 function hvp_get_core_assets() {
-  global $CFG, $PAGE;
+    global $CFG, $PAGE;
 
-  // Get core settings
-  $settings = hvp_get_core_settings();
-  $settings['core'] = array(
-    'styles' => array(),
-    'scripts' => array()
-  );
-  $settings['loadedJs'] = array();
-  $settings['loadedCss'] = array();
+    // Get core settings
+    $settings = hvp_get_core_settings();
+    $settings['core'] = array(
+        'styles' => array(),
+        'scripts' => array()
+    );
+    $settings['loadedJs'] = array();
+    $settings['loadedCss'] = array();
 
-  // Make sure files are reloaded for each plugin update
-  $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
+    // Make sure files are reloaded for each plugin update
+    $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
 
-  // Use relative URL to support both http and https.
-  $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';
-  $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
+    // Use relative URL to support both http and https.
+    $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';
+    $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
 
-  // Add core stylesheets
-  foreach (H5PCore::$styles as $style) {
-    $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
-    $PAGE->requires->css(new moodle_url($lib_url . $style . $cache_buster));
-  }
-  // Add core JavaScript
-  foreach (H5PCore::$scripts as $script) {
-    $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
-    $PAGE->requires->js(new moodle_url($lib_url . $script . $cache_buster), true);
-  }
+    // Add core stylesheets
+    foreach (H5PCore::$styles as $style) {
+        $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
+        $PAGE->requires->css(new moodle_url($lib_url . $style . $cache_buster));
+    }
+    // Add core JavaScript
+    foreach (H5PCore::$scripts as $script) {
+        $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
+        $PAGE->requires->js(new moodle_url($lib_url . $script . $cache_buster), true);
+    }
 
-  return $settings;
+    return $settings;
 }
