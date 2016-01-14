@@ -51,14 +51,14 @@ $string['startingover'] = "You'll be starting over.";
 $string['lookforupdates'] = 'Look for H5P updates';
 
 // Admin settings
-$string['display_options'] = 'Display Options';
-$string['enable_frame'] = 'Display action bar and frame';
-$string['enable_download'] = 'Download button';
-$string['enable_embed'] = 'Embed button';
-$string['enable_copyright'] = 'Copyright button';
-$string['enable_about'] = 'About H5P button';
+$string['displayoptions'] = 'Display Options';
+$string['enableframe'] = 'Display action bar and frame';
+$string['enabledownload'] = 'Download button';
+$string['enableembed'] = 'Embed button';
+$string['enablecopyright'] = 'Copyright button';
+$string['enableabout'] = 'About H5P button';
 
-$string['enable_save_content_state'] = 'Save content state';
-$string['content_state_description'] = 'Automatically save the current state of interactive content for each user. This means that the user may pick up where he left off.';
-$string['content_state_frequency'] = 'Save content state frequency';
-$string['content_state_frequency_description'] = 'In seconds, how often do you wish the user to auto save their progress. Increase this number if you\'re having issues with many ajax requests';
+$string['enablesavecontentstate'] = 'Save content state';
+$string['enablesavecontentstate_help'] = 'Automatically save the current state of interactive content for each user. This means that the user may pick up where he left off.';
+$string['contentstatefrequency'] = 'Save content state frequency';
+$string['contentstatefrequency_help'] = 'In seconds, how often do you wish the user to auto save their progress. Increase this number if you\'re having issues with many ajax requests';
