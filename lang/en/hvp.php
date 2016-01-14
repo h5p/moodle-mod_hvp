@@ -67,4 +67,15 @@ $string['content_state_frequency_description'] = 'In seconds, how often do you w
 $string['settings'] = 'H5P Settings';
 $string['libraries'] = 'H5P Libraries';
 
-// H5P admin page
+// H5P library list headers on admin page
+$string['librarylisttitle'] = 'Title';
+$string['librarylistrestricted'] = 'Restricted';
+$string['librarylistinstances'] = 'Instances';
+$string['librarylistinstancedependencies'] = 'Instance dependencies';
+$string['librarylistlibrarydependencies'] = 'Library dependencies';
+$string['librarylistactions'] = 'Actions';
+
+// H5P library page labels
+$string['notapplicable'] = 'N/A';
+$string['upgradelibrarycontent'] = 'Upgrade library content';
+//$string[''] = '';

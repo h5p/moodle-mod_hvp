@@ -114,6 +114,32 @@ function hvp_get_core_settings() {
   return $settings;
 }
 
+function hvp_admin_add_generic_css_and_js($page, $lib_url, $settings = NULL) {
+  foreach (H5PCore::$adminScripts as $script) {
+    $page->requires->js(new moodle_url($lib_url . $script . hvp_get_cache_buster()), true);
+  }
+
+  if ($settings === NULL) {
+    $settings = array();
+  }
+
+  $settings['containerSelector'] = '#h5p-admin-container';
+  $settings['l10n'] = array(
+    'NA' => get_string('notapplicable', 'hvp'),
+    'viewLibrary' => '',
+    'deleteLibrary' => '',
+    'upgradeLibrary' => get_string('upgradelibrarycontent', 'hvp')
+  );
+
+  $page->requires->data_for_js('H5PAdminIntegration', $settings, true);
+  $page->requires->css(new moodle_url($lib_url . 'styles/h5p.css' . hvp_get_cache_buster()));
+  $page->requires->css(new moodle_url($lib_url . 'styles/h5p-admin.css' . hvp_get_cache_buster()));
+
+  // Add settings:
+  $page->requires->data_for_js('h5p', hvp_get_core_settings(), true);
+}
+
+
 /**
  * Get assets (scripts and styles) for hvp core.
  *
@@ -132,7 +158,7 @@ function hvp_get_core_assets() {
   $settings['loadedCss'] = array();
 
   // Make sure files are reloaded for each plugin update
-  $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
+  $cache_buster = hvp_get_cache_buster();
 
   // Use relative URL to support both http and https.
   $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';
@@ -150,6 +176,10 @@ function hvp_get_core_assets() {
   }
 
   return $settings;
+}
+
+function hvp_get_cache_buster() {
+  return '?v=' . get_component_version('mod_hvp');
 }
 
 /**
@@ -274,7 +304,7 @@ class H5PMoodle implements H5PFrameworkInterface {
     global $DB;
 
     $results = $DB->get_records_sql(
-      "SELECT id, machine_name, title, major_version, minor_version, patch_version, runnable
+      "SELECT id, machine_name, title, major_version, minor_version, patch_version, runnable, restricted
       FROM {hvp_libraries}
       ORDER BY title ASC, major_version ASC, minor_version ASC"
     );
@@ -876,7 +906,8 @@ class H5PMoodle implements H5PFrameworkInterface {
       'dropLibraryCss' => $library->drop_library_css,
       'fullscreen' => $library->fullscreen,
       'runnable' => $library->runnable,
-      'semantics' => $library->semantics
+      'semantics' => $library->semantics,
+      'restricted' => $library->restricted
     );
 
     $dependencies = $DB->get_records_sql('SELECT hl.machine_name, hl.major_version, hl.minor_version, hll.dependency_type
