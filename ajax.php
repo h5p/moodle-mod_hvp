@@ -28,7 +28,7 @@ require(__DIR__ . '/../../config.php');
 $action = required_param('action', PARAM_ALPHA);
 switch($action) {
     case 'contentsuserdata':
-        \mod_hvp\Content_User_Data::handle_ajax();
+        \mod_hvp\content_user_data::handle_ajax();
         break;
     default:
         throw new coding_exception('Unhandled AJAX');

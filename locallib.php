@@ -47,7 +47,7 @@ function hvp_get_core_settings() {
         'ajax' => array(
             'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
         ),
-        'saveFreq' => get_config('hvp', 'enable_save_content_state') ? get_config('hvp', 'content_state_frequency') : FALSE,
+        'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : FALSE,
         'siteUrl' => $CFG->wwwroot,
         'l10n' => array(
             'H5P' => array(
