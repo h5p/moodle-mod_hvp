@@ -98,7 +98,7 @@ function hvp_get_core_assets() {
     $settings['loadedCss'] = array();
 
     // Make sure files are reloaded for each plugin update
-    $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
+    $cache_buster = '?ver=' . get_config('mod_hvp', 'version');
 
     // Use relative URL to support both http and https.
     $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';
