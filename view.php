@@ -1,11 +1,11 @@
 <?php
 
 require_once("../../config.php");
-require_once("lib.php");
+require_once("locallib.php");
 
 $id = required_param('id', PARAM_INT);
 
-$url = new moodle_url('/mod/hvp/view.php', array('id' => $id));
+$url = new \moodle_url('/mod/hvp/view.php', array('id' => $id));
 $PAGE->set_url($url);
 
 if (! $cm = get_coursemodule_from_id('hvp', $id)) {
@@ -18,7 +18,7 @@ if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
 require_course_login($course, false, $cm);
 
 // Load H5P Core
-$core = hvp_get_instance('core');
+$core = \mod_hvp\framework::instance();
 
 // Load H5P Content
 $content = $core->loadContent($cm->instance);
@@ -45,7 +45,7 @@ else {
 }
 
 // Embed is not supported in Moodle
-$content['disable'] |= H5PCore::DISABLE_EMBED;
+$content['disable'] |= \H5PCore::DISABLE_EMBED;
 
 // Filter content parameters
 $safe_parameters = $core->filterParameters($content);
@@ -63,7 +63,7 @@ if (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === TRUE) {
 // Add JavaScript settings for this content
 $cid = 'cid-' . $content['id'];
 $settings['contents'][$cid] = array(
-    'library' => H5PCore::libraryToString($content['library']),
+    'library' => \H5PCore::libraryToString($content['library']),
     'jsonContent' => $safe_parameters,
     'fullScreen' => $content['library']['fullscreen'],
     'exportUrl' => $export,
@@ -71,7 +71,7 @@ $settings['contents'][$cid] = array(
     'disable' => $content['disable'],
     'contentUserData' => array(
       0 => array(
-        'state' => \mod_hvp\Content_User_Data::load_user_data($content['id'])
+        'state' => \mod_hvp\content_user_data::load_user_data($content['id'])
         )
     )
 );

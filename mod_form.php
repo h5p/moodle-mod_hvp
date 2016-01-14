@@ -82,7 +82,7 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         $file = reset($files);
 
-        $interface = hvp_get_instance('interface');
+        $interface = \mod_hvp\framework::instance('interface');
 
         $path = $CFG->tempdir . uniqid('/hvp-');
         $interface->getUploadedH5pFolderPath($path);
@@ -90,7 +90,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         $interface->getUploadedH5pPath($path);
         $file->copy_content_to($path);
 
-        $h5pValidator = hvp_get_instance('validator');
+        $h5pValidator = \mod_hvp\framework::instance('validator');
 
         if (! $h5pValidator->isValidPackage()) {
           $errors['h5pfile'] = get_string('noth5pfile', 'hvp');
