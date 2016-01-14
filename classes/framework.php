@@ -126,18 +126,54 @@ class framework implements \H5PFrameworkInterface {
      * @param string $message translated error message
      */
     public function setErrorMessage($message) {
-        // TODO: Change core, do not send in translated error messages.
-        debugging($message, DEBUG_DEVELOPER);
-        //print_error($message, 'hvp');
+        if ($message !== NULL) {
+            self::messages('error', $message);
+        }
     }
 
     /**
      * Implements setInfoMessage
      */
     public function setInfoMessage($message) {
-        // TODO: ???
-        //$OUTPUT->notification($message, 'notifysuccess');
-        //echo $message;
+        if ($message !== NULL) {
+            self::messages('info', $message);
+        }
+    }
+
+    /**
+     * Store messages until they can be printed to the current user
+     *
+     * @param string $type
+     * @param string $newMessage Optional
+     * @param array
+     */
+    public static function messages($type, $newMessage = NULL) {
+      static $m = 'mod_hvp_messages';
+
+      if ($newMessage === NULL) {
+          // Return and reset messages
+          $messages = isset($_SESSION[$m][$type]) ? $_SESSION[$m][$type] : array();
+          unset($_SESSION[$m][$type]);
+          if (empty($_SESSION[$m])) {
+            unset($_SESSION[$m]);
+          }
+          return $messages;
+      }
+
+      $_SESSION[$m][$type][] = $newMessage;
+    }
+
+    /**
+     * Simple print of given messages.
+     *
+     * @param string $type One of error|info
+     * @param array $messages
+     */
+    public static function printMessages($type, $messages) {
+      global $OUTPUT;
+      foreach ($messages as $message) {
+        print $OUTPUT->notification($message, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
+      }
     }
 
     /**

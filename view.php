@@ -134,6 +134,11 @@ $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
 echo $OUTPUT->header();
 echo '<div class="clearer"></div>';
 
+// Print any messages
+\mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
+\mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
+
+// Print H5P Content
 if ($embedtype === 'div') {
     echo '<div class="h5p-content" data-content-id="' .  $content['id'] . '"></div>';
 }

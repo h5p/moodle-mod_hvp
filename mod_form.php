@@ -38,6 +38,18 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
+        // Print error messages
+        $messages = \mod_hvp\framework::messages('error');
+        foreach ($messages as $message) {
+          $mform->addElement('static', '', '', $OUTPUT->notification($message, 'notifyproblem'));
+        }
+
+        // Print info messages
+        $messages = \mod_hvp\framework::messages('info');
+        foreach ($messages as $message) {
+          $mform->addElement('static', '', '', $OUTPUT->notification($message, 'notifymessage'));
+        }
+
         // H5P
         $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
         $mform->addRule('h5pfile', null, 'required', null, 'client');
