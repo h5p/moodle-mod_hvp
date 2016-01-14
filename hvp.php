@@ -13,8 +13,10 @@ if (!defined('MOODLE_INTERNAL')) {
   die('Direct access to this script is forbidden.');
 }
 
-require_once ($CFG->dirroot . '/mod/hvp/library/h5p.classes.php');
-require_once ($CFG->dirroot . '/mod/hvp/library/h5p-development.class.php');
+require_once($CFG->dirroot . '/mod/hvp/library/h5p-file-storage.interface.php');
+require_once($CFG->dirroot . '/mod/hvp/classes/file_storage.php');
+require_once($CFG->dirroot . '/mod/hvp/library/h5p.classes.php');
+require_once($CFG->dirroot . '/mod/hvp/library/h5p-development.class.php');
 require_once(__DIR__ . '/classes/content_user_data.php');
 
 /**
@@ -30,14 +32,17 @@ function hvp_get_instance($type) {
   if (!isset($interface)) {
     $interface = new H5PMoodle();
 
-    $path = $CFG->dirroot . '/mod/hvp/files';
-    $url = $CFG->wwwroot . '/mod/hvp/files';
+    $fs = new \mod_hvp\file_storage();
+
+    $context = \context_system::instance();
+    $url = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
 
     $language = current_language();
 
-    $export = (isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === FALSE ? FALSE : TRUE);
+    $export = !(isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === '0');
 
-    $core = new H5PCore($interface, $path, $url, $language, $export);
+    $core = new H5PCore($interface, $fs, $url, $language, $export);
+    $core->aggregateAssets = !(isset($CFG->mod_hvp_aggregate_assets) && $CFG->mod_hvp_aggregate_assets === '0');
   }
 
   switch ($type) {
@@ -60,14 +65,17 @@ function hvp_get_instance($type) {
  * @return array Settings
  */
 function hvp_get_core_settings() {
-  global $USER, $CFG;
+  global $USER, $CFG, $COURSE;
 
   $basePath = $CFG->sessioncookiepath;
   $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
 
+  $system_context = \context_system::instance();
+  $course_context = \context_course::instance($COURSE->id);
   $settings = array(
     'baseUrl' => $basePath,
-    'url' => $CFG->wwwroot . '/mod/hvp/files', // TODO: Update when files are read from Moodle
+    'url' => "{$basePath}pluginfile.php/{$course_context->id}/mod_hvp",
+    'libraryUrl' => "{$basePath}pluginfile.php/{$system_context->id}/mod_hvp/libraries",
     'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
     'ajaxPath' => $ajaxPath,
     'ajax' => array(
@@ -127,18 +135,18 @@ function hvp_get_core_assets() {
   $cache_buster = '?ver=1'; // TODO: . get_component_version('mod_hvp'); ?
 
   // Use relative URL to support both http and https.
-  $lib_url = $CFG->wwwroot . '/mod/hvp/library/';
+  $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';
   $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
 
   // Add core stylesheets
   foreach (H5PCore::$styles as $style) {
     $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
-    $PAGE->requires->css('/mod/hvp/library/' . $style);
+    $PAGE->requires->css(new moodle_url($lib_url . $style . $cache_buster));
   }
   // Add core JavaScript
   foreach (H5PCore::$scripts as $script) {
     $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
-    $PAGE->requires->js('/mod/hvp/library/' . $script, true);
+    $PAGE->requires->js(new moodle_url($lib_url . $script . $cache_buster), true);
   }
 
   return $settings;
@@ -321,7 +329,7 @@ class H5PMoodle implements H5PFrameworkInterface {
   public function isPatchedLibrary($library) {
     global $DB, $CFG;
 
-    if (isset($CFG->h5pdev) && $CFG->h5pdev === TRUE) {
+    if (isset($CFG->mod_hvp_dev) && $CFG->mod_hvp_dev) {
       // Makes sure libraries are updated, patch version does not matter.
       return TRUE;
     }
@@ -428,11 +436,9 @@ class H5PMoodle implements H5PFrameworkInterface {
     // implementations. Perhaps core can update the data objects before calling
     // this function?
 
-    if ($new) {
-      // Create new library
-      $library = (object) array(
-        'machine_name' => $libraryData['machineName'],
+    $library = (object) array(
         'title' => $libraryData['title'],
+        'machine_name' => $libraryData['machineName'],
         'major_version' => $libraryData['majorVersion'],
         'minor_version' => $libraryData['minorVersion'],
         'patch_version' => $libraryData['patchVersion'],
@@ -443,37 +449,30 @@ class H5PMoodle implements H5PFrameworkInterface {
         'preloaded_css' => $preloadedCss,
         'drop_library_css' => $dropLibraryCss,
         'semantics' => $libraryData['semantics'],
-      );
+    );
 
-      // Save new library and keep track of id
+    if ($new) {
+      // Create new library and keep track of id
       $library->id = $DB->insert_record('hvp_libraries', $library);
       $libraryData['libraryId'] = $library->id;
     }
     else {
       // Update library data
-      $library['title'] = $libraryData['title'];
-      $library['patch_version'] = $libraryData['patchVersion'];
-      $library['runnable'] = $libraryData['runnable'];
-      $library['fullscreen'] = $libraryData['fullscreen'];
-      $library['embed_types'] = $embedTypes;
-      $library['preloaded_js'] = $preloadedJs;
-      $library['preloaded_css'] = $preloadedCss;
-      $library['drop_library_css'] = $dropLibraryCss;
-      $library['semantics'] = $library['semantics'];
+      $library['id'] = $libraryData['libraryId'];
 
       // Save library data
       $DB->update_record('hvp_libraries', (object) $library);
 
       // Remove old dependencies
-      $this->deleteLibraryDependencies($library['libraryId']);
+      $this->deleteLibraryDependencies($libraryData['libraryId']);
     }
 
     // Update library translations
-    $DB->delete_records('hvp_libraries_languages', array('library_id' => $library->id));
+    $DB->delete_records('hvp_libraries_languages', array('library_id' => $libraryData['libraryId']));
     if (isset($libraryData['language'])) {
       foreach ($libraryData['language'] as $languageCode => $languageJson) {
         $DB->insert_record('hvp_libraries_languages', array(
-          'library_id' => $library->id,
+          'library_id' => $libraryData['libraryId'],
           'language_code' => $languageCode,
           'language_json' => $languageJson,
         ));
@@ -568,12 +567,19 @@ class H5PMoodle implements H5PFrameworkInterface {
    *     - libraryId: The id of the main library for this content
    * @param int $contentMainId
    *   Main id for the content if this is a system that supports versioning
+   *
+   * @return bool|int
    */
   public function updateContent($content, $contentMainId = NULL) {
     global $DB;
 
+    if (!isset($content['disable'])) {
+      $content['disable'] = H5PCore::DISABLE_NONE;
+    }
+
     $data = array(
-      'id' => $content['id'],
+      'name' => $content['name'],
+      'course' => $content['course'],
       'json_content' => $content['params'],
       'embed_type' => 'div',
       'main_library_id' => $content['library']['libraryId'],
@@ -586,6 +592,7 @@ class H5PMoodle implements H5PFrameworkInterface {
       return $DB->insert_record('hvp', $data);
     }
     else {
+      $data['id'] = $content['id'];
       $DB->update_record('hvp', $data);
       return $data['id'];
     }
@@ -685,6 +692,7 @@ class H5PMoodle implements H5PFrameworkInterface {
         JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
         WHERE hc.id = ?", array($id)
     );
+    // TODO: We cannot use the AS keyword ! !
 
     // Return NULL if not found
     if ($data === false) {
@@ -753,7 +761,7 @@ class H5PMoodle implements H5PFrameworkInterface {
    * Implements getOption().
    */
   public function getOption($name, $default = FALSE) {
-    $value = get_config('hvp', $name);
+    $value = get_config('mod_hvp', $name);
     if ($value === FALSE) {
       return $default;
     }
@@ -764,7 +772,7 @@ class H5PMoodle implements H5PFrameworkInterface {
    * Implements setOption().
    */
   public function setOption($name, $value) {
-    set_config($name, $value, 'hvp');
+    set_config($name, $value, 'mod_hvp');
   }
 
   /**
@@ -926,5 +934,41 @@ class H5PMoodle implements H5PFrameworkInterface {
     global $DB;
 
     return !$DB->get_field_sql("SELECT slug FROM {hvp} WHERE slug = ?", array($slug));
+  }
+
+  /**
+   * Implements saveCachedAssets
+   */
+  public function saveCachedAssets($key, $libraries) {
+    global $DB;
+
+    foreach ($libraries as $library) {
+      $cachedAsset = (object) array(
+        'library_id' => $library['id'],
+        'hash' => $key
+      );
+      $DB->insert_record('hvp_libraries_cachedassets', $cachedAsset);
+    }
+  }
+
+  /**
+   * Implements deleteCachedAssets
+   */
+  public function deleteCachedAssets($library_id) {
+    global $DB;
+
+    // Get all the keys so we can remove the files
+    $results = $DB->get_records_sql(
+      'SELECT hash FROM {hvp_libraries_cachedassets} WHERE library_id = ?',
+      array("$library_id"));
+
+    // Remove all invalid keys
+    $hashes = array();
+    foreach ($results as $key) {
+      $hashes[] = $key->hash;
+      $DB->delete_records('hvp_libraries_cachedassets', array('hash' => $key->hash));
+    }
+
+    return $hashes;
   }
 }

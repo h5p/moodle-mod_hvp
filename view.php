@@ -9,10 +9,10 @@ $url = new moodle_url('/mod/hvp/view.php', array('id' => $id));
 $PAGE->set_url($url);
 
 if (! $cm = get_coursemodule_from_id('hvp', $id)) {
-    print_error('invalidcoursemodule');
+  print_error('invalidcoursemodule');
 }
 if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
-    print_error('coursemisconf');
+  print_error('coursemisconf');
 }
 
 require_course_login($course, false, $cm);
@@ -50,13 +50,23 @@ $content['disable'] |= H5PCore::DISABLE_EMBED;
 // Filter content parameters
 $safe_parameters = $core->filterParameters($content);
 
+$export = '';
+if (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === TRUE) {
+  // Find course context
+  $context = \context_course::instance($course->id);
+  $hvp_path = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
+
+  $export_filename = ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p';
+  $export = "{$hvp_path}/exports/{$export_filename}";
+}
+
 // Add JavaScript settings for this content
 $cid = 'cid-' . $content['id'];
 $settings['contents'][$cid] = array(
     'library' => H5PCore::libraryToString($content['library']),
     'jsonContent' => $safe_parameters,
     'fullScreen' => $content['library']['fullscreen'],
-    'exportUrl' => (isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === FALSE ? '' : $CFG->wwwroot . '/mod/hvp/files/exports/' . ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p'),
+    'exportUrl' => $export,
     'title' => $content['title'],
     'disable' => $content['disable'],
     'contentUserData' => array(
@@ -73,18 +83,21 @@ $files = $core->getDependenciesFiles($preloaded_dependencies);
 // Determine embed type
 $embedtype = H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
 if ($embedtype === 'div') {
+  $context = \context_system::instance();
+  $hvp_path = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
+
   // Schedule JavaScripts for loading through Moodle
   foreach ($files['scripts'] as $script) {
-    $url = '/mod/hvp/files/' . $script->path . $script->version;
+    $url = $hvp_path . $script->path . $script->version;
     $settings['loadedJs'][] = $url;
-    $PAGE->requires->js($url, true);
+    $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . $url), true);
   }
 
   // Schedule stylesheets for loading through Moodle
   foreach ($files['styles'] as $style) {
-    $url = '/mod/hvp/files/' . $style->path . $style->version;
+    $url = $hvp_path . $style->path . $style->version;
     $settings['loadedCss'][] = $url;
-    $PAGE->requires->css($url);
+    $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . $url));
   }
 }
 else {

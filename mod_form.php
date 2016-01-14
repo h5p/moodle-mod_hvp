@@ -8,7 +8,7 @@ require_once ($CFG->dirroot . '/course/moodleform_mod.php');
 class mod_hvp_mod_form extends moodleform_mod {
 
     function definition() {
-        global $CFG, $DB, $OUTPUT;
+        global $CFG, $DB, $OUTPUT, $COURSE;
 
         $mform =& $this->_form;
 
@@ -19,9 +19,23 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         // H5P
-        // TODO: Use $course->maxbytes ?
-        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('maxbytes' => $CFG->maxbytes, 'accepted_types' => '*'));
+        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
         $mform->addRule('h5pfile', null, 'required', null, 'client');
+
+        // Display options group.
+        $mform->addElement('header', 'displayoptions', get_string('display_options', 'hvp'));
+
+        $mform->addElement('checkbox', 'frame', get_string('enable_frame', 'hvp'));
+        $mform->setType('frame', PARAM_BOOL);
+        $mform->setDefault('frame', true);
+
+        $mform->addElement('checkbox', 'download', get_string('enable_download', 'hvp'));
+        $mform->setType('download', PARAM_BOOL);
+        $mform->setDefault('download', true);
+
+        $mform->addElement('checkbox', 'copyright', get_string('enable_copyright', 'hvp'));
+        $mform->setType('copyright', PARAM_BOOL);
+        $mform->setDefault('copyright', true);
 
         $this->standard_coursemodule_elements();
 
@@ -33,6 +47,21 @@ class mod_hvp_mod_form extends moodleform_mod {
         $draftitemid = file_get_submitted_draft_itemid('h5pfile');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_hvp', 'package', 0);
         $default_values['h5pfile'] = $draftitemid;
+
+        // Individual display options are not stored, must be extracted from disable.
+        if (isset($default_values['disable'])) {
+            // Extract disable options
+            foreach (H5PCore::$disable as $bit => $option) {
+                if ($default_values['disable'] & $bit) {
+                    // Disable
+                    $default_values[$option] = 0;
+                }
+                else {
+                    // Enable
+                    $default_values[$option] = 1;
+                }
+            }
+        }
     }
 
     function validation($data, $files) {
@@ -55,7 +84,7 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         $interface = hvp_get_instance('interface');
 
-        $path = $CFG->dirroot . '/mod/hvp/files/tmp/' . uniqid('hvp-');
+        $path = $CFG->tempdir . uniqid('/hvp-');
         $interface->getUploadedH5pFolderPath($path);
         $path .= '.h5p';
         $interface->getUploadedH5pPath($path);
