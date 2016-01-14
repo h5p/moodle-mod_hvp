@@ -26,50 +26,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Get type of hvp instance
- *
- * @param string $type Type of hvp instance to get
- * @return \H5PContentValidator|\H5PCore|\H5PMoodle|\H5PStorage|\H5PValidator
- */
-/*function hvp_get_instance($type) {
-  global $CFG;
-  static $interface, $core;
-
-  require_once($CFG->dirroot . '/mod/hvp/library/h5p-file-storage.interface.php');
-  require_once($CFG->dirroot . '/mod/hvp/library/h5p.classes.php');
-  require_once($CFG->dirroot . '/mod/hvp/library/h5p-development.class.php');
-
-  if (!isset($interface)) {
-    $interface = new H5PMoodle();
-
-    $fs = new \mod_hvp\file_storage();
-
-    $context = \context_system::instance();
-    $url = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
-
-    $language = current_language();
-
-    $export = !(isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === '0');
-
-    $core = new H5PCore($interface, $fs, $url, $language, $export);
-    $core->aggregateAssets = !(isset($CFG->mod_hvp_aggregate_assets) && $CFG->mod_hvp_aggregate_assets === '0');
-  }
-
-  switch ($type) {
-    case 'validator':
-      return new H5PValidator($interface, $core);
-    case 'storage':
-      return new H5PStorage($interface, $core);
-    case 'contentvalidator':
-      return new H5PContentValidator($interface, $core);
-    case 'interface':
-      return $interface;
-    case 'core':
-      return $core;
-  }
-}*/
-
-/**
  * Get array with settings for hvp core
  *
  * @return array Settings
