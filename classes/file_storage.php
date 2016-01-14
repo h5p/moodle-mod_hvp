@@ -24,6 +24,7 @@
 
 namespace mod_hvp;
 defined('MOODLE_INTERNAL') || die();
+require_once($CFG->dirroot . '/mod/hvp/library/h5p-file-storage.interface.php');
 
 /**
  * The mod_hvp file storage class.
