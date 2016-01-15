@@ -15,7 +15,7 @@ namespace mod_hvp;
  *
  * @package mod_hvp
  */
-class Content_User_Data {
+class content_user_data {
 
     /**
      * Retrieves ajax parameters for content and update or delete
