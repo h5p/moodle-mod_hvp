@@ -23,7 +23,6 @@ $string['pluginname'] = 'H5P';
 
 $string['intro'] = 'Hello awesome!';
 $string['h5pfile'] = 'H5P File';
-$string['noth5pfile'] = 'The uploaded file is not a valid H5P.';
 $string['fullscreen'] = 'Fullscreen';
 $string['disablefullscreen'] = 'Disable fullscreen';
 $string['download'] = 'Download';
@@ -66,6 +65,17 @@ $string['contentstatefrequency_help'] = 'In seconds, how often do you wish the u
 // Admin menu
 $string['settings'] = 'H5P Settings';
 $string['libraries'] = 'H5P Libraries';
+
+// Upload libraries section
+$string['uploadlibraries'] = 'Upload Libraries';
+$string['options'] = 'Options';
+$string['onlyupdate'] = 'Only update existing libraries';
+$string['disablefileextensioncheck'] = 'Disable file extension check';
+$string['disablefileextensioncheckwarning'] = "Warning! Disabling the file extension check may have security implications as it allows for uploading of php files. That in turn could make it possible for attackers to execute malicious code on your site. Please make sure you know exactly what you're uploading.";
+$string['upload'] = 'Upload';
+
+// Installed libraries section
+$string['installedlibraries'] = 'Installed Libraries';
 
 // H5P library list headers on admin page
 $string['librarylisttitle'] = 'Title';
