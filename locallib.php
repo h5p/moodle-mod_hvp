@@ -177,3 +177,17 @@ function hvp_get_token($key) {
 function hvp_verify_token($key, $token) {
     return $_SESSION['h5p_' . $key] === $token;
 }
+
+/**
+ * Restrict access to a given content type.
+ *
+ * @param int $library_id
+ * @param bool $restrict
+ */
+function hvp_restrict_library($library_id, $restrict) {
+  global $DB;
+  $DB->update_record('hvp_libraries', (object) array(
+    'id' => $library_id,
+    'restricted' => $restrict ? 1 : 0
+  ));
+}

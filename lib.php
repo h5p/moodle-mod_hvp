@@ -151,14 +151,6 @@ function hvp_delete_instance($id) {
     return $result;
 }
 
-function hvp_restrict_library($library_id, $restrict) {
-  global $DB;
-  $DB->update_record('hvp_libraries', (object) array(
-    'id' => $library_id,
-    'restricted' => $restrict ? 1 : 0
-  ));
-}
-
 /**
  * Serves the files from the hvp file areas
  *
