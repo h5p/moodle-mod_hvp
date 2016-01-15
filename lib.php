@@ -42,20 +42,20 @@ defined('MOODLE_INTERNAL') || die();
  * @return mixed true if the feature is supported, null if unknown
  */
 function hvp_supports($feature) {
-  switch($feature) {
-    case FEATURE_GROUPS:                  return true;
-    case FEATURE_GROUPINGS:               return true;
-    case FEATURE_GROUPMEMBERSONLY:        return true;
-    case FEATURE_MOD_INTRO:               return false;
-    case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
-    case FEATURE_COMPLETION_HAS_RULES:    return false;
-    case FEATURE_GRADE_HAS_GRADE:         return true;
-    case FEATURE_GRADE_OUTCOMES:          return false;
-    case FEATURE_BACKUP_MOODLE2:          return false;
-    case FEATURE_SHOW_DESCRIPTION:        return false;
+    switch($feature) {
+        case FEATURE_GROUPS:                  return true;
+        case FEATURE_GROUPINGS:               return true;
+        case FEATURE_GROUPMEMBERSONLY:        return true;
+        case FEATURE_MOD_INTRO:               return false;
+        case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
+        case FEATURE_COMPLETION_HAS_RULES:    return false;
+        case FEATURE_GRADE_HAS_GRADE:         return true;
+        case FEATURE_GRADE_OUTCOMES:          return false;
+        case FEATURE_BACKUP_MOODLE2:          return false;
+        case FEATURE_SHOW_DESCRIPTION:        return false;
 
-    default: return null;
-  }
+        default: return null;
+    }
 }
 
 /**
@@ -107,28 +107,28 @@ function hvp_add_instance($moduleinfo) {
  * @return boolean Success/Fail
  */
 function hvp_update_instance($hvp) {
-  $disable_settings = array(
-    \H5PCore::$disable[\H5PCore::DISABLE_FRAME] => isset($hvp->frame) ? $hvp->frame: 0,
-    \H5PCore::$disable[\H5PCore::DISABLE_DOWNLOAD] => isset($hvp->download) ? $hvp->download: 0,
-    \H5PCore::$disable[\H5PCore::DISABLE_COPYRIGHT] => isset($hvp->copyright) ? $hvp->copyright: 0
-  );
+    $disable_settings = array(
+        \H5PCore::$disable[\H5PCore::DISABLE_FRAME] => isset($hvp->frame) ? $hvp->frame: 0,
+        \H5PCore::$disable[\H5PCore::DISABLE_DOWNLOAD] => isset($hvp->download) ? $hvp->download: 0,
+        \H5PCore::$disable[\H5PCore::DISABLE_COPYRIGHT] => isset($hvp->copyright) ? $hvp->copyright: 0
+    );
 
-  $core = \mod_hvp\framework::instance();
-  $default_disable_value = 0;
-  $disable_value = $core->getDisable($disable_settings, $default_disable_value);
+    $core = \mod_hvp\framework::instance();
+    $default_disable_value = 0;
+    $disable_value = $core->getDisable($disable_settings, $default_disable_value);
 
-  // Updated $hvp values used in $DB
-  $hvp->disable = $disable_value;
-  $hvp->id = $hvp->instance;
+    // Updated $hvp values used in $DB
+    $hvp->disable = $disable_value;
+    $hvp->id = $hvp->instance;
 
-  $h5pStorage = \mod_hvp\framework::instance('storage');
-  $h5pStorage->savePackage((array)$hvp);
+    $h5pStorage = \mod_hvp\framework::instance('storage');
+    $h5pStorage->savePackage((array)$hvp);
 
-  // Update grade item with 100% max score, reset user records
-  $hvp->rawgrademax = '100';
-  hvp_grade_item_update($hvp, 'reset');
+    // Update grade item with 100% max score, reset user records
+    $hvp->rawgrademax = '100';
+    hvp_grade_item_update($hvp, 'reset');
 
-  return TRUE;
+    return TRUE;
 }
 
 /**
@@ -142,21 +142,21 @@ function hvp_update_instance($hvp) {
  * @return boolean Success/Failure
  */
 function hvp_delete_instance($id) {
-  global $DB;
+    global $DB;
 
-  if (! $hvp = $DB->get_record('hvp', array('id' => "$id"))) {
-    return false;
-  }
+    if (! $hvp = $DB->get_record('hvp', array('id' => "$id"))) {
+        return false;
+    }
 
-  $result = true;
-  $h5pStorage = \mod_hvp\framework::instance('storage');
-  $h5pStorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug));
+    $result = true;
+    $h5pStorage = \mod_hvp\framework::instance('storage');
+    $h5pStorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug));
 
-  if (! $DB->delete_records('hvp', array('id' => "$hvp->id"))) {
-    $result = false;
-  }
+    if (! $DB->delete_records('hvp', array('id' => "$hvp->id"))) {
+        $result = false;
+    }
 
-  return $result;
+    return $result;
 }
 
 /**
@@ -176,54 +176,54 @@ function hvp_delete_instance($id) {
  * @return true|false Success
  */
 function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = array()) {
-  switch ($filearea) {
-    default:
-      return false; // Invalid file area
+    switch ($filearea) {
+        default:
+            return false; // Invalid file area
 
-    case 'libraries':
-    case 'cachedassets':
-      if ($context->contextlevel != CONTEXT_SYSTEM) {
-        return false; // Invalid context
-      }
+        case 'libraries':
+        case 'cachedassets':
+            if ($context->contextlevel != CONTEXT_SYSTEM) {
+              return false; // Invalid context
+            }
 
-      // TODO: Check permissions?
+            // TODO: Check permissions?
 
-      $itemid = 0;
-      break;
+            $itemid = 0;
+            break;
 
-    case 'content':
-      if ($context->contextlevel != CONTEXT_COURSE) {
-        return false; // Invalid context
-      }
+        case 'content':
+            if ($context->contextlevel != CONTEXT_COURSE) {
+              return false; // Invalid context
+            }
 
-      // TODO: Check permissions?
+            // TODO: Check permissions?
 
-      $itemid = array_shift($args);
-      break;
+            $itemid = array_shift($args);
+            break;
 
-    case 'exports':
-      if ($context->contextlevel != CONTEXT_COURSE) {
-        return false; // Invalid context
-      }
+        case 'exports':
+            if ($context->contextlevel != CONTEXT_COURSE) {
+              return false; // Invalid context
+            }
 
-      // TODO: Check permissions?
+            // TODO: Check permissions?
 
-      $itemid = 0;
-      break;
-  }
+            $itemid = 0;
+            break;
+    }
 
-  $filename = array_pop($args);
-  $filepath = (!$args ? '/' : '/' .implode('/', $args) . '/');
+    $filename = array_pop($args);
+    $filepath = (!$args ? '/' : '/' .implode('/', $args) . '/');
 
-  $fs = get_file_storage();
-  $file = $fs->get_file($context->id, 'mod_hvp', $filearea, $itemid, $filepath, $filename);
-  if (!$file) {
-    return false; // No such file
-  }
+    $fs = get_file_storage();
+    $file = $fs->get_file($context->id, 'mod_hvp', $filearea, $itemid, $filepath, $filename);
+    if (!$file) {
+        return false; // No such file
+    }
 
-  send_stored_file($file, 86400, 0, $forcedownload, $options);
+    send_stored_file($file, 86400, 0, $forcedownload, $options);
 
-  return true;
+    return true;
 }
 
 /**
@@ -235,24 +235,24 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
  * @return int, 0 if ok, error code otherwise
  */
 function hvp_grade_item_update($hvp, $grades=NULL) {
-  global $CFG;
+    global $CFG;
 
-  if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
-    require_once($CFG->libdir . '/gradelib.php');
-  }
+    if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
+        require_once($CFG->libdir . '/gradelib.php');
+    }
 
-  $params = array('itemname' => $hvp->name, 'idnumber' => $hvp->cmidnumber);
-  if (isset($hvp->rawgrademax)) {
-      $params['gradetype'] = GRADE_TYPE_VALUE;
-      $params['grademax'] = $hvp->rawgrademax;
-  }
+    $params = array('itemname' => $hvp->name, 'idnumber' => $hvp->cmidnumber);
+    if (isset($hvp->rawgrademax)) {
+        $params['gradetype'] = GRADE_TYPE_VALUE;
+        $params['grademax'] = $hvp->rawgrademax;
+    }
 
-  if ($grades === 'reset') {
-      $params['reset'] = true;
-      $grades = null;
-  }
+    if ($grades === 'reset') {
+        $params['reset'] = true;
+        $grades = null;
+    }
 
-  return grade_update('mod/hvp', $hvp->course, 'mod', 'hvp', $hvp->id, 0, $grades, $params);
+    return grade_update('mod/hvp', $hvp->course, 'mod', 'hvp', $hvp->id, 0, $grades, $params);
 }
 
 /**
@@ -264,13 +264,13 @@ function hvp_grade_item_update($hvp, $grades=NULL) {
  * @param bool $nullifnone If true and the user has no grade then a grade item with rawgrade == null will be inserted
  */
 function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
-  if ($userid and $nullifnone) {
-    $grade = new stdClass();
-    $grade->userid   = $userid;
-    $grade->rawgrade = NULL;
-    hvp_grade_item_update($hvp, $grade);
+    if ($userid and $nullifnone) {
+        $grade = new stdClass();
+        $grade->userid   = $userid;
+        $grade->rawgrade = NULL;
+        hvp_grade_item_update($hvp, $grade);
 
-  } else {
-    hvp_grade_item_update($hvp);
-  }
+    } else {
+        hvp_grade_item_update($hvp);
+    }
 }
