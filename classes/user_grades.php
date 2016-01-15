@@ -35,7 +35,6 @@ class user_grades {
         $grade = (object) array(
             'userid' => $USER->id,
             'rawgrade' => $score,
-            'rawgrademax' => $max_score
         );
 
         // Get course module id from db, required for grade item
@@ -47,6 +46,7 @@ class user_grades {
         // Set grade using Gradebook API
         $hvp->cmidnumber = $result->id;
         $hvp->name = $result->name;
+        $hvp->rawgrademax = $max_score;
         $gradeResult = hvp_grade_item_update($hvp, $grade);
 
         print json_encode($gradeResult);
