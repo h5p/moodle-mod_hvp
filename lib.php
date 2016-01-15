@@ -49,7 +49,7 @@ function hvp_supports($feature) {
     case FEATURE_MOD_INTRO:               return false;
     case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
     case FEATURE_COMPLETION_HAS_RULES:    return false;
-    case FEATURE_GRADE_HAS_GRADE:         return false;
+    case FEATURE_GRADE_HAS_GRADE:         return true;
     case FEATURE_GRADE_OUTCOMES:          return false;
     case FEATURE_BACKUP_MOODLE2:          return false;
     case FEATURE_SHOW_DESCRIPTION:        return false;
@@ -89,6 +89,10 @@ function hvp_add_instance($moduleinfo) {
     $h5pStorage = \mod_hvp\framework::instance('storage');
     $h5pStorage->savePackage($cmcontent);
 
+    // Set and create grade item
+    $moduleinfo->id = $h5pStorage->contentId;
+    hvp_grade_item_update($moduleinfo);
+
     return $h5pStorage->contentId;
 }
 
@@ -119,6 +123,10 @@ function hvp_update_instance($hvp) {
 
   $h5pStorage = \mod_hvp\framework::instance('storage');
   $h5pStorage->savePackage((array)$hvp);
+
+  // Update grade item with 100% max score, reset user records
+  $hvp->rawgrademax = '100';
+  hvp_grade_item_update($hvp, 'reset');
 
   return TRUE;
 }
@@ -164,6 +172,8 @@ function hvp_delete_instance($id) {
  * @param array $args extra arguments (itemid, path)
  * @param bool $forcedownload whether or not force download
  * @param array $options additional options affecting the file serving
+ *
+ * @return true|false Success
  */
 function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = array()) {
   switch ($filearea) {
@@ -212,4 +222,55 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
   }
 
   send_stored_file($file, 86400, 0, $forcedownload, $options);
+
+  return true;
+}
+
+/**
+ * Create/update grade item for given hvp
+ *
+ * @category grade
+ * @param stdClass $hvp object with extra cmidnumber
+ * @param mixed $grades Optional array/object of grade(s); 'reset' means reset grades in gradebook
+ * @return int, 0 if ok, error code otherwise
+ */
+function hvp_grade_item_update($hvp, $grades=NULL) {
+  global $CFG;
+
+  if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
+    require_once($CFG->libdir . '/gradelib.php');
+  }
+
+  $params = array('itemname' => $hvp->name, 'idnumber' => $hvp->cmidnumber);
+  if (isset($hvp->rawgrademax)) {
+      $params['gradetype'] = GRADE_TYPE_VALUE;
+      $params['grademax'] = $hvp->rawgrademax;
+  }
+
+  if ($grades === 'reset') {
+      $params['reset'] = true;
+      $grades = null;
+  }
+
+  return grade_update('mod/hvp', $hvp->course, 'mod', 'hvp', $hvp->id, 0, $grades, $params);
+}
+
+/**
+ * Update activity grades
+ *
+ * @category grade
+ * @param stdClass $hvp Null means all hvps (with extra cmidnumber property)
+ * @param int $userid specific user only, 0 means all
+ * @param bool $nullifnone If true and the user has no grade then a grade item with rawgrade == null will be inserted
+ */
+function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
+  if ($userid and $nullifnone) {
+    $grade = new stdClass();
+    $grade->userid   = $userid;
+    $grade->rawgrade = NULL;
+    hvp_grade_item_update($hvp, $grade);
+
+  } else {
+    hvp_grade_item_update($hvp);
+  }
 }

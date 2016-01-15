@@ -84,7 +84,7 @@ $files = $core->getDependenciesFiles($preloaded_dependencies);
 $embedtype = H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
 if ($embedtype === 'div') {
   $context = \context_system::instance();
-  $hvp_path = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
+  $hvp_path = "/pluginfile.php/{$context->id}/mod_hvp";
 
   // Schedule JavaScripts for loading through Moodle
   foreach ($files['scripts'] as $script) {
