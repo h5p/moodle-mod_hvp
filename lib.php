@@ -160,27 +160,6 @@ function hvp_restrict_library($library_id, $restrict) {
 }
 
 /**
- * Get a new H5P security token.
- *
- * @param string $key
- * @return string
- */
-function hvp_get_token($key) {
-  return $_SESSION['h5p_' . $key] = uniqid('h5p-');
-}
-
-/**
- * Verifiy a given H5P security token.
- *
- * @param string $key
- * @param string $token
- * @return string
- */
-function hvp_verify_token($key, $token) {
-  return $_SESSION['h5p_' . $key] === $token;
-}
-
-/**
  * Serves the files from the hvp file areas
  *
  * @package mod_hvp

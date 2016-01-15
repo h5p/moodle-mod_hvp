@@ -98,7 +98,7 @@ function hvp_get_core_assets() {
     $settings['loadedCss'] = array();
 
     // Make sure files are reloaded for each plugin update
-    $cache_buster = '?ver=' . get_config('mod_hvp', 'version');
+    $cache_buster = hvp_get_cache_buster();
 
     // Use relative URL to support both http and https.
     $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';
@@ -144,4 +144,36 @@ function hvp_admin_add_generic_css_and_js($page, $lib_url, $settings = NULL) {
 
     // Add settings:
     $page->requires->data_for_js('h5p', hvp_get_core_settings(), true);
+}
+
+/**
+ * Get a query string with the plugin version number to include at the end
+ * of URLs. This is used to force the browser to reload the asset when the
+ * plugin is updated.
+ *
+ * @return string
+ */
+function hvp_get_cache_buster() {
+    return '?ver=' . get_config('mod_hvp', 'version');
+}
+
+/**
+ * Get a new H5P security token.
+ *
+ * @param string $key
+ * @return string
+ */
+function hvp_get_token($key) {
+    return $_SESSION['h5p_' . $key] = uniqid('h5p-');
+}
+
+/**
+ * Verifiy a given H5P security token.
+ *
+ * @param string $key
+ * @param string $token
+ * @return string
+ */
+function hvp_verify_token($key, $token) {
+    return $_SESSION['h5p_' . $key] === $token;
 }

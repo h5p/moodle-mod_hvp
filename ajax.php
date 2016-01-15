@@ -23,8 +23,6 @@
 
 define('AJAX_SCRIPT', true);
 require(__DIR__ . '/../../config.php');
-require_once ($CFG->dirroot . '/mod/hvp/lib.php');
-
 
 $action = required_param('action', PARAM_ALPHA);
 switch($action) {
@@ -33,7 +31,7 @@ switch($action) {
         break;
 
     case 'restrictlibrary':
-        global $DB;
+        require_once ($CFG->dirroot . '/mod/hvp/locallib.php');
 
         // TODO - check permissions
         $library_id = required_param('library_id', PARAM_INT);

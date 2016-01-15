@@ -1,7 +1,7 @@
 <?php
 require_once("../../config.php");
 require_once($CFG->libdir.'/adminlib.php');
-require_once("lib.php");
+require_once("locallib.php");
 
 // No guest autologin.
 require_login(0, false);
@@ -17,7 +17,7 @@ $PAGE->set_title("{$SITE->shortname}: " . get_string('libraries', 'hvp'));
 // Any equivalent in moodle?
 // _h5p_check_settings();
 
-$core = hvp_get_instance('core');
+$core = \mod_hvp\framework::instance();
 $numNotFiltered = $core->h5pF->getNumNotFiltered();
 $libraries = $core->h5pF->loadLibraries();
 
