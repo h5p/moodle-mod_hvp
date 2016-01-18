@@ -549,10 +549,12 @@ class framework implements \H5PFrameworkInterface {
             'main_library_id' => $content['library']['libraryId'],
             'filtered' => '',
             'disable' => $content['disable'],
+            'timemodified' => time(),
         );
 
         if (!isset($content['id'])) {
             $data['slug'] = '';
+            $data['timecreated'] = $data['timemodified'];
             return $DB->insert_record('hvp', $data);
         }
         else {
