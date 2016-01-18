@@ -98,7 +98,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements fetchExternalData
      *
-     * @param $url file url starting with http(s)://
+     * @param string $url Url starting with http(s)://
      * @return bool|null|\stdClass|string Data object if successful fetch
      */
     public function fetchExternalData($url) {
@@ -143,24 +143,24 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Store messages until they can be printed to the current user
      *
-     * @param string $type
+     * @param string $type Type of messages, e.g. 'info' or 'error'
      * @param string $newMessage Optional
-     * @param array
+     * @return array Array of stored messages
      */
     public static function messages($type, $newMessage = NULL) {
-      static $m = 'mod_hvp_messages';
+        static $m = 'mod_hvp_messages';
 
-      if ($newMessage === NULL) {
-          // Return and reset messages
-          $messages = isset($_SESSION[$m][$type]) ? $_SESSION[$m][$type] : array();
-          unset($_SESSION[$m][$type]);
-          if (empty($_SESSION[$m])) {
-            unset($_SESSION[$m]);
-          }
-          return $messages;
-      }
+        if ($newMessage === NULL) {
+            // Return and reset messages
+            $messages = isset($_SESSION[$m][$type]) ? $_SESSION[$m][$type] : array();
+            unset($_SESSION[$m][$type]);
+            if (empty($_SESSION[$m])) {
+                unset($_SESSION[$m]);
+            }
+            return $messages;
+        }
 
-      $_SESSION[$m][$type][] = $newMessage;
+        $_SESSION[$m][$type][] = $newMessage;
     }
 
     /**
@@ -170,10 +170,10 @@ class framework implements \H5PFrameworkInterface {
      * @param array $messages
      */
     public static function printMessages($type, $messages) {
-      global $OUTPUT;
-      foreach ($messages as $message) {
-        print $OUTPUT->notification($message, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
-      }
+        global $OUTPUT;
+        foreach ($messages as $message) {
+            print $OUTPUT->notification($message, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
+        }
     }
 
     /**
@@ -333,7 +333,8 @@ class framework implements \H5PFrameworkInterface {
      * Get number of content/nodes using a library, and the number of
      * dependencies to other libraries
      *
-     * @param int $libraryId
+     * @param int $id
+     * @param boolean $skipContent Optional. Set as TRUE to get number of content instances for library.
      * @return array The array contains two elements, keyed by 'content' and 'libraries'.
      *               Each element contains a number
      */

@@ -119,7 +119,12 @@ function hvp_get_core_assets() {
 }
 
 /**
- * TODO
+ * Add core JS and CSS to page.
+ *
+ * @param moodle_page $page
+ * @param moodle_url|string $lib_url
+ * @param array|null $settings
+ * @throws \coding_exception
  */
 function hvp_admin_add_generic_css_and_js($page, $lib_url, $settings = NULL) {
     foreach (H5PCore::$adminScripts as $script) {

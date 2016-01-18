@@ -53,6 +53,7 @@ switch($action) {
         else {
             http_response_code(403);
         }
+        break;
 
     case 'setFinished':
         \mod_hvp\user_grades::handle_ajax();

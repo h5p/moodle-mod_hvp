@@ -67,6 +67,8 @@ class upload_libraries_form extends \moodleform {
 
     /**
      * Preprocess incoming data
+     *
+     * @param array $default_values default values for form
      */
     function data_preprocessing(&$default_values) {
         // Aaah.. we meet again h5pfile!
@@ -77,6 +79,11 @@ class upload_libraries_form extends \moodleform {
 
     /**
      * Validate incoming data
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
     function validation($data, $files) {
         global $CFG;

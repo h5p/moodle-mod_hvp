@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The mod_hvp file storage
+ * The mod_hvp user grades
  *
  * @package    mod_hvp
  * @copyright  2016 Joubel AS
