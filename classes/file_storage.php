@@ -136,7 +136,7 @@ class file_storage implements \H5PFileStorage {
         global $COURSE;
 
         $context = \context_course::instance($COURSE->id);
-        \mod_hvp\file_storage::exportFileTree($target, $context->id, 'content', '/', $id);
+        self::exportFileTree($target, $context->id, 'content', '/', $id);
     }
 
     /**
@@ -150,7 +150,7 @@ class file_storage implements \H5PFileStorage {
     public function exportLibrary($library, $target) {
         $folder = \H5PCore::libraryToString($library, TRUE);
         $context = \context_system::instance();
-        \mod_hvp\file_storage::exportFileTree("{$target}/{$folder}", $context->id, 'libraries', "/{$folder}/");
+        self::exportFileTree("{$target}/{$folder}", $context->id, 'libraries', "/{$folder}/");
     }
 
     /**
@@ -392,16 +392,12 @@ class file_storage implements \H5PFileStorage {
     }
 
     /**
-     * Delete file tree
+     * Recursive removal of given filepath.
      *
      * @param int $contextid
-     *  Moodle context where the files are found
      * @param string $filearea
-     *  Moodle file area
      * @param string $filepath
-     *  Moodle file path
      * @param int $itemid
-     *  Optional Moodle item ID
      */
     private static function deleteFileTree($contextid, $filearea, $filepath, $itemid = 0) {
         $fs = get_file_storage();
