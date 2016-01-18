@@ -29,8 +29,9 @@ foreach ($libraries as $versions) {
     $usage = $core->h5pF->getLibraryUsage($library->id, $numNotFiltered ? TRUE : FALSE);
     if ($library->runnable) {
       $upgrades = $core->getUpgrades($library, $versions);
-      // TODO
-      //$upgradeUrl = empty($upgrades) ? FALSE : url('admin/content/h5p/libraries/' . $library->id . '/upgrade', array('query' => drupal_get_destination()));
+      $upgradeUrl = empty($upgrades) ? FALSE : (new moodle_url('/mod/hvp/upgrade_content_page.php', array(
+        'library_id' => $library->id
+      )))->out(false);
 
       $restricted = (isset($library->restricted) && $library->restricted == 1 ? TRUE : FALSE);
       $restricted_url = (new moodle_url('/mod/hvp/ajax.php', array(
@@ -72,7 +73,6 @@ $settings['libraryList']['listHeaders'] = array(
   get_string('librarylistactions', 'hvp')
 );
 
-
 //if ($numNotFiltered) {
   // Not implemented in Moodle
   // $settings['libraryList']['notCached'] = h5p_get_not_cached_settings($numNotFiltered);
@@ -85,5 +85,5 @@ hvp_admin_add_generic_css_and_js($PAGE, $lib_url, $settings);
 $PAGE->requires->js(new moodle_url($lib_url . 'js/h5p-library-list.js' . hvp_get_cache_buster()), true);
 
 echo $OUTPUT->header();
-echo '<h2>H5P Libraries</h2><h3 class="h5p-admin-header">' . 'Add libraries' . '</h3>' . /* TODO  - add upload form  */ '<h3 class="h5p-admin-header">' . 'Installed libraries' . '</h3><div id="h5p-admin-container"></div>';
+echo '<h2>' . get_string('libraries', 'hvp') . '</h2><h3 class="h5p-admin-header">' . get_string('addlibraries', 'hvp') . '</h3>' . /* TODO  - add upload form  */ '<h3 class="h5p-admin-header">' . get_string('installedlibraries', 'hvp') . '</h3><div id="h5p-admin-container"></div>';
 echo $OUTPUT->footer();
