@@ -53,7 +53,11 @@ switch($action) {
         else {
             http_response_code(403);
         }
+
+    case 'setFinished':
+        \mod_hvp\user_grades::handle_ajax();
         break;
+
     default:
         throw new coding_exception('Unhandled AJAX');
         break;
