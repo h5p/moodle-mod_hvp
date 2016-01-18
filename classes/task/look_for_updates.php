@@ -39,7 +39,7 @@ class look_for_updates extends \core\task\scheduled_task {
 
     public function execute() {
         global $CFG;
-        require_once($CFG->dirroot . '/mod/hvp/hvp.php');
+        $core = \mod_hvp\framework::instance();
         $core = hvp_get_instance('core');
         $core->fetchLibrariesMetadata();
     }
