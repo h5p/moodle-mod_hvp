@@ -23,7 +23,6 @@ $string['pluginname'] = 'H5P';
 
 $string['intro'] = 'Hello awesome!';
 $string['h5pfile'] = 'H5P File';
-$string['noth5pfile'] = 'The uploaded file is not a valid H5P.';
 $string['fullscreen'] = 'Fullscreen';
 $string['disablefullscreen'] = 'Disable fullscreen';
 $string['download'] = 'Download';
@@ -51,21 +50,32 @@ $string['startingover'] = "You'll be starting over.";
 $string['lookforupdates'] = 'Look for H5P updates';
 
 // Admin settings
-$string['display_options'] = 'Display Options';
-$string['enable_frame'] = 'Display action bar and frame';
-$string['enable_download'] = 'Download button';
-$string['enable_embed'] = 'Embed button';
-$string['enable_copyright'] = 'Copyright button';
-$string['enable_about'] = 'About H5P button';
+$string['displayoptions'] = 'Display Options';
+$string['enableframe'] = 'Display action bar and frame';
+$string['enabledownload'] = 'Download button';
+$string['enableembed'] = 'Embed button';
+$string['enablecopyright'] = 'Copyright button';
+$string['enableabout'] = 'About H5P button';
 
-$string['enable_save_content_state'] = 'Save content state';
-$string['content_state_description'] = 'Automatically save the current state of interactive content for each user. This means that the user may pick up where he left off.';
-$string['content_state_frequency'] = 'Save content state frequency';
-$string['content_state_frequency_description'] = 'In seconds, how often do you wish the user to auto save their progress. Increase this number if you\'re having issues with many ajax requests';
+$string['enablesavecontentstate'] = 'Save content state';
+$string['enablesavecontentstate_help'] = 'Automatically save the current state of interactive content for each user. This means that the user may pick up where he left off.';
+$string['contentstatefrequency'] = 'Save content state frequency';
+$string['contentstatefrequency_help'] = 'In seconds, how often do you wish the user to auto save their progress. Increase this number if you\'re having issues with many ajax requests';
 
 // Admin menu
 $string['settings'] = 'H5P Settings';
 $string['libraries'] = 'H5P Libraries';
+
+// Upload libraries section
+$string['uploadlibraries'] = 'Upload Libraries';
+$string['options'] = 'Options';
+$string['onlyupdate'] = 'Only update existing libraries';
+$string['disablefileextensioncheck'] = 'Disable file extension check';
+$string['disablefileextensioncheckwarning'] = "Warning! Disabling the file extension check may have security implications as it allows for uploading of php files. That in turn could make it possible for attackers to execute malicious code on your site. Please make sure you know exactly what you're uploading.";
+$string['upload'] = 'Upload';
+
+// Installed libraries section
+$string['installedlibraries'] = 'Installed Libraries';
 
 // H5P library list headers on admin page
 $string['librarylisttitle'] = 'Title';

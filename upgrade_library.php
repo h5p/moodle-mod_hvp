@@ -1,7 +1,7 @@
 <?php
 require_once("../../config.php");
 require_once($CFG->libdir.'/adminlib.php');
-require_once("lib.php");
+require_once("locallib.php");
 
 // library param is in the following format:
 // /<machine-name>/<major-version>/<minor-version>
@@ -22,7 +22,7 @@ function hvp_upgrade_library($name, $major, $minor) {
     )
   );
 
-  $core = hvp_get_instance('core');
+  $core = \mod_hvp\framework::instance();
 
   // echo $name;
   // echo $major;

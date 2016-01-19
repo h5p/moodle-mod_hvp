@@ -1,7 +1,7 @@
 <?php
 require_once("../../config.php");
 require_once($CFG->libdir.'/adminlib.php');
-require_once("lib.php");
+require_once("locallib.php");
 //require_once(__DIR__ . '/classes/upgrade_content_form.php');
 
 // No guest autologin.
@@ -35,7 +35,7 @@ function hvp_content_upgrade_progress($library_id) {
   $out->token = hvp_get_token('content_upgrade');
 
   // Prepare our interface
-  $interface = hvp_get_instance('interface');
+  $interface = \mod_hvp\framework::instance('interface');
 
   // Get updated params
   $params = filter_input(INPUT_POST, 'params');
@@ -93,7 +93,7 @@ admin_externalpage_setup('h5plibraries');
 $PAGE->set_title("{$SITE->shortname}: " . get_string('upgrade', 'hvp'));
 
 // Inform moodle which menu entry currently is active!
-$core = hvp_get_instance('core');
+$core = \mod_hvp\framework::instance();
 global $DB;
 $results = $DB->get_records_sql('SELECT hl2.id as id, hl2.machine_name as name, hl2.title, hl2.major_version, hl2.minor_version, hl2.patch_version
                                  FROM {hvp_libraries} hl1 JOIN {hvp_libraries} hl2 ON hl1.machine_name = hl2.machine_name
