@@ -2,7 +2,6 @@
 require_once("../../config.php");
 require_once($CFG->libdir.'/adminlib.php');
 require_once("locallib.php");
-//require_once(__DIR__ . '/classes/upgrade_content_form.php');
 
 // No guest autologin.
 require_login(0, false);
