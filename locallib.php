@@ -191,3 +191,103 @@ function hvp_restrict_library($library_id, $restrict) {
     'restricted' => $restrict ? 1 : 0
   ));
 }
+
+function hvp_content_upgrade_progress($library_id) {
+  global $DB;
+
+  $to_library_id = filter_input(INPUT_POST, 'libraryId');
+
+  // Verify security token
+  if (!hvp_verify_token('content_upgrade', filter_input(INPUT_POST, 'token'))) {
+    print get_string('upgradeinvalidetoken', 'hvp');
+    return;
+  }
+
+  // Get the library we're upgrading to
+  $to_library = $DB->get_record('hvp_libraries', array(
+    'id' => $to_library_id
+  ));
+  if (!$to_library) {
+    print get_string('upgradelibrarymissing', 'hvp');
+    return;
+  }
+
+  // Prepare response
+  $out = new stdClass();
+  $out->params = array();
+  $out->token = hvp_get_token('content_upgrade');
+
+  // Prepare our interface
+  $interface = \mod_hvp\framework::instance('interface');
+
+  // Get updated params
+  $params = filter_input(INPUT_POST, 'params');
+  if ($params !== NULL) {
+    // Update params.
+    $params = json_decode($params);
+    foreach ($params as $id => $param) {
+      $DB->update_record('hvp', (object) array(
+        'id' => $id,
+        'main_library_id' => $to_library->id,
+        'json_content' => $param,
+        'filtered' => ''
+      ));
+
+      // Clear content cache
+      // $interface->updateContentFields($content['id'], array(
+      //   'filtered' => ''
+      // ));
+    }
+  }
+
+  // Get number of contents for this library
+  $out->left = $interface->getNumContent($library_id);
+
+  if ($out->left) {
+    // Find the 40 first contents using library and add to params
+    $results = $DB->get_records_sql(
+      "SELECT id, json_content as params
+      FROM {hvp}
+      WHERE main_library_id = ?
+      ORDER BY name ASC", array($library_id), 0 , 40
+    );
+
+    foreach ($results as $content) {
+      $out->params[$content->id] = $content->params;
+    }
+  }
+
+  return $out;
+}
+
+function hvp_get_library_upgrade_info($name, $major, $minor) {
+  global $CFG;
+
+  $library = (object) array(
+    'name' => $name,
+    'version' => (object) array(
+      'major' => $major,
+      'minor' => $minor
+    )
+  );
+
+  $core = \mod_hvp\framework::instance();
+
+  $library->semantics = $core->loadLibrarySemantics($library->name, $library->version->major, $library->version->minor);
+  if ($library->semantics === NULL) {
+    http_response_code(404);
+    return;
+  }
+
+  $basePath = $CFG->sessioncookiepath;
+  $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
+  $system_context = \context_system::instance();
+
+
+  $upgrades_script = "{$basePath}pluginfile.php/{$system_context->id}/mod_hvp/libraries/{$library->name}-{$library->version->major}.{$library->version->minor}/upgrades.js";
+  //if (file_exists($upgrades_script)) { TODO
+  $library->upgradesScript = $upgrades_script;
+  //}
+
+  return $library;
+}

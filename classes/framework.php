@@ -886,8 +886,8 @@ class framework implements \H5PFrameworkInterface {
         global $DB;
 
         return (int) $DB->get_field_sql(
-                "SELECT COUNT(id) FROM {hvp}",
-                array('library_id' => $library_id));
+                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?",
+                array($library_id));
     }
 
     /**
