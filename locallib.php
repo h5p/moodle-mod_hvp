@@ -42,7 +42,7 @@ function hvp_get_core_settings() {
         'baseUrl' => $basePath,
         'url' => "{$basePath}pluginfile.php/{$course_context->id}/mod_hvp",
         'libraryUrl' => "{$basePath}pluginfile.php/{$system_context->id}/mod_hvp/libraries",
-        'postUserStatistics' => FALSE, // TODO: Add when grades are implemented
+        'postUserStatistics' => TRUE,
         'ajaxPath' => $ajaxPath,
         'ajax' => array(
             'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
@@ -119,7 +119,12 @@ function hvp_get_core_assets() {
 }
 
 /**
- * TODO
+ * Add core JS and CSS to page.
+ *
+ * @param moodle_page $page
+ * @param moodle_url|string $lib_url
+ * @param array|null $settings
+ * @throws \coding_exception
  */
 function hvp_admin_add_generic_css_and_js($page, $lib_url, $settings = NULL) {
     foreach (H5PCore::$adminScripts as $script) {

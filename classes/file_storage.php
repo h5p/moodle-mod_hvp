@@ -65,7 +65,7 @@ class file_storage implements \H5PFileStorage {
      *
      * @param string $source
      *  Path on file system to content directory.
-     * @param int $contentId
+     * @param int $id
      *  What makes this content unique.
      */
     public function saveContent($source, $id) {
@@ -104,9 +104,9 @@ class file_storage implements \H5PFileStorage {
     /**
      * Creates a stored copy of the content folder.
      *
-     * @param string $source
+     * @param string $id
      *  Path on file system to content directory.
-     * @param int $contentId
+     * @param int $newId
      *  What makes this content unique.
      */
     public function cloneContent($id, $newId) {
@@ -136,7 +136,7 @@ class file_storage implements \H5PFileStorage {
         global $COURSE;
 
         $context = \context_course::instance($COURSE->id);
-        \mod_hvp\file_storage::exportFileTree($target, $context->id, 'content', '/', $id);
+        self::exportFileTree($target, $context->id, 'content', '/', $id);
     }
 
     /**
@@ -150,7 +150,7 @@ class file_storage implements \H5PFileStorage {
     public function exportLibrary($library, $target) {
         $folder = \H5PCore::libraryToString($library, TRUE);
         $context = \context_system::instance();
-        \mod_hvp\file_storage::exportFileTree("{$target}/{$folder}", $context->id, 'libraries', "/{$folder}/");
+        self::exportFileTree("{$target}/{$folder}", $context->id, 'libraries', "/{$folder}/");
     }
 
     /**
@@ -322,6 +322,7 @@ class file_storage implements \H5PFileStorage {
      *  Path to source directory
      * @param array $options
      *  For Moodle's file record
+     * @throws \Exception Unable to copy
      */
     private static function readFileTree($source, $options) {
         $dir = opendir($source);
@@ -391,7 +392,12 @@ class file_storage implements \H5PFileStorage {
     }
 
     /**
-     * Delete file tree
+     * Recursive removal of given filepath.
+     *
+     * @param int $contextid
+     * @param string $filearea
+     * @param string $filepath
+     * @param int $itemid
      */
     private static function deleteFileTree($contextid, $filearea, $filepath, $itemid = 0) {
         $fs = get_file_storage();

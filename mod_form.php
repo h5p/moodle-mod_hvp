@@ -52,10 +52,12 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addElement('checkbox', 'download', get_string('enabledownload', 'hvp'));
         $mform->setType('download', PARAM_BOOL);
         $mform->setDefault('download', true);
+        $mform->disabledIf('download', 'frame');
 
         $mform->addElement('checkbox', 'copyright', get_string('enablecopyright', 'hvp'));
         $mform->setType('copyright', PARAM_BOOL);
         $mform->setDefault('copyright', true);
+        $mform->disabledIf('copyright', 'frame');
 
         $this->standard_coursemodule_elements();
 

@@ -39,6 +39,30 @@ function xmldb_hvp_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
 
+    if ($oldversion < 2016011300) {
+
+        $table = new xmldb_table('hvp');
+
+        // Define field timecreated to be added to hvp.
+        $timecreated = new xmldb_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'slug');
+
+        // Conditionally launch add field timecreated.
+        if (!$dbman->field_exists($table, $timecreated)) {
+            $dbman->add_field($table, $timecreated);
+        }
+
+        // Define field timemodified to be added to hvp.
+        $timemodified = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'timecreated');
+
+        // Conditionally launch add field timemodified.
+        if (!$dbman->field_exists($table, $timemodified)) {
+            $dbman->add_field($table, $timemodified);
+        }
+
+        // Hvp savepoint reached.
+        upgrade_mod_savepoint(true, 2016011300, 'hvp');
+    }
+
     return true;
 }
 

@@ -1,17 +1,18 @@
 <?php
 
 /**
- * Hvp specific lib functions and H5P Framework Interface implementation.
+ * The mod_hvp content user data.
  *
  * @package    mod_hvp
- * @subpackage hvp
+ * @since      Moodle 2.7
+ * @copyright  2016 Joubel AS
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_hvp;
 
 /**
- * Class Content_User_Data handles user data and corresponding db operations.
+ * Class content_user_data handles user data and corresponding db operations.
  *
  * @package mod_hvp
  */
@@ -45,11 +46,11 @@ class content_user_data {
 
         // Delete user data
         if ($data === '0') {
-            Content_User_Data::delete_user_data($content_id, $sub_content_id, $data_id);
+            self::delete_user_data($content_id, $sub_content_id, $data_id);
         }
         else {
             // Save user data
-            Content_User_Data::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
+            self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
         }
 
         print json_encode($response);
