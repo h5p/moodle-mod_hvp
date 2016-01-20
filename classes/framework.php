@@ -762,7 +762,7 @@ class framework implements \H5PFrameworkInterface {
     public function deleteLibraryDependencies($libraryId) {
         global $DB;
 
-        $DB->delete_records('hvp_libraries_libraries', array('library_id' => "$libraryId"));
+        $DB->delete_records('hvp_libraries_libraries', array('library_id' => $libraryId));
     }
 
     /**
@@ -772,13 +772,13 @@ class framework implements \H5PFrameworkInterface {
         global $DB;
 
         // Remove content
-        $DB->delete_records('hvp', array('id' => "$contentId"));
+        $DB->delete_records('hvp', array('id' => $contentId));
 
         // Remove content library dependencies
         $this->deleteLibraryUsage($contentId);
 
         // Remove user data for content
-        $DB->delete_records('hvp_content_user_data', array('hvp_id' => "$contentId"));
+        $DB->delete_records('hvp_content_user_data', array('hvp_id' => $contentId));
     }
 
     /**
@@ -787,7 +787,7 @@ class framework implements \H5PFrameworkInterface {
     public function deleteLibraryUsage($contentId) {
         global $DB;
 
-        $DB->delete_records('hvp_contents_libraries', array('hvp_id' => "$contentId"));
+        $DB->delete_records('hvp_contents_libraries', array('hvp_id' => $contentId));
     }
 
     /**
@@ -849,7 +849,7 @@ class framework implements \H5PFrameworkInterface {
                 'SELECT hl.machine_name, hl.major_version, hl.minor_version, hll.dependency_type
                    FROM {hvp_libraries_libraries} hll
                    JOIN {hvp_libraries} hl ON hll.required_library_id = hl.id
-                  WHERE hll.library_id = ?', array("$library->id"));
+                  WHERE hll.library_id = ?', array($library->id));
         foreach ($dependencies as $dependency) {
             $libraryData[$dependency->dependency_type . 'Dependencies'][] = array(
                 'machineName' => $dependency->machine_name,
@@ -928,7 +928,7 @@ class framework implements \H5PFrameworkInterface {
                 'SELECT hash
                    FROM {hvp_libraries_cachedassets}
                   WHERE library_id = ?',
-                array("$library_id"));
+                array($library_id));
 
         // Remove all invalid keys
         $hashes = array();
