@@ -350,14 +350,14 @@ class framework implements \H5PFrameworkInterface {
                 FROM {hvp_libraries} l
                 JOIN {hvp_contents_libraries} cl ON l.id = cl.library_id
                 JOIN {hvp} c ON cl.hvp_id = c.id
-                WHERE l.id = $id"
+                WHERE l.id = ?", array($id)
             ));
         }
 
         $libraries = intval($DB->get_field_sql(
             "SELECT COUNT(*)
             FROM {hvp_libraries_libraries}
-            WHERE required_library_id = $id"
+            WHERE required_library_id = ?", array($id)
         ));
 
         return array(
