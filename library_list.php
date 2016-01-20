@@ -6,7 +6,7 @@ require_once("locallib.php");
 // No guest autologin.
 require_login(0, false);
 
-$pageurl = new moodle_url('/mod/hvp/toolproxies.php');
+$pageurl = new moodle_url('/mod/hvp/library_list.php');
 $PAGE->set_url($pageurl);
 
 // Inform moodle which menu entry currently is active!
@@ -30,42 +30,42 @@ $libraries = $core->h5pF->loadLibraries();
 $settings = array();
 $i = 0;
 foreach ($libraries as $versions) {
-  foreach ($versions as $library) {
-    $usage = $core->h5pF->getLibraryUsage($library->id, $numNotFiltered ? TRUE : FALSE);
-    if ($library->runnable) {
-      $upgrades = $core->getUpgrades($library, $versions);
-      $upgradeUrl = empty($upgrades) ? FALSE : (new moodle_url('/mod/hvp/upgrade_content_page.php', array(
-        'library_id' => $library->id
-      )))->out(false);
+    foreach ($versions as $library) {
+        $usage = $core->h5pF->getLibraryUsage($library->id, $numNotFiltered ? TRUE : FALSE);
+        if ($library->runnable) {
+            $upgrades = $core->getUpgrades($library, $versions);
+            $upgradeUrl = empty($upgrades) ? FALSE : (new moodle_url('/mod/hvp/upgrade_content_page.php', array(
+                'library_id' => $library->id
+            )))->out(false);
 
-      $restricted = (isset($library->restricted) && $library->restricted == 1 ? TRUE : FALSE);
-      $restricted_url = (new moodle_url('/mod/hvp/ajax.php', array(
-        'action' => 'restrict_library',
-        'token' => hvp_get_token('library_' . $library->id),
-        'restrict' => ($restricted ? 0 : 1),
-        'library_id' => $library->id
-      )))->out(false);
+            $restricted = (isset($library->restricted) && $library->restricted == 1 ? TRUE : FALSE);
+            $restricted_url = (new moodle_url('/mod/hvp/ajax.php', array(
+                'action' => 'restrict_library',
+                'token' => hvp_get_token('library_' . $library->id),
+                'restrict' => ($restricted ? 0 : 1),
+                'library_id' => $library->id
+            )))->out(false);
+        }
+        else {
+            $upgradeUrl = NULL;
+            $restricted = NULL;
+            $restricted_url = NULL;
+        }
+
+        $settings['libraryList']['listData'][] = array(
+            'title' => $library->title . ' (' . H5PCore::libraryVersion($library) . ')',
+            'restricted' => $restricted,
+            'restrictedUrl' => $restricted_url,
+            'numContent' => $core->h5pF->getNumContent($library->id),
+            'numContentDependencies' => $usage['content'] === -1 ? '' : $usage['content'],
+            'numLibraryDependencies' => $usage['libraries'],
+            'upgradeUrl' => $upgradeUrl,
+            'detailsUrl' => NULL, // Not implemented in Moodle
+            'deleteUrl' => NULL // Not implemented in Moodle
+        );
+
+        $i++;
     }
-    else {
-      $upgradeUrl = NULL;
-      $restricted = NULL;
-      $restricted_url = NULL;
-    }
-
-    $settings['libraryList']['listData'][] = array(
-        'title' => $library->title . ' (' . H5PCore::libraryVersion($library) . ')',
-        'restricted' => $restricted,
-        'restrictedUrl' => $restricted_url,
-        'numContent' => $core->h5pF->getNumContent($library->id),
-        'numContentDependencies' => $usage['content'] === -1 ? '' : $usage['content'],
-        'numLibraryDependencies' => $usage['libraries'],
-        'upgradeUrl' => $upgradeUrl,
-        'detailsUrl' => NULL, // Not implemented in Moodle
-        'deleteUrl' => NULL // Not implemented in Moodle
-    );
-
-    $i++;
-  }
 }
 
 // All translations are made server side
@@ -77,11 +77,6 @@ $settings['libraryList']['listHeaders'] = array(
     get_string('librarylistlibrarydependencies', 'hvp'),
     get_string('librarylistactions', 'hvp')
 );
-
-//if ($numNotFiltered) {
-    // Not implemented in Moodle
-    // $settings['libraryList']['notCached'] = h5p_get_not_cached_settings($numNotFiltered);
-//}
 
 // Add js
 $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';

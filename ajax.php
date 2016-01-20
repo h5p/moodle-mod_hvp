@@ -40,7 +40,6 @@ switch($action) {
 
         if (hvp_verify_token('library_' . $library_id, $token)) {
             hvp_restrict_library($library_id, $restrict);
-            // TODO - need to check access - using e.g. tokens  + permissions!
             echo json_encode(array(
                 'url' => (new moodle_url('/mod/hvp/ajax.php', array(
                     'action' => 'restrict_library',

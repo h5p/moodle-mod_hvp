@@ -9,8 +9,8 @@ $library = required_param('library', PARAM_TEXT);
 $library = explode('/', substr($library, 1));
 
 if (sizeof($library) !== 3) {
-  http_response_code(422);
-  return;
+    http_response_code(422);
+    return;
 }
 
 $library = hvp_get_library_upgrade_info($library[0], $library[1], $library[2]);

@@ -419,4 +419,19 @@ class file_storage implements \H5PFileStorage {
             $file->delete();
         }
     }
+
+    /**
+     * Checks if a file exists
+     *
+     * @method fileExists
+     * @param  string     $filearea [description]
+     * @param  string     $filepath [description]
+     * @param  string     $filename [description]
+     * @return boolean
+     */
+    public static function fileExists($contextid, $filearea, $filepath, $filename) {
+        // Check if file exists
+        $fs = get_file_storage();
+        return ($fs->get_file($contextid, 'mod_hvp', $filearea, 0, $filepath, $filename) !== false);
+    }
 }
