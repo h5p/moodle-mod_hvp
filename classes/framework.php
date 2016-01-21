@@ -273,14 +273,34 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getLibraryId
      */
-    public function getLibraryId($machineName, $majorVersion, $minorVersion) {
+    public function getLibraryId($machineName, $majorVersion = NULL, $minorVersion = NULL) {
         global $DB;
 
-        $library = $DB->get_record('hvp_libraries', array(
-            'machine_name' => $machineName,
-            'major_version' => $majorVersion,
-            'minor_version' => $minorVersion
-        ));
+        // Look for specific library
+        $sql_where = 'WHERE machine_name = ?';
+        $sql_args = array($machineName);
+
+        if ($majorVersion !== NULL) {
+          // Look for major version
+          $sql_where .= ' AND major_version = ?';
+          $sql_args[] = $majorVersion;
+          if ($minorVersion !== NULL) {
+            // Look for minor version
+            $sql_where .= ' AND minor_version = ?';
+            $sql_args[] = $minorVersion;
+          }
+        }
+
+        // Get the lastest version which matches the input parameters
+        $library = $DB->get_record_sql("
+                SELECT id
+                  FROM {hvp_libraries}
+          {$sql_where}
+              ORDER BY major_version DESC,
+                       minor_version DESC,
+                       patch_version DESC
+                 LIMIT 1
+                ", $sql_args);
 
         return $library ? $library->id : FALSE;
     }
