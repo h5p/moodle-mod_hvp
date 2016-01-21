@@ -255,9 +255,9 @@ function hvp_content_upgrade_progress($library_id) {
         // Find the 40 first contents using this library version and add to params
         $results = $DB->get_records_sql(
             "SELECT id, json_content as params
-            FROM {hvp}
-            WHERE main_library_id = ?
-            ORDER BY name ASC", array($library_id), 0 , 40
+               FROM {hvp}
+              WHERE main_library_id = ?
+           ORDER BY name ASC", array($library_id), 0 , 40
         );
 
         foreach ($results as $content) {

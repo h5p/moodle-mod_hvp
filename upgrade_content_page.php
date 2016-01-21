@@ -38,9 +38,9 @@ $PAGE->set_title("{$SITE->shortname}: " . get_string('upgrade', 'hvp'));
 $core = \mod_hvp\framework::instance();
 global $DB;
 $results = $DB->get_records_sql('SELECT hl2.id as id, hl2.machine_name as name, hl2.title, hl2.major_version, hl2.minor_version, hl2.patch_version
-                                 FROM {hvp_libraries} hl1 JOIN {hvp_libraries} hl2 ON hl1.machine_name = hl2.machine_name
-                                 WHERE hl1.id = ?
-                                 ORDER BY hl2.title ASC, hl2.major_version ASC, hl2.minor_version ASC', array($library_id));
+                                   FROM {hvp_libraries} hl1 JOIN {hvp_libraries} hl2 ON hl1.machine_name = hl2.machine_name
+                                  WHERE hl1.id = ?
+                               ORDER BY hl2.title ASC, hl2.major_version ASC, hl2.minor_version ASC', array($library_id));
 $versions = array();
 foreach ($results as $result) {
     $versions[$result->id] = $result;
