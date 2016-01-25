@@ -215,8 +215,11 @@ class file_storage implements \H5PFileStorage {
         $fs = get_file_storage();
 
         foreach ($files as $type => $assets) {
-            $content = '';
+            if (empty($assets)) {
+              continue;
+            }
 
+            $content = '';
             foreach ($assets as $asset) {
                 // Find location of asset
                 $location = array();
