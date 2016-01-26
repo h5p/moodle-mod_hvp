@@ -237,7 +237,7 @@ class file_storage implements \H5PFileStorage {
                     $content .= preg_replace_callback(
                             '/url\([\'"]?([^"\')]+)[\'"]?\)/i',
                             function ($matches) use ($location) {
-                                if (preg_match("/^([a-z0-9]+:)?\//i", $matches[1]) === 1) {
+                                if (preg_match("/^(data:|([a-z0-9]+:)?\/)/i", $matches[1]) === 1) {
                                   return $matches[0]; // Not relative, skip
                                 }
                                 return 'url("../' . $location[1] . $location[2] . $matches[1] . '")';
