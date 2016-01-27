@@ -215,8 +215,11 @@ class file_storage implements \H5PFileStorage {
         $fs = get_file_storage();
 
         foreach ($files as $type => $assets) {
-            $content = '';
+            if (empty($assets)) {
+              continue;
+            }
 
+            $content = '';
             foreach ($assets as $asset) {
                 // Find location of asset
                 $location = array();
@@ -234,28 +237,33 @@ class file_storage implements \H5PFileStorage {
                     $content .= preg_replace_callback(
                             '/url\([\'"]?([^"\')]+)[\'"]?\)/i',
                             function ($matches) use ($location) {
-                                return substr($matches[1], 0, 3) !== '../' ? $matches[0] : 'url("../' . $location[1] . $location[2] . $matches[1] . '")';
+                                if (preg_match("/^(data:|([a-z0-9]+:)?\/)/i", $matches[1]) === 1) {
+                                  return $matches[0]; // Not relative, skip
+                                }
+                                return 'url("../' . $location[1] . $location[2] . $matches[1] . '")';
                             },
                             $file->get_content()) . "\n";
                 }
             }
 
             // Create new file for cached assets
+            $ext = ($type === 'scripts' ? 'js' : 'css');
             $fileinfo = array(
                 'contextid' => $context->id,
                 'component' => 'mod_hvp',
                 'filearea' => 'cachedassets',
                 'itemid' => 0,
                 'filepath' => '/',
-                'filename' => $key.'.'.($type === 'scripts' ? 'js' : 'css')
+                'filename' => "{$key}.{$ext}"
             );
 
             // Store concatenated content
             $fs->create_file_from_string($fileinfo, $content);
+            $files[$type] = array((object) array(
+                'path' => "/cachedassets/{$key}.{$ext}",
+                'version' => ''
+            ));
         }
-
-        // Use the newly created cache
-        $files = self::formatCachedAssets($key);
     }
 
     /**
@@ -269,10 +277,25 @@ class file_storage implements \H5PFileStorage {
         $context = \context_system::instance();
         $fs = get_file_storage();
 
-        $js = $fs->get_file($context->id, 'mod_hvp', 'cachedassets', 0, '/', "{$key}.js");
-        $css = $fs->get_file($context->id, 'mod_hvp', 'cachedassets', 0, '/', "{$key}.css");
+        $files = array();
 
-        return (!$js || !$css ? NULL : self::formatCachedAssets($key));
+        $js = $fs->get_file($context->id, 'mod_hvp', 'cachedassets', 0, '/', "{$key}.js");
+        if ($js) {
+            $files['scripts'] = array((object) array(
+                'path' => "/cachedassets/{$key}.js",
+                'version' => ''
+            ));
+        }
+
+        $css = $fs->get_file($context->id, 'mod_hvp', 'cachedassets', 0, '/', "{$key}.css");
+        if ($css) {
+            $files['styles'] = array((object) array(
+                'path' => "/cachedassets/{$key}.css",
+                'version' => ''
+            ));
+        }
+
+        return empty($files) ? NULL : $files;
     }
 
     /**
@@ -293,26 +316,6 @@ class file_storage implements \H5PFileStorage {
                 }
             }
         }
-    }
-
-    /**
-     * Format the cached assets data the way it's supposed to be.
-     *
-     * @param string $key
-     *  Hashed key for cached asset
-     * @return array
-     */
-    private static function formatCachedAssets($key) {
-        return array(
-            'scripts' => array((object) array(
-                'path' => "/cachedassets/{$key}.js",
-                'version' => ''
-            )),
-            'styles' => array((object) array(
-                'path' => "/cachedassets/{$key}.css",
-                'version' => ''
-            ))
-        );
     }
 
     /**
@@ -418,5 +421,20 @@ class file_storage implements \H5PFileStorage {
         if ($file) {
             $file->delete();
         }
+    }
+
+    /**
+     * Checks if a file exists
+     *
+     * @method fileExists
+     * @param  string     $filearea [description]
+     * @param  string     $filepath [description]
+     * @param  string     $filename [description]
+     * @return boolean
+     */
+    public static function fileExists($contextid, $filearea, $filepath, $filename) {
+        // Check if file exists
+        $fs = get_file_storage();
+        return ($fs->get_file($contextid, 'mod_hvp', $filearea, 0, $filepath, $filename) !== false);
     }
 }

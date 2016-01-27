@@ -273,14 +273,34 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getLibraryId
      */
-    public function getLibraryId($machineName, $majorVersion, $minorVersion) {
+    public function getLibraryId($machineName, $majorVersion = NULL, $minorVersion = NULL) {
         global $DB;
 
-        $library = $DB->get_record('hvp_libraries', array(
-            'machine_name' => $machineName,
-            'major_version' => $majorVersion,
-            'minor_version' => $minorVersion
-        ));
+        // Look for specific library
+        $sql_where = 'WHERE machine_name = ?';
+        $sql_args = array($machineName);
+
+        if ($majorVersion !== NULL) {
+          // Look for major version
+          $sql_where .= ' AND major_version = ?';
+          $sql_args[] = $majorVersion;
+          if ($minorVersion !== NULL) {
+            // Look for minor version
+            $sql_where .= ' AND minor_version = ?';
+            $sql_args[] = $minorVersion;
+          }
+        }
+
+        // Get the lastest version which matches the input parameters
+        $library = $DB->get_record_sql("
+                SELECT id
+                  FROM {hvp_libraries}
+          {$sql_where}
+              ORDER BY major_version DESC,
+                       minor_version DESC,
+                       patch_version DESC
+                 LIMIT 1
+                ", $sql_args);
 
         return $library ? $library->id : FALSE;
     }
@@ -350,14 +370,14 @@ class framework implements \H5PFrameworkInterface {
                 FROM {hvp_libraries} l
                 JOIN {hvp_contents_libraries} cl ON l.id = cl.library_id
                 JOIN {hvp} c ON cl.hvp_id = c.id
-                WHERE l.id = $id"
+                WHERE l.id = ?", array($id)
             ));
         }
 
         $libraries = intval($DB->get_field_sql(
             "SELECT COUNT(*)
             FROM {hvp_libraries_libraries}
-            WHERE required_library_id = $id"
+            WHERE required_library_id = ?", array($id)
         ));
 
         return array(
@@ -762,7 +782,7 @@ class framework implements \H5PFrameworkInterface {
     public function deleteLibraryDependencies($libraryId) {
         global $DB;
 
-        $DB->delete_records('hvp_libraries_libraries', array('library_id' => "$libraryId"));
+        $DB->delete_records('hvp_libraries_libraries', array('library_id' => $libraryId));
     }
 
     /**
@@ -772,13 +792,13 @@ class framework implements \H5PFrameworkInterface {
         global $DB;
 
         // Remove content
-        $DB->delete_records('hvp', array('id' => "$contentId"));
+        $DB->delete_records('hvp', array('id' => $contentId));
 
         // Remove content library dependencies
         $this->deleteLibraryUsage($contentId);
 
         // Remove user data for content
-        $DB->delete_records('hvp_content_user_data', array('hvp_id' => "$contentId"));
+        $DB->delete_records('hvp_content_user_data', array('hvp_id' => $contentId));
     }
 
     /**
@@ -787,7 +807,7 @@ class framework implements \H5PFrameworkInterface {
     public function deleteLibraryUsage($contentId) {
         global $DB;
 
-        $DB->delete_records('hvp_contents_libraries', array('hvp_id' => "$contentId"));
+        $DB->delete_records('hvp_contents_libraries', array('hvp_id' => $contentId));
     }
 
     /**
@@ -849,7 +869,7 @@ class framework implements \H5PFrameworkInterface {
                 'SELECT hl.machine_name, hl.major_version, hl.minor_version, hll.dependency_type
                    FROM {hvp_libraries_libraries} hll
                    JOIN {hvp_libraries} hl ON hll.required_library_id = hl.id
-                  WHERE hll.library_id = ?', array("$library->id"));
+                  WHERE hll.library_id = ?', array($library->id));
         foreach ($dependencies as $dependency) {
             $libraryData[$dependency->dependency_type . 'Dependencies'][] = array(
                 'machineName' => $dependency->machine_name,
@@ -889,8 +909,8 @@ class framework implements \H5PFrameworkInterface {
         global $DB;
 
         return (int) $DB->get_field_sql(
-                "SELECT COUNT(id) FROM {hvp}",
-                array('library_id' => $library_id));
+                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?",
+                array($library_id));
     }
 
     /**
@@ -928,7 +948,7 @@ class framework implements \H5PFrameworkInterface {
                 'SELECT hash
                    FROM {hvp_libraries_cachedassets}
                   WHERE library_id = ?',
-                array("$library_id"));
+                array($library_id));
 
         // Remove all invalid keys
         $hashes = array();

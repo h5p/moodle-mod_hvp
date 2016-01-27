@@ -1,4 +1,26 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Responsible for displaying the library list page
+ *
+ * @package    mod_hvp
+ * @copyright  2016 Joubel AS <contact@joubel.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once("../../config.php");
 require_once($CFG->libdir.'/adminlib.php');
 require_once("locallib.php");
@@ -6,7 +28,7 @@ require_once("locallib.php");
 // No guest autologin.
 require_login(0, false);
 
-$pageurl = new moodle_url('/mod/hvp/toolproxies.php');
+$pageurl = new moodle_url('/mod/hvp/library_list.php');
 $PAGE->set_url($pageurl);
 
 // Inform moodle which menu entry currently is active!
@@ -34,8 +56,9 @@ foreach ($libraries as $versions) {
         $usage = $core->h5pF->getLibraryUsage($library->id, $numNotFiltered ? TRUE : FALSE);
         if ($library->runnable) {
             $upgrades = $core->getUpgrades($library, $versions);
-            // TODO
-            //$upgradeUrl = empty($upgrades) ? FALSE : url('admin/content/h5p/libraries/' . $library->id . '/upgrade', array('query' => drupal_get_destination()));
+            $upgradeUrl = empty($upgrades) ? FALSE : (new moodle_url('/mod/hvp/upgrade_content_page.php', array(
+                'library_id' => $library->id
+            )))->out(false);
 
             $restricted = (isset($library->restricted) && $library->restricted == 1 ? TRUE : FALSE);
             $restricted_url = (new moodle_url('/mod/hvp/ajax.php', array(
@@ -76,11 +99,6 @@ $settings['libraryList']['listHeaders'] = array(
     get_string('librarylistlibrarydependencies', 'hvp'),
     get_string('librarylistactions', 'hvp')
 );
-
-//if ($numNotFiltered) {
-    // Not implemented in Moodle
-    // $settings['libraryList']['notCached'] = h5p_get_not_cached_settings($numNotFiltered);
-//}
 
 // Add js
 $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';

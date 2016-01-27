@@ -80,5 +80,26 @@ $string['librarylistlibrarydependencies'] = 'Library dependencies';
 $string['librarylistactions'] = 'Actions';
 
 // H5P library page labels
+$string['addlibraries'] = 'Add libraries';
+$string['installedlibraries'] = 'Installed libraries';
 $string['notapplicable'] = 'N/A';
 $string['upgradelibrarycontent'] = 'Upgrade library content';
+
+// Upgrade H5P content page
+$string['upgrade'] = 'Upgrade H5P';
+$string['upgradeheading'] = 'Upgrade {$a} content';
+$string['upgradenoavailableupgrades'] = 'There are no available upgrades for this library.';
+$string['enablejavascript'] = 'Please enable JavaScript.';
+$string['upgrademessage'] = 'You are about to upgrade {$a} content instance(s). Please select upgrade version.';
+$string['upgradeinprogress'] = 'Upgrading to %ver...';
+$string['upgradeerror'] = 'An error occurred while processing parameters:';
+$string['upgradeerrordata'] = 'Could not load data for library %lib.';
+$string['upgradeerrorscript'] = 'Could not load upgrades script for %lib.';
+$string['upgradeerrorcontent'] = 'Could not upgrade content %id:';
+$string['upgradeerrorparamsbroken'] = 'Parameters are broken.';
+$string['upgradedone'] = 'You have successfully upgraded {$a} content instance(s).';
+$string['upgradereturn'] = 'Return';
+$string['upgradenothingtodo'] = "There's no content instances to upgrade.";
+$string['upgradebuttonlabel'] = 'Upgrade';
+$string['upgradeinvalidetoken'] = 'Error: Invalid security token!';
+$string['upgradelibrarymissing'] = 'Error: Your library is missing!';

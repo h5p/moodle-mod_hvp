@@ -90,6 +90,7 @@ $settings['contents'][$cid] = array(
     'exportUrl' => $export,
     'title' => $content['title'],
     'disable' => $content['disable'],
+    'url' => "{$CFG->httpswwwroot}/mod/hvp/view.php?id={$id}",
     'contentUserData' => array(
         0 => array(
             'state' => \mod_hvp\content_user_data::load_user_data($content['id'])
