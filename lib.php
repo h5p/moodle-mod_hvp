@@ -122,7 +122,22 @@ function hvp_update_instance($hvp) {
     $hvp->id = $hvp->instance;
 
     $h5pStorage = \mod_hvp\framework::instance('storage');
-    $h5pStorage->savePackage((array)$hvp);
+
+    // Save package
+    if (!empty($h5pStorage->h5pC->mainJsonData)) {
+        $h5pStorage->savePackage((array)$hvp);
+    }
+    else {
+        // No package, load content
+        $content = $core->loadContent($hvp->id);
+
+        // Update loaded content with new data
+        $content['name'] = $hvp->name;
+        $content['course'] = $hvp->course;
+        $content['library']['libraryId'] = $content['library']['id'];
+        $content['disable'] = $hvp->disable;
+        $core->saveContent($content);
+    }
 
     // Update grade item with 100% max score, reset user records
     $hvp->rawgrademax = '100';

@@ -40,7 +40,9 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         // H5P
         $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
-        $mform->addRule('h5pfile', null, 'required', null, 'client');
+        if (!is_number($this->current->id)) {
+            $mform->addRule('h5pfile', null, 'required', null, 'client');
+        }
 
         // Display options group.
         $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'hvp'));
@@ -98,8 +100,14 @@ class mod_hvp_mod_form extends moodleform_mod {
         }
 
         $files = $this->get_draft_files('h5pfile');
+
+        // No file uploaded
         if (count($files) < 1) {
-            $errors['h5pfile'] = get_string('required');
+
+            // No previous content to update
+            if (!is_number($this->current->id)) {
+                $errors['h5pfile'] = get_string('required');
+            }
             return $errors;
         }
 
