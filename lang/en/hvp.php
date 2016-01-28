@@ -10,7 +10,7 @@ User interactions and scores are tracked using xAPI and are available through th
 You add interactive H5P content by uploading a .h5p file. You can create and download .h5p files on h5p.org
 
 More content types and example content can be found at the following the link:';
-$string['modulename_link'] = 'https://h5p.org/content-types-and-applications';
+$string['modulename_link'] = 'https://h5p.org/moodle-more-help';
 $string['modulenameplural'] = 'H5Ps';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
