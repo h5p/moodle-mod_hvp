@@ -677,7 +677,6 @@ class framework implements \H5PFrameworkInterface {
                 FROM {hvp} hc
                 JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
                 WHERE hc.id = ?", array($id));
-        // TODO: We cannot use the AS keyword! Must be removed!
 
         // Return NULL if not found
         if ($data === false) {

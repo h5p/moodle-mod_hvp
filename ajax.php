@@ -138,6 +138,27 @@ switch($action) {
         \mod_hvp\user_grades::handle_ajax();
         break;
 
+    /**
+     * Provide data for results view
+     *
+     * Type: HTTP GET
+     *
+     * Parameters:
+     * 	int content_id
+     * 	int offset
+     * 	int limit
+     *  int sortBy
+     *  int sortDir
+     *  string[] filters
+     */
+    case 'results':
+        $results = new \mod_hvp\results();
+        $results->print_results();
+        break;
+
+    /**
+     * Throw error if AJAX isnt handeled
+     */
     default:
         throw new coding_exception('Unhandled AJAX');
         break;

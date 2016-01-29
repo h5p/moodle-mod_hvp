@@ -109,3 +109,18 @@ $string['upgradenothingtodo'] = "There's no content instances to upgrade.";
 $string['upgradebuttonlabel'] = 'Upgrade';
 $string['upgradeinvalidetoken'] = 'Error: Invalid security token!';
 $string['upgradelibrarymissing'] = 'Error: Your library is missing!';
+
+// Results / report page
+$string['user'] = 'User';
+$string['score'] = 'Score';
+$string['maxscore'] = 'Maximum Score';
+$string['finished'] = 'Finished';
+$string['loadingdata'] = 'Loading data.';
+$string['ajaxfailed'] = 'Failed to load data.';
+$string['nodata'] = "There's no data available that matches your criteria.";
+$string['currentpage'] = 'Page $current of $total';
+$string['nextpage'] = 'Next page';
+$string['previouspage'] = 'Previous page';
+$string['search'] = 'Search';
+$string['empty'] = 'No results available';
+$string['javascriptloading'] = 'Waiting for JavaScript';
