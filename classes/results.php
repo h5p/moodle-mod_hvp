@@ -50,6 +50,8 @@ class results {
 
     /**
      * Filter and load input parameters
+     *
+     * @throws \coding_exception
      */
     protected function filter_input() {
         // Type specifc
@@ -105,6 +107,7 @@ class results {
      * Builds the SQL query required to retrieve results for the given
      * interactive content.
      *
+     * @throws \coding_exception
      * @return array
      */
     protected function get_results() {
@@ -165,7 +168,8 @@ class results {
     /**
      * Builds the order part of the SQL query.
      *
-     * @param array Fields allowed to order by
+     * @param array $fields Fields allowed to order by
+     * @throws \coding_exception
      * @return string
      */
     protected function get_order_sql($fields) {

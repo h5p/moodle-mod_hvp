@@ -117,6 +117,6 @@ echo '<div class="clearer"></div>';
 
 // Print H5P Content
 echo "<h2>{$title}</h2>";
-echo '<div id="h5p-results">' . get_string('javascriptloading', 'hvp') . '</div>'; // TODO: Translate
+echo '<div id="h5p-results">' . get_string('javascriptloading', 'hvp') . '</div>';
 
 echo $OUTPUT->footer();
