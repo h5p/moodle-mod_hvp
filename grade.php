@@ -34,9 +34,9 @@ if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
 }
 require_course_login($course, false, $cm);
 
-if ($userid === $USER->id) {
+if ($userid === (int)$USER->id) {
     // If it's the same user, redirect to content
-    redirect(new moodle_url('/mod/quiz/view.php', array('id' => $cm->id)));
+    redirect(new moodle_url('/mod/hvp/view.php', array('id' => $cm->id)));
 }
 
 // Load H5P Content
