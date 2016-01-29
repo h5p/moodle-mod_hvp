@@ -1,11 +1,11 @@
 <?php
 
-$string['modulename'] = 'H5P';
+$string['modulename'] = 'Interactive Content';
 $string['modulename_help'] = 'The H5P activity module enables you to create interactive content such as Interactive Videos, Question Sets, Drag and Drop Questions, Multi-Choice Questions, Presentations and much more.
 
 In addition to being an authoring tool for rich content, H5P enables you to import and export H5P files for effective reuse and sharing of content.
 
-User interactions and scores are tracked using xAPI and are available through the Moodle grade system.
+User interactions and scores are tracked using xAPI and are available through the Moodle Gradebook.
 
 You add interactive H5P content by uploading a .h5p file. You can create and download .h5p files on h5p.org';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
