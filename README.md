@@ -6,21 +6,21 @@ This is a prototype under development.
 
 ### Development Version
 Warning! Using the development version may cause strange bugs, so do not use it for production!
-Inside your `moodle/mod` folder you run the following command:
 
+Inside your `moodle/mod` folder you run the following command:
 ```
 git clone https://github.com/h5p/h5p-moodle-plugin.git hvp && cd hvp && git submodule update --init
 ```
 
 ### Alpha Versions
 If you can't wait for the final release you can check out one of the test versions.
-Here is an example. Remember to replace the version number with the latest from the [releases](/h5p/h5p-moodle-plugin/releases) page:
+Here is an example. Remember to replace the version number with the latest from the [releases](https://github.com/h5p/h5p-moodle-plugin/releases) page:
 ```
 git clone --branch 0.2.0 https://github.com/h5p/h5p-moodle-plugin.git hvp && cd hvp && git submodule update --init
 ```
 
-Alternatively, you can download the latest tag/version from the [releases](/h5p/h5p-moodle-plugin/releases) page. 
-However, then you'll also have to download the same version of [h5p-php-library](/h5p/h5p-php-library/releases), 
+Alternatively, you can download the latest tag/version from the [releases](https://github.com/h5p/h5p-moodle-plugin/releases) page.
+However, then you'll also have to download the same version of [h5p-php-library](https://github.com/h5p/h5p-php-library/releases),
 e.g. *moodle-0.2.0*. And extract it into the `moodle/mod/hvp/library` folder.
 
 ### Enabling The Plugin
