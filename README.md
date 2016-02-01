@@ -7,6 +7,7 @@ This is a prototype under development.
 
 Using github:
 Clone to /moodle/mod/hvp
+Copy the entire https://github.com/h5p/h5p-php-library code into /moodle/mod/hvp/library
 
 In Moodle go to administrator -> plugin overview, and press 'Update database'
 
