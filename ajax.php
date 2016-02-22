@@ -134,7 +134,7 @@ switch($action) {
      * 	- score
      * 	- maxScore
      */
-    case 'setFinished':
+    case 'setfinished':
         \mod_hvp\user_grades::handle_ajax();
         break;
 

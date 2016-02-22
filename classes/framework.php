@@ -387,6 +387,29 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
+     * Implements getLibraryContentCount
+     */
+    public function getLibraryContentCount() {
+        global $DB;
+        $contentCount = array();
+
+        // Count content with same machine name, major and minor version
+        $query = "SELECT main_library_id, machine_name, major_version, minor_version, count(*) as count
+            FROM mdl_hvp, mdl_hvp_libraries as lib
+            WHERE main_library_id = lib.id
+            GROUP BY machine_name, major_version, minor_version";
+
+        $res = $DB->get_records_sql($query);
+
+        // Extract results
+        forEach($res as $lib) {
+            $contentCount[$lib->machine_name.' '.$lib->major_version.'.'.$lib->minor_version] = $lib->count;
+        }
+
+        return $contentCount;
+    }
+
+    /**
      * Implements saveLibraryData
      */
     public function saveLibraryData(&$libraryData, $new = TRUE) {
