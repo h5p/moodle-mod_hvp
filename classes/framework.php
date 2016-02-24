@@ -292,17 +292,21 @@ class framework implements \H5PFrameworkInterface {
         }
 
         // Get the lastest version which matches the input parameters
-        $library = $DB->get_record_sql("
+        $libraries = $DB->get_records_sql("
                 SELECT id
                   FROM {hvp_libraries}
           {$sql_where}
               ORDER BY major_version DESC,
                        minor_version DESC,
                        patch_version DESC
-                 LIMIT 1
-                ", $sql_args);
-
-        return $library ? $library->id : FALSE;
+                ", $sql_args, 0, 1);
+        if ($libraries) {
+            $library = reset($libraries);  
+            return $library ? $library->id : FALSE;
+        }
+        else {
+            return FALSE;
+        }
     }
 
     /**
