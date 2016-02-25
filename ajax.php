@@ -53,28 +53,25 @@ switch($action) {
      *  - token
      */
     case 'restrictlibrary':
-        require_once ($CFG->dirroot . '/mod/hvp/locallib.php');
-
         // TODO - check permissions
         $library_id = required_param('library_id', PARAM_INT);
         $restrict = required_param('restrict', PARAM_INT);
-        $token = required_param('token', PARAM_ALPHANUMEXT);
 
-        if (hvp_verify_token('library_' . $library_id, $token)) {
-            hvp_restrict_library($library_id, $restrict);
-            header('Cache-Control', 'no-cache');
-            header('Content-Type: application/json');
-            echo json_encode(array(
-                'url' => (new moodle_url('/mod/hvp/ajax.php', array(
-                    'action' => 'restrict_library',
-                    'token' => hvp_get_token('library_' . $library_id),
-                    'restrict' => ($restrict === '1' ? 0 : 1),
-                    'library_id' => $library_id
-                )))->out(false)));
+        if (!\H5PCore::validToken('library_' . $library_id, required_param('token', PARAM_RAW))) {
+          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+          exit;
         }
-        else {
-            http_response_code(403);
-        }
+
+        hvp_restrict_library($library_id, $restrict);
+        header('Cache-Control', 'no-cache');
+        header('Content-Type: application/json');
+        echo json_encode(array(
+            'url' => (new moodle_url('/mod/hvp/ajax.php', array(
+                'action' => 'restrict_library',
+                'token' => \H5PCore::createToken('library_' . $library_id),
+                'restrict' => ($restrict === '1' ? 0 : 1),
+                'library_id' => $library_id
+            )))->out(false)));
         break;
 
     /**

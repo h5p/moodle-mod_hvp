@@ -40,9 +40,10 @@ class content_user_data {
             return; // Missing parameters
         }
 
-        $response = (object) array(
-            'success' => TRUE
-        );
+        if (!\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
+          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+          exit;
+        }
 
         // Delete user data
         if ($data === '0') {
@@ -53,7 +54,7 @@ class content_user_data {
             self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
         }
 
-        print json_encode($response);
+        \H5PCore::ajaxSuccess();
         exit;
     }
 

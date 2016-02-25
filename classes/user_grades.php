@@ -19,6 +19,11 @@ class user_grades {
     public static function handle_ajax() {
         global $DB, $USER;
 
+        if (!\H5PCore::validToken('result', required_param('token', PARAM_RAW))) {
+          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+          exit;
+        }
+
         // Content parameters
         $content_id = required_param('contentId', PARAM_INT);
         $score = required_param('score', PARAM_INT);
@@ -47,9 +52,9 @@ class user_grades {
         $hvp->cmidnumber = $result->id;
         $hvp->name = $result->name;
         $hvp->rawgrademax = $max_score;
-        $gradeResult = hvp_grade_item_update($hvp, $grade);
+        hvp_grade_item_update($hvp, $grade);
 
-        print json_encode($gradeResult);
+        \H5PCore::ajaxSuccess();
         exit;
     }
 }

@@ -31,6 +31,8 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+require_once 'autoloader.php';
+
  /* Moodle core API */
 
 /**

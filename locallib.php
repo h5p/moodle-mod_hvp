@@ -25,6 +25,8 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+require_once 'autoloader.php';
+
 /**
  * Get array with settings for hvp core
  *
@@ -46,6 +48,10 @@ function hvp_get_core_settings() {
         'ajax' => array(
             'setFinished' => $ajaxPath . 'set_finished',
             'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
+        ),
+        'tokens' => array(
+          'result' => \H5PCore::createToken('result'),
+          'contentUserData' => \H5PCore::createToken('contentuserdata')
         ),
         'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : FALSE,
         'siteUrl' => $CFG->wwwroot,
@@ -105,12 +111,12 @@ function hvp_get_core_assets() {
     $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
 
     // Add core stylesheets
-    foreach (H5PCore::$styles as $style) {
+    foreach (\H5PCore::$styles as $style) {
         $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
         $PAGE->requires->css(new moodle_url($lib_url . $style . $cache_buster));
     }
     // Add core JavaScript
-    foreach (H5PCore::$scripts as $script) {
+    foreach (\H5PCore::$scripts as $script) {
         $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
         $PAGE->requires->js(new moodle_url($lib_url . $script . $cache_buster), true);
     }
@@ -127,7 +133,7 @@ function hvp_get_core_assets() {
  * @throws \coding_exception
  */
 function hvp_admin_add_generic_css_and_js($page, $lib_url, $settings = NULL) {
-    foreach (H5PCore::$adminScripts as $script) {
+    foreach (\H5PCore::$adminScripts as $script) {
         $page->requires->js(new moodle_url($lib_url . $script . hvp_get_cache_buster()), true);
     }
 
@@ -163,27 +169,6 @@ function hvp_get_cache_buster() {
 }
 
 /**
- * Get a new H5P security token.
- *
- * @param string $key
- * @return string
- */
-function hvp_get_token($key) {
-    return $_SESSION['h5p_' . $key] = uniqid('h5p-');
-}
-
-/**
- * Verifiy a given H5P security token.
- *
- * @param string $key
- * @param string $token
- * @return string
- */
-function hvp_verify_token($key, $token) {
-    return $_SESSION['h5p_' . $key] === $token;
-}
-
-/**
  * Restrict access to a given content type.
  *
  * @param int $library_id
@@ -211,8 +196,8 @@ function hvp_content_upgrade_progress($library_id) {
     $to_library_id = filter_input(INPUT_POST, 'libraryId');
 
     // Verify security token
-    if (!hvp_verify_token('content_upgrade', filter_input(INPUT_POST, 'token'))) {
-        print get_string('upgradeinvalidetoken', 'hvp');
+    if (!\H5PCore::validToken('contentupgrade', required_param('token', PARAM_RAW))) {
+        print get_string('upgradeinvalidtoken', 'hvp');
         return;
     }
 
@@ -228,7 +213,7 @@ function hvp_content_upgrade_progress($library_id) {
     // Prepare response
     $out = new stdClass();
     $out->params = array();
-    $out->token = hvp_get_token('content_upgrade');
+    $out->token = \H5PCore::createToken('contentupgrade');
 
     // Prepare our interface
     $interface = \mod_hvp\framework::instance('interface');

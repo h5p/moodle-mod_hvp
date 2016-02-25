@@ -48,7 +48,7 @@ foreach ($results as $result) {
 $library = $versions[$library_id];
 $upgrades = $core->getUpgrades($library, $versions);
 
-$PAGE->set_heading(get_string('upgradeheading', 'hvp', $library->title . ' (' . H5PCore::libraryVersion($library) . ')'));
+$PAGE->set_heading(get_string('upgradeheading', 'hvp', $library->title . ' (' . \H5PCore::libraryVersion($library) . ')'));
 
 // Get num of contents that can be upgraded
 $num_contents = $core->h5pF->getNumContent($library_id);

@@ -103,7 +103,7 @@ $preloaded_dependencies = $core->loadContentDependencies($content['id'], 'preloa
 $files = $core->getDependenciesFiles($preloaded_dependencies);
 
 // Determine embed type
-$embedtype = H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
+$embedtype = \H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
 if ($embedtype === 'div') {
     $context = \context_system::instance();
     $hvp_path = "/pluginfile.php/{$context->id}/mod_hvp";

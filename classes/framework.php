@@ -26,9 +26,6 @@ namespace mod_hvp;
 
 defined('MOODLE_INTERNAL') || die();
 
-// Load the class we're going to extend
-require_once($CFG->dirroot . '/mod/hvp/library/h5p.classes.php');
-
 /**
  * Moodle's implementation of the H5P framework interface.
  *
@@ -47,9 +44,6 @@ class framework implements \H5PFrameworkInterface {
     public static function instance($type = NULL) {
         global $CFG;
         static $interface, $core;
-
-        require_once($CFG->dirroot . '/mod/hvp/library/h5p-file-storage.interface.php');
-        require_once($CFG->dirroot . '/mod/hvp/library/h5p-development.class.php');
 
         if (!isset($interface)) {
             $interface = new \mod_hvp\framework();
@@ -301,7 +295,7 @@ class framework implements \H5PFrameworkInterface {
                        patch_version DESC
                 ", $sql_args, 0, 1);
         if ($libraries) {
-            $library = reset($libraries);  
+            $library = reset($libraries);
             return $library ? $library->id : FALSE;
         }
         else {

@@ -68,6 +68,7 @@ $string['upload'] = 'Upload';
 
 // Installed libraries section
 $string['installedlibraries'] = 'Installed Libraries';
+$string['invalidtoken'] = 'Invalid security token.';
 
 // H5P library list headers on admin page
 $string['librarylisttitle'] = 'Title';
@@ -99,7 +100,7 @@ $string['upgradedone'] = 'You have successfully upgraded {$a} content instance(s
 $string['upgradereturn'] = 'Return';
 $string['upgradenothingtodo'] = "There's no content instances to upgrade.";
 $string['upgradebuttonlabel'] = 'Upgrade';
-$string['upgradeinvalidetoken'] = 'Error: Invalid security token!';
+$string['upgradeinvalidtoken'] = 'Error: Invalid security token!';
 $string['upgradelibrarymissing'] = 'Error: Your library is missing!';
 
 // Results / report page

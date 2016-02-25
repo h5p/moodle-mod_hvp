@@ -63,7 +63,7 @@ foreach ($libraries as $versions) {
             $restricted = (isset($library->restricted) && $library->restricted == 1 ? TRUE : FALSE);
             $restricted_url = (new moodle_url('/mod/hvp/ajax.php', array(
                 'action' => 'restrict_library',
-                'token' => hvp_get_token('library_' . $library->id),
+                'token' => \H5PCore::createToken('library_' . $library->id),
                 'restrict' => ($restricted ? 0 : 1),
                 'library_id' => $library->id
             )))->out(false);
@@ -75,7 +75,7 @@ foreach ($libraries as $versions) {
         }
 
         $settings['libraryList']['listData'][] = array(
-            'title' => $library->title . ' (' . H5PCore::libraryVersion($library) . ')',
+            'title' => $library->title . ' (' . \H5PCore::libraryVersion($library) . ')',
             'restricted' => $restricted,
             'restrictedUrl' => $restricted_url,
             'numContent' => $core->h5pF->getNumContent($library->id),
