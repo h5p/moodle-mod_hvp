@@ -26,6 +26,8 @@ namespace mod_hvp;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once __DIR__ . '/../autoloader.php';
+
 /**
  * Moodle's implementation of the H5P framework interface.
  *
