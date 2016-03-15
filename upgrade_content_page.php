@@ -83,7 +83,7 @@ else {
             'buttonLabel' => get_string('upgradebuttonlabel', 'hvp'),
             'infoUrl' => (new moodle_url('/mod/hvp/ajax.php', array('action' => 'libraryupgradeprogress', 'library_id' => $library_id)))->out(false),
             'total' => $num_contents,
-            'token' => hvp_get_token('content_upgrade'), // Use token to avoid unauthorized updating
+            'token' => \H5PCore::createToken('contentupgrade')
         )
     );
 
