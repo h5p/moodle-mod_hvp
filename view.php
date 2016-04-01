@@ -43,7 +43,7 @@ $core = \mod_hvp\framework::instance();
 
 // Load H5P Content
 $content = $core->loadContent($cm->instance);
-if ($content === NULL) {
+if ($content === null) {
     print_error('invalidhvp');
 }
 
@@ -72,7 +72,7 @@ $content['disable'] |= \H5PCore::DISABLE_EMBED;
 $safe_parameters = $core->filterParameters($content);
 
 $export = '';
-if (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === TRUE) {
+if (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true) {
     // Find course context
     $context = \context_course::instance($course->id);
     $hvp_path = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";

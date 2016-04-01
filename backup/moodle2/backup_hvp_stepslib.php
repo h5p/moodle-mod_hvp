@@ -32,7 +32,7 @@
 class backup_hvp_activity_structure_step extends backup_activity_structure_step {
 
     protected function define_structure() {
-/*
+        /*
         // To know if we are including userinfo
         $userinfo = $this->get_setting_value('userinfo');
 
@@ -78,6 +78,6 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
 
         // Return the root element (choice), wrapped into standard activity structure
         return $this->prepare_activity_structure($choice);
-*/
+        */
     }
 }

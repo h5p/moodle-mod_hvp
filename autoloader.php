@@ -26,27 +26,27 @@ defined('MOODLE_INTERNAL') || die();
  * @param string $class name
  */
 function hvp_autoloader($class) {
-  global $CFG;
-  static $classmap;
-  if (!isset($classmap)) {
-    $classmap = array(
-      // Core
-      'H5PCore' => 'library/h5p.classes.php',
-      'H5PFrameworkInterface' => 'library/h5p.classes.php',
-      'H5PContentValidator' => 'library/h5p.classes.php',
-      'H5PValidator' => 'library/h5p.classes.php',
-      'H5PStorage' => 'library/h5p.classes.php',
-      'H5PExport' => 'library/h5p.classes.php',
-      'H5PDevelopment' => 'library/h5p-development.class.php',
-      'H5PFileStorage' => 'library/h5p-file-storage.interface.php',
-      'H5PDefaultStorage' => 'library/h5p-default-storage.class.php',
+    global $CFG;
+    static $classmap;
+    if (!isset($classmap)) {
+        $classmap = array(
+        // Core
+        'H5PCore' => 'library/h5p.classes.php',
+        'H5PFrameworkInterface' => 'library/h5p.classes.php',
+        'H5PContentValidator' => 'library/h5p.classes.php',
+        'H5PValidator' => 'library/h5p.classes.php',
+        'H5PStorage' => 'library/h5p.classes.php',
+        'H5PExport' => 'library/h5p.classes.php',
+        'H5PDevelopment' => 'library/h5p-development.class.php',
+        'H5PFileStorage' => 'library/h5p-file-storage.interface.php',
+        'H5PDefaultStorage' => 'library/h5p-default-storage.class.php',
 
-      // Plugin specific classes are loaded by Moodle
-    );
-  }
+        // Plugin specific classes are loaded by Moodle
+        );
+    }
 
-  if (isset($classmap[$class])) {
-    require_once  $CFG->dirroot . '/mod/hvp/' . $classmap[$class];
-  }
+    if (isset($classmap[$class])) {
+        require_once  $CFG->dirroot . '/mod/hvp/' . $classmap[$class];
+    }
 }
 spl_autoload_register('hvp_autoloader');

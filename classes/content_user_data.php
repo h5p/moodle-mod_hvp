@@ -31,18 +31,18 @@ class content_user_data {
         $sub_content_id = required_param('sub_content_id', PARAM_INT);
 
         // Form Data
-        $data = optional_param('data', NULL, PARAM_RAW);
-        $pre_load = optional_param('preload', NULL, PARAM_INT);
-        $invalidate = optional_param('invalidate', NULL, PARAM_INT);
+        $data = optional_param('data', null, PARAM_RAW);
+        $pre_load = optional_param('preload', null, PARAM_INT);
+        $invalidate = optional_param('invalidate', null, PARAM_INT);
 
-        if ($content_id === NULL || $data_id === NULL || $sub_content_id === NULL ||
-            $data === NULL || $invalidate === NULL || $pre_load === NULL) {
+        if ($content_id === null || $data_id === null || $sub_content_id === null ||
+            $data === null || $invalidate === null || $pre_load === null) {
             return; // Missing parameters
         }
 
         if (!\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
-          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-          exit;
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            exit;
         }
 
         // Delete user data
@@ -96,7 +96,7 @@ class content_user_data {
         );
 
         // Does not exist
-        if ($update === FALSE) {
+        if ($update === false) {
             // Insert new data
             $DB->insert_record('hvp_content_user_data', $new_data);
         }
@@ -140,6 +140,6 @@ class content_user_data {
             'hvp_id' => $content_id
         ));
 
-        return $result ? $result->data : NULL;
+        return $result ? $result->data : null;
     }
 }

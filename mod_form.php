@@ -124,8 +124,8 @@ class mod_hvp_mod_form extends moodleform_mod {
         $h5pValidator = \mod_hvp\framework::instance('validator');
 
         if (! $h5pValidator->isValidPackage()) {
-          $messages = \mod_hvp\framework::messages('error');
-          $errors['h5pfile'] = implode('<br/>', $messages);
+            $messages = \mod_hvp\framework::messages('error');
+            $errors['h5pfile'] = implode('<br/>', $messages);
         }
 
         return $errors;

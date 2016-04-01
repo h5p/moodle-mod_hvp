@@ -34,7 +34,7 @@ switch($action) {
      * Type: HTTP POST
      *
      * Parameters:
-     * 	- content_id
+     *  - content_id
      *  - data_type
      *  - sub_content_id
      */
@@ -48,7 +48,7 @@ switch($action) {
      * Type: HTTP GET
      *
      * Parameters:
-     * 	- library_id
+     *  - library_id
      *  - restrict (0 or 1)
      *  - token
      */
@@ -58,8 +58,8 @@ switch($action) {
         $restrict = required_param('restrict', PARAM_INT);
 
         if (!\H5PCore::validToken('library_' . $library_id, required_param('token', PARAM_RAW))) {
-          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-          exit;
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            exit;
         }
 
         hvp_restrict_library($library_id, $restrict);
@@ -80,7 +80,7 @@ switch($action) {
      * Type: HTTP GET
      *
      * Parameters:
-     * 	- library (Format: /<machine-name>/<major-version>/<minor-version>)
+     *  - library (Format: /<machine-name>/<major-version>/<minor-version>)
      */
     case 'getlibrarydataforupgrade':
         $library = required_param('library', PARAM_TEXT);
@@ -105,7 +105,7 @@ switch($action) {
      * Type: HTTP POST
      *
      * Parameters:
-     * 	- library_id
+     *  - library_id
      */
     case 'libraryupgradeprogress':
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
@@ -127,9 +127,9 @@ switch($action) {
      * Type: HTTP GET
      *
      * Parameters:
-     * 	- contentId
-     * 	- score
-     * 	- maxScore
+     *  - contentId
+     *  - score
+     *  - maxScore
      */
     case 'setfinished':
         \mod_hvp\user_grades::handle_ajax();
@@ -141,9 +141,9 @@ switch($action) {
      * Type: HTTP GET
      *
      * Parameters:
-     * 	int content_id
-     * 	int offset
-     * 	int limit
+     *  int content_id
+     *  int offset
+     *  int limit
      *  int sortBy
      *  int sortDir
      *  string[] filters

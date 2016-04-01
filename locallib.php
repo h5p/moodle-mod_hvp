@@ -44,7 +44,7 @@ function hvp_get_core_settings() {
         'baseUrl' => $basePath,
         'url' => "{$basePath}pluginfile.php/{$course_context->id}/mod_hvp",
         'libraryUrl' => "{$basePath}pluginfile.php/{$system_context->id}/mod_hvp/libraries",
-        'postUserStatistics' => TRUE,
+        'postUserStatistics' => true,
         'ajax' => array(
             'setFinished' => $ajaxPath . 'set_finished',
             'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
@@ -53,7 +53,7 @@ function hvp_get_core_settings() {
           'result' => \H5PCore::createToken('result'),
           'contentUserData' => \H5PCore::createToken('contentuserdata')
         ),
-        'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : FALSE,
+        'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : false,
         'siteUrl' => $CFG->wwwroot,
         'l10n' => array(
             'H5P' => array(
@@ -69,7 +69,7 @@ function hvp_get_core_settings() {
                 'source' => get_string('source', 'hvp'),
                 'license' => get_string('license', 'hvp'),
                 'thumbnail' => get_string('thumbnail', 'hvp'),
-                'noCopyrights' =>  get_string('nocopyright', 'hvp'),
+                'noCopyrights' => get_string('nocopyright', 'hvp'),
                 'downloadDescription' => get_string('downloadtitle', 'hvp'),
                 'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
                 'h5pDescription' => get_string('h5ptitle', 'hvp'),
@@ -132,12 +132,12 @@ function hvp_get_core_assets() {
  * @param array|null $settings
  * @throws \coding_exception
  */
-function hvp_admin_add_generic_css_and_js($page, $lib_url, $settings = NULL) {
+function hvp_admin_add_generic_css_and_js($page, $lib_url, $settings = null) {
     foreach (\H5PCore::$adminScripts as $script) {
         $page->requires->js(new moodle_url($lib_url . $script . hvp_get_cache_buster()), true);
     }
 
-    if ($settings === NULL) {
+    if ($settings === null) {
         $settings = array();
     }
 
@@ -175,11 +175,11 @@ function hvp_get_cache_buster() {
  * @param bool $restrict
  */
 function hvp_restrict_library($library_id, $restrict) {
-  global $DB;
-  $DB->update_record('hvp_libraries', (object) array(
+    global $DB;
+    $DB->update_record('hvp_libraries', (object) array(
     'id' => $library_id,
     'restricted' => $restrict ? 1 : 0
-  ));
+    ));
 }
 
 /**
@@ -220,7 +220,7 @@ function hvp_content_upgrade_progress($library_id) {
 
     // Get updated params
     $params = filter_input(INPUT_POST, 'params');
-    if ($params !== NULL) {
+    if ($params !== null) {
         // Update params.
         $params = json_decode($params);
         foreach ($params as $id => $param) {
@@ -277,7 +277,7 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
     $core = \mod_hvp\framework::instance();
 
     $library->semantics = $core->loadLibrarySemantics($library->name, $library->version->major, $library->version->minor);
-    if ($library->semantics === NULL) {
+    if ($library->semantics === null) {
         http_response_code(404);
         return;
     }

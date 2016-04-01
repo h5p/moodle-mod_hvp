@@ -231,7 +231,7 @@ class results {
         }
         $order = array((object) array(
             'name' => 'u.firstname',
-            'reverse' => TRUE
+            'reverse' => true
         ));
 
         return array($fields, $join, $where, $order, $args);

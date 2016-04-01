@@ -30,7 +30,7 @@
  * Structure step to restore one choice activity
  */
 class restore_hvp_activity_structure_step extends restore_activity_structure_step {
-/*
+    /*
     protected function define_structure() {
 
         $paths = array();

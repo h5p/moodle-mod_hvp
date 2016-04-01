@@ -20,8 +20,8 @@ class user_grades {
         global $DB, $USER;
 
         if (!\H5PCore::validToken('result', required_param('token', PARAM_RAW))) {
-          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-          exit;
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            exit;
         }
 
         // Content parameters
@@ -30,8 +30,8 @@ class user_grades {
         $max_score = required_param('maxScore', PARAM_INT);
 
         // Time values not usable by gradebook
-        //$opened = required_param('opened', PARAM_INT);
-        //$finished = required_param('finished', PARAM_INT);
+        // $opened = required_param('opened', PARAM_INT);
+        // $finished = required_param('finished', PARAM_INT);
 
         // Get hvp data from contentId
         $hvp = $DB->get_record('hvp', array('id' => $content_id));

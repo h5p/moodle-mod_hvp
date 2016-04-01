@@ -41,7 +41,7 @@ $uploadform = new \mod_hvp\upload_libraries_form();
 if ($formdata = $uploadform->get_data()) {
     // Handle submitted valid form
     $h5pStorage = \mod_hvp\framework::instance('storage');
-    $h5pStorage->savePackage(NULL, NULL, TRUE);
+    $h5pStorage->savePackage(null, null, true);
 }
 
 $core = \mod_hvp\framework::instance();
@@ -53,14 +53,14 @@ $settings = array();
 $i = 0;
 foreach ($libraries as $versions) {
     foreach ($versions as $library) {
-        $usage = $core->h5pF->getLibraryUsage($library->id, $numNotFiltered ? TRUE : FALSE);
+        $usage = $core->h5pF->getLibraryUsage($library->id, $numNotFiltered ? true : false);
         if ($library->runnable) {
             $upgrades = $core->getUpgrades($library, $versions);
-            $upgradeUrl = empty($upgrades) ? FALSE : (new moodle_url('/mod/hvp/upgrade_content_page.php', array(
+            $upgradeUrl = empty($upgrades) ? false : (new moodle_url('/mod/hvp/upgrade_content_page.php', array(
                 'library_id' => $library->id
             )))->out(false);
 
-            $restricted = (isset($library->restricted) && $library->restricted == 1 ? TRUE : FALSE);
+            $restricted = (isset($library->restricted) && $library->restricted == 1 ? true : false);
             $restricted_url = (new moodle_url('/mod/hvp/ajax.php', array(
                 'action' => 'restrict_library',
                 'token' => \H5PCore::createToken('library_' . $library->id),
@@ -69,9 +69,9 @@ foreach ($libraries as $versions) {
             )))->out(false);
         }
         else {
-            $upgradeUrl = NULL;
-            $restricted = NULL;
-            $restricted_url = NULL;
+            $upgradeUrl = null;
+            $restricted = null;
+            $restricted_url = null;
         }
 
         $settings['libraryList']['listData'][] = array(
@@ -82,8 +82,8 @@ foreach ($libraries as $versions) {
             'numContentDependencies' => $usage['content'] === -1 ? '' : $usage['content'],
             'numLibraryDependencies' => $usage['libraries'],
             'upgradeUrl' => $upgradeUrl,
-            'detailsUrl' => NULL, // Not implemented in Moodle
-            'deleteUrl' => NULL // Not implemented in Moodle
+            'detailsUrl' => null, // Not implemented in Moodle
+            'deleteUrl' => null // Not implemented in Moodle
         );
 
         $i++;

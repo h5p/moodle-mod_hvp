@@ -48,9 +48,9 @@ class file_storage implements \H5PFileStorage {
         $options = array(
             'contextid' => $context->id,
             'component' => 'mod_hvp',
-            'filearea'=> 'libraries',
+            'filearea' => 'libraries',
             'itemid' => 0,
-            'filepath' => '/' . \H5PCore::libraryToString($library, TRUE) . '/',
+            'filepath' => '/' . \H5PCore::libraryToString($library, true) . '/',
         );
 
         // Remove any old existing library files
@@ -79,7 +79,7 @@ class file_storage implements \H5PFileStorage {
         $options = array(
             'contextid' => $context->id,
             'component' => 'mod_hvp',
-            'filearea'=> 'content',
+            'filearea' => 'content',
             'itemid' => $id,
             'filepath' => '/',
         );
@@ -148,7 +148,7 @@ class file_storage implements \H5PFileStorage {
      *  Where the library folder will be saved
      */
     public function exportLibrary($library, $target) {
-        $folder = \H5PCore::libraryToString($library, TRUE);
+        $folder = \H5PCore::libraryToString($library, true);
         $context = \context_system::instance();
         self::exportFileTree("{$target}/{$folder}", $context->id, 'libraries', "/{$folder}/");
     }
@@ -172,7 +172,7 @@ class file_storage implements \H5PFileStorage {
         $record = array(
             'contextid' => $context->id,
             'component' => 'mod_hvp',
-            'filearea'=> 'exports',
+            'filearea' => 'exports',
             'itemid' => 0,
             'filepath' => '/',
             'filename' => $filename
@@ -216,7 +216,7 @@ class file_storage implements \H5PFileStorage {
 
         foreach ($files as $type => $assets) {
             if (empty($assets)) {
-              continue;
+                continue;
             }
 
             $content = '';
@@ -238,7 +238,7 @@ class file_storage implements \H5PFileStorage {
                             '/url\([\'"]?([^"\')]+)[\'"]?\)/i',
                             function ($matches) use ($location) {
                                 if (preg_match("/^(data:|([a-z0-9]+:)?\/)/i", $matches[1]) === 1) {
-                                  return $matches[0]; // Not relative, skip
+                                    return $matches[0]; // Not relative, skip
                                 }
                                 return 'url("../' . $location[1] . $location[2] . $matches[1] . '")';
                             },
@@ -295,7 +295,7 @@ class file_storage implements \H5PFileStorage {
             ));
         }
 
-        return empty($files) ? NULL : $files;
+        return empty($files) ? null : $files;
     }
 
     /**
@@ -329,7 +329,7 @@ class file_storage implements \H5PFileStorage {
      */
     private static function readFileTree($source, $options) {
         $dir = opendir($source);
-        if ($dir === FALSE) {
+        if ($dir === false) {
             trigger_error('Unable to open directory ' . $source, E_USER_WARNING);
             throw new \Exception('unabletocopy');
         }
