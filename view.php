@@ -38,10 +38,10 @@ if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
 
 require_course_login($course, false, $cm);
 
-// Load H5P Core
+// Load H5P Core.
 $core = \mod_hvp\framework::instance();
 
-// Load H5P Content
+// Load H5P Content.
 $content = $core->loadContent($cm->instance);
 if ($content === null) {
     print_error('invalidhvp');
@@ -50,42 +50,41 @@ if ($content === null) {
 $PAGE->set_title(format_string($content['title']));
 $PAGE->set_heading($course->fullname);
 
-// Mark viewed by user (if required)
+// Mark viewed by user (if required).
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-// Attach scripts, styles, etc. from core
+// Attach scripts, styles, etc. from core.
 $settings = hvp_get_core_assets();
 
-// Add global disable settings
+// Add global disable settings.
 if (!isset($content['disable'])) {
     $content['disable'] = $core->getGlobalDisable();
-}
-else {
+} else {
     $content['disable'] |= $core->getGlobalDisable();
 }
 
-// Embed is not supported in Moodle
+// Embed is not supported in Moodle.
 $content['disable'] |= \H5PCore::DISABLE_EMBED;
 
-// Filter content parameters
-$safe_parameters = $core->filterParameters($content);
+// Filter content parameters.
+$safeparameters = $core->filterParameters($content);
 
 $export = '';
 if (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true) {
-    // Find course context
+    // Find course context.
     $context = \context_course::instance($course->id);
-    $hvp_path = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
+    $hvppath = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
 
-    $export_filename = ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p';
-    $export = "{$hvp_path}/exports/{$export_filename}";
+    $exportfilename = ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p';
+    $export = "{$hvppath}/exports/{$exportfilename}";
 }
 
-// Add JavaScript settings for this content
+// Add JavaScript settings for this content.
 $cid = 'cid-' . $content['id'];
 $settings['contents'][$cid] = array(
     'library' => \H5PCore::libraryToString($content['library']),
-    'jsonContent' => $safe_parameters,
+    'jsonContent' => $safeparameters,
     'fullScreen' => $content['library']['fullscreen'],
     'exportUrl' => $export,
     'title' => $content['title'],
@@ -98,53 +97,53 @@ $settings['contents'][$cid] = array(
     )
 );
 
-// Get assets for this content
-$preloaded_dependencies = $core->loadContentDependencies($content['id'], 'preloaded');
-$files = $core->getDependenciesFiles($preloaded_dependencies);
+// Get assets for this content.
+$preloadeddependencies = $core->loadContentDependencies($content['id'], 'preloaded');
+$files = $core->getDependenciesFiles($preloadeddependencies);
 
-// Determine embed type
+// Determine embed type.
 $embedtype = \H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
 if ($embedtype === 'div') {
     $context = \context_system::instance();
-    $hvp_path = "/pluginfile.php/{$context->id}/mod_hvp";
+    $hvppath = "/pluginfile.php/{$context->id}/mod_hvp";
 
-    // Schedule JavaScripts for loading through Moodle
+    // Schedule JavaScripts for loading through Moodle.
     foreach ($files['scripts'] as $script) {
-        $url = $hvp_path . $script->path . $script->version;
+        $url = $hvppath . $script->path . $script->version;
         $settings['loadedJs'][] = $url;
         $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . $url), true);
     }
 
-    // Schedule stylesheets for loading through Moodle
+    // Schedule stylesheets for loading through Moodle.
     foreach ($files['styles'] as $style) {
-        $url = $hvp_path . $style->path . $style->version;
+        $url = $hvppath . $style->path . $style->version;
         $settings['loadedCss'][] = $url;
         $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . $url));
     }
-}
-else {
-    // JavaScripts and stylesheets will be loaded through h5p.js
+} else {
+    // JavaScripts and stylesheets will be loaded through h5p.js.
     $settings['contents'][$cid]['scripts'] = $core->getAssetsUrls($files['scripts']);
     $settings['contents'][$cid]['styles'] = $core->getAssetsUrls($files['styles']);
 }
 
-// Print JavaScript settings to page
+// Print JavaScript settings to page.
 $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
 
-// Print page HTML
+// Print page HTML.
 echo $OUTPUT->header();
 echo '<div class="clearer"></div>';
 
-// Print any messages
+// Print any messages.
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
-// Print H5P Content
+// Print H5P Content.
 if ($embedtype === 'div') {
     echo '<div class="h5p-content" data-content-id="' .  $content['id'] . '"></div>';
-}
-else {
-    echo '<div class="h5p-iframe-wrapper"><iframe id="h5p-iframe-' . $content['id'] . '" class="h5p-iframe" data-content-id="' . $content['id'] . '" style="height:1px" src="about:blank" frameBorder="0" scrolling="no"></iframe></div>';
+} else {
+    echo '<div class="h5p-iframe-wr0apper"><iframe id="h5p-iframe-' . $content['id'] .
+        '" class="h5p-iframe" data-content-id="' . $content['id'] .
+        '" style="height:1px" src="about:blank" frameBorder="0" scrolling="no"></iframe></div>';
 }
 
 echo $OUTPUT->footer();

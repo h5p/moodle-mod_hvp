@@ -30,7 +30,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once 'autoloader.php';
+require_once('autoloader.php');
 
  /* Moodle core API */
 
@@ -82,30 +82,30 @@ function hvp_supports($feature) {
  * @return int The id of the newly inserted newmodule record
  */
 function hvp_add_instance($moduleinfo) {
-    $disable_settings = array(
+    $disablesettings = array(
         \H5PCore::$disable[\H5PCore::DISABLE_FRAME] => isset($moduleinfo->frame) ? $moduleinfo->frame : 0,
         \H5PCore::$disable[\H5PCore::DISABLE_DOWNLOAD] => isset($moduleinfo->download) ? $moduleinfo->download : 0,
         \H5PCore::$disable[\H5PCore::DISABLE_COPYRIGHT] => isset($moduleinfo->copyright) ? $moduleinfo->copyright : 0
     );
 
     $core = \mod_hvp\framework::instance();
-    $default_disable_value = 0;
-    $disable_value = $core->getDisable($disable_settings, $default_disable_value);
+    $defaultdisablevalue = 0;
+    $disablevalue = $core->getDisable($disablesettings, $defaultdisablevalue);
 
     $cmcontent = array(
         'name' => $moduleinfo->name,
         'course' => $moduleinfo->course,
-        'disable' => $disable_value
+        'disable' => $disablevalue
     );
 
-    $h5pStorage = \mod_hvp\framework::instance('storage');
-    $h5pStorage->savePackage($cmcontent);
+    $h5pstorage = \mod_hvp\framework::instance('storage');
+    $h5pstorage->savePackage($cmcontent);
 
     // Set and create grade item.
-    $moduleinfo->id = $h5pStorage->contentId;
+    $moduleinfo->id = $h5pstorage->contentId;
     hvp_grade_item_update($moduleinfo);
 
-    return $h5pStorage->contentId;
+    return $h5pstorage->contentId;
 }
 
 /**
@@ -119,25 +119,25 @@ function hvp_add_instance($moduleinfo) {
  * @return boolean Success/Fail
  */
 function hvp_update_instance($hvp) {
-    $disable_settings = array(
+    $disablesettings = array(
         \H5PCore::$disable[\H5PCore::DISABLE_FRAME] => isset($hvp->frame) ? $hvp->frame : 0,
         \H5PCore::$disable[\H5PCore::DISABLE_DOWNLOAD] => isset($hvp->download) ? $hvp->download : 0,
         \H5PCore::$disable[\H5PCore::DISABLE_COPYRIGHT] => isset($hvp->copyright) ? $hvp->copyright : 0
     );
 
     $core = \mod_hvp\framework::instance();
-    $default_disable_value = 0;
-    $disable_value = $core->getDisable($disable_settings, $default_disable_value);
+    $defaultdisablevalue = 0;
+    $disablevalue = $core->getDisable($disablesettings, $defaultdisablevalue);
 
     // Updated $hvp values used in $DB.
-    $hvp->disable = $disable_value;
+    $hvp->disable = $disablevalue;
     $hvp->id = $hvp->instance;
 
-    $h5pStorage = \mod_hvp\framework::instance('storage');
+    $h5pstorage = \mod_hvp\framework::instance('storage');
 
     // Save package.
-    if (!empty($h5pStorage->h5pC->mainJsonData)) {
-        $h5pStorage->savePackage((array)$hvp);
+    if (!empty($h5pstorage->h5pC->mainJsonData)) {
+        $h5pstorage->savePackage((array)$hvp);
     } else {
         // No package, load content.
         $content = $core->loadContent($hvp->id);
@@ -175,8 +175,8 @@ function hvp_delete_instance($id) {
     }
 
     $result = true;
-    $h5pStorage = \mod_hvp\framework::instance('storage');
-    $h5pStorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug));
+    $h5pstorage = \mod_hvp\framework::instance('storage');
+    $h5pstorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug));
 
     if (! $DB->delete_records('hvp', array('id' => "$hvp->id"))) {
         $result = false;
@@ -209,7 +209,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
         case 'libraries':
         case 'cachedassets':
             if ($context->contextlevel != CONTEXT_SYSTEM) {
-                return false; // Invalid context
+                return false; // Invalid context.
             }
 
             // TODO: Check permissions?
@@ -244,7 +244,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
     $fs = get_file_storage();
     $file = $fs->get_file($context->id, 'mod_hvp', $filearea, $itemid, $filepath, $filename);
     if (!$file) {
-        return false; // No such file
+        return false; // No such file.
     }
 
     send_stored_file($file, 86400, 0, $forcedownload, $options);

@@ -26,7 +26,7 @@
         );
     };
 
-    // Create data views when page is done loading
+    // Create data views when page is done loading.
     $(document).ready(function () {
         for (var id in H5PIntegration.dataViews) {
             if (!H5PIntegration.dataViews.hasOwnProperty(id)) {

@@ -35,11 +35,11 @@ if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
 require_course_login($course, false, $cm);
 
 if ($userid === (int)$USER->id) {
-    // If it's the same user, redirect to content
+    // If it's the same user, redirect to content.
     redirect(new moodle_url('/mod/hvp/view.php', array('id' => $cm->id)));
 }
 
-// Load H5P Content
+// Load H5P Content.
 $hvp = $DB->get_record_sql(
         "SELECT id,
                 name AS title
@@ -51,9 +51,9 @@ if ($hvp === false) {
     print_error('invalidhvp');
 }
 
-// Set page properties
-$page_url = new moodle_url('/mod/hvp/grade.php', array('id' => $hvp->id));
-$PAGE->set_url($page_url);
+// Set page properties.
+$pageurl = new moodle_url('/mod/hvp/grade.php', array('id' => $hvp->id));
+$PAGE->set_url($pageurl);
 $title = "Results for {$hvp->title}";
 $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
