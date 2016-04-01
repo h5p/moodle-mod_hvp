@@ -30,7 +30,7 @@ function hvp_autoloader($class) {
     static $classmap;
     if (!isset($classmap)) {
         $classmap = array(
-        // Core
+        // Core.
         'H5PCore' => 'library/h5p.classes.php',
         'H5PFrameworkInterface' => 'library/h5p.classes.php',
         'H5PContentValidator' => 'library/h5p.classes.php',
@@ -41,12 +41,12 @@ function hvp_autoloader($class) {
         'H5PFileStorage' => 'library/h5p-file-storage.interface.php',
         'H5PDefaultStorage' => 'library/h5p-default-storage.class.php',
 
-        // Plugin specific classes are loaded by Moodle
+        // Plugin specific classes are loaded by Moodle.
         );
     }
 
     if (isset($classmap[$class])) {
-        require_once  $CFG->dirroot . '/mod/hvp/' . $classmap[$class];
+        require_once($CFG->dirroot . '/mod/hvp/' . $classmap[$class]);
     }
 }
 spl_autoload_register('hvp_autoloader');

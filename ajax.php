@@ -28,7 +28,7 @@ require_once("locallib.php");
 $action = required_param('action', PARAM_ALPHA);
 switch($action) {
 
-    /**
+    /*
      * Handle user data reporting
      *
      * Type: HTTP POST
@@ -42,7 +42,7 @@ switch($action) {
         \mod_hvp\content_user_data::handle_ajax();
         break;
 
-    /**
+    /*
      * Handle restricting H5P libraries
      *
      * Type: HTTP GET
@@ -74,7 +74,7 @@ switch($action) {
             )))->out(false)));
         break;
 
-    /**
+    /*
      * Collecting data needed by H5P content upgrade
      *
      * Type: HTTP GET
@@ -86,7 +86,7 @@ switch($action) {
         $library = required_param('library', PARAM_TEXT);
         $library = explode('/', substr($library, 1));
 
-        if (sizeof($library) !== 3) {
+        if (count($library) !== 3) {
             http_response_code(422);
             return;
         }
@@ -99,7 +99,7 @@ switch($action) {
 
         break;
 
-    /**
+    /*
      * Saving upgraded content, and returning next batch to process
      *
      * Type: HTTP POST
@@ -114,14 +114,13 @@ switch($action) {
             header('Cache-Control', 'no-cache');
             header('Content-Type: application/json');
             print json_encode($out);
-        }
-        else {
-            // Only allow POST
+        } else {
+            // Only allow POST.
             http_response_code(405);
         }
         break;
 
-    /**
+    /*
      * Handle set finished / storing grades
      *
      * Type: HTTP GET
@@ -135,7 +134,7 @@ switch($action) {
         \mod_hvp\user_grades::handle_ajax();
         break;
 
-    /**
+    /*
      * Provide data for results view
      *
      * Type: HTTP GET
@@ -153,7 +152,7 @@ switch($action) {
         $results->print_results();
         break;
 
-    /**
+    /*
      * Throw error if AJAX isnt handeled
      */
     default:
