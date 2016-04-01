@@ -13,7 +13,7 @@ php:
 env:
  global:
   - MOODLE_BRANCH=MOODLE_30_STABLE
-
+  - IGNORE_PATHS=library
  matrix:
   - DB=pgsql
   - DB=mysqli
