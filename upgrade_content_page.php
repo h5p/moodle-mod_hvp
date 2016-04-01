@@ -69,13 +69,15 @@ if (count($versions) < 2) {
             'errorScript' => get_string('upgradeerrorscript', 'hvp'),
             'errorContent' => get_string('upgradeerrorcontent', 'hvp'),
             'errorParamsBroken' => get_string('upgradeerrorparamsbroken', 'hvp'),
-            'done' => get_string('upgradedone', 'hvp', $numcontents) .' <a href="' . (new moodle_url('/mod/hvp/library_list.php'))->out(false) .
-                      '">' . get_string('upgradereturn', 'hvp') . '</a>',
+            'done' => get_string('upgradedone', 'hvp', $numcontents) .
+                      ' <a href="' . (new moodle_url('/mod/hvp/library_list.php'))->out(false) . '">' .
+                      get_string('upgradereturn', 'hvp') . '</a>',
             'library' => array(
                 'name' => $library->name,
                 'version' => $library->major_version . '.' . $library->minor_version,
             ),
-            'libraryBaseUrl' => (new moodle_url('/mod/hvp/ajax.php', array('action' => 'getlibrarydataforupgrade')))->out(false) . '&library=',
+            'libraryBaseUrl' => (new moodle_url('/mod/hvp/ajax.php',
+                                 array('action' => 'getlibrarydataforupgrade')))->out(false) . '&library=',
             'scriptBaseUrl' => (new moodle_url('/mod/hvp/library/js'))->out(false),
             'buster' => hvp_get_cache_buster(),
             'versions' => $upgrades,
@@ -88,7 +90,7 @@ if (count($versions) < 2) {
         )
     );
 
-    // Add JavaScripts
+    // Add JavaScripts.
     $liburl = $CFG->httpswwwroot . '/mod/hvp/library/';
     hvp_admin_add_generic_css_and_js($PAGE, $liburl, $settings);
     $PAGE->requires->js(new moodle_url($liburl . 'js/h5p-version.js' . hvp_get_cache_buster()), true);
