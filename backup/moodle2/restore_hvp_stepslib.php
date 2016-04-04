@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -30,7 +29,7 @@
  * Structure step to restore one choice activity
  */
 class restore_hvp_activity_structure_step extends restore_activity_structure_step {
-/*
+    /*
     protected function define_structure() {
 
         $paths = array();

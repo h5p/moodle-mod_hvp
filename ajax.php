@@ -28,13 +28,13 @@ require_once("locallib.php");
 $action = required_param('action', PARAM_ALPHA);
 switch($action) {
 
-    /**
+    /*
      * Handle user data reporting
      *
      * Type: HTTP POST
      *
      * Parameters:
-     * 	- content_id
+     *  - content_id
      *  - data_type
      *  - sub_content_id
      */
@@ -42,13 +42,13 @@ switch($action) {
         \mod_hvp\content_user_data::handle_ajax();
         break;
 
-    /**
+    /*
      * Handle restricting H5P libraries
      *
      * Type: HTTP GET
      *
      * Parameters:
-     * 	- library_id
+     *  - library_id
      *  - restrict (0 or 1)
      *  - token
      */
@@ -58,8 +58,8 @@ switch($action) {
         $restrict = required_param('restrict', PARAM_INT);
 
         if (!\H5PCore::validToken('library_' . $library_id, required_param('token', PARAM_RAW))) {
-          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-          exit;
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            exit;
         }
 
         hvp_restrict_library($library_id, $restrict);
@@ -74,19 +74,19 @@ switch($action) {
             )))->out(false)));
         break;
 
-    /**
+    /*
      * Collecting data needed by H5P content upgrade
      *
      * Type: HTTP GET
      *
      * Parameters:
-     * 	- library (Format: /<machine-name>/<major-version>/<minor-version>)
+     *  - library (Format: /<machine-name>/<major-version>/<minor-version>)
      */
     case 'getlibrarydataforupgrade':
         $library = required_param('library', PARAM_TEXT);
         $library = explode('/', substr($library, 1));
 
-        if (sizeof($library) !== 3) {
+        if (count($library) !== 3) {
             http_response_code(422);
             return;
         }
@@ -99,13 +99,13 @@ switch($action) {
 
         break;
 
-    /**
+    /*
      * Saving upgraded content, and returning next batch to process
      *
      * Type: HTTP POST
      *
      * Parameters:
-     * 	- library_id
+     *  - library_id
      */
     case 'libraryupgradeprogress':
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
@@ -114,36 +114,35 @@ switch($action) {
             header('Cache-Control', 'no-cache');
             header('Content-Type: application/json');
             print json_encode($out);
-        }
-        else {
-            // Only allow POST
+        } else {
+            // Only allow POST.
             http_response_code(405);
         }
         break;
 
-    /**
+    /*
      * Handle set finished / storing grades
      *
      * Type: HTTP GET
      *
      * Parameters:
-     * 	- contentId
-     * 	- score
-     * 	- maxScore
+     *  - contentId
+     *  - score
+     *  - maxScore
      */
     case 'setfinished':
         \mod_hvp\user_grades::handle_ajax();
         break;
 
-    /**
+    /*
      * Provide data for results view
      *
      * Type: HTTP GET
      *
      * Parameters:
-     * 	int content_id
-     * 	int offset
-     * 	int limit
+     *  int content_id
+     *  int offset
+     *  int limit
      *  int sortBy
      *  int sortDir
      *  string[] filters
@@ -153,7 +152,7 @@ switch($action) {
         $results->print_results();
         break;
 
-    /**
+    /*
      * Throw error if AJAX isnt handeled
      */
     default:

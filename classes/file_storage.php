@@ -43,20 +43,20 @@ class file_storage implements \H5PFileStorage {
      *  Library properties
      */
     public function saveLibrary($library) {
-        // Libraries are stored in a system context
+        // Libraries are stored in a system context.
         $context = \context_system::instance();
         $options = array(
             'contextid' => $context->id,
             'component' => 'mod_hvp',
-            'filearea'=> 'libraries',
+            'filearea' => 'libraries',
             'itemid' => 0,
-            'filepath' => '/' . \H5PCore::libraryToString($library, TRUE) . '/',
+            'filepath' => '/' . \H5PCore::libraryToString($library, true) . '/',
         );
 
-        // Remove any old existing library files
+        // Remove any old existing library files.
         self::deleteFileTree($context->id, $options['filearea'], $options['filepath']);
 
-        // Move library folder
+        // Move library folder.
         self::readFileTree($library['uploadDirectory'], $options);
     }
 
@@ -71,20 +71,20 @@ class file_storage implements \H5PFileStorage {
     public function saveContent($source, $id) {
         global $COURSE;
 
-        // Remove any old content
+        // Remove any old content.
         $this->deleteContent($id);
 
-        // Contents are stored in a course context
+        // Contents are stored in a course context.
         $context = \context_course::instance($COURSE->id);
         $options = array(
             'contextid' => $context->id,
             'component' => 'mod_hvp',
-            'filearea'=> 'content',
+            'filearea' => 'content',
             'itemid' => $id,
             'filepath' => '/',
         );
 
-        // Move content folder
+        // Move content folder.
         self::readFileTree($source, $options);
     }
 
@@ -110,7 +110,7 @@ class file_storage implements \H5PFileStorage {
      *  What makes this content unique.
      */
     public function cloneContent($id, $newId) {
-        // Not implemented in Moodle
+        // Not implemented in Moodle.
     }
 
     /**
@@ -148,7 +148,7 @@ class file_storage implements \H5PFileStorage {
      *  Where the library folder will be saved
      */
     public function exportLibrary($library, $target) {
-        $folder = \H5PCore::libraryToString($library, TRUE);
+        $folder = \H5PCore::libraryToString($library, true);
         $context = \context_system::instance();
         self::exportFileTree("{$target}/{$folder}", $context->id, 'libraries', "/{$folder}/");
     }
@@ -164,21 +164,21 @@ class file_storage implements \H5PFileStorage {
     public function saveExport($source, $filename) {
         global $COURSE;
 
-        // Remove old export
+        // Remove old export.
         $this->deleteExport($filename);
 
-        // Create record
+        // Create record.
         $context = \context_course::instance($COURSE->id);
         $record = array(
             'contextid' => $context->id,
             'component' => 'mod_hvp',
-            'filearea'=> 'exports',
+            'filearea' => 'exports',
             'itemid' => 0,
             'filepath' => '/',
             'filename' => $filename
         );
 
-        // Store new export
+        // Store new export.
         $fs = get_file_storage();
         $fs->create_file_from_pathname($record, $source);
     }
@@ -192,11 +192,11 @@ class file_storage implements \H5PFileStorage {
         global $COURSE;
         $context = \context_course::instance($COURSE->id);
 
-        // Check if file exists
+        // Check if file exists.
         $fs = get_file_storage();
         $file = $fs->get_file($context->id, 'mod_hvp', 'exports', 0, '/', $filename);
         if ($file) {
-            // Remove old export
+            // Remove old export.
             $file->delete();
         }
     }
@@ -216,29 +216,28 @@ class file_storage implements \H5PFileStorage {
 
         foreach ($files as $type => $assets) {
             if (empty($assets)) {
-              continue;
+                continue;
             }
 
             $content = '';
             foreach ($assets as $asset) {
-                // Find location of asset
+                // Find location of asset.
                 $location = array();
                 preg_match('/^\/(libraries|development)(.+\/)([^\/]+)$/', $asset->path, $location);
 
-                // Locate file
+                // Locate file.
                 $file = $fs->get_file($context->id, 'mod_hvp', $location[1], 0, $location[2], $location[3]);
 
-                // Get file content and concatenate
+                // Get file content and concatenate.
                 if ($type === 'scripts') {
                     $content .= $file->get_content() . ";\n";
-                }
-                else {
-                    // Rewrite relative URLs used inside stylesheets
+                } else {
+                    // Rewrite relative URLs used inside stylesheets.
                     $content .= preg_replace_callback(
                             '/url\([\'"]?([^"\')]+)[\'"]?\)/i',
                             function ($matches) use ($location) {
                                 if (preg_match("/^(data:|([a-z0-9]+:)?\/)/i", $matches[1]) === 1) {
-                                  return $matches[0]; // Not relative, skip
+                                    return $matches[0]; // Not relative, skip.
                                 }
                                 return 'url("../' . $location[1] . $location[2] . $matches[1] . '")';
                             },
@@ -246,7 +245,7 @@ class file_storage implements \H5PFileStorage {
                 }
             }
 
-            // Create new file for cached assets
+            // Create new file for cached assets.
             $ext = ($type === 'scripts' ? 'js' : 'css');
             $fileinfo = array(
                 'contextid' => $context->id,
@@ -257,7 +256,7 @@ class file_storage implements \H5PFileStorage {
                 'filename' => "{$key}.{$ext}"
             );
 
-            // Store concatenated content
+            // Store concatenated content.
             $fs->create_file_from_string($fileinfo, $content);
             $files[$type] = array((object) array(
                 'path' => "/cachedassets/{$key}.{$ext}",
@@ -295,7 +294,7 @@ class file_storage implements \H5PFileStorage {
             ));
         }
 
-        return empty($files) ? NULL : $files;
+        return empty($files) ? null : $files;
     }
 
     /**
@@ -329,7 +328,7 @@ class file_storage implements \H5PFileStorage {
      */
     private static function readFileTree($source, $options) {
         $dir = opendir($source);
-        if ($dir === FALSE) {
+        if ($dir === false) {
             trigger_error('Unable to open directory ' . $source, E_USER_WARNING);
             throw new \Exception('unabletocopy');
         }
@@ -337,11 +336,10 @@ class file_storage implements \H5PFileStorage {
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..') && $file != '.git' && $file != '.gitignore') {
                 if (is_dir($source . DIRECTORY_SEPARATOR . $file)) {
-                    $sub_options = $options;
-                    $sub_options['filepath'] .= $file . '/';
-                    self::readFileTree($source . '/' . $file, $sub_options);
-                }
-                else {
+                    $suboptions = $options;
+                    $suboptions['filepath'] .= $file . '/';
+                    self::readFileTree($source . '/' . $file, $suboptions);
+                } else {
                     $record = $options;
                     $record['filename'] = $file;
                     $fs = get_file_storage();
@@ -367,28 +365,27 @@ class file_storage implements \H5PFileStorage {
      *  Optional Moodle item ID
      */
     private static function exportFileTree($target, $contextid, $filearea, $filepath, $itemid = 0) {
-        // Make sure target folder exists
+        // Make sure target folder exists.
         if (!file_exists($target)) {
             mkdir($target, 0777, true);
         }
 
-        // Read source files
+        // Read source files.
         $fs = get_file_storage();
         $files = $fs->get_directory_files($contextid, 'mod_hvp', $filearea, $itemid, $filepath, true);
 
         foreach ($files as $file) {
-            // Correct target path for file
+            // Correct target path for file.
             $path = $target . str_replace($filepath, '/', $file->get_filepath());
 
             if ($file->is_directory()) {
-                // Create directory
+                // Create directory.
                 $path = rtrim($path, '/');
                 if (!file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
-            }
-            else {
-                // Copy file
+            } else {
+                // Copy file.
                 $file->copy_content_to($path . $file->get_filename());
             }
         }
@@ -405,18 +402,18 @@ class file_storage implements \H5PFileStorage {
     private static function deleteFileTree($contextid, $filearea, $filepath, $itemid = 0) {
         $fs = get_file_storage();
         if ($filepath === '/') {
-            // Remove complete file area
+            // Remove complete file area.
             $fs->delete_area_files($contextid, 'mod_hvp', $filearea, $itemid);
             return;
         }
 
-        // Look up files and remove
+        // Look up files and remove.
         $files = $fs->get_directory_files($contextid, 'mod_hvp', $filearea, $itemid, $filepath, true);
         foreach ($files as $file) {
             $file->delete();
         }
 
-        // Remove root dir
+        // Remove root dir.
         $file = $fs->get_file($contextid, 'mod_hvp', $filearea, $itemid, $filepath, '.');
         if ($file) {
             $file->delete();
@@ -433,7 +430,7 @@ class file_storage implements \H5PFileStorage {
      * @return boolean
      */
     public static function fileExists($contextid, $filearea, $filepath, $filename) {
-        // Check if file exists
+        // Check if file exists.
         $fs = get_file_storage();
         return ($fs->get_file($contextid, 'mod_hvp', $filearea, 0, $filepath, $filename) !== false);
     }

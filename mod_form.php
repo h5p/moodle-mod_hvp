@@ -23,11 +23,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once ($CFG->dirroot . '/course/moodleform_mod.php');
+require_once($CFG->dirroot . '/course/moodleform_mod.php');
 
 class mod_hvp_mod_form extends moodleform_mod {
 
-    function definition() {
+    public function definition() {
         global $CFG, $DB, $OUTPUT, $COURSE;
 
         $mform =& $this->_form;
@@ -38,8 +38,9 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        // H5P
-        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null, array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
+        // H5P.
+        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null,
+            array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
         if (!is_number($this->current->id)) {
             $mform->addRule('h5pfile', null, 'required', null, 'client');
         }
@@ -66,30 +67,29 @@ class mod_hvp_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
-    function data_preprocessing(&$default_values) {
+    public function data_preprocessing(&$defaultvalues) {
         // Aaah.. we meet again h5pfile!
         $draftitemid = file_get_submitted_draft_itemid('h5pfile');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_hvp', 'package', 0);
-        $default_values['h5pfile'] = $draftitemid;
+        $defaultvalues['h5pfile'] = $draftitemid;
 
         // Individual display options are not stored, must be extracted from disable.
-        if (isset($default_values['disable'])) {
-            // Extract disable options
+        if (isset($defaultvalues['disable'])) {
+            // Extract disable options.
             \mod_hvp\framework::instance();
             foreach (\H5PCore::$disable as $bit => $option) {
-                if ($default_values['disable'] & $bit) {
-                    // Disable
-                    $default_values[$option] = 0;
-                }
-                else {
-                    // Enable
-                    $default_values[$option] = 1;
+                if ($defaultvalues['disable'] & $bit) {
+                    // Disable.
+                    $defaultvalues[$option] = 0;
+                } else {
+                    // Enable.
+                    $defaultvalues[$option] = 1;
                 }
             }
         }
     }
 
-    function validation($data, $files) {
+    public function validation($data, $files) {
         global $CFG;
 
         $errors = parent::validation($data, $files);
@@ -101,10 +101,10 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         $files = $this->get_draft_files('h5pfile');
 
-        // No file uploaded
+        // No file uploaded.
         if (count($files) < 1) {
 
-            // No previous content to update
+            // No previous content to update.
             if (!is_number($this->current->id)) {
                 $errors['h5pfile'] = get_string('required');
             }
@@ -121,17 +121,17 @@ class mod_hvp_mod_form extends moodleform_mod {
         $interface->getUploadedH5pPath($path);
         $file->copy_content_to($path);
 
-        $h5pValidator = \mod_hvp\framework::instance('validator');
+        $h5pvalidator = \mod_hvp\framework::instance('validator');
 
-        if (! $h5pValidator->isValidPackage()) {
-          $messages = \mod_hvp\framework::messages('error');
-          $errors['h5pfile'] = implode('<br/>', $messages);
+        if (! $h5pvalidator->isValidPackage()) {
+            $messages = \mod_hvp\framework::messages('error');
+            $errors['h5pfile'] = implode('<br/>', $messages);
         }
 
         return $errors;
     }
 
-    function get_data() {
+    public function get_data() {
         $data = parent::get_data();
         if (!$data) {
             return false;

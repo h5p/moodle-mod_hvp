@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -24,4 +23,4 @@
 
  // This activity has not particular settings but the inherited from the generic
  // backup_activity_task so here there isn't any class definition, like the ones
- // existing in /backup/moodle2/backup_settingslib.php (activities section)
+ // existing in /backup/moodle2/backup_settingslib.php (activities section).

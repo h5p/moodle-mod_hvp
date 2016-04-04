@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['modulename'] = 'Interactive Content';
 $string['modulename_help'] = 'The H5P activity module enables you to create interactive content such as Interactive Videos, Question Sets, Drag and Drop Questions, Multi-Choice Questions, Presentations and much more.
@@ -13,6 +27,7 @@ $string['modulenameplural'] = 'H5Ps';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
 
+$string['hvp:addinstance'] = 'Add a new H5P Activity';
 $string['intro'] = 'Hello awesome!';
 $string['h5pfile'] = 'H5P File';
 $string['fullscreen'] = 'Fullscreen';
@@ -41,7 +56,7 @@ $string['startingover'] = "You'll be starting over.";
 
 $string['lookforupdates'] = 'Look for H5P updates';
 
-// Admin settings
+// Admin settings.
 $string['displayoptions'] = 'Display Options';
 $string['enableframe'] = 'Display action bar and frame';
 $string['enabledownload'] = 'Download button';
@@ -54,11 +69,11 @@ $string['enablesavecontentstate_help'] = 'Automatically save the current state o
 $string['contentstatefrequency'] = 'Save content state frequency';
 $string['contentstatefrequency_help'] = 'In seconds, how often do you wish the user to auto save their progress. Increase this number if you\'re having issues with many ajax requests';
 
-// Admin menu
+// Admin menu.
 $string['settings'] = 'H5P Settings';
 $string['libraries'] = 'H5P Libraries';
 
-// Upload libraries section
+// Upload libraries section.
 $string['uploadlibraries'] = 'Upload Libraries';
 $string['options'] = 'Options';
 $string['onlyupdate'] = 'Only update existing libraries';
@@ -66,11 +81,11 @@ $string['disablefileextensioncheck'] = 'Disable file extension check';
 $string['disablefileextensioncheckwarning'] = "Warning! Disabling the file extension check may have security implications as it allows for uploading of php files. That in turn could make it possible for attackers to execute malicious code on your site. Please make sure you know exactly what you're uploading.";
 $string['upload'] = 'Upload';
 
-// Installed libraries section
+// Installed libraries section.
 $string['installedlibraries'] = 'Installed Libraries';
 $string['invalidtoken'] = 'Invalid security token.';
 
-// H5P library list headers on admin page
+// H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Title';
 $string['librarylistrestricted'] = 'Restricted';
 $string['librarylistinstances'] = 'Instances';
@@ -78,13 +93,13 @@ $string['librarylistinstancedependencies'] = 'Instance dependencies';
 $string['librarylistlibrarydependencies'] = 'Library dependencies';
 $string['librarylistactions'] = 'Actions';
 
-// H5P library page labels
+// H5P library page labels.
 $string['addlibraries'] = 'Add libraries';
 $string['installedlibraries'] = 'Installed libraries';
 $string['notapplicable'] = 'N/A';
 $string['upgradelibrarycontent'] = 'Upgrade library content';
 
-// Upgrade H5P content page
+// Upgrade H5P content page.
 $string['upgrade'] = 'Upgrade H5P';
 $string['upgradeheading'] = 'Upgrade {$a} content';
 $string['upgradenoavailableupgrades'] = 'There are no available upgrades for this library.';
@@ -103,7 +118,7 @@ $string['upgradebuttonlabel'] = 'Upgrade';
 $string['upgradeinvalidtoken'] = 'Error: Invalid security token!';
 $string['upgradelibrarymissing'] = 'Error: Your library is missing!';
 
-// Results / report page
+// Results / report page.
 $string['user'] = 'User';
 $string['score'] = 'Score';
 $string['maxscore'] = 'Maximum Score';

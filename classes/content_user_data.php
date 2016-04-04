@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * The mod_hvp content user data.
@@ -25,32 +39,31 @@ class content_user_data {
      * @throws \coding_exception
      */
     public static function handle_ajax() {
-        // Query String Parameters
+        // Query String Parameters.
         $content_id = required_param('content_id', PARAM_INT);
         $data_id = required_param('data_type', PARAM_ALPHA);
         $sub_content_id = required_param('sub_content_id', PARAM_INT);
 
-        // Form Data
-        $data = optional_param('data', NULL, PARAM_RAW);
-        $pre_load = optional_param('preload', NULL, PARAM_INT);
-        $invalidate = optional_param('invalidate', NULL, PARAM_INT);
+        // Form Data.
+        $data = optional_param('data', null, PARAM_RAW);
+        $pre_load = optional_param('preload', null, PARAM_INT);
+        $invalidate = optional_param('invalidate', null, PARAM_INT);
 
-        if ($content_id === NULL || $data_id === NULL || $sub_content_id === NULL ||
-            $data === NULL || $invalidate === NULL || $pre_load === NULL) {
-            return; // Missing parameters
+        if ($content_id === null || $data_id === null || $sub_content_id === null ||
+            $data === null || $invalidate === null || $pre_load === null) {
+            return; // Missing parameters.
         }
 
         if (!\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
-          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-          exit;
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            exit;
         }
 
-        // Delete user data
+        // Delete user data.
         if ($data === '0') {
             self::delete_user_data($content_id, $sub_content_id, $data_id);
-        }
-        else {
-            // Save user data
+        } else {
+            // Save user data.
             self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
         }
 
@@ -71,7 +84,7 @@ class content_user_data {
     public static function save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data) {
         global $DB, $USER;
 
-        // Determine if we should update or insert
+        // Determine if we should update or insert.
         $update = $DB->get_record('hvp_content_user_data', array(
                 'user_id' => $USER->id,
                 'hvp_id' => $content_id,
@@ -84,7 +97,7 @@ class content_user_data {
         $pre_load = $pre_load === '0' ? 0 : 1;
         $invalidate = $invalidate === '0' ? 0 : 1;
 
-        // New data to be inserted
+        // New data to be inserted.
         $new_data = (object)array(
             'user_id' => $USER->id,
             'hvp_id' => $content_id,
@@ -95,16 +108,15 @@ class content_user_data {
             'delete_on_content_change' => $invalidate
         );
 
-        // Does not exist
-        if ($update === FALSE) {
-            // Insert new data
+        // Does not exist.
+        if ($update === false) {
+            // Insert new data.
             $DB->insert_record('hvp_content_user_data', $new_data);
-        }
-        else {
-            // Get old data id
+        } else {
+            // Get old data id.
             $new_data->id = $update->id;
 
-            // Update old data
+            // Update old data.
             $DB->update_record('hvp_content_user_data', $new_data);
         }
     }
@@ -140,6 +152,6 @@ class content_user_data {
             'hvp_id' => $content_id
         ));
 
-        return $result ? $result->data : NULL;
+        return $result ? $result->data : null;
     }
 }

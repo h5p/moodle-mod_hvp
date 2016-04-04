@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -44,6 +43,6 @@ class backup_hvp_activity_task extends backup_activity_task {
      * Defines a backup step to store the instance data in the choice.xml file
      */
     protected function define_my_steps() {
-        //$this->add_step(new backup_hvp_activity_structure_step('hvp_structure', 'hvp.xml'));
+        // $this->add_step(new backup_hvp_activity_structure_step('hvp_structure', 'hvp.xml'));
     }
 }

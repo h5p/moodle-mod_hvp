@@ -25,7 +25,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once 'autoloader.php';
+require_once('autoloader.php');
 
 /**
  * Get array with settings for hvp core
@@ -35,25 +35,25 @@ require_once 'autoloader.php';
 function hvp_get_core_settings() {
     global $USER, $CFG, $COURSE;
 
-    $basePath = $CFG->sessioncookiepath;
-    $ajaxPath = $basePath . 'mod/hvp/ajax.php?action=';
+    $basepath = $CFG->sessioncookiepath;
+    $ajaxpath = $basepath . 'mod/hvp/ajax.php?action=';
 
-    $system_context = \context_system::instance();
-    $course_context = \context_course::instance($COURSE->id);
+    $systemcontext = \context_system::instance();
+    $coursecontext = \context_course::instance($COURSE->id);
     $settings = array(
-        'baseUrl' => $basePath,
-        'url' => "{$basePath}pluginfile.php/{$course_context->id}/mod_hvp",
-        'libraryUrl' => "{$basePath}pluginfile.php/{$system_context->id}/mod_hvp/libraries",
-        'postUserStatistics' => TRUE,
+        'baseUrl' => $basepath,
+        'url' => "{$basepath}pluginfile.php/{$coursecontext->id}/mod_hvp",
+        'libraryUrl' => "{$basepath}pluginfile.php/{$systemcontext->id}/mod_hvp/libraries",
+        'postUserStatistics' => true,
         'ajax' => array(
-            'setFinished' => $ajaxPath . 'set_finished',
-            'contentUserData' => $ajaxPath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
+            'setFinished' => $ajaxpath . 'set_finished',
+            'contentUserData' => $ajaxpath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
         ),
         'tokens' => array(
           'result' => \H5PCore::createToken('result'),
           'contentUserData' => \H5PCore::createToken('contentuserdata')
         ),
-        'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : FALSE,
+        'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : false,
         'siteUrl' => $CFG->wwwroot,
         'l10n' => array(
             'H5P' => array(
@@ -69,7 +69,7 @@ function hvp_get_core_settings() {
                 'source' => get_string('source', 'hvp'),
                 'license' => get_string('license', 'hvp'),
                 'thumbnail' => get_string('thumbnail', 'hvp'),
-                'noCopyrights' =>  get_string('nocopyright', 'hvp'),
+                'noCopyrights' => get_string('nocopyright', 'hvp'),
                 'downloadDescription' => get_string('downloadtitle', 'hvp'),
                 'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
                 'h5pDescription' => get_string('h5ptitle', 'hvp'),
@@ -94,7 +94,7 @@ function hvp_get_core_settings() {
 function hvp_get_core_assets() {
     global $CFG, $PAGE;
 
-    // Get core settings
+    // Get core settings.
     $settings = hvp_get_core_settings();
     $settings['core'] = array(
         'styles' => array(),
@@ -103,22 +103,22 @@ function hvp_get_core_assets() {
     $settings['loadedJs'] = array();
     $settings['loadedCss'] = array();
 
-    // Make sure files are reloaded for each plugin update
-    $cache_buster = hvp_get_cache_buster();
+    // Make sure files are reloaded for each plugin update.
+    $cachebuster = hvp_get_cache_buster();
 
     // Use relative URL to support both http and https.
-    $lib_url = $CFG->httpswwwroot . '/mod/hvp/library/';
-    $rel_path = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $lib_url);
+    $liburl = $CFG->httpswwwroot . '/mod/hvp/library/';
+    $relpath = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $liburl);
 
-    // Add core stylesheets
+    // Add core stylesheets.
     foreach (\H5PCore::$styles as $style) {
-        $settings['core']['styles'][] = $rel_path . $style . $cache_buster;
-        $PAGE->requires->css(new moodle_url($lib_url . $style . $cache_buster));
+        $settings['core']['styles'][] = $relpath . $style . $cachebuster;
+        $PAGE->requires->css(new moodle_url($liburl . $style . $cachebuster));
     }
-    // Add core JavaScript
+    // Add core JavaScript.
     foreach (\H5PCore::$scripts as $script) {
-        $settings['core']['scripts'][] = $rel_path . $script . $cache_buster;
-        $PAGE->requires->js(new moodle_url($lib_url . $script . $cache_buster), true);
+        $settings['core']['scripts'][] = $relpath . $script . $cachebuster;
+        $PAGE->requires->js(new moodle_url($liburl . $script . $cachebuster), true);
     }
 
     return $settings;
@@ -128,16 +128,16 @@ function hvp_get_core_assets() {
  * Add core JS and CSS to page.
  *
  * @param moodle_page $page
- * @param moodle_url|string $lib_url
+ * @param moodle_url|string $liburl
  * @param array|null $settings
  * @throws \coding_exception
  */
-function hvp_admin_add_generic_css_and_js($page, $lib_url, $settings = NULL) {
+function hvp_admin_add_generic_css_and_js($page, $liburl, $settings = null) {
     foreach (\H5PCore::$adminScripts as $script) {
-        $page->requires->js(new moodle_url($lib_url . $script . hvp_get_cache_buster()), true);
+        $page->requires->js(new moodle_url($liburl . $script . hvp_get_cache_buster()), true);
     }
 
-    if ($settings === NULL) {
+    if ($settings === null) {
         $settings = array();
     }
 
@@ -150,8 +150,8 @@ function hvp_admin_add_generic_css_and_js($page, $lib_url, $settings = NULL) {
     );
 
     $page->requires->data_for_js('H5PAdminIntegration', $settings, true);
-    $page->requires->css(new moodle_url($lib_url . 'styles/h5p.css' . hvp_get_cache_buster()));
-    $page->requires->css(new moodle_url($lib_url . 'styles/h5p-admin.css' . hvp_get_cache_buster()));
+    $page->requires->css(new moodle_url($liburl . 'styles/h5p.css' . hvp_get_cache_buster()));
+    $page->requires->css(new moodle_url($liburl . 'styles/h5p-admin.css' . hvp_get_cache_buster()));
 
     // Add settings:
     $page->requires->data_for_js('h5p', hvp_get_core_settings(), true);
@@ -174,12 +174,12 @@ function hvp_get_cache_buster() {
  * @param int $library_id
  * @param bool $restrict
  */
-function hvp_restrict_library($library_id, $restrict) {
-  global $DB;
-  $DB->update_record('hvp_libraries', (object) array(
-    'id' => $library_id,
+function hvp_restrict_library($libraryid, $restrict) {
+    global $DB;
+    $DB->update_record('hvp_libraries', (object) array(
+    'id' => $libraryid,
     'restricted' => $restrict ? 1 : 0
-  ));
+    ));
 }
 
 /**
@@ -190,59 +190,59 @@ function hvp_restrict_library($library_id, $restrict) {
  * @return object An object including the json content for the H5P instances
  *                (maximum 40) that should be upgraded.
  */
-function hvp_content_upgrade_progress($library_id) {
+function hvp_content_upgrade_progress($libraryid) {
     global $DB;
 
-    $to_library_id = filter_input(INPUT_POST, 'libraryId');
+    $tolibraryid = filter_input(INPUT_POST, 'libraryId');
 
-    // Verify security token
+    // Verify security token.
     if (!\H5PCore::validToken('contentupgrade', required_param('token', PARAM_RAW))) {
         print get_string('upgradeinvalidtoken', 'hvp');
         return;
     }
 
-    // Get the library we're upgrading to
-    $to_library = $DB->get_record('hvp_libraries', array(
-        'id' => $to_library_id
+    // Get the library we're upgrading to.
+    $tolibrary = $DB->get_record('hvp_libraries', array(
+        'id' => $tolibraryid
     ));
-    if (!$to_library) {
+    if (!$tolibrary) {
         print get_string('upgradelibrarymissing', 'hvp');
         return;
     }
 
-    // Prepare response
+    // Prepare response.
     $out = new stdClass();
     $out->params = array();
     $out->token = \H5PCore::createToken('contentupgrade');
 
-    // Prepare our interface
+    // Prepare our interface.
     $interface = \mod_hvp\framework::instance('interface');
 
-    // Get updated params
+    // Get updated params.
     $params = filter_input(INPUT_POST, 'params');
-    if ($params !== NULL) {
+    if ($params !== null) {
         // Update params.
         $params = json_decode($params);
         foreach ($params as $id => $param) {
             $DB->update_record('hvp', (object) array(
                 'id' => $id,
-                'main_library_id' => $to_library->id,
+                'main_library_id' => $tolibrary->id,
                 'json_content' => $param,
                 'filtered' => ''
             ));
         }
     }
 
-    // Get number of contents for this library
-    $out->left = $interface->getNumContent($library_id);
+    // Get number of contents for this library.
+    $out->left = $interface->getNumContent($libraryid);
 
     if ($out->left) {
-        // Find the 40 first contents using this library version and add to params
+        // Find the 40 first contents using this library version and add to params.
         $results = $DB->get_records_sql(
             "SELECT id, json_content as params
                FROM {hvp}
               WHERE main_library_id = ?
-           ORDER BY name ASC", array($library_id), 0 , 40
+           ORDER BY name ASC", array($libraryid), 0 , 40
         );
 
         foreach ($results as $content) {
@@ -277,16 +277,16 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
     $core = \mod_hvp\framework::instance();
 
     $library->semantics = $core->loadLibrarySemantics($library->name, $library->version->major, $library->version->minor);
-    if ($library->semantics === NULL) {
+    if ($library->semantics === null) {
         http_response_code(404);
         return;
     }
 
     $context = \context_system::instance();
-    $libraryFolderName = "{$library->name}-{$library->version->major}.{$library->version->minor}";
-    if (\mod_hvp\file_storage::fileExists($context->id, 'libraries', '/' . $libraryFolderName . '/', 'upgrades.js')) {
-        $basePath = $CFG->sessioncookiepath;
-        $library->upgradesScript = "{$basePath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryFolderName}/upgrades.js";
+    $libraryfoldername = "{$library->name}-{$library->version->major}.{$library->version->minor}";
+    if (\mod_hvp\file_storage::fileExists($context->id, 'libraries', '/' . $libraryfoldername . '/', 'upgrades.js')) {
+        $basepath = $CFG->sessioncookiepath;
+        $library->upgradesScript = "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/upgrades.js";
     }
 
     return $library;

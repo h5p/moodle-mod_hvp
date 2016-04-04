@@ -43,7 +43,7 @@ class framework implements \H5PFrameworkInterface {
      * @param string $type Type of hvp instance to get
      * @return \H5PContentValidator|\H5PCore|\H5PMoodle|\H5PStorage|\H5PValidator
      */
-    public static function instance($type = NULL) {
+    public static function instance($type = null) {
         global $CFG;
         static $interface, $core;
 
@@ -99,7 +99,7 @@ class framework implements \H5PFrameworkInterface {
      */
     public function fetchExternalData($url) {
         $data = download_file_content($url);
-        return ($data === false ? NULL : $data);
+        return ($data === false ? null : $data);
     }
 
     /**
@@ -122,7 +122,7 @@ class framework implements \H5PFrameworkInterface {
      * @param string $message translated error message
      */
     public function setErrorMessage($message) {
-        if ($message !== NULL) {
+        if ($message !== null) {
             self::messages('error', $message);
         }
     }
@@ -131,7 +131,7 @@ class framework implements \H5PFrameworkInterface {
      * Implements setInfoMessage
      */
     public function setInfoMessage($message) {
-        if ($message !== NULL) {
+        if ($message !== null) {
             self::messages('info', $message);
         }
     }
@@ -143,10 +143,10 @@ class framework implements \H5PFrameworkInterface {
      * @param string $newMessage Optional
      * @return array Array of stored messages
      */
-    public static function messages($type, $newMessage = NULL) {
+    public static function messages($type, $newMessage = null) {
         static $m = 'mod_hvp_messages';
 
-        if ($newMessage === NULL) {
+        if ($newMessage === null) {
             // Return and reset messages
             $messages = isset($_SESSION[$m][$type]) ? $_SESSION[$m][$type] : array();
             unset($_SESSION[$m][$type]);
@@ -178,8 +178,8 @@ class framework implements \H5PFrameworkInterface {
     public function t($message, $replacements = array()) {
         // TODO: Change core, use keywords for translation.
         return str_replace(array_keys($replacements), $replacements, $message);
-        //debugging($message, DEBUG_DEVELOPER);
-        //return get_string($message, 'hvp', $replacements);
+        // debugging($message, DEBUG_DEVELOPER);
+        // return get_string($message, 'hvp', $replacements);
     }
 
     /**
@@ -194,10 +194,10 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getUploadedH5PFolderPath
      */
-    public function getUploadedH5pFolderPath($setPath = NULL) {
+    public function getUploadedH5pFolderPath($setPath = null) {
         static $path;
 
-        if ($setPath !== NULL) {
+        if ($setPath !== null) {
             $path = $setPath;
         }
 
@@ -211,10 +211,10 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getUploadedH5PPath
      */
-    public function getUploadedH5pPath($setPath = NULL) {
+    public function getUploadedH5pPath($setPath = null) {
         static $path;
 
-        if ($setPath !== NULL) {
+        if ($setPath !== null) {
             $path = $setPath;
         }
 
@@ -229,20 +229,20 @@ class framework implements \H5PFrameworkInterface {
      * Implements loadLibraries
      */
     public function loadLibraries() {
-      global $DB;
+        global $DB;
 
-      $results = $DB->get_records_sql(
+        $results = $DB->get_records_sql(
               "SELECT id, machine_name, title, major_version, minor_version,
                       patch_version, runnable, restricted
                  FROM {hvp_libraries}
              ORDER BY title ASC, major_version ASC, minor_version ASC");
 
-      $libraries = array();
-      foreach ($results as $library) {
-          $libraries[$library->machine_name][] = $library;
-      }
+        $libraries = array();
+        foreach ($results as $library) {
+            $libraries[$library->machine_name][] = $library;
+        }
 
-      return $libraries;
+        return $libraries;
     }
 
     /**
@@ -269,22 +269,22 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getLibraryId
      */
-    public function getLibraryId($machineName, $majorVersion = NULL, $minorVersion = NULL) {
+    public function getLibraryId($machineName, $majorVersion = null, $minorVersion = null) {
         global $DB;
 
         // Look for specific library
         $sql_where = 'WHERE machine_name = ?';
         $sql_args = array($machineName);
 
-        if ($majorVersion !== NULL) {
-          // Look for major version
-          $sql_where .= ' AND major_version = ?';
-          $sql_args[] = $majorVersion;
-          if ($minorVersion !== NULL) {
-            // Look for minor version
-            $sql_where .= ' AND minor_version = ?';
-            $sql_args[] = $minorVersion;
-          }
+        if ($majorVersion !== null) {
+            // Look for major version
+            $sql_where .= ' AND major_version = ?';
+            $sql_args[] = $majorVersion;
+            if ($minorVersion !== null) {
+                // Look for minor version
+                $sql_where .= ' AND minor_version = ?';
+                $sql_args[] = $minorVersion;
+            }
         }
 
         // Get the lastest version which matches the input parameters
@@ -298,10 +298,10 @@ class framework implements \H5PFrameworkInterface {
                 ", $sql_args, 0, 1);
         if ($libraries) {
             $library = reset($libraries);
-            return $library ? $library->id : FALSE;
+            return $library ? $library->id : false;
         }
         else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -313,7 +313,7 @@ class framework implements \H5PFrameworkInterface {
 
         if (isset($CFG->mod_hvp_dev) && $CFG->mod_hvp_dev) {
             // Makes sure libraries are updated, patch version does not matter.
-            return TRUE;
+            return true;
         }
 
         $operator = $this->isInDevMode() ? '<=' : '<';
@@ -330,21 +330,21 @@ class framework implements \H5PFrameworkInterface {
                   $library['patchVersion'])
         );
 
-        return $library ? TRUE : FALSE;
+        return $library ? true : false;
     }
 
     /**
      * Implements isInDevMode
      */
     public function isInDevMode() {
-        return FALSE; // Not supported (Files in moodle not editable)
+        return false; // Not supported (Files in moodle not editable)
     }
 
     /**
      * Implements mayUpdateLibraries
      */
     public function mayUpdateLibraries() {
-        return TRUE; // TODO: Add capability to manage libraries
+        return true; // TODO: Add capability to manage libraries
     }
 
     /**
@@ -358,7 +358,7 @@ class framework implements \H5PFrameworkInterface {
      * @return array The array contains two elements, keyed by 'content' and 'libraries'.
      *               Each element contains a number
      */
-    public function getLibraryUsage($id, $skipContent = FALSE) {
+    public function getLibraryUsage($id, $skipContent = false) {
         global $DB;
 
         if ($skipContent) {
@@ -402,7 +402,7 @@ class framework implements \H5PFrameworkInterface {
         $res = $DB->get_records_sql($query);
 
         // Extract results
-        forEach($res as $lib) {
+        foreach($res as $lib) {
             $contentCount[$lib->machine_name.' '.$lib->major_version.'.'.$lib->minor_version] = $lib->count;
         }
 
@@ -412,7 +412,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements saveLibraryData
      */
-    public function saveLibraryData(&$libraryData, $new = TRUE) {
+    public function saveLibraryData(&$libraryData, $new = true) {
         global $DB;
 
         // Some special properties needs some checking and converting before they can be saved.
@@ -578,7 +578,7 @@ class framework implements \H5PFrameworkInterface {
      *
      * @return bool|int
      */
-    public function updateContent($content, $contentMainId = NULL) {
+    public function updateContent($content, $contentMainId = null) {
         global $DB;
 
         if (!isset($content['disable'])) {
@@ -611,7 +611,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements insertContent
      */
-    public function insertContent($content, $contentMainId = NULL) {
+    public function insertContent($content, $contentMainId = null) {
         return $this->updateContent($content);
     }
 
@@ -639,7 +639,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements copyLibraryUsage
      */
-    public function copyLibraryUsage($contentId, $copyFromId, $contentMainId = NULL) {
+    public function copyLibraryUsage($contentId, $copyFromId, $contentMainId = null) {
         global $DB;
 
         $libraryUsage = $DB->get_record('hvp_contents_libraries', array(
@@ -657,9 +657,9 @@ class framework implements \H5PFrameworkInterface {
      * Implements loadLibrarySemantics
      */
     public function loadLibrarySemantics($name, $majorVersion, $minorVersion) {
-      global $DB;
+        global $DB;
 
-      $semantics = $DB->get_field_sql(
+        $semantics = $DB->get_field_sql(
             "SELECT semantics
             FROM {hvp_libraries}
             WHERE machine_name = ?
@@ -667,7 +667,7 @@ class framework implements \H5PFrameworkInterface {
             AND minor_version = ?",
             array($name, $majorVersion, $minorVersion));
 
-      return ($semantics === FALSE ? NULL : $semantics);
+        return ($semantics === false ? null : $semantics);
     }
 
     /**
@@ -703,7 +703,7 @@ class framework implements \H5PFrameworkInterface {
 
         // Return NULL if not found
         if ($data === false) {
-            return NULL;
+            return null;
         }
 
         // Some databases do not support camelCase, so we need to manually
@@ -730,11 +730,10 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements loadContentDependencies
      */
-    public function loadContentDependencies($id, $type = NULL) {
+    public function loadContentDependencies($id, $type = null) {
         global $DB;
 
-        $query =
-                "SELECT hl.id
+        $query = "SELECT hl.id
                       , hl.machine_name
                       , hl.major_version
                       , hl.minor_version
@@ -748,7 +747,7 @@ class framework implements \H5PFrameworkInterface {
                 WHERE hcl.hvp_id = ?";
         $queryArgs = array($id);
 
-        if ($type !== NULL) {
+        if ($type !== null) {
             $query .= " AND hcl.dependency_type = ?";
             $queryArgs[] = $type;
         }
@@ -767,9 +766,9 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getOption().
      */
-    public function getOption($name, $default = FALSE) {
+    public function getOption($name, $default = false) {
         $value = get_config('mod_hvp', $name);
-        if ($value === FALSE) {
+        if ($value === false) {
             return $default;
         }
         return $value;
