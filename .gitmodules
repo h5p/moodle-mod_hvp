@@ -1,3 +1,6 @@
 [submodule "library"]
 	path = library
 	url = https://github.com/h5p/h5p-php-library.git
+[submodule "editor"]
+	path = editor
+	url = https://github.com/h5p/h5p-editor-php-library.git
