@@ -41,6 +41,11 @@ function hvp_autoloader($class) {
         'H5PFileStorage' => 'library/h5p-file-storage.interface.php',
         'H5PDefaultStorage' => 'library/h5p-default-storage.class.php',
 
+        // Editor.
+        'H5peditor' => 'editor/h5peditor.class.php',
+        'H5peditorFile' => 'editor/h5peditor-file.class.php',
+        'H5peditorStorage' => 'editor/h5peditor-storage.interface.php',
+
         // Plugin specific classes are loaded by Moodle.
         );
     }
