@@ -97,9 +97,9 @@ class framework implements \H5PFrameworkInterface {
      * @param string $url Url starting with http(s)://
      * @return bool|null|\stdClass|string Data object if successful fetch
      */
-    public function fetchExternalData($url) {
-        $data = download_file_content($url);
-        return ($data === false ? null : $data);
+    public function fetchExternalData($url, $data = null) {
+        $response = \download_file_content($url, null, $data);
+        return ($response === false ? null : $response);
     }
 
     /**
@@ -980,4 +980,32 @@ class framework implements \H5PFrameworkInterface {
 
         return $hashes;
     }
+
+    /**
+     * Implements getLibraryStats
+     */
+    public function getLibraryStats($type) {
+        $count = array();
+
+        // TODO: Get count of given type of events
+
+        return $count;
+    }
+
+    /**
+     * Implements getNumAuthors
+     */
+    public function getNumAuthors() {
+
+        // TODO: Get num of unique authors
+
+        //global $DB;
+        //return intval($DB->get_field_sql(
+        //    "SELECT COUNT(DISTINCT user_id)
+        //       FROM {hvp}"
+        //));
+
+        return 0;
+    }
+
 }
