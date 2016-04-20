@@ -84,6 +84,7 @@ $string['upload'] = 'Upload';
 // Installed libraries section.
 $string['installedlibraries'] = 'Installed Libraries';
 $string['invalidtoken'] = 'Invalid security token.';
+$string['missingparameters'] = 'Missing parameters';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Title';
