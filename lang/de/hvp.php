@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 $string['modulename'] = 'Interaktiver Inhalt';
-$string['modulename_help'] = 'The H5P activity module enables you to create interactive content such as Interactive Videos, Question Sets, Drag and Drop Questions, Multi-Choice Questions, Presentations and much more.
-In addition to being an authoring tool for rich content, H5P enables you to import and export H5P files for effective reuse and sharing of content.
-User interactions and scores are tracked using xAPI and are available through the Moodle Gradebook.
-You add interactive H5P content by uploading a .h5p file. You can create and download .h5p files on h5p.org';
+$string['modulename_help'] = 'Das H5P Aktivitätenmodul ermöglicht das Erstellen von interaktiven Inhalten, wie interaktive videos, Fragebögen, Drag and Drop Fragen, Multiple-Choice Fragen, Präsentationen und vieles mehr.
+Zusätzlich zu den Funktionen als Tool für rich content, ermöglicht H5P es H5P Datein zu importieren und exportieren, um die Inhalte effektiv wiederverwenden und teilen zu können.
+Nutzerinteraktion und Punkte werden mittels der xAPI verfolgt und sind im Moodle Notenbuch verfügbar.
+Interaktive H5P Inhalte können durch das hochladen von .h5p Dateien hinzugefügt werden. Das Erstellen und Herunterladen von .h5p Dateien ist unter h5p.org möglich.';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
 $string['modulenameplural'] = 'H5Ps';
 $string['pluginadministration'] = 'H5P';
@@ -48,10 +48,10 @@ $string['embedtitle'] = 'Code zur Einbettung dieses Inhalts anzeigen.';
 $string['h5ptitle'] = 'Besuche H5P.org um mehr coole Inhalte zu sehen.';
 $string['contentchanged'] = 'Dieser Inhalt hat sich seit der letzten Nutzung verändert.';
 $string['startingover'] = "Jetzt geht\'s los.";
-$string['lookforupdates'] = 'Nach H5P updates suchen';
+$string['lookforupdates'] = 'Nach H5P Aktualisierungen suchen';
 // Admin settings.
 $string['displayoptions'] = 'Optionen anzeigen';
-$string['enableframe'] = 'Display action bar and frame';
+$string['enableframe'] = 'Menüleiste und Rahmen anzeigen.';
 $string['enabledownload'] = 'Download button';
 $string['enableembed'] = 'Einbettung button';
 $string['enablecopyright'] = 'Copyright button';
@@ -68,7 +68,7 @@ $string['uploadlibraries'] = 'Bibliotheken hochladen';
 $string['options'] = 'Optionen';
 $string['onlyupdate'] = 'Nur bereits bestehende Bibliotheken aktualisieren';
 $string['disablefileextensioncheck'] = 'Prüfung der Dateiendung deaktivieren';
-$string['disablefileextensioncheckwarning'] = "Warnung! Disabling the file extension check may have security implications as it allows for uploading of php files. That in turn could make it possible for attackers to execute malicious code on your site. Please make sure you know exactly what you're uploading.";
+$string['disablefileextensioncheckwarning'] = "Warnung! Das deaktivieren der Prüfung kann zu Sicherheitsproblemen führen, da das Hochladen von php-Dateien möglich wird. Dadurch könnten Hacker in der Lage sein, schadhaften Code in die Website einzuschleusen. Bitte stellen Sie sicher, dass Sie genau wissen, was sie tun.";
 $string['upload'] = 'Hochladen';
 // Installed libraries section.
 $string['installedlibraries'] = 'Installierte Bibliotheken';
