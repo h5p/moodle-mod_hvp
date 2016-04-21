@@ -153,6 +153,38 @@ switch($action) {
         break;
 
     /*
+     * Load list of libraries or details for library.
+     *
+     * Parameters:
+     *  string machineName
+     *  int majorVersion
+     *  int minorVersion
+     */
+    case 'libraries':
+        // TODO: Check permissions
+
+        /// Get parameters
+        $name = optional_param('machineName', '', PARAM_TEXT);
+        $major = optional_param('majorVersion', 0, PARAM_INT);
+        $minor = optional_param('minorVersion', 0, PARAM_INT);
+
+        $editor = \mod_hvp\framework::instance('editor');
+
+        header('Cache-Control: no-cache');
+        header('Content-type: application/json');
+
+        if (!empty($name)) {
+          print 'Not Supported';
+          // TODO: Implement support for get library data
+          //print $editor->getLibraryData($name, $major, $minor, \current_language(), $plugin->get_h5p_path());
+        }
+        else {
+          print $editor->getLibraries();
+        }
+
+        break;
+
+    /*
      * Throw error if AJAX isnt handeled
      */
     default:
