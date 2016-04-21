@@ -45,7 +45,7 @@ class framework implements \H5PFrameworkInterface {
      */
     public static function instance($type = null) {
         global $CFG;
-        static $interface, $core;
+        static $interface, $core, $editor, $editorinterface;
 
         if (!isset($interface)) {
             $interface = new \mod_hvp\framework();
@@ -55,7 +55,7 @@ class framework implements \H5PFrameworkInterface {
             $context = \context_system::instance();
             $url = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
 
-            $language = current_language();
+            $language = \current_language();
 
             $export = !(isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === '0');
 
@@ -72,6 +72,19 @@ class framework implements \H5PFrameworkInterface {
                 return new \H5PContentValidator($interface, $core);
             case 'interface':
                 return $interface;
+            case 'editor':
+                if (empty($editorinterface)) {
+                    $editorinterface = new \mod_hvp\editor_framework();
+                }
+                if (empty($editor)) {
+                    $editor = new \H5peditor(
+                        $core,
+                        $editorinterface,
+                        '',
+                        ''
+                    );
+                }
+                return $editor;
             case 'core':
             default:
                 return $core;
