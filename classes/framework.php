@@ -176,10 +176,77 @@ class framework implements \H5PFrameworkInterface {
      * Implements t
      */
     public function t($message, $replacements = array()) {
-        // TODO: Change core, use keywords for translation.
-        return str_replace(array_keys($replacements), $replacements, $message);
-        // debugging($message, DEBUG_DEVELOPER);
-        // return get_string($message, 'hvp', $replacements);
+        static $map;
+
+        if (empty($map)) {
+            // Create mapping
+            $map = [
+                'Your PHP version does not support ZipArchive.' => get_string('noziparchive', 'hvp'),
+                'The file you uploaded is not a valid HTML5 Package (It does not have the .h5p file extension)' => get_string('noextension', 'hvp'),
+                'The file you uploaded is not a valid HTML5 Package (We are unable to unzip it)' => get_string('nounzip', 'hvp'),
+                'Could not parse the main h5p.json file' => get_string('noparse', 'hvp'),
+                'The main h5p.json file is not valid' => get_string('nojson', 'hvp'),
+                'Invalid content folder' => get_string('invalidcontentfolder', 'hvp'),
+                'Could not find or parse the content.json file' => get_string('nocontent', 'hvp'),
+                'Library directory name must match machineName or machineName-majorVersion.minorVersion (from library.json). (Directory: %directoryName , machineName: %machineName, majorVersion: %majorVersion, minorVersion: %minorVersion)' => get_string('librarydirectoryerror', 'hvp'),
+                'A valid content folder is missing' => get_string('missingcontentfolder', 'hvp'),
+                'A valid main h5p.json file is missing' => get_string('invalidmainjson', 'hvp'),
+                'Missing required library @library' => get_string('missinglibrary', 'hvp'),
+                "Note that the libraries may exist in the file you uploaded, but you're not allowed to upload new libraries. Contact the site administrator about this." => get_string('missinguploadpermissions', 'hvp'),
+                'Invalid library name: %name' => get_string('invalidlibraryname', 'hvp'),
+                'Could not find library.json file with valid json format for library %name' => get_string('missinglibraryjson', 'hvp'),
+                'Invalid semantics.json file has been included in the library %name' => get_string('invalidsemanticsjson', 'hvp'),
+                'Invalid language file %file in library %library' => get_string('invalidlanguagefile', 'hvp'),
+                'Invalid language file %languageFile has been included in the library %name' => get_string('invalidlanguagefile2', 'hvp'),
+                'The file "%file" is missing from library: "%name"' => get_string('missinglibraryfile', 'hvp'),
+                'The library "%libraryName" requires H5P %requiredVersion, but only H5P %coreApi is installed.' => get_string('missingcoreversion', 'hvp'),
+                "Invalid data provided for %property in %library. Boolean expected." => get_string('invalidlibrarydataboolean', 'hvp'),
+                "Invalid data provided for %property in %library" => get_string('invalidlibrarydata', 'hvp'),
+                "Can't read the property %property in %library" => get_string('invalidlibraryproperty', 'hvp'),
+                'The required property %property is missing from %library' => get_string('missinglibraryproperty', 'hvp'),
+                'Illegal option %option in %library' => get_string('invalidlibraryoption', 'hvp'),
+                'Added %new new H5P libraries and updated %old old.' => get_string('addedandupdatelibraries', 'hvp'),
+                'Added %new new H5P libraries.' => get_string('addednewlibraries', 'hvp'),
+                'Updated %old H5P libraries.' => get_string('updatedlibraries', 'hvp'),
+                'Missing dependency @dep required by @lib.' => get_string('missingdependency', 'hvp'),
+                'Provided string is not valid according to regexp in semantics. (value: \"%value\", regexp: \"%regexp\")' => get_string('invalidstring', 'hvp'),
+                'File "%filename" not allowed. Only files with the following extensions are allowed: %files-allowed.' => get_string('invalidfile', 'hvp'),
+                'Invalid selected option in multi-select.' => get_string('invalidmultiselectoption', 'hvp'),
+                'Invalid selected option in select.' => get_string('invalidselectoption', 'hvp'),
+                'H5P internal error: unknown content type "@type" in semantics. Removing content!' => get_string('invalidsemanticstype', 'hvp'),
+                'Library used in content is not a valid library according to semantics' => get_string('invalidsemantics', 'hvp'),
+                'Copyright information' => get_string('copyrightinfo', 'hvp'),
+                'Title' => get_string('titole', 'hvp'),
+                'Author' => get_string('autor', 'hvp'),
+                'Year(s)' => get_string('years', 'hvp'),
+                'Source' => get_string('source', 'hvp'),
+                'License' => get_string('license', 'hvp'),
+                'Undisclosed' => get_string('undisclosed', 'hvp'),
+                'Attribution 4.0' => get_string('attribution', 'hvp'),
+                'Attribution-ShareAlike 4.0' => get_string('attributionsa', 'hvp'),
+                'Attribution-NoDerivs 4.0' => get_string('attributionnd', 'hvp'),
+                'Attribution-NonCommercial 4.0' => get_string('attributionnc', 'hvp'),
+                'Attribution-NonCommercial-ShareAlike 4.0' => get_string('attributionncsa', 'hvp'),
+                'Attribution-NonCommercial-NoDerivs 4.0' => get_string('attributionncnd', 'hvp'),
+                'General Public License v3' => get_string('gpl', 'hvp'),
+                'Public Domain' => get_string('pd', 'hvp'),
+                'Public Domain Dedication and Licence' => get_string('pddl', 'hvp'),
+                'Public Domain Mark' => get_string('pdm', 'hvp'),
+                'Copyright' => get_string('copyright', 'hvp'),
+                'Unable to create directory.' => get_string('unabletocreatedir', 'hvp'),
+                'Unable to get field type.' => get_string('unabletogetfieldtype', 'hvp'),
+                "File type isn't allowed." => get_string('filetypenotallowed', 'hvp'),
+                'Invalid field type.' => get_string('invalidfieldtype', 'hvp'),
+                'Invalid image file format. Use jpg, png or gif.' => get_string('invalidimageformat', 'hvp'),
+                'File is not an image.' => get_string('filenotimage', 'hvp'),
+                'Invalid audio file format. Use mp3 or wav.' => get_string('invalidaudioformat', 'hvp'),
+                'Invalid video file format. Use mp4 or webm.' => get_string('invalidvideoformat', 'hvp'),
+                'Could not save file.' => get_string('couldnotsave', 'hvp'),
+                'Could not copy file.' => get_string('couldnotcopy', 'hvp')
+            ];
+        }
+
+        return str_replace(array_keys($replacements), $replacements, $map[$message]);
     }
 
     /**
