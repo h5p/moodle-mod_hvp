@@ -318,6 +318,28 @@ class file_storage implements \H5PFileStorage {
     }
 
     /**
+     * Read file content of given file and then return it.
+     *
+     * @param string $file_path
+     * @return string
+     */
+    public function getContent($file_path) {
+      // Grab context and file storage
+      $context = \context_system::instance();
+      $fs = get_file_storage();
+
+      // Find location of file
+      $location = array();
+      preg_match('/^\/(libraries|development|cachedassets)(.*\/)([^\/]+)$/', $file_path, $location);
+
+      // Locate file
+      $file = $fs->get_file($context->id, 'mod_hvp', $location[1], 0, $location[2], $location[3]);
+
+      // Return content
+      return $file->get_content();
+    }
+
+    /**
      * Copies files from tmp folder to Moodle storage.
      *
      * @param string $source
