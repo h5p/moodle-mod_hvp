@@ -49,9 +49,9 @@ class editor_framework implements \H5peditorStorage {
         global $DB;
 
         return $DB->get_field_sql(
-            "SELECT hlt.translation
+            "SELECT hlt.language_json
                FROM {hvp_libraries_languages} hlt
-               JOIN {hvp_libraries} hl ON ON hl.id = hlt.library_id
+               JOIN {hvp_libraries} hl ON hl.id = hlt.library_id
               WHERE hl.machine_name = ?
                 AND hl.major_version = ?
                 AND hl.minor_version = ?
@@ -97,7 +97,7 @@ class editor_framework implements \H5peditorStorage {
             // Get details for the specified libraries only.
             $librarieswithdetails = array();
             foreach ($libraries as $library) {
-                $details = $wpdb->get_row($wpdb->prepare(
+                $details = $DB->get_record_sql(
                         "SELECT title,
                                 runnable,
                                 restricted,
@@ -112,7 +112,7 @@ class editor_framework implements \H5peditorStorage {
                             $library->majorVersion,
                             $library->minorVersion
                         )
-                  ));
+                  );
                 if ($details) {
                     $library->tutorialUrl = $details->tutorial_url;
                     $library->title = $details->title;
