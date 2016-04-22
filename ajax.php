@@ -174,9 +174,7 @@ switch($action) {
         header('Content-type: application/json');
 
         if (!empty($name)) {
-          print 'Not Supported';
-          // TODO: Implement support for get library data
-          //print $editor->getLibraryData($name, $major, $minor, \current_language(), $plugin->get_h5p_path());
+          print $editor->getLibraryData($name, $major, $minor, \current_language());
         }
         else {
           print $editor->getLibraries();
