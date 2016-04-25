@@ -187,7 +187,10 @@ function hvp_add_editor_assets($id = null) {
       'libraryUrl' => $url . 'editor',
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
       'assets' => $assets,
-      'uploadToken' => \H5PCore::createToken('editorfileuploads')
+      'uploadParams' => array(
+        'token' => \H5PCore::createToken('editorfileuploads'),
+        'contextId' => $context->id
+      )
     );
 
     if ($id !== null) {
