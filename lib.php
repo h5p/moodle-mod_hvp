@@ -228,6 +228,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             break;
 
         case 'exports':
+        case 'editor':
             if ($context->contextlevel != CONTEXT_COURSE) {
                 return false; // Invalid context.
             }
