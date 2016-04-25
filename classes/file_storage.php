@@ -340,6 +340,32 @@ class file_storage implements \H5PFileStorage {
     }
 
     /**
+     * Save files uploaded through the editor.
+     *
+     * @param \H5peditorFile $file
+     */
+    public function saveFile($file, $contentid, $contextid = null) {
+        $record = array(
+            'contextid' => $contextid,
+            'component' => 'mod_hvp',
+            'filearea' => $contentid === 0 ? 'editor' : 'content',
+            'itemid' => $contentid,
+            'filepath' => '/' . $file->getType() . 's/',
+            'filename' => $file->getName()
+        );
+        $fs = get_file_storage();
+        $filedata = $file->getData();
+        if ($filedata) {
+            $stored_file = $fs->create_file_from_string($record, $filedata);
+        }
+        else {
+            $stored_file = $fs->create_file_from_pathname($record, $_FILES['file']['tmp_name']);
+        }
+
+        return $stored_file->get_id();
+    }
+
+    /**
      * Copies files from tmp folder to Moodle storage.
      *
      * @param string $source
