@@ -95,7 +95,7 @@ function hvp_get_core_assets() {
     global $CFG, $PAGE;
 
     // Get core settings.
-    $settings = hvp_get_core_settings();
+    $settings = \hvp_get_core_settings();
     $settings['core'] = array(
         'styles' => array(),
         'scripts' => array()
@@ -104,7 +104,7 @@ function hvp_get_core_assets() {
     $settings['loadedCss'] = array();
 
     // Make sure files are reloaded for each plugin update.
-    $cachebuster = hvp_get_cache_buster();
+    $cachebuster = \hvp_get_cache_buster();
 
     // Use relative URL to support both http and https.
     $liburl = $CFG->httpswwwroot . '/mod/hvp/library/';
@@ -122,6 +122,79 @@ function hvp_get_core_assets() {
     }
 
     return $settings;
+}
+
+/**
+ * Add required assets for displaying the editor.
+ *
+ * @param int $id Content being edited. null for creating new content
+ */
+function hvp_add_editor_assets($id = null) {
+    global $PAGE, $CFG, $COURSE;
+    $settings = \hvp_get_core_assets();
+
+    // Use jQuery and styles from core.
+    $assets = array(
+        'css' => $settings['core']['styles'],
+        'js' => $settings['core']['scripts']
+    );
+
+    // Use relative URL to support both http and https.
+    $url = $CFG->httpswwwroot . '/mod/hvp/';
+    $url = '/' . preg_replace('/^[^:]+:\/\/[^\/]+\//', '', $url);
+
+    // Make sure files are reloaded for each plugin update.
+    $cachebuster = \hvp_get_cache_buster();
+
+    // Add editor styles
+    foreach (H5peditor::$styles as $style) {
+        $assets['css'][] = $url . 'editor/' . $style . $cachebuster;
+    }
+
+    // Add editor JavaScript
+    foreach (H5peditor::$scripts as $script) {
+        // We do not want the creator of the iframe inside the iframe
+        if ($script !== 'scripts/h5peditor-editor.js') {
+            $assets['js'][] = $url . 'editor/' . $script . $cachebuster;
+        }
+    }
+
+    // Add JavaScript with library framework integration (editor part)
+    $PAGE->requires->js(new moodle_url($url . 'editor/scripts/h5peditor-editor.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url($url . 'editor/scripts/h5peditor-init.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url($url . 'editor.js' . $cachebuster), true);
+
+    // Add translations
+    $language = \current_language();
+    $languagescript = "editor/language/{$language}.js";
+    if (!file_exists("{$CFG->dirroot}/mod/hvp/{$languagescript}")) {
+      $languagescript = 'editor/language/en.js';
+    }
+    $PAGE->requires->js(new moodle_url($url . $languagescript . $cachebuster), true);
+
+    // Add JavaScript settings
+    $context = \context_course::instance($COURSE->id);
+    $filespathbase = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp/";
+    $contentvalidator = $core = \mod_hvp\framework::instance('contentvalidator');
+    $settings['editor'] = array(
+      'filesPath' => "{$filespathbase}/content/{$id}", // TODO: Add tmp dir for new content in #48
+      'fileIcon' => array(
+        'path' => $url . 'editor/images/binary-file.png',
+        'width' => 50,
+        'height' => 50,
+      ),
+      'ajaxPath' => $url . 'ajax.php?action=',
+      'libraryUrl' => $url . 'editor',
+      'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
+      'assets' => $assets,
+      'uploadToken' => \H5PCore::createToken('editorfileuploads')
+    );
+
+    if ($id !== null) {
+      $settings['editor']['nodeVersionId'] = $id;
+    }
+
+    $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
 }
 
 /**

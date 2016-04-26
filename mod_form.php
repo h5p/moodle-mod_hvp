@@ -38,12 +38,28 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        // H5P.
+        // Action.
+        $h5paction = array();
+        $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('upload', 'hvp'), 'upload');
+        $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('create', 'hvp'), 'create');
+        $mform->addGroup($h5paction, 'h5pactiongroup', get_string('action', 'hvp'), array('<br/>'), false);
+        $mform->setDefault('h5paction', 'create');
+
+        // Upload.
         $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null,
             array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
         if (!is_number($this->current->id)) {
             $mform->addRule('h5pfile', null, 'required', null, 'client');
         }
+
+        // Editor placeholder.
+        $mform->addElement('static', 'h5peditor', get_string('editor', 'hvp'), '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') .  '</div>');
+
+        // Hidden fields.
+        $mform->addElement('hidden', 'h5plibrary', '');
+        $mform->setType('h5plibrary', PARAM_RAW);
+        $mform->addElement('hidden', 'h5pparams', '');
+        $mform->setType('h5pparams', PARAM_RAW);
 
         // Display options group.
         $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'hvp'));
@@ -68,6 +84,16 @@ class mod_hvp_mod_form extends moodleform_mod {
     }
 
     public function data_preprocessing(&$defaultvalues) {
+        $content = null;
+        if (!empty($defaultvalues['id'])) {
+            // Load Content
+            $core = \mod_hvp\framework::instance();
+            $content = $core->loadContent($defaultvalues['id']);
+            if ($content === null) {
+                print_error('invalidhvp');
+            }
+        }
+
         // Aaah.. we meet again h5pfile!
         $draftitemid = file_get_submitted_draft_itemid('h5pfile');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_hvp', 'package', 0);
@@ -87,6 +113,19 @@ class mod_hvp_mod_form extends moodleform_mod {
                 }
             }
         }
+
+        // Determine default action
+        if ($content === null) { // TODO: && !libraries exists && previous action != 'upload'
+          $defaultvalues['h5paction'] = 'upload';
+        }
+
+        // Set editor defaults
+        $defaultvalues['h5plibrary'] = ($content === null ? 0 : H5PCore::libraryToString($content['library']));
+        $defaultvalues['h5pparams'] = ($content === null ? '{}' : $defaultvalues['filtered']);
+
+        // Add required editor assets.
+        require_once 'locallib.php';
+        \hvp_add_editor_assets($content === null ? null : $defaultvalues['id']);
     }
 
     public function validation($data, $files) {
