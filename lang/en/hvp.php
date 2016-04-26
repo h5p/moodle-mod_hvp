@@ -131,4 +131,10 @@ $string['nextpage'] = 'Next page';
 $string['previouspage'] = 'Previous page';
 $string['search'] = 'Search';
 $string['empty'] = 'No results available';
-$string['javascriptloading'] = 'Waiting for JavaScript';
+
+// Editor
+$string['javascriptloading'] = 'Waiting for javascript...';
+$string['action'] = 'Action';
+$string['upload'] = 'Upload';
+$string['create'] = 'Create';
+$string['editor'] = 'Editor';
