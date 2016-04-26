@@ -30,6 +30,8 @@ require_once __DIR__ . '/../autoloader.php';
 
 /**
  * Moodle's implementation of the H5P Editor framework interface.
+ * Makes it possible for the editor's core library to communicate with the
+ * database used by Moodle.
  *
  * @package    mod_hvp
  * @copyright  2016 Joubel AS
@@ -38,16 +40,19 @@ require_once __DIR__ . '/../autoloader.php';
 class editor_framework implements \H5peditorStorage {
 
     /**
-     * Empty contructor.
-     */
-    function __construct() { }
-
-    /**
-     * Implements getLanguage().
+     * Load language file(JSON) from database.
+     * This is used to translate the editor fields(title, description etc.)
+     *
+     * @param string $name The machine readable name of the library(content type)
+     * @param int $major Major part of version number
+     * @param int $minor Minor part of version number
+     * @param string $lang Language code
+     * @return string Translation in JSON format
      */
     public function getLanguage($name, $major, $minor, $lang) {
         global $DB;
 
+        // Load translation field from DB
         return $DB->get_field_sql(
             "SELECT hlt.language_json
                FROM {hvp_libraries_languages} hlt
@@ -66,28 +71,55 @@ class editor_framework implements \H5peditorStorage {
     }
 
     /**
-     * Implements addTmpFile().
+     * Mark the given file as a temporary file.
+     *
+     * NOTE: THIS FUNCTION IS DEPRACTED AND WILL BE REMOVED VERY SOON!
+     * All file operations are now handeled by the implementation of the file
+     * storage interface in h5p-php-library.
+     *
+     * @param stdClass $file File object
      */
     public function addTmpFile($file) {
-        // TODO: Keep track of tmp files.
+        // TODO: Remove
     }
 
     /**
-     * Implements keepFile().
+     * Mark the given file as a permanent file.
+     *
+     * TODO: Consider if this should be deprecated when solving h5p/h5p-moodle-plugin#49
+     * There might be a better way of solving this.
+     *
+     * @param string $oldpath
+     * @param string $newpath
      */
     public function keepFile($oldpath, $newpath) {
         // TODO: No longer a tmp file.
     }
 
     /**
-     * Implements removeFile().
+     * File is deleted, remove from DB.
+     *
+     * TODO: Consider if this should be deprecated when solving h5p/h5p-moodle-plugin#49
+     * There might be a better way of solving this.
+     *
+     * @param string $path
      */
     public function removeFile($path) {
         // TODO: Removed from file tracking.
     }
 
     /**
-     * Implements getLibraries().
+     * Decides which content types the editor should have.
+     *
+     * Two usecases:
+     * 1. No input, will list all the available content types.
+     * 2. Libraries supported are specified, load additional data and verify
+     * that the content types are available. Used by e.g. the Presentation Tool
+     * Editor that already knows which content types are supported in its
+     * slides.
+     *
+     * @param array $libraries List of library names + version to load info for
+     * @return array List of all libraries loaded
      */
     public function getLibraries($libraries = null) {
         global $DB;
@@ -97,6 +129,7 @@ class editor_framework implements \H5peditorStorage {
             // Get details for the specified libraries only.
             $librarieswithdetails = array();
             foreach ($libraries as $library) {
+                // Look for library
                 $details = $DB->get_record_sql(
                         "SELECT title,
                                 runnable,
@@ -112,8 +145,9 @@ class editor_framework implements \H5peditorStorage {
                             $library->majorVersion,
                             $library->minorVersion
                         )
-                  );
+                );
                 if ($details) {
+                    // Library found, add details to list
                     $library->tutorialUrl = $details->tutorial_url;
                     $library->title = $details->title;
                     $library->runnable = $details->runnable;
@@ -122,11 +156,12 @@ class editor_framework implements \H5peditorStorage {
                 }
             }
 
+            // Done, return list with library details
             return $librarieswithdetails;
         }
 
+        // Load all libraries
         $libraries = array();
-
         $librariesresult = $DB->get_records_sql(
                 "SELECT machine_name AS name,
                         title,
@@ -148,19 +183,21 @@ class editor_framework implements \H5peditorStorage {
             // Make sure we only display the newest version of a library.
             foreach ($libraries as $key => $existinglibrary) {
                 if ($library->name === $existinglibrary->name) {
-                    // Mark old ones
-                    // This is the newest
+                    // Found library with same name, check versions
                     if ( ( $library->majorVersion === $existinglibrary->majorVersion &&
                            $library->minorVersion > $existinglibrary->minorVersion ) ||
                          ( $library->majorVersion > $existinglibrary->majorVersion ) ) {
+                        // This is a newer version
                         $existinglibrary->isOld = true;
                     }
                     else {
+                        // This is an older version
                         $library->isOld = true;
                     }
                 }
             }
 
+            // Check to see if content type should be restricted
             $library->restricted = $super_user ? false : ($library->restricted === '1' ? true : false);
 
             // Add new library
@@ -170,9 +207,17 @@ class editor_framework implements \H5peditorStorage {
     }
 
     /**
-     * Implements alterLibraryFiles().
+     * Allow for other plugins to decide which styles and scripts are attached.
+     * This is useful for adding and/or modifing the functionality and look of
+     * the content types.
+     *
+     * @param array $files
+     *  List of files as objects with path and version as properties
+     * @param array $libraries
+     *  List of libraries indexed by machineName with objects as values. The objects
+     *  have majorVersion and minorVersion as properties.
      */
     public function alterLibraryFiles(&$files, $libraries) {
-        // TODO: Fill with code
+        // TODO: h5p/h5p-moodle-plugin#12
     }
 }

@@ -174,10 +174,10 @@ switch($action) {
         header('Content-type: application/json');
 
         if (!empty($name)) {
-          print $editor->getLibraryData($name, $major, $minor, \current_language());
+            print $editor->getLibraryData($name, $major, $minor, \current_language());
         }
         else {
-          print $editor->getLibraries();
+            print $editor->getLibraries();
         }
 
         break;
