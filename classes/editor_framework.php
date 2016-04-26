@@ -52,6 +52,7 @@ class editor_framework implements \H5peditorStorage {
     public function getLanguage($name, $major, $minor, $lang) {
         global $DB;
 
+        // Load translation field from DB
         return $DB->get_field_sql(
             "SELECT hlt.language_json
                FROM {hvp_libraries_languages} hlt
@@ -128,6 +129,7 @@ class editor_framework implements \H5peditorStorage {
             // Get details for the specified libraries only.
             $librarieswithdetails = array();
             foreach ($libraries as $library) {
+                // Look for library
                 $details = $DB->get_record_sql(
                         "SELECT title,
                                 runnable,
@@ -143,8 +145,9 @@ class editor_framework implements \H5peditorStorage {
                             $library->majorVersion,
                             $library->minorVersion
                         )
-                  );
+                );
                 if ($details) {
+                    // Library found, add details to list
                     $library->tutorialUrl = $details->tutorial_url;
                     $library->title = $details->title;
                     $library->runnable = $details->runnable;
@@ -153,11 +156,12 @@ class editor_framework implements \H5peditorStorage {
                 }
             }
 
+            // Done, return list with library details
             return $librarieswithdetails;
         }
 
+        // Load all libraries
         $libraries = array();
-
         $librariesresult = $DB->get_records_sql(
                 "SELECT machine_name AS name,
                         title,
@@ -179,19 +183,21 @@ class editor_framework implements \H5peditorStorage {
             // Make sure we only display the newest version of a library.
             foreach ($libraries as $key => $existinglibrary) {
                 if ($library->name === $existinglibrary->name) {
-                    // Mark old ones
-                    // This is the newest
+                    // Found library with same name, check versions
                     if ( ( $library->majorVersion === $existinglibrary->majorVersion &&
                            $library->minorVersion > $existinglibrary->minorVersion ) ||
                          ( $library->majorVersion > $existinglibrary->majorVersion ) ) {
+                        // This is a newer version
                         $existinglibrary->isOld = true;
                     }
                     else {
+                        // This is an older version
                         $library->isOld = true;
                     }
                 }
             }
 
+            // Check to see if content type should be restricted
             $library->restricted = $super_user ? false : ($library->restricted === '1' ? true : false);
 
             // Add new library
