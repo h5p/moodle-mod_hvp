@@ -77,12 +77,7 @@ class framework implements \H5PFrameworkInterface {
                     $editorinterface = new \mod_hvp\editor_framework();
                 }
                 if (empty($editor)) {
-                    $editor = new \H5peditor(
-                        $core,
-                        $editorinterface,
-                        '',
-                        ''
-                    );
+                    $editor = new \H5peditor($core, $editorinterface);
                 }
                 return $editor;
             case 'core':

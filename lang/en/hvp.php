@@ -139,3 +139,7 @@ $string['action'] = 'Action';
 $string['upload'] = 'Upload';
 $string['create'] = 'Create';
 $string['editor'] = 'Editor';
+$string['invalidlibrary'] = 'Invalid library';
+$string['nosuchlibrary'] = 'No such library';
+$string['noparameters'] = 'No parameters';
+$string['invalidparameters'] = 'Invalid Parameters';

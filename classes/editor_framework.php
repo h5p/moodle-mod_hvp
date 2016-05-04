@@ -71,41 +71,18 @@ class editor_framework implements \H5peditorStorage {
     }
 
     /**
-     * Mark the given file as a temporary file.
+     * "Callback" for mark the given file as a permanent file.
+     * Used when saving content that has new uploaded files.
      *
-     * NOTE: THIS FUNCTION IS DEPRACTED AND WILL BE REMOVED VERY SOON!
-     * All file operations are now handeled by the implementation of the file
-     * storage interface in h5p-php-library.
-     *
-     * @param stdClass $file File object
+     * @param int $fileId
      */
-    public function addTmpFile($file) {
-        // TODO: Remove
-    }
+    public function keepFile($fileid) {
+        global $DB;
 
-    /**
-     * Mark the given file as a permanent file.
-     *
-     * TODO: Consider if this should be deprecated when solving h5p/h5p-moodle-plugin#49
-     * There might be a better way of solving this.
-     *
-     * @param string $oldpath
-     * @param string $newpath
-     */
-    public function keepFile($oldpath, $newpath) {
-        // TODO: No longer a tmp file.
-    }
-
-    /**
-     * File is deleted, remove from DB.
-     *
-     * TODO: Consider if this should be deprecated when solving h5p/h5p-moodle-plugin#49
-     * There might be a better way of solving this.
-     *
-     * @param string $path
-     */
-    public function removeFile($path) {
-        // TODO: Removed from file tracking.
+        // Remove from tmpfiles
+        $DB->delete_records('hvp_tmpfiles', array(
+            'id' => $fileid
+        ));
     }
 
     /**
