@@ -183,7 +183,7 @@ switch($action) {
         break;
 
     /*
-     * Load list of libraries or details for library.
+     * Handle file upload through the editor.
      *
      * Parameters:
      *  int contentId
