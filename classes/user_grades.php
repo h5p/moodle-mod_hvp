@@ -36,6 +36,14 @@ class user_grades {
         // Get hvp data from contentId
         $hvp = $DB->get_record('hvp', array('id' => $content_id));
 
+        // Check permissions
+        $context = \context_course::instance($hvp->course);
+        if (!has_capability('mod/hvp:saveresult', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontosaveresult', 'hvp'));
+            http_response_code(403);
+            exit;
+        }
+
         // Create grade object and set grades
         $grade = (object) array(
             'userid' => $USER->id,

@@ -357,7 +357,13 @@ class framework implements \H5PFrameworkInterface {
      * Implements mayUpdateLibraries
      */
     public function mayUpdateLibraries() {
-        return true; // TODO: Add capability to manage libraries
+        // Check permissions
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:updatelibraries', $context)) {
+            return false;
+        }
+        
+        return true;
     }
 
     /**
