@@ -184,7 +184,7 @@ function hvp_add_editor_assets($id = null) {
         'height' => 50,
       ),
       'ajaxPath' => $url . 'ajax.php?action=',
-      'libraryUrl' => $url . 'editor',
+      'libraryUrl' => $url . 'editor/',
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
       'assets' => $assets,
       'uploadParams' => array(

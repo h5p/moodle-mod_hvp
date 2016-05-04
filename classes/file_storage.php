@@ -366,6 +366,75 @@ class file_storage implements \H5PFileStorage {
     }
 
     /**
+     * Copy a file from another content or editor tmp dir.
+     * Used when copy pasting content in H5P.
+     *
+     * @param string $file path + name
+     * @param string|int $fromid Content ID or 'editor' string
+     * @param int $toid Target Content ID
+     */
+    public function cloneContentFile($file, $fromid, $toid) {
+      global $COURSE;
+
+      // Determine source file area and item id
+      $sourcefilearea = ($fromid === 'editor' ? $fromid : 'content');
+      $sourceitemid = ($fromid === 'editor' ? 0 : $fromid);
+
+      // Check to see if source exist
+      $sourcefile = $this->getFile($sourcefilearea, $sourceitemid, $file);
+      if ($sourcefile === false) {
+          return; // Nothing to copy from
+      }
+
+      // Check to make sure source doesn't exist already
+      if ($this->getFile('content', $toid, $file) !== false) {
+          return; // File exists, no need to copy
+      }
+
+      // Grab current context
+      $context = \context_course::instance($COURSE->id);
+
+      // Create new file record
+      $record = array(
+          'contextid' => $context->id,
+          'component' => 'mod_hvp',
+          'filearea' => 'content',
+          'itemid' => $toid,
+          'filepath' => $this->getFilepath($file),
+          'filename' => $this->getFilename($file)
+      );
+      $fs = get_file_storage();
+      $fs->create_file_from_storedfile($record, $sourcefile);
+    }
+
+    /**
+     * Checks to see if content has the given file.
+     * Used when saving content.
+     *
+     * @param string $file path + name
+     * @param int $contentid
+     * @return string|int File ID or NULL if not found
+     */
+    public function getContentFile($file, $contentid) {
+        $file = $this->getFile('content', $contentid, $file);
+        return ($file === false ? null : $file->get_id());
+    }
+
+    /**
+     * Remove content files that are no longer used.
+     * Used when saving content.
+     *
+     * @param string $file path + name
+     * @param int $contentid
+     */
+    public function removeContentFile($file, $contentid) {
+        $file = $this->getFile('content', $contentid, $file);
+        if ($file !== false) {
+            $file->delete();
+        }
+    }
+
+    /**
      * Copies files from tmp folder to Moodle storage.
      *
      * @param string $source
@@ -466,6 +535,44 @@ class file_storage implements \H5PFileStorage {
         if ($file) {
             $file->delete();
         }
+    }
+
+    /**
+     * Help make it easy to load content files.
+     *
+     * @param string $filearea
+     * @param int $itemid
+     * @param string $file path + name
+     */
+    private function getFile($filearea, $itemid, $file) {
+        global $COURSE;
+
+        // Grab current context
+        $context = \context_course::instance($COURSE->id);
+
+        // Load file
+        $fs = get_file_storage();
+        return $fs->get_file($context->id, 'mod_hvp', $filearea, $itemid, $this->getFilepath($file), $this->getFilename($file));
+    }
+
+    /**
+     * Extract Moodle compatible filepath
+     *
+     * @param string $file
+     * @return string With slashes
+     */
+    private function getFilepath($file) {
+        return '/' . dirname($file) . '/';
+    }
+
+    /**
+     * Extract filename from filepath string
+     *
+     * @param string $file
+     * @return string Without slashes
+     */
+    private function getFilename($file) {
+        return basename($file);
     }
 
     /**
