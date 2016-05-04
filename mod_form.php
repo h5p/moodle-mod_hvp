@@ -80,6 +80,8 @@ class mod_hvp_mod_form extends moodleform_mod {
     }
 
     public function data_preprocessing(&$defaultvalues) {
+        global $DB;
+
         $content = null;
         if (!empty($defaultvalues['id'])) {
             // Load Content
@@ -111,7 +113,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         }
 
         // Determine default action
-        if ($content === null) { // TODO: && !libraries exists && previous action != 'upload'
+        if ($content === null && $DB->get_field_sql("SELECT id FROM {hvp_libraries} WHERE runnable = 1 LIMIT 1") === false) {
           $defaultvalues['h5paction'] = 'upload';
         }
 
