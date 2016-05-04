@@ -141,7 +141,7 @@ echo '<div class="clearer"></div>';
 if ($embedtype === 'div') {
     echo '<div class="h5p-content" data-content-id="' .  $content['id'] . '"></div>';
 } else {
-    echo '<div class="h5p-iframe-wr0apper"><iframe id="h5p-iframe-' . $content['id'] .
+    echo '<div class="h5p-iframe-wrapper"><iframe id="h5p-iframe-' . $content['id'] .
         '" class="h5p-iframe" data-content-id="' . $content['id'] .
         '" style="height:1px" src="about:blank" frameBorder="0" scrolling="no"></iframe></div>';
 }
