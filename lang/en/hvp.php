@@ -154,4 +154,4 @@ $string['nopermissiontorestrict'] = 'You do not have permission to restrict libr
 $string['nopermissiontodeletecontentuserdata'] = 'You do not have permission to delete content user data.';
 $string['nopermissiontosavecontentuserdata'] = 'You do not have permission to save content user data.';
 $string['nopermissiontosaveresult'] = 'You do not have permission to save result for this content.';
-$string['nopermissiontoviewresult'] = 'You do not have permission to save result for this content.';
+$string['nopermissiontoviewresult'] = 'You do not have permission to view results for this content.';
