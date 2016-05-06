@@ -26,8 +26,6 @@ $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
 $string['modulenameplural'] = 'H5Ps';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
-
-$string['hvp:addinstance'] = 'Add a new H5P Activity';
 $string['intro'] = 'Hello awesome!';
 $string['h5pfile'] = 'H5P File';
 $string['fullscreen'] = 'Fullscreen';
@@ -139,3 +137,22 @@ $string['action'] = 'Action';
 $string['upload'] = 'Upload';
 $string['create'] = 'Create';
 $string['editor'] = 'Editor';
+
+
+
+// Capabilities
+$string['hvp:addinstance'] = 'Add a new H5P Activity';
+$string['hvp:restrictlibraries'] = 'Restrict a H5P library';
+$string['hvp:updatelibraries'] = 'Update the version of an H5P library';
+$string['hvp:deletecontentuserdata'] = 'Delete content user data';
+$string['hvp:savecontentuserdata'] = 'Save content user data';
+$string['hvp:saveresults'] = 'Save result for H5P content';
+$string['hvp:viewresults'] = 'View result for H5P content';
+
+// Capabilities error messages
+$string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
+$string['nopermissiontorestrict'] = 'You do not have permission to restrict libraries.';
+$string['nopermissiontodeletecontentuserdata'] = 'You do not have permission to delete content user data.';
+$string['nopermissiontosavecontentuserdata'] = 'You do not have permission to save content user data.';
+$string['nopermissiontosaveresult'] = 'You do not have permission to save result for this content.';
+$string['nopermissiontoviewresult'] = 'You do not have permission to view results for this content.';

@@ -53,7 +53,15 @@ switch($action) {
      *  - token
      */
     case 'restrictlibrary':
-        // TODO - check permissions
+
+        // Check permissions
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:restrictlibraries', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontorestrict', 'hvp'));
+            http_response_code(403);
+            break;
+        }
+
         $library_id = required_param('library_id', PARAM_INT);
         $restrict = required_param('restrict', PARAM_INT);
 
@@ -83,6 +91,15 @@ switch($action) {
      *  - library (Format: /<machine-name>/<major-version>/<minor-version>)
      */
     case 'getlibrarydataforupgrade':
+
+        // Check permissions
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:updatelibraries', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontoupgrade', 'hvp'));
+            http_response_code(403);
+            break;
+        }
+
         $library = required_param('library', PARAM_TEXT);
         $library = explode('/', substr($library, 1));
 
@@ -108,6 +125,14 @@ switch($action) {
      *  - library_id
      */
     case 'libraryupgradeprogress':
+        // Check upgrade permissions
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:updatelibraries', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontoupgrade', 'hvp'));
+            http_response_code(403);
+            break;
+        }
+
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
             $library_id = required_param('library_id', PARAM_INT);
             $out = hvp_content_upgrade_progress($library_id);
@@ -161,8 +186,6 @@ switch($action) {
      *  int minorVersion
      */
     case 'libraries':
-        // TODO: Check permissions
-
         /// Get parameters
         $name = optional_param('machineName', '', PARAM_TEXT);
         $major = optional_param('majorVersion', 0, PARAM_INT);
