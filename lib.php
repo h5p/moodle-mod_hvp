@@ -212,7 +212,10 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // TODO: Check permissions?
+            // Check permissions
+            if (!has_capability('mod/hvp:getcachedassets', $context)) {
+                return false;
+            }
 
             $itemid = 0;
             break;
@@ -222,7 +225,10 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // TODO: Check permissions?
+            // Check permissions
+            if (!has_capability('mod/hvp:getcontent', $context)) {
+                return false;
+            }
 
             $itemid = array_shift($args);
             break;
@@ -232,7 +238,10 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // TODO: Check permissions?
+            // Check permissions
+            if (!has_capability('mod/hvp:getexport', $context)) {
+                return false;
+            }
 
             $itemid = 0;
             break;

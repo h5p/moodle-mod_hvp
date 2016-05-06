@@ -38,7 +38,7 @@ class user_grades {
 
         // Check permissions
         $context = \context_course::instance($hvp->course);
-        if (!has_capability('mod/hvp:saveresult', $context)) {
+        if (!has_capability('mod/hvp:saveresults', $context)) {
             \H5PCore::ajaxError(get_string('nopermissiontosaveresult', 'hvp'));
             http_response_code(403);
             exit;
