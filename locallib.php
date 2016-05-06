@@ -160,9 +160,9 @@ function hvp_add_editor_assets($id = null) {
     }
 
     // Add JavaScript with library framework integration (editor part)
-    $PAGE->requires->js(new moodle_url($url . 'editor/scripts/h5peditor-editor.js' . $cachebuster), true);
-    $PAGE->requires->js(new moodle_url($url . 'editor/scripts/h5peditor-init.js' . $cachebuster), true);
-    $PAGE->requires->js(new moodle_url($url . 'editor.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/mod/hvp/editor/scripts/h5peditor-editor.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/mod/hvp/editor/scripts/h5peditor-init.js' . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/mod/hvp/editor.js' . $cachebuster), true);
 
     // Add translations
     $language = \current_language();
@@ -170,7 +170,7 @@ function hvp_add_editor_assets($id = null) {
     if (!file_exists("{$CFG->dirroot}/mod/hvp/{$languagescript}")) {
       $languagescript = 'editor/language/en.js';
     }
-    $PAGE->requires->js(new moodle_url($url . $languagescript . $cachebuster), true);
+    $PAGE->requires->js(new moodle_url('/mod/hvp/' . $languagescript . $cachebuster), true);
 
     // Add JavaScript settings
     $context = \context_course::instance($COURSE->id);

@@ -51,7 +51,8 @@ class content_user_data {
 
         if ($content_id === null || $data_id === null || $sub_content_id === null ||
             $data === null || $invalidate === null || $pre_load === null) {
-            return; // Missing parameters.
+            \H5PCore::ajaxError(get_string('missingparameters', 'hvp'));
+            exit; // Missing parameters.
         }
 
         if (!\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
@@ -152,6 +153,6 @@ class content_user_data {
             'hvp_id' => $content_id
         ));
 
-        return $result ? $result->data : null;
+        return $result ? $result->data : '{}';
     }
 }
