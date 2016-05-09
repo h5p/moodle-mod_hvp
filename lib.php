@@ -46,13 +46,13 @@ function hvp_supports($feature) {
         case FEATURE_GROUPS:                  return true;
         case FEATURE_GROUPINGS:               return true;
         case FEATURE_GROUPMEMBERSONLY:        return true;
-        case FEATURE_MOD_INTRO:               return false;
+        case FEATURE_MOD_INTRO:               return true;
         case FEATURE_COMPLETION_TRACKS_VIEWS: return false;
         case FEATURE_COMPLETION_HAS_RULES:    return false;
         case FEATURE_GRADE_HAS_GRADE:         return true;
         case FEATURE_GRADE_OUTCOMES:          return false;
         case FEATURE_BACKUP_MOODLE2:          return false;
-        case FEATURE_SHOW_DESCRIPTION:        return false;
+        case FEATURE_SHOW_DESCRIPTION:        return true;
 
         default: return null;
     }
@@ -142,6 +142,11 @@ function hvp_update_instance($hvp) {
     // Update grade item with 100% max score, reset user records
     $hvp->rawgrademax = '100';
     hvp_grade_item_update($hvp, 'reset');
+
+    // Save intro & introformat.
+    global $DB;
+    $result = $DB->set_field('hvp', 'intro', $hvp->intro, array('id' => $hvp->id));
+    $result &= $DB->set_field('hvp', 'introformat', $hvp->introformat, array('id' => $hvp->id));
 
     return TRUE;
 }

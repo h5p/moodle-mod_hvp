@@ -31,6 +31,8 @@ $PAGE->set_url($url);
 
 if (! $cm = get_coursemodule_from_id('hvp', $id)) {
     print_error('invalidcoursemodule');
+} else {
+    $hvp = $DB->get_record('hvp', array('id'=>$cm->instance), '*', MUST_EXIST);
 }
 if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
     print_error('coursemisconf');
@@ -138,6 +140,13 @@ echo '<div class="clearer"></div>';
 // Print any messages
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
+
+// Print intro.
+if (trim(strip_tags($hvp->intro))) {
+    echo $OUTPUT->box_start('mod_introbox', 'hvpintro');
+    echo format_module_intro('hvp', $hvp, $cm->id);
+    echo $OUTPUT->box_end();
+}
 
 // Print H5P Content
 if ($embedtype === 'div') {
