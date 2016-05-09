@@ -21,25 +21,26 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_hvp\task;
+
 defined('MOODLE_INTERNAL') || die();
 
-$tasks = array(
-    array(
-        'classname' => 'mod_hvp\task\look_for_updates',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'mod_hvp\task\remove_old_log_entries',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    )
-);
+/**
+ * The mod_hvp look for updates task class
+ *
+ * @package    mod_hvp
+ * @copyright  2016 Joubel AS <contact@joubel.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class remove_old_log_entries extends \core\task\scheduled_task {
+    public function get_name() {
+        return get_string('removeoldlogentries', 'mod_hvp');
+    }
+
+    public function execute() {
+        global $DB;
+
+        $older_than = (time() - H5PEventBase::$log_time);
+        $DB->execute("DELETE FROM {hvp_events} WHERE created_at < {$older_than}");
+    }
+}

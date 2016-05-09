@@ -118,5 +118,36 @@
         <INDEX NAME="meta" UNIQUE="false" FIELDS="drop_css"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="hvp_events" COMMENT="Keep track of logged H5P events">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="created_at" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="63" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sub_type" TYPE="char" LENGTH="63" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="content_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="content_title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="library_name" TYPE="char" LENGTH="127" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="library_version" TYPE="char" LENGTH="31" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="hvp_counters" COMMENT="A set of global counters to keep track of H5P usage">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="63" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="library_name" TYPE="char" LENGTH="127" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="library_version" TYPE="char" LENGTH="31" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="num" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="realkey" UNIQUE="true" FIELDS="type, library_name, library_version"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

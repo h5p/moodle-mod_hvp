@@ -51,16 +51,37 @@ class user_grades {
         );
 
         // Get course module id from db, required for grade item
-        $cm_id_sql = 'SELECT cm.id, h.name
-            FROM {course_modules} cm, {hvp} h, {modules} m
-            WHERE cm.instance = h.id AND h.id = ? AND m.name = "hvp" AND m.id = cm.module';
-        $result = $DB->get_record_sql($cm_id_sql, array($content_id));
+        $result = $DB->get_record_sql(
+                "SELECT cm.id, h.name
+                   FROM {course_modules} cm, {hvp} h, {modules} m
+                  WHERE cm.instance = h.id
+                    AND h.id = ?
+                    AND m.name = 'hvp'
+                    AND m.id = cm.module",
+                array($content_id)
+        );
 
         // Set grade using Gradebook API
         $hvp->cmidnumber = $result->id;
         $hvp->name = $result->name;
         $hvp->rawgrademax = $max_score;
         hvp_grade_item_update($hvp, $grade);
+
+        // Get content info for log
+        $content = $DB->get_record_sql(
+                "SELECT c.title, l.machine_name AS name, l.major_version, l.minor_version
+                   FROM {hvp} c
+                   JOIN {hvp_libraries} l ON l.id = c.main_library_id
+                  WHERE c.id = ?",
+                array($content_id)
+        );
+
+        // Log view
+        new \mod_hvp\event(
+                'results', 'set',
+                $content_id, $content->title,
+                $content->name, $content->major_version . '.' . $content->minor_version
+        );
 
         \H5PCore::ajaxSuccess();
         exit;

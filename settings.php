@@ -39,21 +39,27 @@ $ADMIN->add('modhvpfolder', new admin_externalpage('h5plibraries',
 if ($ADMIN->fulltree) {
     // Settings is stored on the global $CFG object.
 
+    // Stats tracking
+    $settings->add(
+            new admin_setting_configcheckbox('mod_hvp/external_communication',
+                    get_string('externalcommunication', 'hvp'),
+                    get_string('externalcommunication_help', 'hvp', 'href="https://h5p.org/tracking-the-usage-of-h5p" target="_blank"'),
+                    1));
+
     // Content state.
     $settings->add(
             new admin_setting_configcheckbox('mod_hvp/enable_save_content_state',
-            get_string('enablesavecontentstate', 'hvp'),
-            get_string('enablesavecontentstate_help', 'hvp'), 0));
+                    get_string('enablesavecontentstate', 'hvp'),
+                    get_string('enablesavecontentstate_help', 'hvp'), 0));
     $settings->add(
             new admin_setting_configtext('mod_hvp/content_state_frequency',
-            get_string('contentstatefrequency', 'hvp'),
-            get_string('contentstatefrequency_help', 'hvp'), 30, PARAM_INT));
+                    get_string('contentstatefrequency', 'hvp'),
+                    get_string('contentstatefrequency_help', 'hvp'), 30, PARAM_INT));
 
     // Display options for H5P frame.
     $settings->add(new admin_setting_heading('mod_hvp/display_options', get_string('displayoptions', 'hvp'), ''));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/frame', get_string('enableframe', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/export', get_string('enabledownload', 'hvp'), '', 1));
-    // $settings->add(new admin_setting_configcheckbox('hvp/embed', get_string('enable_embed', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/copyright', get_string('enablecopyright', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/icon', get_string('enableabout', 'hvp'), '', 1));
 }
