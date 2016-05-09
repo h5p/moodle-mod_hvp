@@ -56,7 +56,8 @@ class content_user_data {
             exit; // Missing parameters.
         }
 
-        if (!\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
+        // Only check if post/saving data
+        if ((bool)INPUT_POST && !\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
             exit;
         }
