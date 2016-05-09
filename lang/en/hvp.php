@@ -152,6 +152,9 @@ $string['hvp:deletecontentuserdata'] = 'Delete content user data';
 $string['hvp:savecontentuserdata'] = 'Save content user data';
 $string['hvp:saveresults'] = 'Save result for H5P content';
 $string['hvp:viewresults'] = 'View result for H5P content';
+$string['hvp:getcachedassets'] = 'Get cached content assets';
+$string['hvp:getcontent'] = 'Get/view content of H5P file in course';
+$string['hvp:getexport'] = 'Get export file from H5P in course';
 
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';

@@ -79,7 +79,8 @@ $capabilities = array(
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW
+            'teacher' => CAP_ALLOW,
+            'student' => CAP_ALLOW
         )
     ),
 
@@ -94,14 +95,36 @@ $capabilities = array(
         )
     ),
 
-    'mod/hvp:saveresult' => array(
-        'captype' => 'write',
+    'mod/hvp:getcachedassets' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
+            'user' => CAP_ALLOW
+        )
+    ),
+
+    'mod/hvp:getcontent' => array(
+        'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'student' => CAP_ALLOW
+        )
+    ),
+
+    'mod/hvp:getexport' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW
         )
     )
 );
