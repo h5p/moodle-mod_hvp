@@ -154,7 +154,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="realkey" UNIQUE="true" FIELDS="type, library_name, library_version"/>
+        <INDEX NAME="realkey" UNIQUE="false" FIELDS="type, library_name, library_version"/>
       </INDEXES>
     </TABLE>
   </TABLES>

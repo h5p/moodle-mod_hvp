@@ -114,7 +114,7 @@ function xmldb_hvp_upgrade($oldversion) {
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
         // Adding indexes to table hvp_counters.
-        $table->add_index('realkey', XMLDB_INDEX_UNIQUE, array('type', 'library_name', 'library_version'));
+        $table->add_index('realkey', XMLDB_INDEX_NOTUNIQUE, array('type', 'library_name', 'library_version'));
 
         // Conditionally launch create table for hvp_counters.
         if (!$dbman->table_exists($table)) {
