@@ -35,7 +35,6 @@ class mod_hvp_mod_form extends moodleform_mod {
         // Name.
         $mform->addElement('text', 'name', get_string('name'));
         $mform->setType('name', PARAM_TEXT);
-        $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         // Action.
@@ -48,9 +47,6 @@ class mod_hvp_mod_form extends moodleform_mod {
         // Upload.
         $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null,
             array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
-        if (!is_number($this->current->id)) {
-            $mform->addRule('h5pfile', null, 'required', null, 'client');
-        }
 
         // Editor placeholder.
         $mform->addElement('static', 'h5peditor', get_string('editor', 'hvp'), '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') .  '</div>');
@@ -84,6 +80,8 @@ class mod_hvp_mod_form extends moodleform_mod {
     }
 
     public function data_preprocessing(&$defaultvalues) {
+        global $DB;
+
         $content = null;
         if (!empty($defaultvalues['id'])) {
             // Load Content
@@ -115,7 +113,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         }
 
         // Determine default action
-        if ($content === null) { // TODO: && !libraries exists && previous action != 'upload'
+        if ($content === null && $DB->get_field_sql("SELECT id FROM {hvp_libraries} WHERE runnable = 1 LIMIT 1") === false) {
           $defaultvalues['h5paction'] = 'upload';
         }
 
@@ -147,40 +145,72 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         $errors = parent::validation($data, $files);
 
-        if (empty($data['h5pfile'])) {
-            $errors['h5pfile'] = get_string('required');
-            return $errors;
-        }
-
-        $files = $this->get_draft_files('h5pfile');
-
-        // No file uploaded.
-        if (count($files) < 1) {
-
-            // No previous content to update.
-            if (!is_number($this->current->id)) {
+        if ($data['h5paction'] === 'upload') {
+            // Validate uploaded H5P file
+            if (empty($data['h5pfile'])) {
+                // Field missing
                 $errors['h5pfile'] = get_string('required');
             }
-            return $errors;
+            else {
+                $files = $this->get_draft_files('h5pfile');
+                if (count($files) < 1) {
+                    // No file uploaded
+                    $errors['h5pfile'] = get_string('required');
+                }
+                else {
+                    // Prepare to validate package
+                    $file = reset($files);
+                    $interface = \mod_hvp\framework::instance('interface');
+
+                    $path = $CFG->tempdir . uniqid('/hvp-');
+                    $interface->getUploadedH5pFolderPath($path);
+                    $path .= '.h5p';
+                    $interface->getUploadedH5pPath($path);
+                    $file->copy_content_to($path);
+
+                    $h5pvalidator = \mod_hvp\framework::instance('validator');
+                    if (! $h5pvalidator->isValidPackage()) {
+                        // Errors while validating the package
+                        $messages = \mod_hvp\framework::messages('error');
+                        $errors['h5pfile'] = implode('<br/>', $messages);
+                    }
+                }
+            }
         }
+        else {
+            // Validate library and params used in editor
+            $core = \mod_hvp\framework::instance();
 
-        $file = reset($files);
+            // Get library array from string
+            $library = H5PCore::libraryFromString($data['h5plibrary']);
+            if (!$library) {
+                $errors['h5peditor'] = get_string('invalidlibrary', 'hvp');
+            }
+            else {
+                // Check that library exists
+                $library['libraryId'] = $core->h5pF->getLibraryId($library['machineName'], $library['majorVersion'], $library['minorVersion']);
+                if (!$library['libraryId']) {
+                    $errors['h5peditor'] = get_string('nosuchlibrary', 'hvp');
+                }
+                else {
+                    $data['h5plibrary'] = $library;
 
-        $interface = \mod_hvp\framework::instance('interface');
-
-        $path = $CFG->tempdir . uniqid('/hvp-');
-        $interface->getUploadedH5pFolderPath($path);
-        $path .= '.h5p';
-        $interface->getUploadedH5pPath($path);
-        $file->copy_content_to($path);
-
-        $h5pvalidator = \mod_hvp\framework::instance('validator');
-
-        if (! $h5pvalidator->isValidPackage()) {
-            $messages = \mod_hvp\framework::messages('error');
-            $errors['h5pfile'] = implode('<br/>', $messages);
+                    // Verify that parameters are valid
+                    if (empty($data['h5pparams'])) {
+                        $errors['h5peditor'] = get_string('noparameters', 'hvp');
+                    }
+                    else {
+                        $params = json_decode($data['h5pparams']);
+                        if ($params === NULL) {
+                            $errors['h5peditor'] = get_string('invalidparameters', 'hvp');
+                        }
+                        else {
+                            $data['h5pparams'] = $params;
+                        }
+                    }
+                }
+            }
         }
-
         return $errors;
     }
 

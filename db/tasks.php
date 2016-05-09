@@ -34,6 +34,15 @@ $tasks = array(
         'month' => '*'
     ),
     array(
+        'classname' => 'mod_hvp\task\remove_tmpfiles',
+        'blocking' => 0,
+        'minute' => 'R',
+        'hour' => 'R',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
+    ),
+    array(
         'classname' => 'mod_hvp\task\remove_old_log_entries',
         'blocking' => 0,
         'minute' => 'R',

@@ -177,17 +177,20 @@ function hvp_add_editor_assets($id = null) {
     $filespathbase = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp/";
     $contentvalidator = $core = \mod_hvp\framework::instance('contentvalidator');
     $settings['editor'] = array(
-      'filesPath' => "{$filespathbase}/content/{$id}", // TODO: Add tmp dir for new content in #48
+      'filesPath' => $filespathbase . ($id ? "content/{$id}" : 'editor'),
       'fileIcon' => array(
         'path' => $url . 'editor/images/binary-file.png',
         'width' => 50,
         'height' => 50,
       ),
       'ajaxPath' => $url . 'ajax.php?action=',
-      'libraryUrl' => $url . 'editor',
+      'libraryUrl' => $url . 'editor/',
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
       'assets' => $assets,
-      'uploadToken' => \H5PCore::createToken('editorfileuploads')
+      'uploadParams' => array(
+        'token' => \H5PCore::createToken('editorfileuploads'),
+        'contextId' => $context->id
+      )
     );
 
     if ($id !== null) {
