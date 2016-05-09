@@ -51,8 +51,7 @@ class content_user_data {
         $pre_load = optional_param('preload', null, PARAM_INT);
         $invalidate = optional_param('invalidate', null, PARAM_INT);
 
-        if ($content_id === null || $data_id === null || $sub_content_id === null ||
-            $data === null || $invalidate === null || $pre_load === null) {
+        if ($content_id === null || $data_id === null || $sub_content_id === null) {
             \H5PCore::ajaxError(get_string('missingparameters', 'hvp'));
             exit; // Missing parameters.
         }
