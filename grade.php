@@ -48,7 +48,7 @@ $hvp = $DB->get_record_sql(
                 hl.minor_version
            FROM {hvp} h
            JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
-          WHERE id = ?",
+          WHERE h.id = ?",
         array($cm->instance));
 
 if ($hvp === false) {
