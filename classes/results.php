@@ -81,6 +81,17 @@ class results {
      * Print results data
      */
     public function print_results() {
+        global $DB;
+
+        // Check permission
+        $course = $DB->get_field('hvp', 'course', array('id' => $this->content_id));
+        $context = \context_course::instance($course);
+        if (!has_capability('mod/hvp:viewresults', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontoviewresult', 'hvp'));
+            http_response_code(403);
+            exit;
+        }
+
         $results = $this->get_results();
 
         // Make data readable for humans

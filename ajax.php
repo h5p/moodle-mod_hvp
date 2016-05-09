@@ -53,7 +53,15 @@ switch($action) {
      *  - token
      */
     case 'restrictlibrary':
-        // TODO - check permissions
+
+        // Check permissions
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:restrictlibraries', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontorestrict', 'hvp'));
+            http_response_code(403);
+            break;
+        }
+
         $library_id = required_param('library_id', PARAM_INT);
         $restrict = required_param('restrict', PARAM_INT);
 
@@ -83,6 +91,15 @@ switch($action) {
      *  - library (Format: /<machine-name>/<major-version>/<minor-version>)
      */
     case 'getlibrarydataforupgrade':
+
+        // Check permissions
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:updatelibraries', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontoupgrade', 'hvp'));
+            http_response_code(403);
+            break;
+        }
+
         $library = required_param('library', PARAM_TEXT);
         $library = explode('/', substr($library, 1));
 
@@ -108,6 +125,14 @@ switch($action) {
      *  - library_id
      */
     case 'libraryupgradeprogress':
+        // Check upgrade permissions
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:updatelibraries', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontoupgrade', 'hvp'));
+            http_response_code(403);
+            break;
+        }
+
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
             $library_id = required_param('library_id', PARAM_INT);
             $out = hvp_content_upgrade_progress($library_id);
@@ -150,6 +175,75 @@ switch($action) {
     case 'results':
         $results = new \mod_hvp\results();
         $results->print_results();
+        break;
+
+    /*
+     * Load list of libraries or details for library.
+     *
+     * Parameters:
+     *  string machineName
+     *  int majorVersion
+     *  int minorVersion
+     */
+    case 'libraries':
+        /// Get parameters
+        $name = optional_param('machineName', '', PARAM_TEXT);
+        $major = optional_param('majorVersion', 0, PARAM_INT);
+        $minor = optional_param('minorVersion', 0, PARAM_INT);
+
+        $editor = \mod_hvp\framework::instance('editor');
+
+        header('Cache-Control: no-cache');
+        header('Content-type: application/json');
+
+        if (!empty($name)) {
+            print $editor->getLibraryData($name, $major, $minor, \current_language());
+        }
+        else {
+            print $editor->getLibraries();
+        }
+
+        break;
+
+    /*
+     * Handle file upload through the editor.
+     *
+     * Parameters:
+     *  int contentId
+     *  int contextId
+     */
+    case 'files':
+        global $DB;
+        // TODO: Check permissions
+
+        if (!\H5PCore::validToken('editorfileuploads', required_param('token', PARAM_RAW))) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            exit;
+        }
+
+        // Get Content ID and Context ID for upload
+        $contentid = required_param('contentId', PARAM_INT);
+        $contextid = required_param('contextId', PARAM_INT);
+
+        // Create file
+        $file = new H5peditorFile(\mod_hvp\framework::instance('interface'));
+        if (!$file->isLoaded()) {
+            H5PCore::ajaxError(get_string('filenotfound', 'hvp'));
+            break;
+        }
+
+        // Make sure file is valid
+        if ($file->validate()) {
+            $core = \mod_hvp\framework::instance('core');
+            // Save the valid file
+            $file_id = $core->fs->saveFile($file, $contentid, $contextid);
+
+            $DB->insert_record_raw('hvp_tmpfiles', array(
+                'id' => $file_id
+            ), false, false, true);
+        }
+
+        $file->printResult();
         break;
 
     /*

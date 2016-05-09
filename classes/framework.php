@@ -27,6 +27,7 @@ namespace mod_hvp;
 defined('MOODLE_INTERNAL') || die();
 
 require_once __DIR__ . '/../autoloader.php';
+require_once($CFG->libdir . '/filelib.php');
 
 /**
  * Moodle's implementation of the H5P framework interface.
@@ -45,7 +46,7 @@ class framework implements \H5PFrameworkInterface {
      */
     public static function instance($type = null) {
         global $CFG;
-        static $interface, $core;
+        static $interface, $core, $editor, $editorinterface;
 
         if (!isset($interface)) {
             $interface = new \mod_hvp\framework();
@@ -55,7 +56,7 @@ class framework implements \H5PFrameworkInterface {
             $context = \context_system::instance();
             $url = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
 
-            $language = current_language();
+            $language = \current_language();
 
             $export = !(isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === '0');
 
@@ -72,6 +73,14 @@ class framework implements \H5PFrameworkInterface {
                 return new \H5PContentValidator($interface, $core);
             case 'interface':
                 return $interface;
+            case 'editor':
+                if (empty($editorinterface)) {
+                    $editorinterface = new \mod_hvp\editor_framework();
+                }
+                if (empty($editor)) {
+                    $editor = new \H5peditor($core, $editorinterface);
+                }
+                return $editor;
             case 'core':
             default:
                 return $core;
@@ -98,7 +107,7 @@ class framework implements \H5PFrameworkInterface {
      * @return bool|null|\stdClass|string Data object if successful fetch
      */
     public function fetchExternalData($url, $data = null) {
-        $response = \download_file_content($url, null, $data);
+        $response = download_file_content($url, null, $data);
         return ($response === false ? null : $response);
     }
 
@@ -411,7 +420,13 @@ class framework implements \H5PFrameworkInterface {
      * Implements mayUpdateLibraries
      */
     public function mayUpdateLibraries() {
-        return true; // TODO: Add capability to manage libraries
+        // Check permissions
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:updatelibraries', $context)) {
+            return false;
+        }
+        
+        return true;
     }
 
     /**

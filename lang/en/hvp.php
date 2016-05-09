@@ -26,8 +26,6 @@ $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
 $string['modulenameplural'] = 'H5Ps';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
-
-$string['hvp:addinstance'] = 'Add a new H5P Activity';
 $string['intro'] = 'Hello awesome!';
 $string['h5pfile'] = 'H5P File';
 $string['fullscreen'] = 'Fullscreen';
@@ -55,6 +53,7 @@ $string['contentchanged'] = 'This content has changed since you last used it.';
 $string['startingover'] = "You'll be starting over.";
 
 $string['lookforupdates'] = 'Look for H5P updates';
+$string['removetmpfiles'] = 'Remove old temporary files';
 
 // Admin settings.
 $string['displayoptions'] = 'Display Options';
@@ -84,6 +83,7 @@ $string['upload'] = 'Upload';
 // Installed libraries section.
 $string['installedlibraries'] = 'Installed Libraries';
 $string['invalidtoken'] = 'Invalid security token.';
+$string['missingparameters'] = 'Missing parameters';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Title';
@@ -131,7 +131,38 @@ $string['nextpage'] = 'Next page';
 $string['previouspage'] = 'Previous page';
 $string['search'] = 'Search';
 $string['empty'] = 'No results available';
-$string['javascriptloading'] = 'Waiting for JavaScript';
+
+// Editor
+$string['javascriptloading'] = 'Waiting for JavaScript...';
+$string['action'] = 'Action';
+$string['upload'] = 'Upload';
+$string['create'] = 'Create';
+$string['editor'] = 'Editor';
+
+$string['invalidlibrary'] = 'Invalid library';
+$string['nosuchlibrary'] = 'No such library';
+$string['noparameters'] = 'No parameters';
+$string['invalidparameters'] = 'Invalid Parameters';
+
+// Capabilities
+$string['hvp:addinstance'] = 'Add a new H5P Activity';
+$string['hvp:restrictlibraries'] = 'Restrict a H5P library';
+$string['hvp:updatelibraries'] = 'Update the version of an H5P library';
+$string['hvp:deletecontentuserdata'] = 'Delete content user data';
+$string['hvp:savecontentuserdata'] = 'Save content user data';
+$string['hvp:saveresults'] = 'Save result for H5P content';
+$string['hvp:viewresults'] = 'View result for H5P content';
+$string['hvp:getcachedassets'] = 'Get cached content assets';
+$string['hvp:getcontent'] = 'Get/view content of H5P file in course';
+$string['hvp:getexport'] = 'Get export file from H5P in course';
+
+// Capabilities error messages
+$string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
+$string['nopermissiontorestrict'] = 'You do not have permission to restrict libraries.';
+$string['nopermissiontodeletecontentuserdata'] = 'You do not have permission to delete content user data.';
+$string['nopermissiontosavecontentuserdata'] = 'You do not have permission to save content user data.';
+$string['nopermissiontosaveresult'] = 'You do not have permission to save result for this content.';
+$string['nopermissiontoviewresult'] = 'You do not have permission to view results for this content.';
 
 // Editor translations
 $string['noziparchive'] = 'Your PHP version does not support ZipArchive.';

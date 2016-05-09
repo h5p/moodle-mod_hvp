@@ -39,6 +39,8 @@ class content_user_data {
      * @throws \coding_exception
      */
     public static function handle_ajax() {
+        global $DB;
+
         // Query String Parameters.
         $content_id = required_param('content_id', PARAM_INT);
         $data_id = required_param('data_type', PARAM_ALPHA);
@@ -49,20 +51,39 @@ class content_user_data {
         $pre_load = optional_param('preload', null, PARAM_INT);
         $invalidate = optional_param('invalidate', null, PARAM_INT);
 
-        if ($content_id === null || $data_id === null || $sub_content_id === null ||
-            $data === null || $invalidate === null || $pre_load === null) {
-            return; // Missing parameters.
+        if ($content_id === null || $data_id === null || $sub_content_id === null) {
+            \H5PCore::ajaxError(get_string('missingparameters', 'hvp'));
+            exit; // Missing parameters.
         }
 
-        if (!\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
+        // Only check if post/saving data
+        if ((bool)INPUT_POST && !\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
             exit;
         }
 
+        $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
+
         // Delete user data.
         if ($data === '0') {
+
+            // Check permissions
+            if (!has_capability('mod/hvp:deletecontentuserdata', $context)) {
+                \H5PCore::ajaxError(get_string('nopermissiontodeletecontentuserdata', 'hvp'));
+                http_response_code(403);
+                exit;
+            }
+
             self::delete_user_data($content_id, $sub_content_id, $data_id);
         } else {
+
+            // Check permissions
+            if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
+                \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
+                http_response_code(403);
+                exit;
+            }
+
             // Save user data.
             self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
         }
@@ -152,6 +173,6 @@ class content_user_data {
             'hvp_id' => $content_id
         ));
 
-        return $result ? $result->data : null;
+        return $result ? $result->data : '{}';
     }
 }
