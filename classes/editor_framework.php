@@ -74,7 +74,7 @@ class editor_framework implements \H5peditorStorage {
      * "Callback" for mark the given file as a permanent file.
      * Used when saving content that has new uploaded files.
      *
-     * @param int $fileId
+     * @param int $fileid
      */
     public function keepFile($fileid) {
         global $DB;
