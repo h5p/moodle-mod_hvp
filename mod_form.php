@@ -126,6 +126,20 @@ class mod_hvp_mod_form extends moodleform_mod {
         // Add required editor assets.
         require_once 'locallib.php';
         \hvp_add_editor_assets($content === null ? null : $defaultvalues['id']);
+
+        // Log editor opened
+        if ($content === null) {
+            new \mod_hvp\event('content', 'new');
+        }
+        else {
+            new \mod_hvp\event(
+                    'content', 'edit',
+                    $content['id'],
+                    $content['title'],
+                    $content['library']['name'],
+                    $content['library']['majorVersion'] . '.' . $content['library']['minorVersion']
+            );
+        }
     }
 
     public function validation($data, $files) {

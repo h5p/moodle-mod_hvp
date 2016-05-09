@@ -95,7 +95,8 @@ function hvp_add_instance($moduleinfo) {
     $cmcontent = array(
         'name' => $moduleinfo->name,
         'course' => $moduleinfo->course,
-        'disable' => $disablevalue
+        'disable' => $disablevalue,
+        'uploaded' => true
     );
 
     $h5pstorage = \mod_hvp\framework::instance('storage');
@@ -147,6 +148,7 @@ function hvp_update_instance($hvp) {
         $content['course'] = $hvp->course;
         $content['library']['libraryId'] = $content['library']['id'];
         $content['disable'] = $hvp->disable;
+        $content['uploaded'] = true;
         $core->saveContent($content);
     }
 
@@ -180,6 +182,15 @@ function hvp_delete_instance($id) {
 
     if (! $DB->delete_records('hvp', array('id' => "$hvp->id"))) {
         $result = false;
+    }
+    else {
+        // Log content delete
+        new \mod_hvp\event(
+                'content', 'delete',
+                $hvp['id'], $hvp['title'],
+                $hvp['library']['name'],
+                $hvp['library']['majorVersion'] . '.' . $hvp['library']['minorVersion']
+        );
     }
 
     return $result;
