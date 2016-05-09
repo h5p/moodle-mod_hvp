@@ -143,6 +143,7 @@ $string['invalidlibrary'] = 'Invalid library';
 $string['nosuchlibrary'] = 'No such library';
 $string['noparameters'] = 'No parameters';
 $string['invalidparameters'] = 'Invalid Parameters';
+$string['missingcontentuserdata'] = 'Error: Could not find content user data';
 
 // Capabilities
 $string['hvp:addinstance'] = 'Add a new H5P Activity';

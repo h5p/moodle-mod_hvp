@@ -56,40 +56,78 @@ class content_user_data {
             exit; // Missing parameters.
         }
 
-        // Only check if post/saving data
-        if ((bool)INPUT_POST && !\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
-            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-            exit;
-        }
+        // Saving data
+        if ($data !== NULL && $pre_load !== NULL && $invalidate !== NULL) {
 
-        $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
-
-        // Delete user data.
-        if ($data === '0') {
-
-            // Check permissions
-            if (!has_capability('mod/hvp:deletecontentuserdata', $context)) {
-                \H5PCore::ajaxError(get_string('nopermissiontodeletecontentuserdata', 'hvp'));
-                http_response_code(403);
+            // Validate token
+            if (!\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
+                \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
                 exit;
             }
 
-            self::delete_user_data($content_id, $sub_content_id, $data_id);
-        } else {
+            $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
 
-            // Check permissions
-            if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
-                \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
-                http_response_code(403);
-                exit;
+            // Delete user data.
+            if ($data === '0') {
+
+                // Check permissions
+                if (!has_capability('mod/hvp:deletecontentuserdata', $context)) {
+                    \H5PCore::ajaxError(get_string('nopermissiontodeletecontentuserdata', 'hvp'));
+                    http_response_code(403);
+                    exit;
+                }
+
+                self::delete_user_data($content_id, $sub_content_id, $data_id);
+            } else {
+
+                // Check permissions
+                if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
+                    \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
+                    http_response_code(403);
+                    exit;
+                }
+
+                // Save user data.
+                self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
             }
-
-            // Save user data.
-            self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
+            \H5PCore::ajaxSuccess();
         }
+        else {
+            // Fetch user data
+            $data = self::get_user_data($content_id, $sub_content_id, $data_id);
 
-        \H5PCore::ajaxSuccess();
+            if ($data === false) {
+                \H5PCore::ajaxError(get_string('missingcontentuserdata', 'hvp'));
+                http_response_code(404); // Not found
+            }
+            else {
+                \H5PCore::ajaxSuccess(json_encode($data));
+            }
+        }
         exit;
+    }
+
+    /**
+     * Get user data for content.
+     *
+     * @param $content_id
+     * @param $sub_content_id
+     * @param $data_id
+     *
+     * @return mixed
+     */
+    public static function get_user_data($content_id, $sub_content_id, $data_id) {
+        global $DB, $USER;
+
+        $result = $DB->get_record('hvp_content_user_data', array(
+                'user_id' => $USER->id,
+                'hvp_id' => $content_id,
+                'sub_content_id' => $sub_content_id,
+                'data_id' => $data_id
+            )
+        );
+
+        return $result;
     }
 
     /**
@@ -106,17 +144,11 @@ class content_user_data {
         global $DB, $USER;
 
         // Determine if we should update or insert.
-        $update = $DB->get_record('hvp_content_user_data', array(
-                'user_id' => $USER->id,
-                'hvp_id' => $content_id,
-                'sub_content_id' => $sub_content_id,
-                'data_id' => $data_id
-            )
-        );
+        $update = self::get_user_data($content_id, $sub_content_id, $data_id);
 
         // Wash values to ensure 0 or 1.
-        $pre_load = $pre_load === '0' ? 0 : 1;
-        $invalidate = $invalidate === '0' ? 0 : 1;
+        $pre_load = ($pre_load === '0' || $pre_load === 0) ? 0 : 1;
+        $invalidate = ($invalidate === '0' || $invalidate === 0) ? 0 : 1;
 
         // New data to be inserted.
         $new_data = (object)array(
