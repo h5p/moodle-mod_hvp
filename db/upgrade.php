@@ -57,7 +57,24 @@ function xmldb_hvp_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016011300, 'hvp');
     }
 
+    if ($oldversion < 2016042500) {
+        // Define table hvp_tmpfiles to be created.
+        $table = new xmldb_table('hvp_tmpfiles');
+
+        // Adding fields to table hvp_tmpfiles.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table hvp_tmpfiles.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for hvp_tmpfiles.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Hvp savepoint reached.
+        upgrade_mod_savepoint(true, 2016042500, 'hvp');
+    }
+
     return true;
 }
-
-

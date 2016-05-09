@@ -53,6 +53,7 @@ $string['contentchanged'] = 'This content has changed since you last used it.';
 $string['startingover'] = "You'll be starting over.";
 
 $string['lookforupdates'] = 'Look for H5P updates';
+$string['removetmpfiles'] = 'Remove old temporary files';
 
 // Admin settings.
 $string['displayoptions'] = 'Display Options';
@@ -82,6 +83,7 @@ $string['upload'] = 'Upload';
 // Installed libraries section.
 $string['installedlibraries'] = 'Installed Libraries';
 $string['invalidtoken'] = 'Invalid security token.';
+$string['missingparameters'] = 'Missing parameters';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Title';
@@ -136,6 +138,11 @@ $string['action'] = 'Action';
 $string['upload'] = 'Upload';
 $string['create'] = 'Create';
 $string['editor'] = 'Editor';
+
+$string['invalidlibrary'] = 'Invalid library';
+$string['nosuchlibrary'] = 'No such library';
+$string['noparameters'] = 'No parameters';
+$string['invalidparameters'] = 'Invalid Parameters';
 
 // Capabilities
 $string['hvp:addinstance'] = 'Add a new H5P Activity';

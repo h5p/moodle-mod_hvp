@@ -27,6 +27,7 @@ namespace mod_hvp;
 defined('MOODLE_INTERNAL') || die();
 
 require_once __DIR__ . '/../autoloader.php';
+require_once($CFG->libdir . '/filelib.php');
 
 /**
  * Moodle's implementation of the H5P framework interface.
@@ -77,12 +78,7 @@ class framework implements \H5PFrameworkInterface {
                     $editorinterface = new \mod_hvp\editor_framework();
                 }
                 if (empty($editor)) {
-                    $editor = new \H5peditor(
-                        $core,
-                        $editorinterface,
-                        '',
-                        ''
-                    );
+                    $editor = new \H5peditor($core, $editorinterface);
                 }
                 return $editor;
             case 'core':
@@ -111,7 +107,7 @@ class framework implements \H5PFrameworkInterface {
      * @return bool|null|\stdClass|string Data object if successful fetch
      */
     public function fetchExternalData($url, $data = null) {
-        $response = \download_file_content($url, null, $data);
+        $response = download_file_content($url, null, $data);
         return ($response === false ? null : $response);
     }
 
