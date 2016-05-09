@@ -198,6 +198,11 @@ switch($action) {
 
         if (!empty($name)) {
             print $editor->getLibraryData($name, $major, $minor, \current_language());
+            new \mod_hvp\event(
+                    'library', NULL,
+                    NULL, NULL,
+                    $name, $major_version . '.' . $minor_version
+            );
         }
         else {
             print $editor->getLibraries();
