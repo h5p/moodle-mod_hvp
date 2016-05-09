@@ -201,7 +201,7 @@ switch($action) {
             new \mod_hvp\event(
                     'library', NULL,
                     NULL, NULL,
-                    $name, $major_version . '.' . $minor_version
+                    $name, $major . '.' . $minor
             );
         }
         else {
