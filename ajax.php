@@ -206,6 +206,47 @@ switch($action) {
         break;
 
     /*
+     * Handle file upload through the editor.
+     *
+     * Parameters:
+     *  int contentId
+     *  int contextId
+     */
+    case 'files':
+        global $DB;
+        // TODO: Check permissions
+
+        if (!\H5PCore::validToken('editorfileuploads', required_param('token', PARAM_RAW))) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            exit;
+        }
+
+        // Get Content ID and Context ID for upload
+        $contentid = required_param('contentId', PARAM_INT);
+        $contextid = required_param('contextId', PARAM_INT);
+
+        // Create file
+        $file = new H5peditorFile(\mod_hvp\framework::instance('interface'));
+        if (!$file->isLoaded()) {
+            H5PCore::ajaxError(get_string('filenotfound', 'hvp'));
+            break;
+        }
+
+        // Make sure file is valid
+        if ($file->validate()) {
+            $core = \mod_hvp\framework::instance('core');
+            // Save the valid file
+            $file_id = $core->fs->saveFile($file, $contentid, $contextid);
+
+            $DB->insert_record_raw('hvp_tmpfiles', array(
+                'id' => $file_id
+            ), false, false, true);
+        }
+
+        $file->printResult();
+        break;
+
+    /*
      * Throw error if AJAX isnt handeled
      */
     default:

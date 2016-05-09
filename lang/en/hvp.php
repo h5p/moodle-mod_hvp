@@ -53,6 +53,7 @@ $string['contentchanged'] = 'This content has changed since you last used it.';
 $string['startingover'] = "You'll be starting over.";
 
 $string['lookforupdates'] = 'Look for H5P updates';
+$string['removetmpfiles'] = 'Remove old temporary files';
 
 // Admin settings.
 $string['displayoptions'] = 'Display Options';
@@ -138,7 +139,10 @@ $string['upload'] = 'Upload';
 $string['create'] = 'Create';
 $string['editor'] = 'Editor';
 
-
+$string['invalidlibrary'] = 'Invalid library';
+$string['nosuchlibrary'] = 'No such library';
+$string['noparameters'] = 'No parameters';
+$string['invalidparameters'] = 'Invalid Parameters';
 
 // Capabilities
 $string['hvp:addinstance'] = 'Add a new H5P Activity';
