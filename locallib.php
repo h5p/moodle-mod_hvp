@@ -177,7 +177,7 @@ function hvp_add_editor_assets($id = null) {
     $filespathbase = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp/";
     $contentvalidator = $core = \mod_hvp\framework::instance('contentvalidator');
     $settings['editor'] = array(
-      'filesPath' => $filespathbase . ($id ? "content{$id}" : 'editor'),
+      'filesPath' => $filespathbase . ($id ? "content/{$id}" : 'editor'),
       'fileIcon' => array(
         'path' => $url . 'editor/images/binary-file.png',
         'width' => 50,
