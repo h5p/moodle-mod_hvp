@@ -51,7 +51,7 @@ function hvp_supports($feature) {
         case FEATURE_GROUPMEMBERSONLY:
             return true;
         case FEATURE_MOD_INTRO:
-            return false;
+            return true;
         case FEATURE_COMPLETION_TRACKS_VIEWS:
             return false;
         case FEATURE_COMPLETION_HAS_RULES:
@@ -63,7 +63,7 @@ function hvp_supports($feature) {
         case FEATURE_BACKUP_MOODLE2:
             return false;
         case FEATURE_SHOW_DESCRIPTION:
-            return false;
+            return true;
 
         default:
             return null;

@@ -53,6 +53,14 @@ $capabilities = array(
         )
     ),
 
+    'mod/hvp:userestrictedlibraries' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW
+        )
+    ),
+
     'mod/hvp:deletecontentuserdata' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
@@ -128,5 +136,3 @@ $capabilities = array(
         )
     )
 );
-
-

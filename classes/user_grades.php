@@ -51,9 +51,9 @@ class user_grades {
         );
 
         // Get course module id from db, required for grade item
-        $cm_id_sql = 'SELECT cm.id, h.name
+        $cm_id_sql = "SELECT cm.id, h.name
             FROM {course_modules} cm, {hvp} h, {modules} m
-            WHERE cm.instance = h.id AND h.id = ? AND m.name = "hvp" AND m.id = cm.module';
+            WHERE cm.instance = h.id AND h.id = ? AND m.name = 'hvp' AND m.id = cm.module";
         $result = $DB->get_record_sql($cm_id_sql, array($content_id));
 
         // Set grade using Gradebook API

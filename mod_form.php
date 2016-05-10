@@ -37,6 +37,14 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
+        // Intro.
+        if (method_exists($this, 'standard_intro_elements')) {
+            $this->standard_intro_elements();
+        }
+        else {
+            $this->add_intro_editor(false, get_string('intro', 'hvp'));
+        }
+
         // Action.
         $h5paction = array();
         $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('upload', 'hvp'), 'upload');

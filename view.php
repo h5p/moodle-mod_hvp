@@ -135,7 +135,17 @@ echo '<div class="clearer"></div>';
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
-// Print H5P Content.
+// Print intro.
+if (trim(strip_tags($content['intro']))) {
+    echo $OUTPUT->box_start('mod_introbox', 'hvpintro');
+    echo format_module_intro('hvp', (object) array(
+      'intro' => $content['intro'],
+      'introformat' => $content['introformat'],
+    ), $cm->id);
+    echo $OUTPUT->box_end();
+}
+
+// Print H5P Content
 if ($embedtype === 'div') {
     echo '<div class="h5p-content" data-content-id="' .  $content['id'] . '"></div>';
 } else {
