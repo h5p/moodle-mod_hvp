@@ -196,28 +196,31 @@ function hvp_get_disabled_content_features($hvp) {
 function hvp_delete_instance($id) {
     global $DB;
 
+    // Load content record
     if (! $hvp = $DB->get_record('hvp', array('id' => "$id"))) {
         return false;
     }
 
-    $result = true;
+    // Delete content
     $h5pstorage = \mod_hvp\framework::instance('storage');
     $h5pstorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug));
 
-    if (! $DB->delete_records('hvp', array('id' => "$hvp->id"))) {
-        $result = false;
-    }
-    else {
-        // Log content delete
-        new \mod_hvp\event(
-                'content', 'delete',
-                $hvp['id'], $hvp['title'],
-                $hvp['library']['name'],
-                $hvp['library']['majorVersion'] . '.' . $hvp['library']['minorVersion']
-        );
-    }
+    // Get library details
+    $library = $DB->get_record_sql(
+            "SELECT machine_name AS name, major_version, minor_version
+               FROM {hvp_libraries}
+              WHERE id = ?",
+            array($hvp->main_library_id)
+    );
 
-    return $result;
+    // Log content delete
+    new \mod_hvp\event(
+            'content', 'delete',
+            $hvp->id, $hvp->name,
+            $library->name, $library->major_version . '.' . $library->minor_version
+    );
+
+    return true;
 }
 
 /**
