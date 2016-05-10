@@ -95,14 +95,19 @@ class editor_framework implements \H5peditorStorage {
      * Editor that already knows which content types are supported in its
      * slides.
      *
+     * @param int $context_id Identifier for current context
      * @param array $libraries List of library names + version to load info for
      * @return array List of all libraries loaded
      */
-    public function getLibraries($libraries = null) {
-        global $DB, $COURSE;
+    public function getLibraries($context_id = NULL, $libraries = null) {
+        global $DB;
 
-        $coursecontext = \context_course::instance($COURSE->id);
-        $super_user = has_capability('mod/hvp:userestrictedlibraries', $coursecontext);
+        if (isset($context_id)) {
+            $context = \context::instance_by_id($context_id);
+        }
+        $super_user = isset($context) ?
+            has_capability('mod/hvp:userestrictedlibraries', $context) : false;
+
 
         if ($libraries !== null) {
             // Get details for the specified libraries only.
