@@ -96,13 +96,11 @@ class content_user_data {
             // Fetch user data
             $data = self::get_user_data($content_id, $sub_content_id, $data_id);
 
+            // Did not find data, return empty object
             if ($data === false) {
-                \H5PCore::ajaxError(get_string('missingcontentuserdata', 'hvp'));
-                http_response_code(404); // Not found
+                $data = '{}';
             }
-            else {
-                \H5PCore::ajaxSuccess(json_encode($data));
-            }
+            \H5PCore::ajaxSuccess(json_encode($data));
         }
         exit;
     }
@@ -198,13 +196,23 @@ class content_user_data {
      * @param $content_id
      * @return mixed User data for specific content if found, else NULL
      */
-    public static function load_user_data($content_id) {
-        global $DB;
+    public static function load_pre_loaded_user_data($content_id) {
+        global $DB, $USER;
 
-        $result = $DB->get_record('hvp_content_user_data', array(
-            'hvp_id' => $content_id
+        $pre_loaded_user_data = array();
+
+        $results = $DB->get_records('hvp_content_user_data', array(
+            'user_id' => $USER->id,
+            'hvp_id' => $content_id,
+            'sub_content_id' => 0,
+            'preloaded' => 1
         ));
 
-        return $result ? $result->data : '{}';
+        // Get data for data ids
+        foreach ($results as $content_user_data) {
+            $pre_loaded_user_data[$content_user_data->data_id] = $content_user_data->data;
+        }
+
+        return $pre_loaded_user_data;
     }
 }

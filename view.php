@@ -91,9 +91,7 @@ $settings['contents'][$cid] = array(
     'disable' => $content['disable'],
     'url' => "{$CFG->httpswwwroot}/mod/hvp/view.php?id={$id}",
     'contentUserData' => array(
-        0 => array(
-            'state' => \mod_hvp\content_user_data::load_user_data($content['id'])
-        )
+        0 => \mod_hvp\content_user_data::load_pre_loaded_user_data($content['id'])
     )
 );
 
