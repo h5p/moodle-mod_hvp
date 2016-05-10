@@ -148,11 +148,12 @@ $string['invalidparameters'] = 'Invalid Parameters';
 $string['hvp:addinstance'] = 'Add a new H5P Activity';
 $string['hvp:restrictlibraries'] = 'Restrict a H5P library';
 $string['hvp:updatelibraries'] = 'Update the version of an H5P library';
-$string['hvp:deletecontentuserdata'] = 'Delete content user data';
-$string['hvp:savecontentuserdata'] = 'Save content user data';
+$string['hvp:userestrictedlibraries'] = 'Use restricted H5P libraries';
+$string['hvp:deletecontentuserdata'] = 'Delete H5P content user data';
+$string['hvp:savecontentuserdata'] = 'Save H5P content user data';
 $string['hvp:saveresults'] = 'Save result for H5P content';
 $string['hvp:viewresults'] = 'View result for H5P content';
-$string['hvp:getcachedassets'] = 'Get cached content assets';
+$string['hvp:getcachedassets'] = 'Get cached H5P content assets';
 $string['hvp:getcontent'] = 'Get/view content of H5P file in course';
 $string['hvp:getexport'] = 'Get export file from H5P in course';
 

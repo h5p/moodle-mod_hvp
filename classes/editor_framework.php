@@ -99,8 +99,10 @@ class editor_framework implements \H5peditorStorage {
      * @return array List of all libraries loaded
      */
     public function getLibraries($libraries = null) {
-        global $DB;
-        $super_user = false; // TODO: Check if user can has manage h5p libraries
+        global $DB, $COURSE;
+
+        $coursecontext = \context_course::instance($COURSE->id);
+        $super_user = has_capability('mod/hvp:userestrictedlibraries', $coursecontext);
 
         if ($libraries !== null) {
             // Get details for the specified libraries only.
