@@ -425,7 +425,7 @@ class framework implements \H5PFrameworkInterface {
         if (!has_capability('mod/hvp:updatelibraries', $context)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -670,12 +670,14 @@ class framework implements \H5PFrameworkInterface {
         $data = array(
             'name' => $content['name'],
             'course' => $content['course'],
+            'intro' => $content['intro'],
+            'introformat' => $content['introformat'],
             'json_content' => $content['params'],
             'embed_type' => 'div',
             'main_library_id' => $content['library']['libraryId'],
             'filtered' => '',
             'disable' => $content['disable'],
-            'timemodified' => time(),
+            'timemodified' => time()
         );
 
         if (!isset($content['id'])) {
@@ -768,6 +770,8 @@ class framework implements \H5PFrameworkInterface {
         $data = $DB->get_record_sql(
                 "SELECT hc.id
                       , hc.name
+                      , hc.intro
+                      , hc.introformat
                       , hc.json_content
                       , hc.filtered
                       , hc.slug
@@ -793,6 +797,8 @@ class framework implements \H5PFrameworkInterface {
         $content = array(
             'id' => $data->id,
             'title' => $data->name,
+            'intro' => $data->intro,
+            'introformat' => $data->introformat,
             'params' => $data->json_content,
             'filtered' => $data->filtered,
             'slug' => $data->slug,

@@ -76,5 +76,29 @@ function xmldb_hvp_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016042500, 'hvp');
     }
 
+    if ($oldversion < 2016051000) {
+
+        $table = new xmldb_table('hvp');
+
+        // Define field timecreated to be added to hvp.
+        $intro = new xmldb_field('intro', XMLDB_TYPE_TEXT, null, null, null, null, null, 'name');
+
+        // Conditionally launch add field timecreated.
+        if (!$dbman->field_exists($table, $intro)) {
+            $dbman->add_field($table, $intro);
+        }
+
+        // Define field timemodified to be added to hvp.
+        $introformat = new xmldb_field('introformat', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'intro');
+
+        // Conditionally launch add field timemodified.
+        if (!$dbman->field_exists($table, $introformat)) {
+            $dbman->add_field($table, $introformat);
+        }
+
+        // Hvp savepoint reached.
+        upgrade_mod_savepoint(true, 2016051000, 'hvp');
+    }
+
     return true;
 }

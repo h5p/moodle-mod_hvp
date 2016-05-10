@@ -36,6 +36,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addElement('text', 'name', get_string('name'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        $this->standard_intro_elements();
 
         // Action.
         $h5paction = array();
