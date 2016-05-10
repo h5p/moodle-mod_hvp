@@ -69,7 +69,7 @@ class user_grades {
 
         // Get content info for log
         $content = $DB->get_record_sql(
-                "SELECT c.title, l.machine_name AS name, l.major_version, l.minor_version
+                "SELECT c.name, l.machine_name AS name, l.major_version, l.minor_version
                    FROM {hvp} c
                    JOIN {hvp_libraries} l ON l.id = c.main_library_id
                   WHERE c.id = ?",
