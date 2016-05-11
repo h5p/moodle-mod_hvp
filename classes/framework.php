@@ -475,17 +475,24 @@ class framework implements \H5PFrameworkInterface {
         global $DB;
         $contentCount = array();
 
-        // Count content with same machine name, major and minor version
-        $query = "SELECT main_library_id, machine_name, major_version, minor_version, count(*) as count
-            FROM mdl_hvp, mdl_hvp_libraries as lib
-            WHERE main_library_id = lib.id
-            GROUP BY machine_name, major_version, minor_version";
-
-        $res = $DB->get_records_sql($query);
+        // Count content using the same content type
+        $res = $DB->get_records_sql(
+          "SELECT c.main_library_id,
+                  l.machine_name,
+                  l.major_version,
+                  l.minor_version,
+                  c.count
+             FROM (SELECT main_library_id,
+                          count(id) as count
+                     FROM {hvp}
+                 GROUP BY main_library_id) c,
+                 {hvp_libraries} l
+            WHERE c.main_library_id = l.id"
+        );
 
         // Extract results
         foreach($res as $lib) {
-            $contentCount[$lib->machine_name.' '.$lib->major_version.'.'.$lib->minor_version] = $lib->count;
+            $contentCount["{$lib->machine_name} {$lib->major_version}.{$lib->minor_version}"] = $lib->count;
         }
 
         return $contentCount;
@@ -556,6 +563,13 @@ class framework implements \H5PFrameworkInterface {
             // Remove old dependencies
             $this->deleteLibraryDependencies($libraryData['libraryId']);
         }
+
+        // Log library successfully installed/upgraded
+        new \mod_hvp\event(
+              'library', ($new ? 'create' : 'update'),
+              NULL, NULL,
+              $library->machine_name, $library->major_version . '.' . $library->minor_version
+        );
 
         // Update library translations
         $DB->delete_records('hvp_libraries_languages', array('library_id' => $libraryData['libraryId']));
@@ -683,13 +697,28 @@ class framework implements \H5PFrameworkInterface {
         if (!isset($content['id'])) {
             $data['slug'] = '';
             $data['timecreated'] = $data['timemodified'];
-            return $DB->insert_record('hvp', $data);
+            $event_type = 'create';
+            $id = $DB->insert_record('hvp', $data);
         }
         else {
             $data['id'] = $content['id'];
             $DB->update_record('hvp', $data);
-            return $data['id'];
+            $event_type = 'update';
+            $id = $data['id'];
         }
+
+        // Log content create/update/upload
+        if (!empty($content['uploaded'])) {
+            $event_type .= ' upload';
+        }
+        new \mod_hvp\event(
+                'content', $event_type,
+                $id, $content['name'],
+                $content['library']['machineName'],
+                $content['library']['majorVersion'] . '.' . $content['library']['minorVersion']
+        );
+
+        return $id;
     }
 
     /**
@@ -821,18 +850,19 @@ class framework implements \H5PFrameworkInterface {
     public function loadContentDependencies($id, $type = null) {
         global $DB;
 
-        $query = "SELECT hl.id
-                      , hl.machine_name
-                      , hl.major_version
-                      , hl.minor_version
-                      , hl.patch_version
-                      , hl.preloaded_css
-                      , hl.preloaded_js
-                      , hcl.drop_css
-                      , hcl.dependency_type
-                FROM {hvp_contents_libraries} hcl
-                JOIN {hvp_libraries} hl ON hcl.library_id = hl.id
-                WHERE hcl.hvp_id = ?";
+        $query = "SELECT hcl.id AS unidepid
+                       , hl.id
+                       , hl.machine_name
+                       , hl.major_version
+                       , hl.minor_version
+                       , hl.patch_version
+                       , hl.preloaded_css
+                       , hl.preloaded_js
+                       , hcl.drop_css
+                       , hcl.dependency_type
+                   FROM {hvp_contents_libraries} hcl
+                   JOIN {hvp_libraries} hl ON hcl.library_id = hl.id
+                  WHERE hcl.hvp_id = ?";
         $queryArgs = array($id);
 
         if ($type !== null) {
@@ -845,6 +875,7 @@ class framework implements \H5PFrameworkInterface {
 
         $dependencies = array();
         foreach ($data as $dependency) {
+            unset($dependency->unidepid);
             $dependencies[] = \H5PCore::snakeToCamel($dependency);
         }
 
@@ -975,7 +1006,7 @@ class framework implements \H5PFrameworkInterface {
         );
 
         $dependencies = $DB->get_records_sql(
-                'SELECT hl.machine_name, hl.major_version, hl.minor_version, hll.dependency_type
+                'SELECT hl.id, hl.machine_name, hl.major_version, hl.minor_version, hll.dependency_type
                    FROM {hvp_libraries_libraries} hll
                    JOIN {hvp_libraries} hl ON hll.required_library_id = hl.id
                   WHERE hll.library_id = ?', array($library->id));
@@ -1073,9 +1104,22 @@ class framework implements \H5PFrameworkInterface {
      * Implements getLibraryStats
      */
     public function getLibraryStats($type) {
+        global $DB;
         $count = array();
 
-        // TODO: Get count of given type of events
+        // Get the counts for the given type of event
+        $records = $DB->get_records_sql(
+                "SELECT library_name AS name,
+                        library_version AS version,
+                        num
+                   FROM {hvp_counters}
+                  WHERE type = ?",
+                array($type));
+
+        // Extract num from records
+        foreach($records as $library) {
+            $count[$library->name . ' ' . $library->version] = $library->num;
+        }
 
         return $count;
     }
@@ -1084,16 +1128,13 @@ class framework implements \H5PFrameworkInterface {
      * Implements getNumAuthors
      */
     public function getNumAuthors() {
+        global $DB;
 
-        // TODO: Get num of unique authors
-
-        //global $DB;
-        //return intval($DB->get_field_sql(
-        //    "SELECT COUNT(DISTINCT user_id)
-        //       FROM {hvp}"
-        //));
-
-        return 0;
+        // Get number of unique courses using H5P
+        return intval($DB->get_field_sql(
+                "SELECT COUNT(DISTINCT course)
+                   FROM {hvp}"
+        ));
     }
 
 }

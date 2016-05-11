@@ -47,6 +47,14 @@ if ($content === null) {
     print_error('invalidhvp');
 }
 
+// Log view
+new \mod_hvp\event(
+        'content', NULL,
+        $content['id'], $content['title'],
+        $content['library']['name'],
+        $content['library']['majorVersion'] . '.' . $content['library']['minorVersion']
+);
+
 $PAGE->set_title(format_string($content['title']));
 $PAGE->set_heading($course->fullname);
 

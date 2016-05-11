@@ -51,9 +51,14 @@ $string['embedtitle'] = 'View the embed code for this content.';
 $string['h5ptitle'] = 'Visit H5P.org to check out more cool content.';
 $string['contentchanged'] = 'This content has changed since you last used it.';
 $string['startingover'] = "You'll be starting over.";
+$string['confirmdialogheader'] = 'Confirm action';
+$string['confirmdialogbody'] = 'Please confirm that you wish to proceed. This action is not reversible.';
+$string['cancellabel'] = 'Cancel';
+$string['confirmlabel'] = 'Confirm';
 
 $string['lookforupdates'] = 'Look for H5P updates';
-$string['removetmpfiles'] = 'Remove old temporary files';
+$string['removetmpfiles'] = 'Remove old H5P temporary files';
+$string['removeoldlogentries'] = 'Remove old H5P log entries';
 
 // Admin settings.
 $string['displayoptions'] = 'Display Options';
@@ -63,6 +68,8 @@ $string['enableembed'] = 'Embed button';
 $string['enablecopyright'] = 'Copyright button';
 $string['enableabout'] = 'About H5P button';
 
+$string['externalcommunication'] = 'External communication';
+$string['externalcommunication_help'] = 'Aid in the development of H5P by contributing anonymous usage data. Disabling this option will prevent your site from fetching the newest H5P updates. You can read more about <a {$a}>which data is collected</a> on h5p.org.';
 $string['enablesavecontentstate'] = 'Save content state';
 $string['enablesavecontentstate_help'] = 'Automatically save the current state of interactive content for each user. This means that the user may pick up where he left off.';
 $string['contentstatefrequency'] = 'Save content state frequency';

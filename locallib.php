@@ -74,7 +74,11 @@ function hvp_get_core_settings() {
                 'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
                 'h5pDescription' => get_string('h5ptitle', 'hvp'),
                 'contentChanged' => get_string('contentchanged', 'hvp'),
-                'startingOver' => get_string('startingover', 'hvp')
+                'startingOver' => get_string('startingover', 'hvp'),
+                'confirmDialogHeader' => get_string('confirmdialogheader', 'hvp'),
+                'confirmDialogBody' => get_string('confirmdialogbody', 'hvp'),
+                'cancelLabel' => get_string('cancellabel', 'hvp'),
+                'confirmLabel' => get_string('confirmlabel', 'hvp')
             )
         ),
         'user' => array(
@@ -306,6 +310,13 @@ function hvp_content_upgrade_progress($libraryid) {
                 'json_content' => $param,
                 'filtered' => ''
             ));
+
+            // Log content upgrade successful
+            new \mod_hvp\event(
+                    'content', 'upgrade',
+                    $id, $DB->get_field_sql("SELECT name FROM {hvp} WHERE id = ?", array($id)),
+                    $tolibrary->machine_name, $tolibrary->major_version . '.' . $tolibrary->minor_version
+            );
         }
     }
 
