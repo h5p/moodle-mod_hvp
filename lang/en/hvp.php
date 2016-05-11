@@ -51,6 +51,10 @@ $string['embedtitle'] = 'View the embed code for this content.';
 $string['h5ptitle'] = 'Visit H5P.org to check out more cool content.';
 $string['contentchanged'] = 'This content has changed since you last used it.';
 $string['startingover'] = "You'll be starting over.";
+$string['confirmdialogheader'] = 'Confirm action';
+$string['confirmdialogbody'] = 'Please confirm that you wish to proceed. This action is not reversible.';
+$string['cancellabel'] = 'Cancel';
+$string['confirmlabel'] = 'Confirm';
 
 $string['lookforupdates'] = 'Look for H5P updates';
 $string['removetmpfiles'] = 'Remove old temporary files';

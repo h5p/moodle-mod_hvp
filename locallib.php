@@ -74,7 +74,11 @@ function hvp_get_core_settings() {
                 'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
                 'h5pDescription' => get_string('h5ptitle', 'hvp'),
                 'contentChanged' => get_string('contentchanged', 'hvp'),
-                'startingOver' => get_string('startingover', 'hvp')
+                'startingOver' => get_string('startingover', 'hvp'),
+                'confirmDialogHeader' => get_string('confirmdialogheader', 'hvp'),
+                'confirmDialogBody' => get_string('confirmdialogbody', 'hvp'),
+                'cancelLabel' => get_string('cancellabel', 'hvp'),
+                'confirmLabel' => get_string('confirmlabel', 'hvp')
             )
         ),
         'user' => array(
