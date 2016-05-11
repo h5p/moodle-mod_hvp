@@ -94,13 +94,16 @@ class content_user_data {
         }
         else {
             // Fetch user data
-            $data = self::get_user_data($content_id, $sub_content_id, $data_id);
+            $user_data = self::get_user_data($content_id, $sub_content_id, $data_id);
 
-            // Did not find data, return empty object
-            if ($data === false) {
-                $data = '{}';
+            if ($user_data === false) {
+                // Did not find data, return nothing
+                \H5PCore::ajaxSuccess();
             }
-            \H5PCore::ajaxSuccess(json_encode($data));
+            else {
+                // Found data, return encoded data
+                \H5PCore::ajaxSuccess(json_encode($user_data->data));
+            }
         }
         exit;
     }
