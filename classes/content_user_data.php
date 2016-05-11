@@ -102,7 +102,7 @@ class content_user_data {
             }
             else {
                 // Found data, return encoded data
-                \H5PCore::ajaxSuccess(json_encode($user_data->data));
+                \H5PCore::ajaxSuccess($user_data->data);
             }
         }
         exit;
