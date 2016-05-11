@@ -164,7 +164,7 @@ class editor_framework implements \H5peditorStorage {
             unset($library->major_version);
             $library->minorVersion = (int) $library->minor_version;
             unset($library->minor_version);
-            if (!empty($library->tutorialUrl)) {
+            if (!empty($library->tutorial_url)) {
               $library->tutorialUrl = $library->tutorial_url;
             }
             unset($library->tutorial_url);
