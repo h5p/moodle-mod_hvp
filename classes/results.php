@@ -146,7 +146,8 @@ class results {
 
         // Execute query and get results
         return $this->get_sql_results("
-                SELECT {$fields}
+                SELECT i.id,
+                       {$fields}
                        g.rawgrade,
                        g.rawgrademax,
                        g.timemodified
@@ -154,7 +155,8 @@ class results {
                   {$join}
                   {$where}
                   {$order_by}
-                  LIMIT {$this->offset}, {$this->limit}
+                  LIMIT {$this->limit}
+                  OFFSET {$this->offset}
                 ", $args);
     }
 

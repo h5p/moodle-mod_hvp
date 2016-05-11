@@ -51,7 +51,7 @@ function hvp_supports($feature) {
         case FEATURE_GROUPMEMBERSONLY:
             return true;
         case FEATURE_MOD_INTRO:
-            return false;
+            return true;
         case FEATURE_COMPLETION_TRACKS_VIEWS:
             return false;
         case FEATURE_COMPLETION_HAS_RULES:
@@ -63,7 +63,7 @@ function hvp_supports($feature) {
         case FEATURE_BACKUP_MOODLE2:
             return false;
         case FEATURE_SHOW_DESCRIPTION:
-            return false;
+            return true;
 
         default:
             return null;
@@ -250,7 +250,10 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // TODO: Check permissions?
+            // Check permissions
+            if (!has_capability('mod/hvp:getcachedassets', $context)) {
+                return false;
+            }
 
             $itemid = 0;
             break;
@@ -260,7 +263,10 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // TODO: Check permissions?
+            // Check permissions
+            if (!has_capability('mod/hvp:getcontent', $context)) {
+                return false;
+            }
 
             $itemid = array_shift($args);
             break;
@@ -271,7 +277,10 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // TODO: Check permissions?
+            // Check permissions
+            if (!has_capability('mod/hvp:getexport', $context)) {
+                return false;
+            }
 
             $itemid = 0;
             break;

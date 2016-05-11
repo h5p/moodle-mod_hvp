@@ -38,7 +38,7 @@ class user_grades {
 
         // Check permissions
         $context = \context_course::instance($hvp->course);
-        if (!has_capability('mod/hvp:saveresult', $context)) {
+        if (!has_capability('mod/hvp:saveresults', $context)) {
             \H5PCore::ajaxError(get_string('nopermissiontosaveresult', 'hvp'));
             http_response_code(403);
             exit;
@@ -51,15 +51,10 @@ class user_grades {
         );
 
         // Get course module id from db, required for grade item
-        $result = $DB->get_record_sql(
-                "SELECT cm.id, h.name
-                   FROM {course_modules} cm, {hvp} h, {modules} m
-                  WHERE cm.instance = h.id
-                    AND h.id = ?
-                    AND m.name = 'hvp'
-                    AND m.id = cm.module",
-                array($content_id)
-        );
+        $cm_id_sql = "SELECT cm.id, h.name
+            FROM {course_modules} cm, {hvp} h, {modules} m
+            WHERE cm.instance = h.id AND h.id = ? AND m.name = 'hvp' AND m.id = cm.module";
+        $result = $DB->get_record_sql($cm_id_sql, array($content_id));
 
         // Set grade using Gradebook API
         $hvp->cmidnumber = $result->id;
