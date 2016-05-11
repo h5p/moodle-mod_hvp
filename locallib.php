@@ -310,6 +310,13 @@ function hvp_content_upgrade_progress($libraryid) {
                 'json_content' => $param,
                 'filtered' => ''
             ));
+
+            // Log content upgrade successful
+            new \mod_hvp\event(
+                    'content', 'upgrade',
+                    $id, $DB->get_field_sql("SELECT name FROM {hvp} WHERE id = ?", array($id)),
+                    $tolibrary->machine_name, $tolibrary->major_version . '.' . $tolibrary->minor_version
+            );
         }
     }
 

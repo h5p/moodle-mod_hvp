@@ -41,15 +41,26 @@ if ($userid === (int)$USER->id) {
 
 // Load H5P Content.
 $hvp = $DB->get_record_sql(
-        "SELECT id,
-                name AS title
-           FROM {hvp}
-          WHERE id = ?",
+        "SELECT h.id,
+                h.name AS title,
+                hl.machine_name,
+                hl.major_version,
+                hl.minor_version
+           FROM {hvp} h
+           JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
+          WHERE h.id = ?",
         array($cm->instance));
 
 if ($hvp === false) {
     print_error('invalidhvp');
 }
+
+// Log content result view
+new \mod_hvp\event(
+        'results', 'content',
+        $hvp->id, $hvp->title,
+        $hvp->machine_name, "{$hvp->major_version}.{$hvp->minor_version}"
+);
 
 // Set page properties.
 $pageurl = new moodle_url('/mod/hvp/grade.php', array('id' => $hvp->id));

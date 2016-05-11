@@ -564,6 +564,13 @@ class framework implements \H5PFrameworkInterface {
             $this->deleteLibraryDependencies($libraryData['libraryId']);
         }
 
+        // Log library successfully installed/upgraded
+        new \mod_hvp\event(
+              'library', ($new ? 'create' : 'update'),
+              NULL, NULL,
+              $library->machine_name, $library->major_version . '.' . $library->minor_version
+        );
+
         // Update library translations
         $DB->delete_records('hvp_libraries_languages', array('library_id' => $libraryData['libraryId']));
         if (isset($libraryData['language'])) {
@@ -690,13 +697,28 @@ class framework implements \H5PFrameworkInterface {
         if (!isset($content['id'])) {
             $data['slug'] = '';
             $data['timecreated'] = $data['timemodified'];
-            return $DB->insert_record('hvp', $data);
+            $event_type = 'create';
+            $id = $DB->insert_record('hvp', $data);
         }
         else {
             $data['id'] = $content['id'];
             $DB->update_record('hvp', $data);
-            return $data['id'];
+            $event_type = 'update';
+            $id = $data['id'];
         }
+
+        // Log content create/update/upload
+        if (!empty($content['uploaded'])) {
+            $event_type .= ' upload';
+        }
+        new \mod_hvp\event(
+                'content', $event_type,
+                $id, $content['name'],
+                $content['library']['machineName'],
+                $content['library']['majorVersion'] . '.' . $content['library']['minorVersion']
+        );
+
+        return $id;
     }
 
     /**
@@ -1082,9 +1104,22 @@ class framework implements \H5PFrameworkInterface {
      * Implements getLibraryStats
      */
     public function getLibraryStats($type) {
+        global $DB;
         $count = array();
 
-        // TODO: Get count of given type of events
+        // Get the counts for the given type of event
+        $records = $DB->get_records_sql(
+                "SELECT library_name AS name,
+                        library_version AS version,
+                        num
+                   FROM {hvp_counters}
+                  WHERE type = ?",
+                array($type));
+
+        // Extract num from records
+        foreach($records as $library) {
+            $count[$library->name . ' ' . $library->version] = $library->num;
+        }
 
         return $count;
     }
@@ -1093,16 +1128,13 @@ class framework implements \H5PFrameworkInterface {
      * Implements getNumAuthors
      */
     public function getNumAuthors() {
+        global $DB;
 
-        // TODO: Get num of unique authors
-
-        //global $DB;
-        //return intval($DB->get_field_sql(
-        //    "SELECT COUNT(DISTINCT user_id)
-        //       FROM {hvp}"
-        //));
-
-        return 0;
+        // Get number of unique courses using H5P
+        return intval($DB->get_field_sql(
+                "SELECT COUNT(DISTINCT course)
+                   FROM {hvp}"
+        ));
     }
 
 }
