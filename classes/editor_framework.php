@@ -142,7 +142,8 @@ class editor_framework implements \H5peditorStorage {
         // Load all libraries
         $libraries = array();
         $librariesresult = $DB->get_records_sql(
-                "SELECT machine_name AS name,
+                "SELECT id,
+                        machine_name AS name,
                         title,
                         major_version,
                         minor_version,
@@ -154,10 +155,18 @@ class editor_framework implements \H5peditorStorage {
                ORDER BY title"
         );
         foreach ($librariesresult as $library) {
+            // Remove unique index
+            unset($library->id);
+
             // Convert snakes to camels
             $library->majorVersion = (int) $library->major_version;
+            unset($library->major_version);
             $library->minorVersion = (int) $library->minor_version;
-            $library->tutorialUrl = $library->tutorial_url;
+            unset($library->minor_version);
+            if (!empty($library->tutorialUrl)) {
+              $library->tutorialUrl = $library->tutorial_url;
+            }
+            unset($library->tutorial_url);
 
             // Make sure we only display the newest version of a library.
             foreach ($libraries as $key => $existinglibrary) {

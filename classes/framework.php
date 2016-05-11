@@ -475,17 +475,24 @@ class framework implements \H5PFrameworkInterface {
         global $DB;
         $contentCount = array();
 
-        // Count content with same machine name, major and minor version
-        $query = "SELECT main_library_id, machine_name, major_version, minor_version, count(*) as count
-            FROM mdl_hvp, mdl_hvp_libraries as lib
-            WHERE main_library_id = lib.id
-            GROUP BY machine_name, major_version, minor_version";
-
-        $res = $DB->get_records_sql($query);
+        // Count content using the same content type
+        $res = $DB->get_records_sql(
+          "SELECT c.main_library_id,
+                  l.machine_name,
+                  l.major_version,
+                  l.minor_version,
+                  c.count
+             FROM (SELECT main_library_id,
+                          count(id) as count
+                     FROM {hvp}
+                 GROUP BY main_library_id) c,
+                 {hvp_libraries} l
+            WHERE c.main_library_id = l.id"
+        );
 
         // Extract results
         foreach($res as $lib) {
-            $contentCount[$lib->machine_name.' '.$lib->major_version.'.'.$lib->minor_version] = $lib->count;
+            $contentCount["{$lib->machine_name} {$lib->major_version}.{$lib->minor_version}"] = $lib->count;
         }
 
         return $contentCount;
@@ -821,18 +828,19 @@ class framework implements \H5PFrameworkInterface {
     public function loadContentDependencies($id, $type = null) {
         global $DB;
 
-        $query = "SELECT hl.id
-                      , hl.machine_name
-                      , hl.major_version
-                      , hl.minor_version
-                      , hl.patch_version
-                      , hl.preloaded_css
-                      , hl.preloaded_js
-                      , hcl.drop_css
-                      , hcl.dependency_type
-                FROM {hvp_contents_libraries} hcl
-                JOIN {hvp_libraries} hl ON hcl.library_id = hl.id
-                WHERE hcl.hvp_id = ?";
+        $query = "SELECT hcl.id AS unidepid
+                       , hl.id
+                       , hl.machine_name
+                       , hl.major_version
+                       , hl.minor_version
+                       , hl.patch_version
+                       , hl.preloaded_css
+                       , hl.preloaded_js
+                       , hcl.drop_css
+                       , hcl.dependency_type
+                   FROM {hvp_contents_libraries} hcl
+                   JOIN {hvp_libraries} hl ON hcl.library_id = hl.id
+                  WHERE hcl.hvp_id = ?";
         $queryArgs = array($id);
 
         if ($type !== null) {
@@ -845,6 +853,7 @@ class framework implements \H5PFrameworkInterface {
 
         $dependencies = array();
         foreach ($data as $dependency) {
+            unset($dependency->unidepid);
             $dependencies[] = \H5PCore::snakeToCamel($dependency);
         }
 
@@ -975,7 +984,7 @@ class framework implements \H5PFrameworkInterface {
         );
 
         $dependencies = $DB->get_records_sql(
-                'SELECT hl.machine_name, hl.major_version, hl.minor_version, hll.dependency_type
+                'SELECT hl.id, hl.machine_name, hl.major_version, hl.minor_version, hll.dependency_type
                    FROM {hvp_libraries_libraries} hll
                    JOIN {hvp_libraries} hl ON hll.required_library_id = hl.id
                   WHERE hll.library_id = ?', array($library->id));
