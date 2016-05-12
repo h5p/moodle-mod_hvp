@@ -62,6 +62,22 @@ class user_grades {
         $hvp->rawgrademax = $max_score;
         hvp_grade_item_update($hvp, $grade);
 
+        // Get content info for log
+        $content = $DB->get_record_sql(
+                "SELECT c.name AS title, l.machine_name AS name, l.major_version, l.minor_version
+                   FROM {hvp} c
+                   JOIN {hvp_libraries} l ON l.id = c.main_library_id
+                  WHERE c.id = ?",
+                array($content_id)
+        );
+
+        // Log view
+        new \mod_hvp\event(
+                'results', 'set',
+                $content_id, $content->title,
+                $content->name, $content->major_version . '.' . $content->minor_version
+        );
+
         \H5PCore::ajaxSuccess();
         exit;
     }

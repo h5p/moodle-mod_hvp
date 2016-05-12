@@ -47,6 +47,14 @@ if ($content === null) {
     print_error('invalidhvp');
 }
 
+// Log view
+new \mod_hvp\event(
+        'content', NULL,
+        $content['id'], $content['title'],
+        $content['library']['name'],
+        $content['library']['majorVersion'] . '.' . $content['library']['minorVersion']
+);
+
 $PAGE->set_title(format_string($content['title']));
 $PAGE->set_heading($course->fullname);
 
@@ -91,9 +99,7 @@ $settings['contents'][$cid] = array(
     'disable' => $content['disable'],
     'url' => "{$CFG->httpswwwroot}/mod/hvp/view.php?id={$id}",
     'contentUserData' => array(
-        0 => array(
-            'state' => \mod_hvp\content_user_data::load_user_data($content['id'])
-        )
+        0 => \mod_hvp\content_user_data::load_pre_loaded_user_data($content['id'])
     )
 );
 
