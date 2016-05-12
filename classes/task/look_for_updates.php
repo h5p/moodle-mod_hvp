@@ -45,6 +45,8 @@ class look_for_updates extends \core\task\scheduled_task {
             $core = \mod_hvp\framework::instance();
             $core->fetchLibrariesMetadata(!$extcom);
             set_config('external_communication_notify', $extcom ? false : time(), 'mod_hvp');
+
+            // TODO: Notify admin if there's an update available!
         }
     }
 }

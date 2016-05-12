@@ -79,6 +79,18 @@ $string['contentstatefrequency_help'] = 'In seconds, how often do you wish the u
 $string['settings'] = 'H5P Settings';
 $string['libraries'] = 'H5P Libraries';
 
+// Update libraries section.
+$string['updatelibraries'] = 'Update All Libraries';
+$string['updatesavailable'] = 'There are updates available for your H5P content types.';
+$string['whyupdatepart1'] = 'You can read about why it\'s important to update and the benefits from doing so on the <a {$a}>Why Update H5P</a> page.';
+$string['whyupdatepart2'] = 'The page also list the different changelogs, where you can read about the new features introduced and the issues that have been fixed.';
+$string['currentversion'] = 'You are running';
+$string['availableversion'] = 'Available update';
+$string['usebuttonbelow'] = 'You can use the button below to automatically download and update all of your content types.';
+$string['downloadandupdate'] = 'Download & Update';
+$string['missingh5purl'] = 'Missing URL for H5P file';
+$string['unabletodownloadh5p'] = 'Unable to download H5P file';
+
 // Upload libraries section.
 $string['uploadlibraries'] = 'Upload Libraries';
 $string['options'] = 'Options';

@@ -36,6 +36,17 @@ admin_externalpage_setup('h5plibraries');
 
 $PAGE->set_title("{$SITE->shortname}: " . get_string('libraries', 'hvp'));
 
+// Create form for automatically downloading and installing updates
+$update_available = \get_config('mod_hvp', 'update_available');
+$current_update = \get_config('mod_hvp', 'current_update');
+if ($update_available !== false && $current_update !== false && $current_update < $update_available) {
+    $updateform = new \mod_hvp\update_libraries_form();
+    if ($formdata = $updateform->get_data()) {
+        // Update successful, hide form.
+        $updateform = null;
+    }
+}
+
 // Create upload libraries form
 $uploadform = new \mod_hvp\upload_libraries_form();
 if ($formdata = $uploadform->get_data()) {
@@ -116,6 +127,12 @@ echo $OUTPUT->header();
 
 // Page Header
 echo '<h2>' . get_string('libraries', 'hvp') . '</h2>';
+
+if (isset($updateform)) {
+    // Update All Libraries
+    echo '<h3 class="h5p-admin-header">' . get_string('updatelibraries', 'hvp') . '</h3>';
+    $updateform->display();
+}
 
 // Upload Form
 echo '<h3 class="h5p-admin-header">' . get_string('uploadlibraries', 'hvp') . '</h3>';
