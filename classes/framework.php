@@ -56,7 +56,7 @@ class framework implements \H5PFrameworkInterface {
             $context = \context_system::instance();
             $url = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
 
-            $language = \current_language();
+            $language = self::get_language();
 
             $export = !(isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === '0');
 
@@ -85,6 +85,28 @@ class framework implements \H5PFrameworkInterface {
             default:
                 return $core;
         }
+    }
+
+    /**
+     * Get current H5P language code.
+     *
+     * @return string Language Code
+     */
+    public static function get_language() {
+        static $map;
+
+        if (empty($map)) {
+            // Create mapping for "converting" language codes
+            $map = array(
+                'no' => 'nb'
+            );
+        }
+
+        // Get current language in Moodle
+        $language = \current_language();
+
+        // Try to map
+        return isset($map[$language]) ? $map[$language] : $language;
     }
 
     /**

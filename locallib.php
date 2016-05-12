@@ -169,7 +169,7 @@ function hvp_add_editor_assets($id = null) {
     $PAGE->requires->js(new moodle_url('/mod/hvp/editor.js' . $cachebuster), true);
 
     // Add translations
-    $language = \current_language();
+    $language = \mod_hvp\framework::get_language();
     $languagescript = "editor/language/{$language}.js";
     if (!file_exists("{$CFG->dirroot}/mod/hvp/{$languagescript}")) {
       $languagescript = 'editor/language/en.js';
