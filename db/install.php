@@ -7,7 +7,9 @@ function xmldb_hvp_install() {
             '<a href="https://h5p.org/moodle" target="_blank">tutorial</a>' .
             ' and check out the ' .
             '<a href="https://h5p.org/content-types-and-applications" target="_blank">example content</a>' .
-            ' at H5P.org for inspiration.' .
+            ' at H5P.org for inspiration.<br>' .
+            'You may choose to download only the content types you want, or ' .
+            '<a href="https://h5p.org/update-all-content-types" target="_blank">all of the recommend ones</a>.' .
          '</p>' .
          '<p>' .
              'We hope you will enjoy H5P and get engaged in our growing community through our ' .
