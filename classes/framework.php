@@ -116,46 +116,48 @@ class framework implements \H5PFrameworkInterface {
      * @return string|null Error or null if everything's OK.
      */
     public static function downloadH5pLibraries($onlyupdate = false) {
-      $update_available = \get_config('mod_hvp', 'update_available');
-      $current_update = \get_config('mod_hvp', 'current_update');
-      if ($update_available === $current_update) {
-          // Prevent re-submission of forms/action
-          return null;
-      }
+        global $CFG;
 
-      // URL for file to download
-      $download_url = \get_config('mod_hvp', 'update_available_path');
-      if (!$download_url) {
-          return get_string('missingh5purl');
-      }
+        $update_available = \get_config('mod_hvp', 'update_available');
+        $current_update = \get_config('mod_hvp', 'current_update');
+        if ($update_available === $current_update) {
+            // Prevent re-submission of forms/action
+            return null;
+        }
 
-      // Generate local tmp file path
-      $local_folder = $CFG->tempdir . uniqid('/hvp-');
-      $local_file = $local_folder . '.h5p';
+        // URL for file to download
+        $download_url = \get_config('mod_hvp', 'update_available_path');
+        if (!$download_url) {
+            return get_string('missingh5purl');
+        }
 
-      if (!\download_file_content($download_url, null, null, false, 300, 20, false, $local_file)) {
-          return get_string('unabletodownloadh5p');
-      }
+        // Generate local tmp file path
+        $local_folder = $CFG->tempdir . uniqid('/hvp-');
+        $local_file = $local_folder . '.h5p';
 
-      // Add folder and file paths to H5P Core
-      $interface = \mod_hvp\framework::instance('interface');
-      $interface->getUploadedH5pFolderPath($local_folder);
-      $interface->getUploadedH5pPath($local_file);
+        if (!\download_file_content($download_url, null, null, false, 300, 20, false, $local_file)) {
+            return get_string('unabletodownloadh5p');
+        }
 
-      // Validate package
-      $h5pValidator = \mod_hvp\framework::instance('validator');
-      if (!$h5pValidator->isValidPackage(true, $onlyupdate)) {
-          @unlink($local_file);
-          $messages = \mod_hvp\framework::messages('error');
-          return implode('<br/>', $messages);
-      }
+        // Add folder and file paths to H5P Core
+        $interface = \mod_hvp\framework::instance('interface');
+        $interface->getUploadedH5pFolderPath($local_folder);
+        $interface->getUploadedH5pPath($local_file);
 
-      // Install H5P file into Moodle
-      $storage = \mod_hvp\framework::instance('storage');
-      $storage->savePackage(null, null, true);
-      \set_config('current_update', $update_available, 'mod_hvp');
+        // Validate package
+        $h5pValidator = \mod_hvp\framework::instance('validator');
+        if (!$h5pValidator->isValidPackage(true, $onlyupdate)) {
+            @unlink($local_file);
+            $messages = \mod_hvp\framework::messages('error');
+            return implode('<br/>', $messages);
+        }
 
-      return null;
+        // Install H5P file into Moodle
+        $storage = \mod_hvp\framework::instance('storage');
+        $storage->savePackage(null, null, true);
+        \set_config('current_update', $update_available, 'mod_hvp');
+
+        return null;
     }
 
     /**
@@ -490,7 +492,18 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements mayUpdateLibraries
      */
-    public function mayUpdateLibraries() {
+    public function mayUpdateLibraries($allow = false) {
+        static $override;
+
+        // Allow overriding the permission check. Needed when installing
+        // since caps hasn't been set.
+        if ($allow) {
+            $override = true;
+        }
+        if ($override) {
+            return true;
+        }
+
         // Check permissions
         $context = \context_system::instance();
         if (!has_capability('mod/hvp:updatelibraries', $context)) {
