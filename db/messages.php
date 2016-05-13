@@ -13,19 +13,19 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * @package    mod
- * @subpackage hvp
- * @copyright  Amendor
+ * Defines message providers (types of message sent)
+ *
+ * @package    mod_hvp
+ * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016051302;
-$plugin->requires  = 2013051403;
-$plugin->cron      = 0;
-$plugin->component = 'mod_hvp';
-$plugin->maturity  = MATURITY_ALPHA;
-$plugin->release   = '0.x';
+$messageproviders = array(
+    // Notify admin that content type updates are available
+    'updates' => array(
+        'capability' => 'mod/hvp:updatesavailable'
+    ),
+);

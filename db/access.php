@@ -134,5 +134,12 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW
         )
-    )
+    ),
+
+    'mod/hvp:updatesavailable' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array(
+        )
+    ),
 );
