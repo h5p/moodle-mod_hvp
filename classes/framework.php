@@ -112,7 +112,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Make it easy to download and install H5P libraries.
      *
-     * @param $onlyupdate Prevent install of new libraries
+     * @param boolean $onlyupdate Prevent install of new libraries
      * @return string|null Error or null if everything's OK.
      */
     public static function downloadH5pLibraries($onlyupdate = false) {
