@@ -128,7 +128,7 @@ class framework implements \H5PFrameworkInterface {
         // URL for file to download
         $download_url = \get_config('mod_hvp', 'update_available_path');
         if (!$download_url) {
-            return get_string('missingh5purl');
+            return get_string('missingh5purl', 'hvp');
         }
 
         // Generate local tmp file path
@@ -136,7 +136,7 @@ class framework implements \H5PFrameworkInterface {
         $local_file = $local_folder . '.h5p';
 
         if (!\download_file_content($download_url, null, null, false, 300, 20, false, $local_file)) {
-            return get_string('unabletodownloadh5p');
+            return get_string('unabletodownloadh5p', 'hvp');
         }
 
         // Add folder and file paths to H5P Core
