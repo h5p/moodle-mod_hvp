@@ -17,7 +17,7 @@ function xmldb_hvp_install() {
     // Download default libraries and try to install
     $error = \mod_hvp\framework::downloadH5pLibraries();
     if ($error !== null) {
-      self::messages('error', $error);
+      \mod_hvp\framework::messages('error', $error);
     }
 
     // Print any messages
