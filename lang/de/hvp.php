@@ -256,7 +256,7 @@ $string['welcomegettingstarted'] =
     'Um mit H5P und Moodle zu starten, befindet sich hier ein ' .
     '<a {$a->moodle_tutorial}>Tutorial</a> und es gibt' .
     '<a {$a->example_content}>Beispielinhalte</a> auf H5P.org als Inspiration.<br>' .
-    'Für das bestmögliche Erlebnis wurden die beliebtesten Inhaltstypen installiert!' .;
+    'Für das bestmögliche Erlebnis wurden die beliebtesten Inhaltstypen installiert!';
 $string['welcomecommunity'] =
     'Wir hoffen, dass H5P gefällt und bieten die Möglichkeit, im ' .
     '<a {$a->forums}>Forum</a> und dem Chat-Room ' .
