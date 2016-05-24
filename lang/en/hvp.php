@@ -23,7 +23,7 @@ User interactions and scores are tracked using xAPI and are available through th
 
 You add interactive H5P content by uploading a .h5p file. You can create and download .h5p files on h5p.org';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
-$string['modulenameplural'] = 'H5Ps';
+$string['modulenameplural'] = 'Interactive Content';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
 $string['intro'] = 'Introduction';
@@ -55,6 +55,7 @@ $string['confirmdialogheader'] = 'Confirm action';
 $string['confirmdialogbody'] = 'Please confirm that you wish to proceed. This action is not reversible.';
 $string['cancellabel'] = 'Cancel';
 $string['confirmlabel'] = 'Confirm';
+$string['noh5ps'] = 'There\'s no interactive content available for this course.';
 
 // Update message email for admin
 $string['messageprovider:updates'] = 'Notification of available H5P updates';
