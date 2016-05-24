@@ -179,8 +179,9 @@ class mod_hvp_mod_form extends moodleform_mod {
                     $h5pvalidator = \mod_hvp\framework::instance('validator');
                     if (! $h5pvalidator->isValidPackage()) {
                         // Errors while validating the package
-                        $messages = \mod_hvp\framework::messages('error');
-                        $errors['h5pfile'] = implode('<br/>', $messages);
+                        $infomessages =  implode('<br/>', \mod_hvp\framework::messages('info'));
+                        $errormessages = implode('<br/>', \mod_hvp\framework::messages('error'));
+                        $errors['h5pfile'] = ($errormessages ? $errormessages . '<br/>' : '') . $infomessages;
                     }
                 }
             }
