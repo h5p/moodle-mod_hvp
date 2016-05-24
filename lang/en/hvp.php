@@ -61,7 +61,7 @@ $string['messageprovider:updates'] = 'Notification of available H5P updates';
 $string['updatesavailabletitle'] = 'New H5P updates are available';
 $string['updatesavailablemsgpt1'] = 'There are updates available for the H5P content types you\'ve installed on your Moodle site.';
 $string['updatesavailablemsgpt2'] = 'Head over to the page linked to below for further instructions.';
-$string['updatesavailablemsgpt3'] = 'The latest update was release on: {$a}';
+$string['updatesavailablemsgpt3'] = 'The latest update was released on: {$a}';
 $string['updatesavailablemsgpt4'] = 'Your are running a version from: {$a}';
 
 $string['lookforupdates'] = 'Look for H5P updates';
