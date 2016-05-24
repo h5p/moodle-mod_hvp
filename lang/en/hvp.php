@@ -184,6 +184,7 @@ $string['hvp:viewresults'] = 'View result for H5P content';
 $string['hvp:getcachedassets'] = 'Get cached H5P content assets';
 $string['hvp:getcontent'] = 'Get/view content of H5P file in course';
 $string['hvp:getexport'] = 'Get export file from H5P in course';
+$string['hvp:updatesavailable'] = 'Get notification when H5P updates are available';
 
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
