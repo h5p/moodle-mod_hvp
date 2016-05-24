@@ -136,7 +136,8 @@ class framework implements \H5PFrameworkInterface {
         $local_file = $local_folder . '.h5p';
 
         if (!\download_file_content($download_url, null, null, false, 300, 20, false, $local_file)) {
-            return get_string('unabletodownloadh5p', 'hvp');
+            return get_string('unabletodownloadh5p', 'hvp',
+                'href="https://h5p.org/update-all-content-types" target="_blank"');
         }
 
         // Add folder and file paths to H5P Core

@@ -97,7 +97,8 @@ $string['availableversion'] = 'Available update';
 $string['usebuttonbelow'] = 'You can use the button below to automatically download and update all of your content types.';
 $string['downloadandupdate'] = 'Download & Update';
 $string['missingh5purl'] = 'Missing URL for H5P file';
-$string['unabletodownloadh5p'] = 'Unable to download H5P file';
+$string['unabletodownloadh5p'] = 'We were unable to download and install the standard H5P content types for you. ' .
+    'You may get them manually by following the install guide at <a {$a}>H5P.org</a>';
 
 // Upload libraries section.
 $string['uploadlibraries'] = 'Upload Libraries';
