@@ -1194,7 +1194,8 @@ class framework implements \H5PFrameworkInterface {
 
         // Get the counts for the given type of event
         $records = $DB->get_records_sql(
-                "SELECT library_name AS name,
+                "SELECT id,
+                        library_name AS name,
                         library_version AS version,
                         num
                    FROM {hvp_counters}

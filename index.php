@@ -13,5 +13,108 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Form for creating new H5P Content
+ *
+ * @package    mod_hvp
+ * @copyright  2016 Joubel AS <contact@joubel.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-echo 'Hellow from index.php!';
+require_once('../../config.php');
+
+// Get Course ID
+$id = optional_param('id', 0, PARAM_INT);
+
+// Set URL
+$url = new \moodle_url('/mod/hvp/index.php', array('id' => $id));
+$PAGE->set_url($url);
+
+// Load Course
+$course = $DB->get_record('course', array('id' => $id));
+if (!$course) {
+  print_error('invalidcourseid');
+}
+
+// Require login
+require_course_login($course);
+$PAGE->set_pagelayout('incourse');
+$coursecontext = context_course::instance($course->id);
+
+// Set title and heading
+$PAGE->set_title($course->shortname . ': ' . get_string('modulenameplural', 'mod_hvp'));
+$PAGE->set_heading($course->fullname);
+
+echo $OUTPUT->header();
+
+// TODO: Prevent loading everything!
+$h5ps = get_all_instances_in_course('hvp', $course);
+
+// Load H5P list data
+$h5ps = $DB->get_records_sql("SELECT cm.id AS coursemodule,
+                                     cw.section,
+                                     cm.visible,
+                                     h.name,
+                                     hl.title AS librarytitle
+                                FROM {course_modules} cm,
+                                     {course_sections} cw,
+                                     {modules} md,
+                                     {hvp} h,
+                                     {hvp_libraries} hl
+                               WHERE cm.course = ?
+                                 AND cm.instance = h.id
+                                 AND cm.section = cw.id
+                                 AND md.name = 'hvp'
+                                 AND md.id = cm.module
+                                 AND hl.id = h.main_library_id
+                            ORDER BY h.name
+                             ", array($course->id));
+if (!$h5ps) {
+    notice(get_string('noh5ps', 'mod_hvp'), "../../course/view.php?id={$course->id}");
+    die;
+}
+
+// Print H5P list
+$table = new html_table();
+$table->attributes['class'] = 'generaltable mod_index';
+
+$table->head = array();
+$table->align = array();
+
+$usesections = course_format_uses_sections($course->format);
+if ($usesections) {
+    // Section name
+    $table->head[] = get_string('sectionname', 'format_'.$course->format);
+    $table->align[] = 'center';
+}
+
+// Activity name
+$table->head[] = get_string('name');
+$table->align[] = 'left';
+
+// Content type
+$table->head[] = 'Content Type';
+$table->align[] = 'left';
+
+// Add data rows
+foreach ($h5ps as $h5p) {
+    $row = array();
+
+    if ($usesections) {
+      // Section name
+      $row[] = get_section_name($course, $h5p->section);
+    }
+
+    // Activity name
+    $attrs = ($h5p->visible ? '' : ' class="dimmed"');
+    $row[] = "<a href=\"view.php?id={$h5p->coursemodule}\"{$attrs}>{$h5p->name}</a>";
+
+    // Activity type
+    $row[] = $h5p->librarytitle;
+
+    $table->data[] = $row;
+}
+
+echo html_writer::table($table);
+
+echo $OUTPUT->footer();

@@ -23,7 +23,7 @@ Brukerinteraksjoner og poeng spores vha xAPI og er tilgjengelig gjennom Moodles 
 
 Du kan legge til eksisterende interaktivt H5P-innhold fra andre nettsider ved å laste opp en .h5p-fil. Du kan lage og laste ned .h5p-filer på feks h5p.org';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
-$string['modulenameplural'] = 'H5Per';
+$string['modulenameplural'] = 'Interaktivt innhold';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
 $string['intro'] = 'Introduksjon';

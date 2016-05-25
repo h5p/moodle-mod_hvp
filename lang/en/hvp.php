@@ -23,7 +23,7 @@ User interactions and scores are tracked using xAPI and are available through th
 
 You add interactive H5P content by uploading a .h5p file. You can create and download .h5p files on h5p.org';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
-$string['modulenameplural'] = 'H5Ps';
+$string['modulenameplural'] = 'Interactive Content';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
 $string['intro'] = 'Introduction';
@@ -55,13 +55,14 @@ $string['confirmdialogheader'] = 'Confirm action';
 $string['confirmdialogbody'] = 'Please confirm that you wish to proceed. This action is not reversible.';
 $string['cancellabel'] = 'Cancel';
 $string['confirmlabel'] = 'Confirm';
+$string['noh5ps'] = 'There\'s no interactive content available for this course.';
 
 // Update message email for admin
 $string['messageprovider:updates'] = 'Notification of available H5P updates';
 $string['updatesavailabletitle'] = 'New H5P updates are available';
 $string['updatesavailablemsgpt1'] = 'There are updates available for the H5P content types you\'ve installed on your Moodle site.';
 $string['updatesavailablemsgpt2'] = 'Head over to the page linked to below for further instructions.';
-$string['updatesavailablemsgpt3'] = 'The latest update was release on: {$a}';
+$string['updatesavailablemsgpt3'] = 'The latest update was released on: {$a}';
 $string['updatesavailablemsgpt4'] = 'Your are running a version from: {$a}';
 
 $string['lookforupdates'] = 'Look for H5P updates';
@@ -185,6 +186,7 @@ $string['hvp:viewresults'] = 'View result for H5P content';
 $string['hvp:getcachedassets'] = 'Get cached H5P content assets';
 $string['hvp:getcontent'] = 'Get/view content of H5P file in course';
 $string['hvp:getexport'] = 'Get export file from H5P in course';
+$string['hvp:updatesavailable'] = 'Get notification when H5P updates are available';
 
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
@@ -260,7 +262,7 @@ $string['welcomegettingstarted'] =
     'To get started with H5P and Moodle take a look at our ' .
     '<a {$a->moodle_tutorial}>tutorial</a> and check out the ' .
     '<a {$a->example_content}>example content</a> at H5P.org for inspiration.<br>' .
-    'The most popuplar content types have been installed for your convenience!' .
+    'The most popuplar content types have been installed for your convenience!';
 $string['welcomecommunity'] =
     'We hope you will enjoy H5P and get engaged in our growing community through our ' .
     '<a {$a->forums}>forums</a> and chat room ' .

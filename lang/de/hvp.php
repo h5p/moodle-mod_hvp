@@ -53,10 +53,17 @@ $string['confirmdialogbody'] = 'Zum Fortfahren bestätigen. Dieser Vorgang kann 
 $string['cancellabel'] = 'Abbrechen';
 $string['confirmlabel'] = 'Bestätigen';
 
+// Update message email for admin
+$string['messageprovider:updates'] = 'Benachrichtigung über verfügbare H5P Aktualisierungen';
+$string['updatesavailabletitle'] = 'Neue H5P Aktualisierungen sind verfügbar';
+$string['updatesavailablemsgpt1'] = 'Für die auf dieser Moodle Seite installierten H5P Inhaltstypen sind Aktualisierungen verfügbar.';
+$string['updatesavailablemsgpt2'] = 'Für weitere Informationen bitte dem Link unten folgen.';
+$string['updatesavailablemsgpt3'] = 'Das letzte Update wurde freigegeben am: {$a}';
+$string['updatesavailablemsgpt4'] = 'Installiert ist die Verion vom: {$a}';
+
 $string['lookforupdates'] = 'Nach H5P Aktualisierungen suchen';
 $string['removetmpfiles'] = 'Entfernen alter temporärer H5P Dateien';
 $string['removeoldlogentries'] = 'Entfernen alter H5P Logdateien';
-
 
 // Admin settings.
 $string['displayoptions'] = 'Optionen anzeigen';
@@ -71,11 +78,23 @@ $string['externalcommunication_help'] = 'Die Entwicklung von H5P durch die Über
 $string['enablesavecontentstate'] = 'Status des Inhalts speichern';
 $string['enablesavecontentstate_help'] = 'Automatisch den Status des interaktiven Inhalts für jeden Nutzer speichern. Das bedeutet, dass die Nutzer da weitermachen können, wo sie aufgehört haben.';
 $string['contentstatefrequency'] = 'Häufigkeit des Speicherns';
-$string['contentstatefrequency_help'] = 'Wie oft soll der Nutzer den Inhalt (in Sekunden) speichern? Bei Problemen mit zu vielen AJAX Anfragen erhöhen.';
+$string['contentstatefrequency_help'] = 'Wie oft (in Sekunden) soll der Inhalt des Nutzers automatisch gespeichert werden? Bei Problemen mit zu vielen AJAX Anfragen erhöhen.';
 
 // Admin menu.
 $string['settings'] = 'H5P Einstellungen';
 $string['libraries'] = 'H5P Bibliotheken';
+
+// Update libraries section.
+$string['updatelibraries'] = 'Alle Bibliotheken installieren';
+$string['updatesavailable'] = 'Es sind Aktualisierungen für die H5P Inhaltstypen vorhanden.';
+$string['whyupdatepart1'] = 'Informationen, warum es wichtig ist und welche Vorteile es bringt, zu aktualieren, sind unter "<a {$a}>Warum H5P aktualisieren?</a>" verfügbar.';
+$string['whyupdatepart2'] = 'Auf dieser Seite sind außerdem auch die verschiedenen Änderungsprotokolle. In diesen werden die neuesten Features und die behobenen Fehler aufgelistet.';
+$string['currentversion'] = 'Aktuelle Version';
+$string['availableversion'] = 'Verfügbare Aktualisierung';
+$string['usebuttonbelow'] = 'Mit dem Button unten können automatisch alle Inhaltstypen heruntergeladen und aktualisert werden.';
+$string['downloadandupdate'] = 'Herunterladen & Aktualisieren';
+$string['missingh5purl'] = 'Die URL für die H5P Datei fehlt';
+$string['unabletodownloadh5p'] = 'Herunterladen der H5P Datei nicht möglich';
 
 // Upload libraries section.
 $string['uploadlibraries'] = 'Bibliotheken hochladen';
@@ -154,12 +173,12 @@ $string['missingcontentuserdata'] = 'Fehler: Konnte den Nutzerinhalt nicht finde
 $string['hvp:addinstance'] = 'Neue H5P Aktivität hinzufügen';
 $string['hvp:restrictlibraries'] = 'H5P Bibliothek beschränken';
 $string['hvp:updatelibraries'] = 'Aktualisieren einer H5P Bibliothek';
-$string['hvp:userestrictedlibraries'] = 'Use restricted H5P libraries';
+$string['hvp:userestrictedlibraries'] = 'Verwendung eingeschränkter H5P Bibliotheken';
 $string['hvp:deletecontentuserdata'] = 'H5P Nutzerinhalt löschen';
 $string['hvp:savecontentuserdata'] = 'H5P Nutzerinhalt speichern';
 $string['hvp:saveresults'] = 'Ergebnis des H5P Inhalts speichern';
 $string['hvp:viewresults'] = 'Ergebnis des H5P Inhalts ansehen';
-$string['hvp:getcachedassets'] = 'Get cached H5P content assets';
+$string['hvp:getcachedassets'] = 'Erhalte zwischengespeicherte H5P Inhaltswerte';
 $string['hvp:getcontent'] = 'H5P Dateiinhalt im Kurs verwenden/ansehen';
 $string['hvp:getexport'] = 'Exportierte H5P Datei in Kurs verwenden';
 
@@ -235,10 +254,9 @@ $string['couldnotcopy'] = 'Konnte die Datei nicht kopieren.';
 $string['welcomeheader'] = 'Willkommen in der Welt von H5P!';
 $string['welcomegettingstarted'] =
     'Um mit H5P und Moodle zu starten, befindet sich hier ein ' .
-    '<a {$a->moodle_tutorial}>Tutorial</a> and gibt es ' .
-    '<a {$a->example_content}>eBeispielinhalte</a> auf H5P.org als Inspiration.<br>' .
-    'Es können nur die gewünschten Inhaltstypen heruntergeladen werden, oder ' .
-    '<a {$a->update_all_content_types}>alle empfohlenen</a>.';
+    '<a {$a->moodle_tutorial}>Tutorial</a> und es gibt' .
+    '<a {$a->example_content}>Beispielinhalte</a> auf H5P.org als Inspiration.<br>' .
+    'Für das bestmögliche Erlebnis wurden die beliebtesten Inhaltstypen installiert!';
 $string['welcomecommunity'] =
     'Wir hoffen, dass H5P gefällt und bieten die Möglichkeit, im ' .
     '<a {$a->forums}>Forum</a> und dem Chat-Room ' .
