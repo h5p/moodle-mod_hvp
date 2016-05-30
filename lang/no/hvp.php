@@ -153,7 +153,6 @@ $string['hvp:addinstance'] = 'Legg til en ny H5P-aktivitet';
 $string['hvp:restrictlibraries'] = 'Begrense et H5P-bibliotek';
 $string['hvp:updatelibraries'] = 'Oppdatere versjonen til et H5P-bibliotek';
 $string['hvp:userestrictedlibraries'] = 'Bruke begrenset H5P-bibliotek';
-$string['hvp:deletecontentuserdata'] = 'Slette H5P-brukerdata';
 $string['hvp:savecontentuserdata'] = 'Lagre H5P-brukerdata';
 $string['hvp:saveresults'] = 'Lagre resultater for H5P-innhold';
 $string['hvp:viewresults'] = 'Vise resultater for H5P-innhold';
@@ -164,7 +163,6 @@ $string['hvp:getexport'] = 'Tilgang til eksportfil fra H5P i kurs';
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'Du har ikke tillatelse til å oppgradere bibliotek.';
 $string['nopermissiontorestrict'] = 'Du har ikke tillatelse til å begrense tilgang til bibliotek.';
-$string['nopermissiontodeletecontentuserdata'] = 'Du har ikke tillatelse til å slete brukerdata.';
 $string['nopermissiontosavecontentuserdata'] = 'Du har ikke tillatelse til å lagre brukerdata.';
 $string['nopermissiontosaveresult'] = 'Du har ikke tillatelse til å lagre resultater for dette innholdet.';
 $string['nopermissiontoviewresult'] = 'Du har ikke tillatelse til å se resultater for dette innholdet.';

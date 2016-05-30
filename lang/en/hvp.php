@@ -178,7 +178,6 @@ $string['hvp:addinstance'] = 'Add a new H5P Activity';
 $string['hvp:restrictlibraries'] = 'Restrict a H5P library';
 $string['hvp:updatelibraries'] = 'Update the version of an H5P library';
 $string['hvp:userestrictedlibraries'] = 'Use restricted H5P libraries';
-$string['hvp:deletecontentuserdata'] = 'Delete H5P content user data';
 $string['hvp:savecontentuserdata'] = 'Save H5P content user data';
 $string['hvp:saveresults'] = 'Save result for H5P content';
 $string['hvp:viewresults'] = 'View result for H5P content';
@@ -190,7 +189,6 @@ $string['hvp:updatesavailable'] = 'Get notification when H5P updates are availab
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
 $string['nopermissiontorestrict'] = 'You do not have permission to restrict libraries.';
-$string['nopermissiontodeletecontentuserdata'] = 'You do not have permission to delete content user data.';
 $string['nopermissiontosavecontentuserdata'] = 'You do not have permission to save content user data.';
 $string['nopermissiontosaveresult'] = 'You do not have permission to save result for this content.';
 $string['nopermissiontoviewresult'] = 'You do not have permission to view results for this content.';
