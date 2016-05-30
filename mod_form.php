@@ -127,7 +127,7 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         // Set editor defaults
         $defaultvalues['h5plibrary'] = ($content === null ? 0 : H5PCore::libraryToString($content['library']));
-        $defaultvalues['h5pparams'] = ($content === null ? '{}' : $defaultvalues['filtered']);
+        $defaultvalues['h5pparams'] = ($content === null ? '{}' : $core->filterParameters($content));
 
         // Add required editor assets.
         require_once 'locallib.php';
