@@ -67,26 +67,17 @@ class content_user_data {
 
             $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
 
-            // Delete user data.
+            // Check permissions
+            if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
+                \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
+                http_response_code(403);
+                exit;
+            }
+
             if ($data === '0') {
-
-                // Check permissions
-                if (!has_capability('mod/hvp:deletecontentuserdata', $context)) {
-                    \H5PCore::ajaxError(get_string('nopermissiontodeletecontentuserdata', 'hvp'));
-                    http_response_code(403);
-                    exit;
-                }
-
+                // Delete user data.
                 self::delete_user_data($content_id, $sub_content_id, $data_id);
             } else {
-
-                // Check permissions
-                if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
-                    \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
-                    http_response_code(403);
-                    exit;
-                }
-
                 // Save user data.
                 self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
             }

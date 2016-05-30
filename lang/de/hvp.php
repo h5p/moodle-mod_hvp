@@ -174,7 +174,6 @@ $string['hvp:addinstance'] = 'Neue H5P Aktivität hinzufügen';
 $string['hvp:restrictlibraries'] = 'H5P Bibliothek beschränken';
 $string['hvp:updatelibraries'] = 'Aktualisieren einer H5P Bibliothek';
 $string['hvp:userestrictedlibraries'] = 'Verwendung eingeschränkter H5P Bibliotheken';
-$string['hvp:deletecontentuserdata'] = 'H5P Nutzerinhalt löschen';
 $string['hvp:savecontentuserdata'] = 'H5P Nutzerinhalt speichern';
 $string['hvp:saveresults'] = 'Ergebnis des H5P Inhalts speichern';
 $string['hvp:viewresults'] = 'Ergebnis des H5P Inhalts ansehen';
@@ -185,7 +184,6 @@ $string['hvp:getexport'] = 'Exportierte H5P Datei in Kurs verwenden';
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'Die nötigen Rechte, um die Bibliothek zu aktualisieren sind nicht vorhanden.';
 $string['nopermissiontorestrict'] = 'Die nötigen Rechte, um Bibliotheken zu beschränken sind nicht vorhanden.';
-$string['nopermissiontodeletecontentuserdata'] = 'Die nötigen Rechte, um Nutzerinhalte zu löschen sind nicht vorhanden.';
 $string['nopermissiontosavecontentuserdata'] = 'Die nötigen Rechte, um Nutzerinhalte zu speichern sind nicht vorhanden.';
 $string['nopermissiontosaveresult'] = 'Die nötigen Rechte, um die Ergebnisse dieses Inhalts zu speichern sind nicht vorhanden.';
 $string['nopermissiontoviewresult'] = 'Die nötigen Rechte, um die Ergebnisse dieses Inhalts anzusehen sind nicht vorhanden.';
