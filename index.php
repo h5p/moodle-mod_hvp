@@ -47,11 +47,8 @@ $PAGE->set_heading($course->fullname);
 
 echo $OUTPUT->header();
 
-// TODO: Prevent loading everything!
-$h5ps = get_all_instances_in_course('hvp', $course);
-
 // Load H5P list data
-$h5ps = $DB->get_records_sql("SELECT cm.id AS coursemodule,
+$rawh5ps = $DB->get_records_sql("SELECT cm.id AS coursemodule,
                                      cw.section,
                                      cm.visible,
                                      h.name,
@@ -67,11 +64,29 @@ $h5ps = $DB->get_records_sql("SELECT cm.id AS coursemodule,
                                  AND md.name = 'hvp'
                                  AND md.id = cm.module
                                  AND hl.id = h.main_library_id
-                            ORDER BY h.name
                              ", array($course->id));
-if (!$h5ps) {
+if (!$rawh5ps) {
     notice(get_string('noh5ps', 'mod_hvp'), "../../course/view.php?id={$course->id}");
     die;
+}
+
+$modinfo = get_fast_modinfo($course, NULL);
+if (empty($modinfo->instances['hvp'])) {
+  $h5ps = $rawh5ps;
+}
+else {
+  // Lets try to order these bad boys
+  $h5ps = array();
+  foreach($modinfo->instances['hvp'] as $cm) {
+    if (!$cm->uservisible || !isset($rawh5ps[$cm->id])) {
+      continue; // Not visible or not found
+    }
+    if (!empty($cm->extra)) {
+      $rawh5ps[$cm->id]->extra = $cm->extra;
+    }
+    $h5ps[] = $rawh5ps[$cm->id];
+    print $cm->id;
+  }
 }
 
 // Print H5P list
