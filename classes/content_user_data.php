@@ -43,7 +43,7 @@ class content_user_data {
 
         // Query String Parameters.
         $content_id = required_param('content_id', PARAM_INT);
-        $data_id = required_param('data_type', PARAM_ALPHA);
+        $data_id = required_param('data_type', PARAM_RAW);
         $sub_content_id = required_param('sub_content_id', PARAM_INT);
 
         // Form Data.
@@ -65,7 +65,14 @@ class content_user_data {
                 exit;
             }
 
-            $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
+            // Use context id if supplied
+            $context_id = optional_param('contextId', null, PARAM_INT);
+            if ($context_id) {
+                $context = \context::instance_by_id($context_id);
+            }
+            else { // Otherwise try to find it from content id
+                $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
+            }
 
             // Delete user data.
             if ($data === '0') {
