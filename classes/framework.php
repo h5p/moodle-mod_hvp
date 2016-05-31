@@ -281,7 +281,7 @@ class framework implements \H5PFrameworkInterface {
                 'Invalid language file %file in library %library' => 'invalidlanguagefile',
                 'Invalid language file %languageFile has been included in the library %name' => 'invalidlanguagefile2',
                 'The file "%file" is missing from library: "%name"' => 'missinglibraryfile',
-                'The library "%libraryName" requires H5P %requiredVersion, but only H5P %coreApi is installed.' => 'missingcoreversion',
+                'The system was unable to install the <em>%component</em> component from the package, it requires a newer version of the H5P plugin. This site is currently running version %current, whereas the required version is %required or higher. You should consider upgrading and then try again.' => 'missingcoreversion',
                 "Invalid data provided for %property in %library. Boolean expected." => 'invalidlibrarydataboolean',
                 "Invalid data provided for %property in %library" => 'invalidlibrarydata',
                 "Can't read the property %property in %library" => 'invalidlibraryproperty',

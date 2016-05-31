@@ -207,7 +207,6 @@ $string['invalidsemanticsjson'] = 'Ungültige semantics.json Datei wurde in die 
 $string['invalidlanguagefile'] = 'Ungültige Sprachdatei {$a->%file} in Bibliothek {$a->%library}';
 $string['invalidlanguagefile2'] = 'Ungültige Sprachdatei {$a->%languageFile} wurde in die Bibliothek {$a->%name} eingefügt';
 $string['missinglibraryfile'] = 'Die Datei "{$a->%file}" fehlt in der Bibliothek "{$a->%name}"';
-$string['missingcoreversion'] = 'Die Bibliothek "{$a->%libraryName}" benötigt H5P {$a->%requiredVersion}, aber es ist nur H5P {$a->%coreApi} installiert.';
 $string['invalidlibrarydataboolean'] = 'Ungültige Daten für {$a->%property} in {$a->%library}. Boolean wurde erwartet.';
 $string['invalidlibrarydata'] = 'Ungültige Daten für {$a->%property} in {$a->%library}';
 $string['invalidlibraryproperty'] = 'Kann das Merkmal {$a->%property} in {$a->%library} nicht lesen';
