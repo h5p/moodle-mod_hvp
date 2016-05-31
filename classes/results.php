@@ -146,7 +146,7 @@ class results {
 
         // Execute query and get results
         return $this->get_sql_results("
-                SELECT i.id,
+                SELECT g.id,
                        {$fields}
                        g.rawgrade,
                        g.rawgrademax,
