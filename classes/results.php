@@ -98,7 +98,7 @@ class results {
         $rows = array();
         foreach ($results as $result)  {
             $rows[] = array(
-                "{$result->firstname} {$result->lastname}",
+                fullname($result),
                 (int) $result->rawgrade,
                 (int) $result->rawgrademax,
                 userdate($result->timemodified)
@@ -175,7 +175,7 @@ class results {
         $where = 'WHERE ' . implode(' AND ', $where);
         $from = $this->get_from_sql();
 
-        return (int) $DB->get_field_sql("SELECT COUNT(i.id) {$from} {$where}", $args);
+        return (int) $DB->get_field_sql("SELECT COUNT(i.id) {$from} {$join} {$where}", $args);
     }
 
     /**
@@ -237,9 +237,8 @@ class results {
         $where = array("i.iteminstance = ?");
         $args = array($this->content_id);
         if (isset($this->filters[0])) {
-            $where[] = '(' . $DB->sql_like('u.firstname', '?', false) . ' OR ' .
-                             $DB->sql_like('u.lastname', '?', false) . ')';
-            $args[] = '%' . $this->filters[0] . '%';
+            $where[] = $DB->sql_like($DB->sql_fullname('u.firstname', 'u.lastname'), '?', false);
+
             $args[] = '%' . $this->filters[0] . '%';
         }
         $order = array((object) array(
