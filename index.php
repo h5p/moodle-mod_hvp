@@ -85,7 +85,6 @@ else {
       $rawh5ps[$cm->id]->extra = $cm->extra;
     }
     $h5ps[] = $rawh5ps[$cm->id];
-    print $cm->id;
   }
 }
 
