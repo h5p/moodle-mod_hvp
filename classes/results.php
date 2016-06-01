@@ -98,7 +98,13 @@ class results {
         $rows = array();
         foreach ($results as $result)  {
             $rows[] = array(
-                fullname($result),
+                \html_writer::link(
+                    new \moodle_url('/user/view.php', array(
+                        'id' => $result->user_id,
+                        'course' => $course
+                    )),
+                    \fullname($result)
+                ),
                 (int) $result->rawgrade,
                 (int) $result->rawgrademax,
                 userdate($result->timemodified)
