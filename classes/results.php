@@ -107,7 +107,7 @@ class results {
                 ),
                 (int) $result->rawgrade,
                 (int) $result->rawgrademax,
-                userdate($result->timemodified)
+                date('Y/m/d – H:i', $result->timemodified)
             );
         }
 
