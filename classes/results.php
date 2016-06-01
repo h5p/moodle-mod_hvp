@@ -206,9 +206,10 @@ class results {
 
         $dir = ($this->orderDir ? 'ASC' : 'DESC');
         if ($field === 'u.firstname') {
-            // Order by extra field for name
-            $field .= " {$dir}, u.lastname";
+            // Order by all user name fields
+            $field = implode(" {$dir}, ", self::get_ordered_user_name_fields());
         }
+
         return "ORDER BY {$field} {$dir}";
     }
 
@@ -222,6 +223,35 @@ class results {
     }
 
     /**
+     * Get all user name fields in display order.
+     *
+     * @param string $prefix Optional table prefix to prepend to all fields
+     * @return array
+     */
+    public static function get_ordered_user_name_fields($prefix = 'u.') {
+        static $ordered;
+
+        if (empty($ordered)) {
+            $available = \get_all_user_name_fields();
+            $displayname = \fullname((object)$available);
+            if (empty($displayname)) {
+                $ordered = array("{$prefix}firstname", "{$prefix}lastname");
+            }
+            else {
+                // Find fields in order
+                $matches = array();
+                preg_match_all('/' . implode('|', $available) . '/', $displayname, $matches);
+                $ordered = $matches[0];
+                foreach ($ordered as $index => $value) {
+                    $ordered[$index] = "{$prefix}{$value}";
+                }
+            }
+        }
+
+        return $ordered;
+    }
+
+    /**
      * Get the different parts needed to create the SQL for getting results
      * belonging to a specifc content.
      * (An alternative to this could be getting all the results for a
@@ -232,14 +262,34 @@ class results {
     protected function get_content_sql() {
         global $DB;
 
-        $fields = " u.id AS user_id, u.firstname, u.lastname,";
+        $usernamefields = implode(', ', self::get_ordered_user_name_fields());
+        $fields = " u.id AS user_id, {$usernamefields}, ";
         $join = " LEFT JOIN {user} u ON u.id = g.userid";
         $where = array("i.iteminstance = ?");
         $args = array($this->content_id);
-        if (isset($this->filters[0])) {
-            $where[] = $DB->sql_like($DB->sql_fullname('u.firstname', 'u.lastname'), '?', false);
 
-            $args[] = '%' . $this->filters[0] . '%';
+        if (isset($this->filters[0])) {
+            $keywordswhere = array();
+
+            // Split up keywords using whitespace and comma
+            foreach (preg_split("/[\s,]+/", $this->filters[0]) as $keyword) {
+                // Search all user name fields
+                $usernamewhere = array();
+                foreach (self::get_ordered_user_name_fields() as $usernamefield) {
+                    $usernamewhere[] = $DB->sql_like($usernamefield, '?', false);
+                    $args[] = '%' . $keyword . '%';
+                }
+
+                // Add user name fields where to keywords where
+                if (!empty($usernamewhere)) {
+                    $keywordswhere[] = '(' . implode(' OR ', $usernamewhere) . ')';
+                }
+            }
+
+            // Add keywords where to SQL where
+            if (!empty($keywordswhere)) {
+                $where[] = '(' . implode(' AND ', $keywordswhere) . ')';
+            }
         }
         $order = array((object) array(
             'name' => 'u.firstname',
