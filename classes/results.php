@@ -105,9 +105,9 @@ class results {
                     )),
                     \fullname($result)
                 ),
-                (int) $result->rawgrade,
-                (int) $result->rawgrademax,
-                date('Y/m/d – H:i', $result->timemodified)
+                $result->rawgrade === null ? '—' : (int) $result->rawgrade,
+                $result->rawgrade === null ? '—' : (int) $result->rawgrademax,
+                empty($result->timemodified) ? '—' : date('Y/m/d – H:i', $result->timemodified)
             );
         }
 
