@@ -180,6 +180,7 @@ function hvp_add_editor_assets($id = null) {
     $context = \context_course::instance($COURSE->id);
     $filespathbase = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp/";
     $contentvalidator = $core = \mod_hvp\framework::instance('contentvalidator');
+    $editorajaxtoken = \H5PCore::createToken('editorajax');
     $settings['editor'] = array(
       'filesPath' => $filespathbase . ($id ? "content/{$id}" : 'editor'),
       'fileIcon' => array(
@@ -187,14 +188,10 @@ function hvp_add_editor_assets($id = null) {
         'width' => 50,
         'height' => 50,
       ),
-      'ajaxPath' => $url . 'ajax.php?action=',
+      'ajaxPath' => "{$url}ajax.php?contextId={$context->id}&token={$editorajaxtoken}&action=",
       'libraryUrl' => $url . 'editor/',
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
-      'assets' => $assets,
-      'uploadParams' => array(
-        'token' => \H5PCore::createToken('editorfileuploads'),
-        'contextId' => $context->id
-      )
+      'assets' => $assets
     );
 
     if ($id !== null) {
