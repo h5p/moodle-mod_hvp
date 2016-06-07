@@ -35,7 +35,7 @@ require_once('autoloader.php');
 function hvp_get_core_settings() {
     global $USER, $CFG, $COURSE;
 
-    $basepath = $CFG->sessioncookiepath;
+    $basepath = $CFG->httpswwwroot . '/';
     $ajaxpath = $basepath . 'mod/hvp/ajax.php?action=';
 
     $systemcontext = \context_system::instance();
@@ -178,7 +178,7 @@ function hvp_add_editor_assets($id = null) {
 
     // Add JavaScript settings
     $context = \context_course::instance($COURSE->id);
-    $filespathbase = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp/";
+    $filespathbase = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/";
     $contentvalidator = $core = \mod_hvp\framework::instance('contentvalidator');
     $settings['editor'] = array(
       'filesPath' => $filespathbase . ($id ? "content/{$id}" : 'editor'),
@@ -372,7 +372,7 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
     $context = \context_system::instance();
     $libraryfoldername = "{$library->name}-{$library->version->major}.{$library->version->minor}";
     if (\mod_hvp\file_storage::fileExists($context->id, 'libraries', '/' . $libraryfoldername . '/', 'upgrades.js')) {
-        $basepath = $CFG->sessioncookiepath;
+        $basepath = $CFG->httpswwwroot . '/';
         $library->upgradesScript = "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/upgrades.js";
     }
 
