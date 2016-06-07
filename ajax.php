@@ -221,7 +221,7 @@ switch($action) {
         global $DB;
         // TODO: Check permissions
 
-        if (!\H5PCore::validToken('editorfileuploads', required_param('token', PARAM_RAW))) {
+        if (!\H5PCore::validToken('editorajax', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
             exit;
         }
