@@ -54,7 +54,7 @@ class framework implements \H5PFrameworkInterface {
             $fs = new \mod_hvp\file_storage();
 
             $context = \context_system::instance();
-            $url = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
+            $url = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp";
 
             $language = self::get_language();
 

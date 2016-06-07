@@ -82,7 +82,7 @@ $export = '';
 if (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true) {
     // Find course context.
     $context = \context_course::instance($course->id);
-    $hvppath = "{$CFG->sessioncookiepath}pluginfile.php/{$context->id}/mod_hvp";
+    $hvppath = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp";
 
     $exportfilename = ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p';
     $export = "{$hvppath}/exports/{$exportfilename}";
