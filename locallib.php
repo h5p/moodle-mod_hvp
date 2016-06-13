@@ -35,19 +35,20 @@ require_once('autoloader.php');
 function hvp_get_core_settings() {
     global $USER, $CFG, $COURSE;
 
-    $basepath = $CFG->httpswwwroot . '/';
-    $ajaxpath = $basepath . 'mod/hvp/ajax.php?action=';
-
     $systemcontext = \context_system::instance();
     $coursecontext = \context_course::instance($COURSE->id);
+
+    $basepath = $CFG->httpswwwroot . '/';
+    $ajaxpath = "{$basepath}mod/hvp/ajax.php?contextId={$coursecontext->id}&token=";
+
     $settings = array(
         'baseUrl' => $basepath,
         'url' => "{$basepath}pluginfile.php/{$coursecontext->id}/mod_hvp",
         'libraryUrl' => "{$basepath}pluginfile.php/{$systemcontext->id}/mod_hvp/libraries",
         'postUserStatistics' => true,
         'ajax' => array(
-            'setFinished' => $ajaxpath . 'set_finished',
-            'contentUserData' => $ajaxpath . 'contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
+            'setFinished' => $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished',
+            'contentUserData' => $ajaxpath . \H5PCore::createToken('contentuserdata') . '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId',
         ),
         'tokens' => array(
           'result' => \H5PCore::createToken('result'),
