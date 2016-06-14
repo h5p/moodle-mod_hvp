@@ -60,7 +60,7 @@ class content_user_data {
         if ($data !== NULL && $pre_load !== NULL && $invalidate !== NULL) {
 
             // Validate token
-            if (!\H5PCore::validToken('contentuserdata', filter_input(INPUT_POST, 'token'))) {
+            if (!\H5PCore::validToken('contentuserdata', required_param('token', PARAM_RAW))) {
                 \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
                 exit;
             }
