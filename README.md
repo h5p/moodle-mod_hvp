@@ -1,27 +1,62 @@
 # H5P Moodle Plugin
 
-This is a prototype under development.
+This is the 0.3-beta version of the H5P plugin for Moodle. That means that this
+version is feature complete but you might encounter bugs or issues that will
+not be present in the final version.
+
+Create and add rich content inside your LMS for free. Some examples of what you
+get with H5P are Interactive Video, Quizzes, Collage and Timeline.
+
+## Description
+
+One of the great benefits with using H5P is that it gives you access to lots of
+different [interactive content types](https://h5p.org/content-types-and-applications).
+
+Another great benefit with H5P is that it allows you to easily share and reuse
+content. To reuse content, you just download the H5P you would like to edit and
+make your changes – e.g. translate to a new language or adjust it to a new
+situation.
+
+H5P is:
+
+* Open Source
+* Free to Use
+* HTML5
+* Responsive
+
+The H5P community is actively contributing to improve H5P. Updates and new
+features are continuously made available on the community portal
+[H5P.org](https://h5p.org).
+
+View our [setup for Moodle](https://h5p.org/moodle) to get information on how
+to get started with H5P.
 
 ## Install
 
+### Beta Version
+If you can't wait for the final release or simply wish to help test the plugin,
+you can download the beta version.
+Here is an example. Remember to replace the version number with the latest from
+the [releases](https://github.com/h5p/h5p-moodle-plugin/releases) page:
+```
+git clone --branch 0.3-beta https://github.com/h5p/h5p-moodle-plugin.git hvp && cd hvp && git submodule update --init
+```
+
+It's not recommended to download the tag/version from the
+[releases](https://github.com/h5p/h5p-moodle-plugin/releases) page as you would
+also have to download the appropriate version of
+[h5p-php-library](https://github.com/h5p/h5p-php-library/releases) and
+[h5p-editor-php-library](https://github.com/h5p/h5p-php-library/releases) to
+put inside the `library` and `editor` folders.
+
 ### Development Version
-Warning! Using the development version may cause strange bugs, so do not use it for production!
+Warning! Using the development version may cause strange bugs, so do not use it
+for production!
 
 Inside your `moodle/mod` folder you run the following command:
 ```
 git clone https://github.com/h5p/h5p-moodle-plugin.git hvp && cd hvp && git submodule update --init
 ```
-
-### Alpha Versions
-If you can't wait for the final release you can check out one of the test versions.
-Here is an example. Remember to replace the version number with the latest from the [releases](https://github.com/h5p/h5p-moodle-plugin/releases) page:
-```
-git clone --branch 0.2.0 https://github.com/h5p/h5p-moodle-plugin.git hvp && cd hvp && git submodule update --init
-```
-
-Alternatively, you can download the latest tag/version from the [releases](https://github.com/h5p/h5p-moodle-plugin/releases) page.
-However, then you'll also have to download the same version of [h5p-php-library](https://github.com/h5p/h5p-php-library/releases),
-e.g. *moodle-0.2.0*. And extract it into the `moodle/mod/hvp/library` folder.
 
 ### Enabling The Plugin
 In Moodle, go to administrator -> plugin overview, and press 'Update database'.
@@ -34,6 +69,7 @@ Settings can be found at: Site Administration -> Plugins -> Activity Modules -> 
 
 Feel free to contribute by:
 * Submitting translations
-* Testing and creating issues. But remember to check if the issues is already reported before creating a new one.
-Perhaps you can contribute to an already existing issue?
+* Testing and creating issues. But remember to check if the issues is already
+reported before creating a new one. Perhaps you can contribute to an already
+existing issue?
 * Solving issues and submitting code through Pull Requests.
