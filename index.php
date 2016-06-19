@@ -41,6 +41,14 @@ require_course_login($course);
 $PAGE->set_pagelayout('incourse');
 $coursecontext = context_course::instance($course->id);
 
+// Trigger instances list viewed event.
+$params = array(
+    'context' => context_course::instance($course->id)
+);
+$event = \mod_hvp\event\course_module_instance_list_viewed::create($params);
+$event->add_record_snapshot('course', $course);
+$event->trigger();
+
 // Set title and heading
 $PAGE->set_title($course->shortname . ': ' . get_string('modulenameplural', 'mod_hvp'));
 $PAGE->set_heading($course->fullname);
