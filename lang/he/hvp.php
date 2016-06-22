@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['modulename'] = 'תוכן H5P אינטראקטיבי';
+$string['modulename'] = 'תוכן אינטראקטיבי';
 $string['modulename_help'] = 'פעילות H5P מאפשר יצירה של תוכן דינמי ואינטראקטיבי כגון: סרטוני וידאו משובצים בשאלות מסוגים שונים, מצגות הכוללות שאלות מגוונות, משחקוני למידה, שאלות גרירה למיניהן, רב־בררה, ועוד סוגים רבים...
 בנוסף, ניתן ליבא וליצא חבילות לומדה לשימוש חוזר בתכנים קיימים.  הפעילות מבצעת מקב למידה מבוסס על תקן xAPI ומדווחת ציונים לגליון הציונים של ה Moodle.
 ניתן להעלות קבצי h5p ממאגר עצמי הלמידה (OER) של אתר h5p.org';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
-$string['modulenameplural'] = 'תוכן H5P אינטראקטיבי';
+$string['modulenameplural'] = 'תוכן אינטראקטיבי';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
 $string['intro'] = 'הנחיה לתלמידים';
