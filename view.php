@@ -135,6 +135,11 @@ if ($embedtype === 'div') {
 // Print JavaScript settings to page.
 $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
 
+// H5P JS xAPI event listener & Moodle event log dispatcher.
+$jsparams = array('hvpid' => $id, 'courseid' => $course->id,
+    'debug' => $CFG->debug, 'token' => \H5PCore::createToken('logxapievent'));
+$PAGE->requires->js_call_amd('mod_hvp/xapi-stmt-dispatcher', 'init', array($jsparams));
+
 // Print page HTML.
 echo $OUTPUT->header();
 echo '<div class="clearer"></div>';
@@ -161,5 +166,14 @@ if ($embedtype === 'div') {
         '" class="h5p-iframe" data-content-id="' . $content['id'] .
         '" style="height:1px" src="about:blank" frameBorder="0" scrolling="no"></iframe></div>';
 }
+
+$context = \context_module::instance($id);
+// Trigger module viewed event.
+$event = \mod_hvp\event\course_module_viewed::create(array(
+    'objectid' => $cm->instance,
+    'context' => $context
+));
+$event->add_record_snapshot('course_modules', $cm);
+$event->trigger();
 
 echo $OUTPUT->footer();

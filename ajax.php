@@ -251,6 +251,37 @@ switch($action) {
         $file->printResult();
         break;
 
+    case 'logxapievent':
+        // Trigger a Moodle log event for each xAPI statement
+        // that is dispatched by the H5P (hvp) object.
+        if (!\H5PCore::validToken('logxapievent', required_param('token', PARAM_RAW))) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            exit;
+        }
+
+        $hvpid = optional_param('hvpid', null, PARAM_INT);
+        $courseid = optional_param('courseid', null, PARAM_INT);
+        $jsonxapistatement = optional_param('xapistatement', null, PARAM_RAW);
+        $xapistatement = json_decode($jsonxapistatement, true);
+
+        $context = \context_module::instance($hvpid);
+
+        $event = \mod_hvp\event\hvp_xapi::create(array(
+            'objectid' => $hvpid,
+            'context' => $context,
+            'other' => array('statement' => $xapistatement['data']['statement']),
+            'courseid' => $courseid
+        ));
+        $event->trigger();
+
+        // Debugging...
+        if (!empty($CFG->debug) and $CFG->debug >= DEBUG_DEVELOPER) {
+            $msg = "xAPI '" . $xapistatement['data']['statement']['verb']['display']['en-US'] . "' statement dispatched";
+            \H5PCore::ajaxSuccess($msg);
+            http_response_code(200);
+        }
+        break;
+
     /*
      * Throw error if AJAX isnt handeled
      */
