@@ -27,5 +27,5 @@ $plugin->version   = 2016051306;
 $plugin->requires  = 2013051403;
 $plugin->cron      = 0;
 $plugin->component = 'mod_hvp';
-$plugin->maturity  = MATURITY_BETA;
-$plugin->release   = '0.3-beta';
+$plugin->maturity  = MATURITY_RC;
+$plugin->release   = '1.0-rc';
