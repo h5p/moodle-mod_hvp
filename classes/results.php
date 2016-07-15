@@ -161,9 +161,9 @@ class results {
                   {$join}
                   {$where}
                   {$order_by}
-                  LIMIT {$this->limit}
-                  OFFSET {$this->offset}
-                ", $args);
+                ", $args,
+                $this->offset,
+                $this->limit);
     }
 
     /**
@@ -312,8 +312,8 @@ class results {
      * @param array $args Used for placeholders
      * @return array
      */
-    protected function get_sql_results($query, $args) {
+    protected function get_sql_results($query, $args, $limitfrom = 0, $limitnum = 0) {
         global $DB;
-        return $DB->get_records_sql($query, $args);
+        return $DB->get_records_sql($query, $args, $limitfrom, $limitnum);
     }
 }

@@ -121,7 +121,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         }
 
         // Determine default action
-        if ($content === null && $DB->get_field_sql("SELECT id FROM {hvp_libraries} WHERE runnable = 1 LIMIT 1") === false) {
+        if ($content === null && $DB->get_field_sql("SELECT id FROM {hvp_libraries} WHERE runnable = 1", null, IGNORE_MULTIPLE) === false) {
           $defaultvalues['h5paction'] = 'upload';
         }
 
