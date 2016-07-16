@@ -41,7 +41,6 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
-            'manager' => CAP_ALLOW
         )
     ),
 
@@ -49,7 +48,6 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array(
-            'manager' => CAP_ALLOW
         )
     ),
 

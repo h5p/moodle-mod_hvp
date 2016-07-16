@@ -162,4 +162,13 @@ if ($embedtype === 'div') {
         '" style="height:1px" src="about:blank" frameBorder="0" scrolling="no"></iframe></div>';
 }
 
+$context = \context_module::instance($id);
+// Trigger module viewed event.
+$event = \mod_hvp\event\course_module_viewed::create(array(
+    'objectid' => $cm->instance,
+    'context' => $context
+));
+$event->add_record_snapshot('course_modules', $cm);
+$event->trigger();
+
 echo $OUTPUT->footer();

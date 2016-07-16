@@ -1,6 +1,6 @@
 # H5P Moodle Plugin
 
-This is the 0.3-beta version of the H5P plugin for Moodle. That means that this
+This is the 1.0-rc version of the H5P plugin for Moodle. That means that this
 version is feature complete but you might encounter bugs or issues that will
 not be present in the final version.
 

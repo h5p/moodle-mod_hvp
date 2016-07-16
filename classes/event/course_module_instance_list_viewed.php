@@ -15,17 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    mod
- * @subpackage hvp
- * @copyright  Amendor
+ * The mod_hvp instance list viewed event.
+ *
+ * @package    mod_hvp
+ * @copyright  @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_hvp\event;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016051306;
-$plugin->requires  = 2013051403;
-$plugin->cron      = 0;
-$plugin->component = 'mod_hvp';
-$plugin->maturity  = MATURITY_RC;
-$plugin->release   = '1.0-rc';
+/**
+ * The mod_hvp instance list viewed event class.
+ *
+ * @package    mod_hvp
+ * @copyright  @copyright  2016 Joubel AS <contact@joubel.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed
+{
+    // No code required here as the parent class handles it all.
+}
