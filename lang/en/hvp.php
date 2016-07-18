@@ -97,8 +97,10 @@ $string['currentversion'] = 'You are running';
 $string['availableversion'] = 'Available update';
 $string['usebuttonbelow'] = 'You can use the button below to automatically download and update all of your content types.';
 $string['downloadandupdate'] = 'Download & Update';
-$string['missingh5purl'] = 'Missing URL for H5P file';
-$string['unabletodownloadh5p'] = 'Unable to download H5P file';
+$string['missingh5purl'] = 'We were unable to download and install the standard H5P content types for you because of a ' . 
+                           'missing or faulty URL to the package.';
+$string['unabletodownloadh5p'] = 'We were unable to download and install the standard H5P content types for you.';
+$string['downloadh5pmanually'] = 'You may get them manually by following the install guide at <a {$a}>H5P.org</a>';
 
 // Upload libraries section.
 $string['uploadlibraries'] = 'Upload Libraries';
@@ -258,7 +260,8 @@ $string['welcomeheader'] = 'Welcome to the world of H5P!';
 $string['welcomegettingstarted'] =
     'To get started with H5P and Moodle take a look at our ' .
     '<a {$a->moodle_tutorial}>tutorial</a> and check out the ' .
-    '<a {$a->example_content}>example content</a> at H5P.org for inspiration.<br>' .
+    '<a {$a->example_content}>example content</a> at H5P.org for inspiration.<br>';
+$string['welcomeinstalledh5ps'] =
     'The most popuplar content types have been installed for your convenience!';
 $string['welcomecommunity'] =
     'We hope you will enjoy H5P and get engaged in our growing community through our ' .

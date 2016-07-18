@@ -15,9 +15,13 @@ function xmldb_hvp_install() {
     $core->fetchLibrariesMetadata();
 
     // Download default libraries and try to install
+    $installed_h5ps_string = '';
     $error = \mod_hvp\framework::downloadH5pLibraries();
     if ($error !== null) {
       \mod_hvp\framework::messages('error', $error);
+    }
+    else {
+        $installed_h5ps_string = get_string('welcomeinstalledh5ps', 'hvp');
     }
 
     // Print any messages
@@ -27,6 +31,7 @@ function xmldb_hvp_install() {
              'moodle_tutorial' => 'href="https://h5p.org/moodle" target="_blank"',
              'example_content' => 'href="https://h5p.org/content-types-and-applications" target="_blank"'
          )) .
+         $installed_h5ps_string .
          '</p>' .
          '<p>' .
          get_string('welcomecommunity', 'hvp', array(

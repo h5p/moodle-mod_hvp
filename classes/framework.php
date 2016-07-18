@@ -118,6 +118,14 @@ class framework implements \H5PFrameworkInterface {
     public static function downloadH5pLibraries($onlyupdate = false) {
         global $CFG;
 
+        // URL for file to download
+        $download_url = \get_config('mod_hvp', 'update_available_path');
+        if (!$download_url) {
+            return get_string('missingh5purl', 'hvp') . ' ' .
+                   get_string('downloadh5pmanually', 'hvp',
+                       'href="https://h5p.org/update-all-content-types" target="_blank"');
+        }
+
         $update_available = \get_config('mod_hvp', 'update_available');
         $current_update = \get_config('mod_hvp', 'current_update');
         if ($update_available === $current_update) {
@@ -125,18 +133,14 @@ class framework implements \H5PFrameworkInterface {
             return null;
         }
 
-        // URL for file to download
-        $download_url = \get_config('mod_hvp', 'update_available_path');
-        if (!$download_url) {
-            return get_string('missingh5purl', 'hvp');
-        }
-
         // Generate local tmp file path
         $local_folder = $CFG->tempdir . uniqid('/hvp-');
         $local_file = $local_folder . '.h5p';
 
         if (!\download_file_content($download_url, null, null, false, 300, 20, false, $local_file)) {
-            return get_string('unabletodownloadh5p', 'hvp');
+            return get_string('unabletodownloadh5p', 'hvp') . ' ' .
+                   get_string('downloadh5pmanually', 'hvp',
+                       'href="https://h5p.org/update-all-content-types" target="_blank"');
         }
 
         // Add folder and file paths to H5P Core
