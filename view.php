@@ -142,6 +142,7 @@ $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
 
 // Print page HTML.
 echo $OUTPUT->header();
+echo $OUTPUT->heading(format_string($content['title']));
 echo '<div class="clearer"></div>';
 
 // Print any messages.
