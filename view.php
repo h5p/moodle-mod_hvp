@@ -167,7 +167,9 @@ if ($embedtype === 'div') {
         '" style="height:1px" src="about:blank" frameBorder="0" scrolling="no"></iframe></div>';
 }
 
-$context = \context_module::instance($id);
+// Find cm context
+$context = \context_module::instance($cm->id);
+
 // Trigger module viewed event.
 $event = \mod_hvp\event\course_module_viewed::create(array(
     'objectid' => $cm->instance,
