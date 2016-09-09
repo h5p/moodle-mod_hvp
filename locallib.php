@@ -197,6 +197,13 @@ function hvp_add_editor_assets($id = null) {
 
     if ($id !== null) {
       $settings['editor']['nodeVersionId'] = $id;
+
+      // Find cm context
+      $cm = \get_coursemodule_from_instance('hvp', $id);
+      $context = \context_module::instance($cm->id);
+
+      // Override content URL
+      $settings['contents']['cid-'.$id]['contentUrl'] = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/{$id}";
     }
 
     $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
@@ -255,8 +262,8 @@ function hvp_get_cache_buster() {
 function hvp_restrict_library($libraryid, $restrict) {
     global $DB;
     $DB->update_record('hvp_libraries', (object) array(
-    'id' => $libraryid,
-    'restricted' => $restrict ? 1 : 0
+        'id' => $libraryid,
+        'restricted' => $restrict ? 1 : 0
     ));
 }
 

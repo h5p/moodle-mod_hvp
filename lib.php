@@ -259,7 +259,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             break;
 
         case 'content':
-            if ($context->contextlevel != CONTEXT_COURSE) {
+            if ($context->contextlevel != CONTEXT_MODULE) {
                 return false; // Invalid context.
             }
 
@@ -272,13 +272,25 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             break;
 
         case 'exports':
+            if ($context->contextlevel != CONTEXT_MODULE) {
+                return false; // Invalid context.
+            }
+
+            // Check permissions
+            if (!has_capability('mod/hvp:getexport', $context)) {
+                return false;
+            }
+
+            $itemid = 0;
+            break;
+
         case 'editor':
             if ($context->contextlevel != CONTEXT_COURSE) {
                 return false; // Invalid context.
             }
 
             // Check permissions
-            if (!has_capability('mod/hvp:getexport', $context)) {
+            if (!has_capability('mod/hvp:addinstance', $context)) {
                 return false;
             }
 

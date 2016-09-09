@@ -69,13 +69,12 @@ class file_storage implements \H5PFileStorage {
      *  What makes this content unique.
      */
     public function saveContent($source, $id) {
-        global $COURSE;
-
         // Remove any old content.
         $this->deleteContent($id);
 
         // Contents are stored in a course context.
-        $context = \context_course::instance($COURSE->id);
+        $cm = \get_coursemodule_from_instance('hvp', $id);
+        $context = \context_module::instance($cm->id);
         $options = array(
             'contextid' => $context->id,
             'component' => 'mod_hvp',
@@ -95,9 +94,8 @@ class file_storage implements \H5PFileStorage {
      *  Content identifier
      */
     public function deleteContent($id) {
-        global $COURSE;
-
-        $context = \context_course::instance($COURSE->id);
+        $cm = \get_coursemodule_from_instance('hvp', $id);
+        $context = \context_module::instance($cm->id);
         self::deleteFileTree($context->id, 'content', '/', $id);
     }
 
@@ -133,9 +131,8 @@ class file_storage implements \H5PFileStorage {
      *  Where the content folder will be saved
      */
     public function exportContent($id, $target) {
-        global $COURSE;
-
-        $context = \context_course::instance($COURSE->id);
+        $cm = \get_coursemodule_from_instance('hvp', $id);
+        $context = \context_module::instance($cm->id);
         self::exportFileTree($target, $context->id, 'content', '/', $id);
     }
 
@@ -343,8 +340,22 @@ class file_storage implements \H5PFileStorage {
      * Save files uploaded through the editor.
      *
      * @param \H5peditorFile $file
+     * @param int $contentid
+     * @param \stdClass $context Course Context ID
      */
     public function saveFile($file, $contentid, $contextid = null) {
+        global $COURSE;
+
+        if ($contentid !== 0) {
+            // Grab cm context
+            $cm = \get_coursemodule_from_instance('hvp', $contentid);
+            $context = \context_module::instance($cm->id);
+            $contextid = $context->id;
+        }
+
+        // Files not yet related to any activities are stored in a course context
+        // (These are temporary files and should not be part of backups.)
+
         $record = array(
             'contextid' => $contextid,
             'component' => 'mod_hvp',
@@ -374,8 +385,6 @@ class file_storage implements \H5PFileStorage {
      * @param int $toid Target Content ID
      */
     public function cloneContentFile($file, $fromid, $toid) {
-      global $COURSE;
-
       // Determine source file area and item id
       $sourcefilearea = ($fromid === 'editor' ? $fromid : 'content');
       $sourceitemid = ($fromid === 'editor' ? 0 : $fromid);
@@ -391,8 +400,9 @@ class file_storage implements \H5PFileStorage {
           return; // File exists, no need to copy
       }
 
-      // Grab current context
-      $context = \context_course::instance($COURSE->id);
+      // Grab context for cm
+      $cm = \get_coursemodule_from_instance('hvp', $toid);
+      $context = \context_module::instance($cm->id);
 
       // Create new file record
       $record = array(
@@ -545,10 +555,9 @@ class file_storage implements \H5PFileStorage {
      * @param string $file path + name
      */
     private function getFile($filearea, $itemid, $file) {
-        global $COURSE;
-
-        // Grab current context
-        $context = \context_course::instance($COURSE->id);
+        // Grab cm context
+        $cm = \get_coursemodule_from_instance('hvp', $itemid);
+        $context = \context_module::instance($cm->id);
 
         // Load file
         $fs = get_file_storage();

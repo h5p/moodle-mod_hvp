@@ -243,6 +243,7 @@ switch($action) {
             // Save the valid file
             $file_id = $core->fs->saveFile($file, $contentid, $contextid);
 
+            // Track temporary files for later cleanup
             $DB->insert_record_raw('hvp_tmpfiles', array(
                 'id' => $file_id
             ), false, false, true);

@@ -93,6 +93,9 @@ if (empty($export)) {
     $content['disable'] |= \H5PCore::DISABLE_DOWNLOAD;
 }
 
+// Find cm context
+$context = \context_module::instance($cm->id);
+
 // Add JavaScript settings for this content.
 $cid = 'cid-' . $content['id'];
 $settings['contents'][$cid] = array(
@@ -103,6 +106,7 @@ $settings['contents'][$cid] = array(
     'title' => $content['title'],
     'disable' => $content['disable'],
     'url' => "{$CFG->httpswwwroot}/mod/hvp/view.php?id={$id}",
+    'contentUrl' => "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/" . $content['id'],
     'contentUserData' => array(
         0 => \mod_hvp\content_user_data::load_pre_loaded_user_data($content['id'])
     )
