@@ -553,9 +553,17 @@ class file_storage implements \H5PFileStorage {
      * @param string $file path + name
      */
     private function getFile($filearea, $itemid, $file) {
-        // Grab cm context
-        $cm = \get_coursemodule_from_instance('hvp', $itemid);
-        $context = \context_module::instance($cm->id);
+        global $COURSE;
+
+        if ($filearea === 'editor') {
+            // Use Course context
+            $context = \context_course::instance($COURSE->id);
+        }
+        else {
+            // Use CM context
+            $cm = \get_coursemodule_from_instance('hvp', $itemid);
+            $context = \context_module::instance($cm->id);
+        }
 
         // Load file
         $fs = get_file_storage();
