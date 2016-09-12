@@ -344,8 +344,6 @@ class file_storage implements \H5PFileStorage {
      * @param \stdClass $context Course Context ID
      */
     public function saveFile($file, $contentid, $contextid = null) {
-        global $COURSE;
-
         if ($contentid !== 0) {
             // Grab cm context
             $cm = \get_coursemodule_from_instance('hvp', $contentid);
