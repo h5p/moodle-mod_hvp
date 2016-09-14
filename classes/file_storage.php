@@ -65,21 +65,20 @@ class file_storage implements \H5PFileStorage {
      *
      * @param string $source
      *  Path on file system to content directory.
-     * @param int $id
-     *  What makes this content unique.
+     * @param array $content
+     *  Content properties
      */
-    public function saveContent($source, $id) {
+    public function saveContent($source, $content) {
         // Remove any old content.
-        $this->deleteContent($id);
+        $this->deleteContent($content);
 
         // Contents are stored in a course context.
-        $cm = \get_coursemodule_from_instance('hvp', $id);
-        $context = \context_module::instance($cm->id);
+        $context = \context_module::instance($content['coursemodule']);
         $options = array(
             'contextid' => $context->id,
             'component' => 'mod_hvp',
             'filearea' => 'content',
-            'itemid' => $id,
+            'itemid' => $content['id'],
             'filepath' => '/',
         );
 
@@ -90,13 +89,12 @@ class file_storage implements \H5PFileStorage {
     /**
      * Remove content folder.
      *
-     * @param int $id
-     *  Content identifier
+     * @param array $content
+     *  Content properties
      */
-    public function deleteContent($id) {
-        $cm = \get_coursemodule_from_instance('hvp', $id);
-        $context = \context_module::instance($cm->id);
-        self::deleteFileTree($context->id, 'content', '/', $id);
+    public function deleteContent($content) {
+        $context = \context_module::instance($content['coursemodule']);
+        self::deleteFileTree($context->id, 'content', '/', $content['id']);
     }
 
     /**

@@ -201,9 +201,12 @@ function hvp_delete_instance($id) {
         return false;
     }
 
+    // Load CM
+    $cm = \get_coursemodule_from_instance('hvp', $id);
+
     // Delete content
     $h5pstorage = \mod_hvp\framework::instance('storage');
-    $h5pstorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug));
+    $h5pstorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug, 'coursemodule' => $cm->id));
 
     // Get library details
     $library = $DB->get_record_sql(
