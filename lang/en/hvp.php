@@ -83,6 +83,8 @@ $string['enablesavecontentstate'] = 'Save content state';
 $string['enablesavecontentstate_help'] = 'Automatically save the current state of interactive content for each user. This means that the user may pick up where he left off.';
 $string['contentstatefrequency'] = 'Save content state frequency';
 $string['contentstatefrequency_help'] = 'In seconds, how often do you wish the user to auto save their progress. Increase this number if you\'re having issues with many ajax requests';
+$string['enabledlrscontenttypes'] = 'Enable LRS dependent content types';
+$string['enabledlrscontenttypes_help'] = 'Makes it possible to use content types that rely upon a Learning Record Store to function properly, like the Questionnaire content type.';
 
 // Admin menu.
 $string['settings'] = 'H5P Settings';
