@@ -56,6 +56,12 @@ if ($ADMIN->fulltree) {
                     get_string('contentstatefrequency', 'hvp'),
                     get_string('contentstatefrequency_help', 'hvp'), 30, PARAM_INT));
 
+    // Content state.
+    $settings->add(
+            new admin_setting_configcheckbox('mod_hvp/enable_lrs_content_types',
+                    get_string('enabledlrscontenttypes', 'hvp'),
+                    get_string('enabledlrscontenttypes_help', 'hvp'), 0));
+
     // Display options for H5P frame.
     $settings->add(new admin_setting_heading('mod_hvp/display_options', get_string('displayoptions', 'hvp'), ''));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/frame', get_string('enableframe', 'hvp'), '', 1));
