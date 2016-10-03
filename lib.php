@@ -159,7 +159,7 @@ function hvp_save_content($hvp) {
         $params = json_decode($hvp->params);
 
         // Move any uploaded images or files. Determine content dependencies.
-        $editor->processParameters($hvp->id, $hvp->library, $params, isset($oldlib) ? $oldlib : NULL, isset($oldparams) ? $oldparams : NULL);
+        $editor->processParameters($hvp, $hvp->library, $params, isset($oldlib) ? $oldlib : NULL, isset($oldparams) ? $oldparams : NULL);
     }
 
     return $hvp->id;

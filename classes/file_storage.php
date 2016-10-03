@@ -378,9 +378,9 @@ class file_storage implements \H5PFileStorage {
      *
      * @param string $file path + name
      * @param string|int $fromid Content ID or 'editor' string
-     * @param int $toid Target Content ID
+     * @param stdClass $tocontent Target Content
      */
-    public function cloneContentFile($file, $fromid, $toid) {
+    public function cloneContentFile($file, $fromid, $tocontent) {
       // Determine source file area and item id
       $sourcefilearea = ($fromid === 'editor' ? $fromid : 'content');
       $sourceitemid = ($fromid === 'editor' ? 0 : $fromid);
@@ -392,20 +392,19 @@ class file_storage implements \H5PFileStorage {
       }
 
       // Check to make sure source doesn't exist already
-      if ($this->getFile('content', $toid, $file) !== false) {
+      if ($this->getFile('content', $tocontent, $file) !== false) {
           return; // File exists, no need to copy
       }
 
-      // Grab context for cm
-      $cm = \get_coursemodule_from_instance('hvp', $toid);
-      $context = \context_module::instance($cm->id);
+      // Grab context for CM
+      $context = \context_module::instance($tocontent->coursemodule);
 
       // Create new file record
       $record = array(
           'contextid' => $context->id,
           'component' => 'mod_hvp',
           'filearea' => 'content',
-          'itemid' => $toid,
+          'itemid' => $tocontent->id,
           'filepath' => $this->getFilepath($file),
           'filename' => $this->getFilename($file)
       );
@@ -418,11 +417,11 @@ class file_storage implements \H5PFileStorage {
      * Used when saving content.
      *
      * @param string $file path + name
-     * @param int $contentid
+     * @param stdClass $content
      * @return string|int File ID or NULL if not found
      */
-    public function getContentFile($file, $contentid) {
-        $file = $this->getFile('content', $contentid, $file);
+    public function getContentFile($file, $content) {
+        $file = $this->getFile('content', $content, $file);
         return ($file === false ? null : $file->get_id());
     }
 
@@ -431,10 +430,10 @@ class file_storage implements \H5PFileStorage {
      * Used when saving content.
      *
      * @param string $file path + name
-     * @param int $contentid
+     * @param stdClass $content
      */
-    public function removeContentFile($file, $contentid) {
-        $file = $this->getFile('content', $contentid, $file);
+    public function removeContentFile($file, $content) {
+        $file = $this->getFile('content', $content, $file);
         if ($file !== false) {
             $file->delete();
         }
@@ -547,7 +546,7 @@ class file_storage implements \H5PFileStorage {
      * Help make it easy to load content files.
      *
      * @param string $filearea
-     * @param int $itemid
+     * @param int|stdClass $itemid
      * @param string $file path + name
      */
     private function getFile($filearea, $itemid, $file) {
@@ -557,8 +556,13 @@ class file_storage implements \H5PFileStorage {
             // Use Course context
             $context = \context_course::instance($COURSE->id);
         }
+        elseif (is_object($itemid)) {
+            // Grab CM context from item
+            $context = \context_module::instance($itemid->coursemodule);
+            $itemid = $itemid->id;
+        }
         else {
-            // Use CM context
+            // Use item ID to find CM context
             $cm = \get_coursemodule_from_instance('hvp', $itemid);
             $context = \context_module::instance($cm->id);
         }
