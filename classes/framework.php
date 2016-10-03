@@ -1222,4 +1222,9 @@ class framework implements \H5PFrameworkInterface {
         ));
     }
 
+    /**
+     * Implements afterExportCreated
+     */
+    public function afterExportCreated() {
+    }
 }

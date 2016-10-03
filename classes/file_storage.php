@@ -179,21 +179,41 @@ class file_storage implements \H5PFileStorage {
     }
 
     /**
-     * Removes given export file
+     * Get file object for given export file.
      *
      * @param string $filename
+     * @return stdClass Moodle file object
      */
-    public function deleteExport($filename) {
+    private function getExportFile($filename) {
         global $COURSE;
         $context = \context_course::instance($COURSE->id);
 
         // Check if file exists.
         $fs = get_file_storage();
-        $file = $fs->get_file($context->id, 'mod_hvp', 'exports', 0, '/', $filename);
+        return $fs->get_file($context->id, 'mod_hvp', 'exports', 0, '/', $filename);
+    }
+
+    /**
+     * Removes given export file
+     *
+     * @param string $filename
+     */
+    public function deleteExport($filename) {
+        $file = $this->getExportFile($filename);
         if ($file) {
             // Remove old export.
             $file->delete();
         }
+    }
+
+    /**
+     * Check if the given export file exists
+     *
+     * @param string $filename
+     * @return boolean
+     */
+    public function hasExport($filename) {
+      return !! $this->getExportFile($filename);
     }
 
     /**
