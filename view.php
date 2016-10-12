@@ -144,6 +144,11 @@ if ($embedtype === 'div') {
 // Print JavaScript settings to page.
 $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
 
+// H5P JS xAPI event listener & Moodle event log dispatcher.
+$jsparams = array('hvpid' => $id, 'courseid' => $course->id,
+    'debug' => $CFG->debug, 'token' => \H5PCore::createToken('logxapievent'));
+$PAGE->requires->js_call_amd('mod_hvp/xapi-stmt-dispatcher', 'init', array($jsparams));
+
 // Print page HTML.
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($content['title']));
