@@ -71,7 +71,7 @@ switch($action) {
         }
 
         hvp_restrict_library($library_id, $restrict);
-        header('Cache-Control', 'no-cache');
+        header('Cache-Control: no-cache');
         header('Content-Type: application/json');
         echo json_encode(array(
             'url' => (new moodle_url('/mod/hvp/ajax.php', array(
@@ -110,7 +110,7 @@ switch($action) {
 
         $library = hvp_get_library_upgrade_info($library[0], $library[1], $library[2]);
 
-        header('Cache-Control', 'no-cache');
+        header('Cache-Control: no-cache');
         header('Content-Type: application/json');
         print json_encode($library);
 
@@ -136,7 +136,7 @@ switch($action) {
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
             $library_id = required_param('library_id', PARAM_INT);
             $out = hvp_content_upgrade_progress($library_id);
-            header('Cache-Control', 'no-cache');
+            header('Cache-Control: no-cache');
             header('Content-Type: application/json');
             print json_encode($out);
         } else {
