@@ -103,7 +103,7 @@ class framework implements \H5PFrameworkInterface {
         }
 
         // Get current language in Moodle
-        $language = \current_language();
+        $language = str_replace('_', '-', strtolower(\current_language()));
 
         // Try to map
         return isset($map[$language]) ? $map[$language] : $language;
