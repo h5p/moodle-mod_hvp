@@ -149,7 +149,7 @@ function xmldb_hvp_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016051000, 'hvp');
     }
 
-    if ($oldversion < 2016080903) {
+    if ($oldversion < 2016110100) {
 
         // Change context of activity files from COURSE to MODULE.
 
@@ -172,12 +172,15 @@ function xmldb_hvp_upgrade($oldversion) {
             // Need to re-hash pathname after changing context
             $pathnamehash = file_storage::get_pathname_hash($hvp->id, $component, $filearea, $hvp->itemid, $hvp->filepath, $hvp->filename);
 
-            // Update context ID and pathname hash for files
-            $DB->execute("UPDATE {files} SET contextid = {$hvp->id}, pathnamehash = '{$pathnamehash}' WHERE pathnamehash = '{$hvp->pathnamehash}'");
+            // Double check that hash doesn't exist (avoid duplicate entries)
+            if (!$DB->get_field_sql("SELECT contextid FROM {files} WHERE pathnamehash = '{$pathnamehash}'")) {
+              // Update context ID and pathname hash for files
+              $DB->execute("UPDATE {files} SET contextid = {$hvp->id}, pathnamehash = '{$pathnamehash}' WHERE pathnamehash = '{$hvp->pathnamehash}'");
+            }
         }
 
         // Hvp savepoint reached.
-        upgrade_mod_savepoint(true, 2016080903, 'hvp');
+        upgrade_mod_savepoint(true, 2016110100, 'hvp');
     }
 
     return true;
