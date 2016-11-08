@@ -19,7 +19,7 @@
  *
  * @package     mod_hvp
  * @category    backup
- * @copyright   2013 Amendor
+ * @copyright   2016 Joubel AS <contact@joubel.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

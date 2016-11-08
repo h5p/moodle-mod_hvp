@@ -17,7 +17,7 @@
 /**
  * @package    mod
  * @subpackage hvp
- * @copyright  Amendor
+ * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,4 +28,4 @@ $plugin->requires  = 2013051403;
 $plugin->cron      = 0;
 $plugin->component = 'mod_hvp';
 $plugin->maturity  = MATURITY_RC;
-$plugin->release   = '1.0-rc.3';
+$plugin->release   = '1.0-rc.4';
