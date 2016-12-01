@@ -256,5 +256,5 @@ $string['couldnotcopy'] = 'Impossible de copier le fichier.';
 // Welcome messages
 $string['welcomeheader'] = 'Bienvenue dans le monde H5P!';
 $string['welcomegettingstarted'] = 'Pour démarrer avec H5P et Moodle, consultez nos tutoriels <a {$a->moodle_tutorial}>tutorial</a> et testez <a {$a->example_content}>nos exemples</a> sur le site H5P.org pour vous en inspirer.<br>Pour vous simplifier la taĉhe, les modules les plus populaires ont déjà été installés!';
-$string['welcomecommunity'] = 'Nous espérons que vous allez apprécier H5P et rejoindre nos communauté en constante augmentation au travers de nos <a {$a->forums}>forums</a> et notre chat <a {$a->gitter}>H5P sur Gitter</a>';
+$string['welcomecommunity'] = 'Nous espérons que vous allez apprécier H5P et rejoindre notre communauté en constante augmentation au travers de nos <a {$a->forums}>forums</a> et notre chat <a {$a->gitter}>H5P sur Gitter</a>';
 $string['welcomecontactus'] = 'Si vous avez des suggestions, n\'hésitez pas à <a {$a}>nous contacter</a>. Nous prenons toutes les suggestions très sérieuse en considération pour rendre H5P meilleur chaque jour !';
