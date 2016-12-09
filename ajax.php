@@ -133,7 +133,8 @@ switch($action) {
             break;
         }
 
-        if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+        // Because of a confirmed bug in PHP, filter_input(INPUT_SERVER, ...) will return null on some versions of FCGI/PHP (5.4 and probably older versions as well), ref. https://bugs.php.net/bug.php?id=49184
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $library_id = required_param('library_id', PARAM_INT);
             $out = hvp_content_upgrade_progress($library_id);
             header('Cache-Control: no-cache');
