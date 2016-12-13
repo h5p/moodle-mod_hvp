@@ -66,6 +66,11 @@ $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
 
 // Admin settings.
+$string['displayoptionnevershow'] = 'Never show';
+$string['displayoptionalwaysshow'] = 'Always show';
+$string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
+$string['displayoptionauthoron'] = 'Controlled by author, default is on';
+$string['displayoptionauthoroff'] = 'Controlled by author, default is off';
 $string['displayoptions'] = 'Display Options';
 $string['enableframe'] = 'Display action bar and frame';
 $string['enabledownload'] = 'Download button';

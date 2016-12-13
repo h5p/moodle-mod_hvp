@@ -70,6 +70,11 @@ $string['removetmpfiles'] = 'Eski H5P geçici dosyalarını kaldır';
 $string['removeoldlogentries'] = 'Eski H5P kütük girdilerini kaldır';
 
 // Admin settings.
+$string['displayoptionnevershow'] = 'Never show';
+$string['displayoptionalwaysshow'] = 'Always show';
+$string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
+$string['displayoptionauthoron'] = 'Controlled by author, default is on';
+$string['displayoptionauthoroff'] = 'Controlled by author, default is off';
 $string['displayoptions'] = 'Seçenekleri Göster';
 $string['enableframe'] = 'Eylem çubuğunu ve çerçevesini göster';
 $string['enabledownload'] = 'İndirme tuşu';

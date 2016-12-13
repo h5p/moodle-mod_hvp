@@ -178,9 +178,8 @@ function hvp_get_disabled_content_features($hvp) {
       \H5PCore::$disable[\H5PCore::DISABLE_DOWNLOAD] => isset($hvp->download) ? $hvp->download : 0,
       \H5PCore::$disable[\H5PCore::DISABLE_COPYRIGHT] => isset($hvp->copyright) ? $hvp->copyright : 0
   );
-
   $core = \mod_hvp\framework::instance();
-  return $core->getDisable($disablesettings, 0);
+  return $core->getDisplayOptionsAsByte($disablesettings, 0);
 }
 
 /**
