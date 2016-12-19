@@ -173,6 +173,9 @@ $string['noparameters'] = 'Pas de paramètres';
 $string['invalidparameters'] = 'Paramètres invalides';
 $string['missingcontentuserdata'] = 'Erreur : impossible de trouver les données utilisateur';
 
+$string['maximumgrade'] = 'Maximum grade';
+$string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
+
 // Capabilities
 $string['hvp:addinstance'] = 'Ajouter une nouvelle activiét H5P';
 $string['hvp:restrictlibraries'] = 'Restreindre une bibliothèque H5P';

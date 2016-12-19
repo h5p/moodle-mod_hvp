@@ -107,11 +107,7 @@ function hvp_update_instance($hvp) {
 
     // Save content
     hvp_save_content($hvp);
-
-    // Update grade item with 100% max score, reset user records.
-    $hvp->rawgrademax = '100';
     hvp_grade_item_update($hvp, 'reset');
-
     return true;
 }
 
@@ -331,9 +327,27 @@ function hvp_grade_item_update($hvp, $grades=null) {
     }
 
     $params = array('itemname' => $hvp->name, 'idnumber' => $hvp->cmidnumber);
-    if (isset($hvp->rawgrademax)) {
+
+    if (isset($hvp->maximumgrade)) {
         $params['gradetype'] = GRADE_TYPE_VALUE;
-        $params['grademax'] = $hvp->rawgrademax;
+        $params['grademax'] = $hvp->maximumgrade;
+    }
+
+    // Recalculate rawgrade relative to grademax
+    if (isset($hvp->rawgrade) && isset($hvp->rawgrademax)) {
+        // Get max grade Obs: do not try to use grade_get_grades because it
+        // requires context which we don't have inside an ajax
+        // $gradinginfo = grade_get_grades($hvp->course, 'mod', 'hvp', $hvp->id);
+        $gradeitem = grade_item::fetch(array(
+            'itemtype' => 'mod',
+            'itemmodule' => 'hvp',
+            'iteminstance' => $hvp->id,
+            'courseid' => $hvp->course
+        ));
+
+        if (isset($gradeitem) && isset($gradeitem->grademax)) {
+            $grades->rawgrade = ($hvp->rawgrade / $hvp->rawgrademax) * $gradeitem->grademax;
+        }
     }
 
     if ($grades === 'reset') {

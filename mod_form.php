@@ -45,6 +45,11 @@ class mod_hvp_mod_form extends moodleform_mod {
             $this->add_intro_editor(false, get_string('intro', 'hvp'));
         }
 
+        // Max grade
+        $mform->addElement('text', 'maximumgrade', get_string('maximumgrade', 'hvp'));
+        $mform->setType('maximumgrade', PARAM_INT);
+        $mform->setDefault('maximumgrade', 10);
+
         // Action.
         $h5paction = array();
         $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('upload', 'hvp'), 'upload');
@@ -100,6 +105,23 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
         }
 
+        // Set default maxgrade
+        if (isset($content) && isset($content['id'])
+            && isset($defaultvalues) && isset($defaultvalues['course'])) {
+
+            // Get the gradeitem and set maxgrade
+            $gradeitem = grade_item::fetch(array(
+                'itemtype' => 'mod',
+                'itemmodule' => 'hvp',
+                'iteminstance' => $content['id'],
+                'courseid' => $defaultvalues['course']
+            ));
+
+            if (isset($gradeitem) && isset($gradeitem->grademax)) {
+                $defaultvalues['maximumgrade'] = $gradeitem->grademax;
+            }
+        }
+
         // Aaah.. we meet again h5pfile!
         $draftitemid = file_get_submitted_draft_itemid('h5pfile');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_hvp', 'package', 0);
@@ -152,6 +174,11 @@ class mod_hvp_mod_form extends moodleform_mod {
         global $CFG;
 
         $errors = parent::validation($data, $files);
+
+        // Validate max grade as a non-negative numeric value
+        if (!is_numeric($data['maximumgrade']) || $data['maximumgrade'] < 0) {
+            $errors['maximumgrade'] = get_string('maximumgradeerror', 'hvp');
+        }
 
         if ($data['h5paction'] === 'upload') {
             // Validate uploaded H5P file

@@ -148,6 +148,9 @@ $string['nosuchlibrary'] = 'Biblioteket finnes ikke';
 $string['noparameters'] = 'Ingen parametre';
 $string['invalidparameters'] = 'Ugyldige parametre';
 
+$string['maximumgrade'] = 'Maximum grade';
+$string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
+
 // Capabilities
 $string['hvp:addinstance'] = 'Legg til en ny H5P-aktivitet';
 $string['hvp:restrictlibraries'] = 'Begrense et H5P-bibliotek';

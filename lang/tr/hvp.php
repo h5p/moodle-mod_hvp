@@ -173,6 +173,9 @@ $string['noparameters'] = 'Parametre yok';
 $string['invalidparameters'] = 'Parametreler geçersiz';
 $string['missingcontentuserdata'] = 'Hata: İçerik kullanıcısı verisi bulunamadı';
 
+$string['maximumgrade'] = 'Maximum grade';
+$string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
+
 // Capabilities
 $string['hvp:addinstance'] = 'Yeni bir H5P Etkinliği ekle';
 $string['hvp:restrictlibraries'] = 'Bir H5P kitaplığını kısıtla';
