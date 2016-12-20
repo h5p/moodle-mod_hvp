@@ -174,12 +174,12 @@ function hvp_save_content($hvp) {
  */
 function hvp_get_disabled_content_features($hvp) {
   $disablesettings = array(
-      \H5PCore::$disable[\H5PCore::DISABLE_FRAME] => isset($hvp->frame) ? $hvp->frame : 0,
-      \H5PCore::$disable[\H5PCore::DISABLE_DOWNLOAD] => isset($hvp->download) ? $hvp->download : 0,
-      \H5PCore::$disable[\H5PCore::DISABLE_COPYRIGHT] => isset($hvp->copyright) ? $hvp->copyright : 0
+      \H5PCore::DISPLAY_OPTION_FRAME => isset($hvp->frame) ? $hvp->frame : 0,
+      \H5PCore::DISPLAY_OPTION_DOWNLOAD => isset($hvp->download) ? $hvp->download : 0,
+      \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($hvp->copyright) ? $hvp->copyright : 0
   );
   $core = \mod_hvp\framework::instance();
-  return $core->getDisplayOptionsAsByte($disablesettings, 0);
+  return $core->getStorableDisplayOptions($disablesettings, 0);
 }
 
 /**

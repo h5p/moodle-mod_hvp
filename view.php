@@ -68,13 +68,13 @@ $settings = hvp_get_core_assets();
 // Display options:
 $displayOptions = $core->getDisplayOptionsForView($content['disable'], $content['id']);
 // Embed is not supported in Moodle.
-$displayOptions['showEmbed'] = false;
+$displayOptions[\H5PCore::DISPLAY_OPTION_EMBED] = false;
 
 // Filter content parameters.
 $safeparameters = $core->filterParameters($content);
 
 $export = '';
-if ($displayOptions['showDownload'] && (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true)) {
+if ($displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD] && (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true)) {
     // Find course context.
     $context = \context_course::instance($course->id);
     $hvppath = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp";
