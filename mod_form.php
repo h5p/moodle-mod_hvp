@@ -70,22 +70,30 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addElement('hidden', 'h5pparams', '');
         $mform->setType('h5pparams', PARAM_RAW);
 
-        // Display options group.
-        $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'hvp'));
+        $core = \mod_hvp\framework::instance();
+        $displayOptions = $core->getDisplayOptionsForEdit();
+        if (isset($displayOptions[\H5PCore::DISPLAY_OPTION_FRAME])) {
+          // Display options group.
+          $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'hvp'));
 
-        $mform->addElement('checkbox', 'frame', get_string('enableframe', 'hvp'));
-        $mform->setType('frame', PARAM_BOOL);
-        $mform->setDefault('frame', true);
+          $mform->addElement('checkbox', 'frame', get_string('enableframe', 'hvp'));
+          $mform->setType('frame', PARAM_BOOL);
+          $mform->setDefault('frame', true);
 
-        $mform->addElement('checkbox', 'download', get_string('enabledownload', 'hvp'));
-        $mform->setType('download', PARAM_BOOL);
-        $mform->setDefault('download', true);
-        $mform->disabledIf('download', 'frame');
+          if (isset($displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
+            $mform->addElement('checkbox', 'download', get_string('enabledownload', 'hvp'));
+            $mform->setType('download', PARAM_BOOL);
+            $mform->setDefault('download', $displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD]);
+            $mform->disabledIf('download', 'frame');
+          }
 
-        $mform->addElement('checkbox', 'copyright', get_string('enablecopyright', 'hvp'));
-        $mform->setType('copyright', PARAM_BOOL);
-        $mform->setDefault('copyright', true);
-        $mform->disabledIf('copyright', 'frame');
+          if (isset($displayOptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
+            $mform->addElement('checkbox', 'copyright', get_string('enablecopyright', 'hvp'));
+            $mform->setType('copyright', PARAM_BOOL);
+            $mform->setDefault('copyright', $displayOptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT]);
+            $mform->disabledIf('copyright', 'frame');
+          }
+        }
 
         $this->standard_coursemodule_elements();
 

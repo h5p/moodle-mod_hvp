@@ -60,6 +60,11 @@ $string['lookforupdates'] = 'Se etter H5P-oppdateringer';
 $string['removetmpfiles'] = 'Fjern gamle midlertidige filer';
 
 // Admin settings.
+$string['displayoptionnevershow'] = 'Vis aldri';
+$string['displayoptionalwaysshow'] = 'Vis alltid';
+$string['displayoptionpermissions'] = 'Vis kun for brukere som har tilgang til å eksportere H5Per';
+$string['displayoptionauthoron'] = 'Settes av forfatter, standard på';
+$string['displayoptionauthoroff'] = 'Settes av forfatter, standard av';
 $string['displayoptions'] = 'Visningsinnstillinger';
 $string['enableframe'] = 'Vis handlingslinjen og rammen';
 $string['enabledownload'] = 'Nedlastings-knapp';
