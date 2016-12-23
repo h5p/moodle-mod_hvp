@@ -66,11 +66,11 @@ $string['removetmpfiles'] = 'Entfernen alter temporärer H5P-Dateien';
 $string['removeoldlogentries'] = 'Entfernen alter H5P-Logdateien';
 
 // Admin settings.
-$string['displayoptionnevershow'] = 'Never show';
-$string['displayoptionalwaysshow'] = 'Always show';
-$string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
-$string['displayoptionauthoron'] = 'Controlled by author, default is on';
-$string['displayoptionauthoroff'] = 'Controlled by author, default is off';
+$string['displayoptionnevershow'] = 'Nie zeigen';
+$string['displayoptionalwaysshow'] = 'Immer zeigen';
+$string['displayoptionpermissions'] = 'Nur zeigen, wenn der Nutzer H5P exportieren darf';
+$string['displayoptionauthoron'] = 'Vom Autor gesteuert, Standard ist an';
+$string['displayoptionauthoroff'] = 'Vom Autor gesteuert, Standard ist aus';
 $string['displayoptions'] = 'Optionen anzeigen';
 $string['enableframe'] = 'Menüleiste und Rahmen anzeigen.';
 $string['enabledownload'] = 'Download-Knopf';
@@ -175,8 +175,8 @@ $string['noparameters'] = 'Keine Parameter';
 $string['invalidparameters'] = 'Ungültige Parameter';
 $string['missingcontentuserdata'] = 'Fehler: Konnte den Nutzerinhalt nicht finden';
 
-$string['maximumgrade'] = 'Maximum grade';
-$string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
+$string['maximumgrade'] = 'Beste Bewertung';
+$string['maximumgradeerror'] = 'Bitte gib einen positive ganze Zahl als maximale Punktzahl für diese Aktivität an.';
 
 // Capabilities
 $string['hvp:addinstance'] = 'Neue H5P-Aktivität hinzufügen';
