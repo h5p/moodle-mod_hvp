@@ -25,7 +25,7 @@
  * Moodle is performing actions across all modules.
  *
  * @package    mod_hvp
- * @copyright  2013 Amendor
+ * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
@@ -107,11 +107,7 @@ function hvp_update_instance($hvp) {
 
     // Save content
     hvp_save_content($hvp);
-
-    // Update grade item with 100% max score, reset user records.
-    $hvp->rawgrademax = '100';
     hvp_grade_item_update($hvp, 'reset');
-
     return true;
 }
 
@@ -159,7 +155,7 @@ function hvp_save_content($hvp) {
         $params = json_decode($hvp->params);
 
         // Move any uploaded images or files. Determine content dependencies.
-        $editor->processParameters($hvp->id, $hvp->library, $params, isset($oldlib) ? $oldlib : NULL, isset($oldparams) ? $oldparams : NULL);
+        $editor->processParameters($hvp, $hvp->library, $params, isset($oldlib) ? $oldlib : NULL, isset($oldparams) ? $oldparams : NULL);
     }
 
     return $hvp->id;
@@ -174,13 +170,12 @@ function hvp_save_content($hvp) {
  */
 function hvp_get_disabled_content_features($hvp) {
   $disablesettings = array(
-      \H5PCore::$disable[\H5PCore::DISABLE_FRAME] => isset($hvp->frame) ? $hvp->frame : 0,
-      \H5PCore::$disable[\H5PCore::DISABLE_DOWNLOAD] => isset($hvp->download) ? $hvp->download : 0,
-      \H5PCore::$disable[\H5PCore::DISABLE_COPYRIGHT] => isset($hvp->copyright) ? $hvp->copyright : 0
+      \H5PCore::DISPLAY_OPTION_FRAME => isset($hvp->frame) ? $hvp->frame : 0,
+      \H5PCore::DISPLAY_OPTION_DOWNLOAD => isset($hvp->download) ? $hvp->download : 0,
+      \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($hvp->copyright) ? $hvp->copyright : 0
   );
-
   $core = \mod_hvp\framework::instance();
-  return $core->getDisable($disablesettings, 0);
+  return $core->getStorableDisplayOptions($disablesettings, 0);
 }
 
 /**
@@ -201,9 +196,12 @@ function hvp_delete_instance($id) {
         return false;
     }
 
+    // Load CM
+    $cm = \get_coursemodule_from_instance('hvp', $id);
+
     // Delete content
     $h5pstorage = \mod_hvp\framework::instance('storage');
-    $h5pstorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug));
+    $h5pstorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug, 'coursemodule' => $cm->id));
 
     // Get library details
     $library = $DB->get_record_sql(
@@ -259,7 +257,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             break;
 
         case 'content':
-            if ($context->contextlevel != CONTEXT_COURSE) {
+            if ($context->contextlevel != CONTEXT_MODULE) {
                 return false; // Invalid context.
             }
 
@@ -272,13 +270,25 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             break;
 
         case 'exports':
-        case 'editor':
             if ($context->contextlevel != CONTEXT_COURSE) {
                 return false; // Invalid context.
             }
 
             // Check permissions
             if (!has_capability('mod/hvp:getexport', $context)) {
+                return false;
+            }
+
+            $itemid = 0;
+            break;
+
+        case 'editor':
+            if ($context->contextlevel != CONTEXT_COURSE) {
+                return false; // Invalid context.
+            }
+
+            // Check permissions
+            if (!has_capability('mod/hvp:addinstance', $context)) {
                 return false;
             }
 
@@ -316,9 +326,27 @@ function hvp_grade_item_update($hvp, $grades=null) {
     }
 
     $params = array('itemname' => $hvp->name, 'idnumber' => $hvp->cmidnumber);
-    if (isset($hvp->rawgrademax)) {
+
+    if (isset($hvp->maximumgrade)) {
         $params['gradetype'] = GRADE_TYPE_VALUE;
-        $params['grademax'] = $hvp->rawgrademax;
+        $params['grademax'] = $hvp->maximumgrade;
+    }
+
+    // Recalculate rawgrade relative to grademax
+    if (isset($hvp->rawgrade) && isset($hvp->rawgrademax)) {
+        // Get max grade Obs: do not try to use grade_get_grades because it
+        // requires context which we don't have inside an ajax
+        // $gradinginfo = grade_get_grades($hvp->course, 'mod', 'hvp', $hvp->id);
+        $gradeitem = grade_item::fetch(array(
+            'itemtype' => 'mod',
+            'itemmodule' => 'hvp',
+            'iteminstance' => $hvp->id,
+            'courseid' => $hvp->course
+        ));
+
+        if (isset($gradeitem) && isset($gradeitem->grademax)) {
+            $grades->rawgrade = ($hvp->rawgrade / $hvp->rawgrademax) * $gradeitem->grademax;
+        }
     }
 
     if ($grades === 'reset') {

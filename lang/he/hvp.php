@@ -66,6 +66,11 @@ $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
 
 // Admin settings.
+$string['displayoptionnevershow'] = 'Never show';
+$string['displayoptionalwaysshow'] = 'Always show';
+$string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
+$string['displayoptionauthoron'] = 'Controlled by author, default is on';
+$string['displayoptionauthoroff'] = 'Controlled by author, default is off';
 $string['displayoptions'] = 'Display Options';
 $string['enableframe'] = 'Display action bar and frame';
 $string['enabledownload'] = 'Download button';
@@ -168,6 +173,9 @@ $string['nosuchlibrary'] = 'לא קיימת ספריה כזו';
 $string['noparameters'] = 'חסרים משתני אתחול';
 $string['invalidparameters'] = 'משתני אתחול לא תקינים';
 $string['missingcontentuserdata'] = 'התרחשה תקלה: לא זמינים נתוני השימוש של התלמיד עבור פעילות זו';
+
+$string['maximumgrade'] = 'Maximum grade';
+$string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities
 $string['hvp:addinstance'] = 'הוספת פעילות H5P חדשה';

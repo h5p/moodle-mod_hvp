@@ -65,33 +65,25 @@ $completion->set_module_viewed($cm);
 // Attach scripts, styles, etc. from core.
 $settings = hvp_get_core_assets();
 
-// Add global disable settings.
-if (!isset($content['disable'])) {
-    $content['disable'] = $core->getGlobalDisable();
-} else {
-    $content['disable'] |= $core->getGlobalDisable();
-}
-
+// Display options:
+$displayOptions = $core->getDisplayOptionsForView($content['disable'], $content['id']);
 // Embed is not supported in Moodle.
-$content['disable'] |= \H5PCore::DISABLE_EMBED;
+$displayOptions[\H5PCore::DISPLAY_OPTION_EMBED] = false;
 
 // Filter content parameters.
 $safeparameters = $core->filterParameters($content);
 
 $export = '';
-if (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true) {
+if ($displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD] && (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true)) {
     // Find course context.
     $context = \context_course::instance($course->id);
-    if (has_capability('mod/hvp:getexport', $context)) {
-        $hvppath = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp";
-        $exportfilename = ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p';
-        $export = "{$hvppath}/exports/{$exportfilename}";
-    }
+    $hvppath = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp";
+    $exportfilename = ($content['slug'] ? $content['slug'] . '-' : '') . $content['id'] . '.h5p';
+    $export = "{$hvppath}/exports/{$exportfilename}";
 }
-if (empty($export)) {
-    // Remove Download button when there's no export URL
-    $content['disable'] |= \H5PCore::DISABLE_DOWNLOAD;
-}
+
+// Find cm context
+$context = \context_module::instance($cm->id);
 
 // Add JavaScript settings for this content.
 $cid = 'cid-' . $content['id'];
@@ -101,8 +93,9 @@ $settings['contents'][$cid] = array(
     'fullScreen' => $content['library']['fullscreen'],
     'exportUrl' => $export,
     'title' => $content['title'],
-    'disable' => $content['disable'],
+    'displayOptions' => $displayOptions,
     'url' => "{$CFG->httpswwwroot}/mod/hvp/view.php?id={$id}",
+    'contentUrl' => "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/" . $content['id'],
     'contentUserData' => array(
         0 => \mod_hvp\content_user_data::load_pre_loaded_user_data($content['id'])
     )
@@ -142,6 +135,7 @@ $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
 
 // Print page HTML.
 echo $OUTPUT->header();
+echo $OUTPUT->heading(format_string($content['title']));
 echo '<div class="clearer"></div>';
 
 // Print any messages.
@@ -167,7 +161,9 @@ if ($embedtype === 'div') {
         '" style="height:1px" src="about:blank" frameBorder="0" scrolling="no"></iframe></div>';
 }
 
-$context = \context_module::instance($id);
+// Find cm context
+$context = \context_module::instance($cm->id);
+
 // Trigger module viewed event.
 $event = \mod_hvp\event\course_module_viewed::create(array(
     'objectid' => $cm->instance,

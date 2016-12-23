@@ -70,6 +70,11 @@ $string['removetmpfiles'] = 'Supprimer les anciens fichiers temporaires H5P';
 $string['removeoldlogentries'] = 'Supprimer les anciennes entrées de logs H5P';
 
 // Admin settings.
+$string['displayoptionnevershow'] = 'Never show';
+$string['displayoptionalwaysshow'] = 'Always show';
+$string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
+$string['displayoptionauthoron'] = 'Controlled by author, default is on';
+$string['displayoptionauthoroff'] = 'Controlled by author, default is off';
 $string['displayoptions'] = 'Afficher les options';
 $string['enableframe'] = 'Afficher la barre de menu des actions';
 $string['enabledownload'] = 'Bouton de téléchargement';
@@ -172,6 +177,9 @@ $string['nosuchlibrary'] = 'Aucune bibliothèque de ce type';
 $string['noparameters'] = 'Pas de paramètres';
 $string['invalidparameters'] = 'Paramètres invalides';
 $string['missingcontentuserdata'] = 'Erreur : impossible de trouver les données utilisateur';
+
+$string['maximumgrade'] = 'Maximum grade';
+$string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities
 $string['hvp:addinstance'] = 'Ajouter une nouvelle activiét H5P';

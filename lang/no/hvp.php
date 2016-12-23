@@ -60,6 +60,11 @@ $string['lookforupdates'] = 'Se etter H5P-oppdateringer';
 $string['removetmpfiles'] = 'Fjern gamle midlertidige filer';
 
 // Admin settings.
+$string['displayoptionnevershow'] = 'Vis aldri';
+$string['displayoptionalwaysshow'] = 'Vis alltid';
+$string['displayoptionpermissions'] = 'Vis kun for brukere som har tilgang til å eksportere H5Per';
+$string['displayoptionauthoron'] = 'Settes av forfatter, standard på';
+$string['displayoptionauthoroff'] = 'Settes av forfatter, standard av';
 $string['displayoptions'] = 'Visningsinnstillinger';
 $string['enableframe'] = 'Vis handlingslinjen og rammen';
 $string['enabledownload'] = 'Nedlastings-knapp';
@@ -147,6 +152,9 @@ $string['invalidlibrary'] = 'Ugyldig bibliotek';
 $string['nosuchlibrary'] = 'Biblioteket finnes ikke';
 $string['noparameters'] = 'Ingen parametre';
 $string['invalidparameters'] = 'Ugyldige parametre';
+
+$string['maximumgrade'] = 'Maximum grade';
+$string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities
 $string['hvp:addinstance'] = 'Legg til en ny H5P-aktivitet';

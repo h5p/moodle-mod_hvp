@@ -18,7 +18,7 @@
  * Upgrade definitions for the hvp module.
  *
  * @package    mod_hvp
- * @copyright  2013 Amendor
+ * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -147,6 +147,40 @@ function xmldb_hvp_upgrade($oldversion) {
 
         // Hvp savepoint reached.
         upgrade_mod_savepoint(true, 2016051000, 'hvp');
+    }
+
+    if ($oldversion < 2016110100) {
+
+        // Change context of activity files from COURSE to MODULE.
+
+        $filearea = 'content';
+        $component = 'mod_hvp';
+
+        // Find activity ID and correct context ID
+        $hvpsresult = $DB->get_records_sql(
+                "SELECT f.id AS fileid, f.itemid, c.id, f.filepath, f.filename, f.pathnamehash
+                   FROM {files} f
+                   JOIN {course_modules} cm ON f.itemid = cm.instance
+                   JOIN {modules} md ON md.id = cm.module
+                   JOIN {context} c ON c.instanceid = cm.id
+                  WHERE md.name = 'hvp'
+                    AND f.filearea = 'content'
+                    AND c.contextlevel = " . CONTEXT_MODULE
+        );
+
+        foreach ($hvpsresult as $hvp) {
+            // Need to re-hash pathname after changing context
+            $pathnamehash = file_storage::get_pathname_hash($hvp->id, $component, $filearea, $hvp->itemid, $hvp->filepath, $hvp->filename);
+
+            // Double check that hash doesn't exist (avoid duplicate entries)
+            if (!$DB->get_field_sql("SELECT contextid FROM {files} WHERE pathnamehash = '{$pathnamehash}'")) {
+              // Update context ID and pathname hash for files
+              $DB->execute("UPDATE {files} SET contextid = {$hvp->id}, pathnamehash = '{$pathnamehash}' WHERE pathnamehash = '{$hvp->pathnamehash}'");
+            }
+        }
+
+        // Hvp savepoint reached.
+        upgrade_mod_savepoint(true, 2016110100, 'hvp');
     }
 
     return true;

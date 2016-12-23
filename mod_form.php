@@ -45,6 +45,11 @@ class mod_hvp_mod_form extends moodleform_mod {
             $this->add_intro_editor(false, get_string('intro', 'hvp'));
         }
 
+        // Max grade
+        $mform->addElement('text', 'maximumgrade', get_string('maximumgrade', 'hvp'));
+        $mform->setType('maximumgrade', PARAM_INT);
+        $mform->setDefault('maximumgrade', 10);
+
         // Action.
         $h5paction = array();
         $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('upload', 'hvp'), 'upload');
@@ -65,22 +70,30 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->addElement('hidden', 'h5pparams', '');
         $mform->setType('h5pparams', PARAM_RAW);
 
-        // Display options group.
-        $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'hvp'));
+        $core = \mod_hvp\framework::instance();
+        $displayOptions = $core->getDisplayOptionsForEdit();
+        if (isset($displayOptions[\H5PCore::DISPLAY_OPTION_FRAME])) {
+          // Display options group.
+          $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'hvp'));
 
-        $mform->addElement('checkbox', 'frame', get_string('enableframe', 'hvp'));
-        $mform->setType('frame', PARAM_BOOL);
-        $mform->setDefault('frame', true);
+          $mform->addElement('checkbox', 'frame', get_string('enableframe', 'hvp'));
+          $mform->setType('frame', PARAM_BOOL);
+          $mform->setDefault('frame', true);
 
-        $mform->addElement('checkbox', 'download', get_string('enabledownload', 'hvp'));
-        $mform->setType('download', PARAM_BOOL);
-        $mform->setDefault('download', true);
-        $mform->disabledIf('download', 'frame');
+          if (isset($displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
+            $mform->addElement('checkbox', 'download', get_string('enabledownload', 'hvp'));
+            $mform->setType('download', PARAM_BOOL);
+            $mform->setDefault('download', $displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD]);
+            $mform->disabledIf('download', 'frame');
+          }
 
-        $mform->addElement('checkbox', 'copyright', get_string('enablecopyright', 'hvp'));
-        $mform->setType('copyright', PARAM_BOOL);
-        $mform->setDefault('copyright', true);
-        $mform->disabledIf('copyright', 'frame');
+          if (isset($displayOptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
+            $mform->addElement('checkbox', 'copyright', get_string('enablecopyright', 'hvp'));
+            $mform->setType('copyright', PARAM_BOOL);
+            $mform->setDefault('copyright', $displayOptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT]);
+            $mform->disabledIf('copyright', 'frame');
+          }
+        }
 
         $this->standard_coursemodule_elements();
 
@@ -97,6 +110,23 @@ class mod_hvp_mod_form extends moodleform_mod {
             $content = $core->loadContent($defaultvalues['id']);
             if ($content === null) {
                 print_error('invalidhvp');
+            }
+        }
+
+        // Set default maxgrade
+        if (isset($content) && isset($content['id'])
+            && isset($defaultvalues) && isset($defaultvalues['course'])) {
+
+            // Get the gradeitem and set maxgrade
+            $gradeitem = grade_item::fetch(array(
+                'itemtype' => 'mod',
+                'itemmodule' => 'hvp',
+                'iteminstance' => $content['id'],
+                'courseid' => $defaultvalues['course']
+            ));
+
+            if (isset($gradeitem) && isset($gradeitem->grademax)) {
+                $defaultvalues['maximumgrade'] = $gradeitem->grademax;
             }
         }
 
@@ -152,6 +182,11 @@ class mod_hvp_mod_form extends moodleform_mod {
         global $CFG;
 
         $errors = parent::validation($data, $files);
+
+        // Validate max grade as a non-negative numeric value
+        if (!is_numeric($data['maximumgrade']) || $data['maximumgrade'] < 0) {
+            $errors['maximumgrade'] = get_string('maximumgradeerror', 'hvp');
+        }
 
         if ($data['h5paction'] === 'upload') {
             // Validate uploaded H5P file

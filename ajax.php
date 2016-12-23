@@ -71,7 +71,7 @@ switch($action) {
         }
 
         hvp_restrict_library($library_id, $restrict);
-        header('Cache-Control', 'no-cache');
+        header('Cache-Control: no-cache');
         header('Content-Type: application/json');
         echo json_encode(array(
             'url' => (new moodle_url('/mod/hvp/ajax.php', array(
@@ -110,7 +110,7 @@ switch($action) {
 
         $library = hvp_get_library_upgrade_info($library[0], $library[1], $library[2]);
 
-        header('Cache-Control', 'no-cache');
+        header('Cache-Control: no-cache');
         header('Content-Type: application/json');
         print json_encode($library);
 
@@ -133,10 +133,11 @@ switch($action) {
             break;
         }
 
-        if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+        // Because of a confirmed bug in PHP, filter_input(INPUT_SERVER, ...) will return null on some versions of FCGI/PHP (5.4 and probably older versions as well), ref. https://bugs.php.net/bug.php?id=49184
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $library_id = required_param('library_id', PARAM_INT);
             $out = hvp_content_upgrade_progress($library_id);
-            header('Cache-Control', 'no-cache');
+            header('Cache-Control: no-cache');
             header('Content-Type: application/json');
             print json_encode($out);
         } else {
@@ -243,6 +244,7 @@ switch($action) {
             // Save the valid file
             $file_id = $core->fs->saveFile($file, $contentid, $contextid);
 
+            // Track temporary files for later cleanup
             $DB->insert_record_raw('hvp_tmpfiles', array(
                 'id' => $file_id
             ), false, false, true);

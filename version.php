@@ -17,15 +17,15 @@
 /**
  * @package    mod
  * @subpackage hvp
- * @copyright  Amendor
+ * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016051306;
+$plugin->version   = 2016113000;
 $plugin->requires  = 2013051403;
 $plugin->cron      = 0;
 $plugin->component = 'mod_hvp';
 $plugin->maturity  = MATURITY_RC;
-$plugin->release   = '1.0-rc.2';
+$plugin->release   = '1.0-rc.5';

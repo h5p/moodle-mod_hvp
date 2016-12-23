@@ -19,17 +19,17 @@
  *
  * @package     mod_hvp
  * @category    backup
- * @copyright   2013 Amendor
+ * @copyright   2016 Joubel AS <contact@joubel.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/backup/moodle2/backup_stepslib.php');
 require_once($CFG->dirroot . '/mod/hvp/backup/moodle2/backup_hvp_stepslib.php');
-require_once($CFG->dirroot . '/mod/hvp/backup/moodle2/backup_hvp_settingslib.php');
 
 /**
- * Provides the steps to perform one complete backup of the Choice instance
+ * Provides the steps to perform one complete backup of a H5P instance
  */
 class backup_hvp_activity_task extends backup_activity_task {
 
@@ -40,12 +40,12 @@ class backup_hvp_activity_task extends backup_activity_task {
     }
 
     /**
-     * Defines a backup step to store the instance data in the choice.xml file
+     * Defines a backup step to store the instance data in the hvp.xml file
      */
     protected function define_my_steps() {
-        // $this->add_step(new backup_hvp_activity_structure_step('hvp_structure', 'hvp.xml'));
+        $this->add_step(new backup_hvp_activity_structure_step('hvp_structure', 'hvp.xml'));
     }
-    
+
     /**
      * Encodes URLs to the index.php and view.php scripts
      *
