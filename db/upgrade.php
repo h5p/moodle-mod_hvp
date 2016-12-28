@@ -183,5 +183,12 @@ function xmldb_hvp_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016110100, 'hvp');
     }
 
+    if ($oldversion < 2016122800) {
+        \mod_hvp\framework::messages('info', '<span style="font-weight: bold;">Upgrade your H5P content types!</span> Old content types will still work, but the authoring tool will look and feel much better if you <a href="https://h5p.org/update-all-content-types">upgrade the content types</a>.');
+        \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
+
+        upgrade_mod_savepoint(true, 2016122800, 'hvp');
+    }
+
     return true;
 }
