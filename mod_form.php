@@ -76,22 +76,22 @@ class mod_hvp_mod_form extends moodleform_mod {
           // Display options group.
           $mform->addElement('header', 'displayoptions', get_string('displayoptions', 'hvp'));
 
-          $mform->addElement('checkbox', 'frame', get_string('enableframe', 'hvp'));
-          $mform->setType('frame', PARAM_BOOL);
-          $mform->setDefault('frame', true);
+          $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_FRAME, get_string('enableframe', 'hvp'));
+          $mform->setType(\H5PCore::DISPLAY_OPTION_FRAME, PARAM_BOOL);
+          $mform->setDefault(\H5PCore::DISPLAY_OPTION_FRAME, true);
 
           if (isset($displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
-            $mform->addElement('checkbox', 'download', get_string('enabledownload', 'hvp'));
-            $mform->setType('download', PARAM_BOOL);
-            $mform->setDefault('download', $displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD]);
-            $mform->disabledIf('download', 'frame');
+            $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_DOWNLOAD, get_string('enabledownload', 'hvp'));
+            $mform->setType(\H5PCore::DISPLAY_OPTION_DOWNLOAD, PARAM_BOOL);
+            $mform->setDefault(\H5PCore::DISPLAY_OPTION_DOWNLOAD, $displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD]);
+            $mform->disabledIf(\H5PCore::DISPLAY_OPTION_DOWNLOAD, 'frame');
           }
 
           if (isset($displayOptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
-            $mform->addElement('checkbox', 'copyright', get_string('enablecopyright', 'hvp'));
-            $mform->setType('copyright', PARAM_BOOL);
-            $mform->setDefault('copyright', $displayOptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT]);
-            $mform->disabledIf('copyright', 'frame');
+            $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_COPYRIGHT, get_string('enablecopyright', 'hvp'));
+            $mform->setType(\H5PCore::DISPLAY_OPTION_COPYRIGHT, PARAM_BOOL);
+            $mform->setDefault(\H5PCore::DISPLAY_OPTION_COPYRIGHT, $displayOptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT]);
+            $mform->disabledIf(\H5PCore::DISPLAY_OPTION_COPYRIGHT, 'frame');
           }
         }
 
@@ -137,17 +137,11 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         // Individual display options are not stored, must be extracted from disable.
         if (isset($defaultvalues['disable'])) {
-            // Extract disable options.
-            \mod_hvp\framework::instance();
-            foreach (\H5PCore::$disable as $bit => $option) {
-                if ($defaultvalues['disable'] & $bit) {
-                    // Disable.
-                    $defaultvalues[$option] = 0;
-                } else {
-                    // Enable.
-                    $defaultvalues[$option] = 1;
-                }
-            }
+            $h5pcore = \mod_hvp\framework::instance('core');
+            $displayoptions = $h5pcore->getDisplayOptionsForEdit($defaultvalues['disable']);
+            $defaultvalues[\H5PCore::DISPLAY_OPTION_DOWNLOAD] = $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD];
+            $defaultvalues[\H5PCore::DISPLAY_OPTION_FRAME] = $displayoptions[\H5PCore::DISPLAY_OPTION_FRAME];
+            $defaultvalues[\H5PCore::DISPLAY_OPTION_COPYRIGHT] = $displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT];
         }
 
         // Determine default action

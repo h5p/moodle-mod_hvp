@@ -171,7 +171,7 @@ function hvp_save_content($hvp) {
 function hvp_get_disabled_content_features($hvp) {
   $disablesettings = array(
       \H5PCore::DISPLAY_OPTION_FRAME => isset($hvp->frame) ? $hvp->frame : 0,
-      \H5PCore::DISPLAY_OPTION_DOWNLOAD => isset($hvp->download) ? $hvp->download : 0,
+      \H5PCore::DISPLAY_OPTION_DOWNLOAD => isset($hvp->export) ? $hvp->export : 0,
       \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($hvp->copyright) ? $hvp->copyright : 0
   );
   $core = \mod_hvp\framework::instance();
@@ -274,8 +274,22 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
+            // Get core:
+            $h5pinterface = \mod_hvp\framework::instance('interface');
+            $h5pcore = \mod_hvp\framework::instance('core');
+
+            // Get content id from filename:
+            if (!preg_match('/(\d*).h5p/', $args[0], $matches)) {
+              // did not find any content ID :(
+              return false;
+            }
+
+            $contentid = $matches[0];
+            $content = $h5pinterface->loadContent($contentid);
+            $displayOptions = $h5pcore->getDisplayOptionsForView($content['disable'], $contentid);
+
             // Check permissions
-            if (!has_capability('mod/hvp:getexport', $context)) {
+            if (!$displayOptions['export']) {
                 return false;
             }
 
