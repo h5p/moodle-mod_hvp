@@ -146,9 +146,15 @@ class mod_hvp_mod_form extends moodleform_mod {
         if (isset($defaultvalues['disable'])) {
             $h5pcore = \mod_hvp\framework::instance('core');
             $displayoptions = $h5pcore->getDisplayOptionsForEdit($defaultvalues['disable']);
-            $defaultvalues[\H5PCore::DISPLAY_OPTION_DOWNLOAD] = $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD];
-            $defaultvalues[\H5PCore::DISPLAY_OPTION_FRAME] = $displayoptions[\H5PCore::DISPLAY_OPTION_FRAME];
-            $defaultvalues[\H5PCore::DISPLAY_OPTION_COPYRIGHT] = $displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT];
+            if (isset ($displayoptions[\H5PCore::DISPLAY_OPTION_FRAME])) {
+              $defaultvalues[\H5PCore::DISPLAY_OPTION_FRAME] = $displayoptions[\H5PCore::DISPLAY_OPTION_FRAME];
+            }
+            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
+              $defaultvalues[\H5PCore::DISPLAY_OPTION_DOWNLOAD] = $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD];
+            }
+            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
+              $defaultvalues[\H5PCore::DISPLAY_OPTION_COPYRIGHT] = $displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT];
+            }
         }
 
         // Determine default action
