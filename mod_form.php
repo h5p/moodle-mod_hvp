@@ -30,9 +30,6 @@ class mod_hvp_mod_form extends moodleform_mod {
     public function definition() {
         global $CFG, $DB, $OUTPUT, $COURSE;
 
-        // is this a pre 3.2 release
-        $pre_3_2 = $CFG->version < "2016120500";
-
         $mform =& $this->_form;
 
         // Name.
@@ -65,11 +62,13 @@ class mod_hvp_mod_form extends moodleform_mod {
             array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
 
         // Editor placeholder.
-        if ($pre_3_2) {
-          $mform->addElement('static', 'h5peditor', get_string('editor', 'hvp'), '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') .  '</div>');
+        if ($CFG->theme == 'boost') {
+          $h5peditor = array();
+          $h5peditor[] = $mform->createElement('html', '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') .  '</div>');
+          $mform->addGroup($h5peditor, 'h5peditorgroup', get_string('editor', 'hvp'));
         }
         else {
-          $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-3">' . get_string('editor', 'hvp') . '</div><div class="col-md-9"><div class="h5p-editor">' . get_string('javascriptloading', 'hvp') .  '</div></div></div>');
+          $mform->addElement('static', 'h5peditor', get_string('editor', 'hvp'), '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') .  '</div>');
         }
 
         // Hidden fields.
