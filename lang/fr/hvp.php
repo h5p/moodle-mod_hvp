@@ -182,7 +182,7 @@ $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities
-$string['hvp:addinstance'] = 'Ajouter une nouvelle activiét H5P';
+$string['hvp:addinstance'] = 'Ajouter une nouvelle activité H5P';
 $string['hvp:restrictlibraries'] = 'Restreindre une bibliothèque H5P';
 $string['hvp:updatelibraries'] = 'Mettre à jour la version d\'une bibliothèque H5P';
 $string['hvp:userestrictedlibraries'] = 'Utiliser des bibliothèques H5P restreintes';
