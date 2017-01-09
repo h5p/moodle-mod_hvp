@@ -1123,7 +1123,7 @@ class framework implements \H5PFrameworkInterface {
         return (int) $DB->get_field_sql(
                 "SELECT COUNT(id)
                    FROM {hvp}
-                  WHERE filtered LIKE ''");
+                  WHERE " . $DB->sql_compare_text('filtered') . " = ''");
     }
 
     /**
