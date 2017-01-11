@@ -182,7 +182,7 @@ $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities
-$string['hvp:addinstance'] = 'Ajouter une nouvelle activiét H5P';
+$string['hvp:addinstance'] = 'Ajouter une nouvelle activité H5P';
 $string['hvp:restrictlibraries'] = 'Restreindre une bibliothèque H5P';
 $string['hvp:updatelibraries'] = 'Mettre à jour la version d\'une bibliothèque H5P';
 $string['hvp:userestrictedlibraries'] = 'Utiliser des bibliothèques H5P restreintes';
@@ -226,13 +226,13 @@ $string['invalidlibrarydata'] = 'La donnée fournie pour la proriété {$a->%pro
 $string['invalidlibraryproperty'] = 'Impossible de lire la propriété {$a->%property} de la bibliothèque {$a->%library}';
 $string['missinglibraryproperty'] = 'La propriété requise {$a->%property} de la bibliothèque {$a->%library} est manquante';
 $string['invalidlibraryoption'] = 'L\'option {$a->%option} de la bibliothèque {$a->%library} n\'est pas autorisée';
-$string['addedandupdatelibraries'] = '{$a->%new} nouvelle bibliothèques H5P ont été ajoutées et {$a->%old} déjà existantes ont été mises à jour.';
+$string['addedandupdatelibraries'] = '{$a->%new} nouvelles bibliothèques H5P ont été ajoutées et {$a->%old} déjà existantes ont été mises à jour.';
 $string['addednewlibraries'] = '{$a->%new} nouvelles bibliothèques H5P ont été ajoutées.';
 $string['updatedlibraries'] = '{$a->%old} bibliothèques H5P ont été mises à jour.';
 $string['missingdependency'] = 'la dépendance {$a->@dep} requise par {$a->@lib} est manquante.';
 $string['invalidstring'] = 'La chaine fournie n\'est pas valide selon l\'expression régulière suivante : (value: \"{$a->%value}\", regexp: \"{$a->%regexp}\")';
 $string['invalidfile'] = 'Le fichier "{$a->%filename}" n\est pas autorisé. Seuls les fichiers avec les extensions suivantes sont autorisés : {$a->%files-allowed}.';
-$string['invalidmultiselectoption'] = 'éléments selectionnées dans un multi-select non valides.';
+$string['invalidmultiselectoption'] = 'éléments selectionnés dans un multi-select non valides.';
 $string['invalidselectoption'] = 'élément sélectionné dans un select non valide.';
 $string['invalidsemanticstype'] = 'Erreur interne H5P: Type de contenu "{$a->@type}" non valide. Supprimez ce contenu!';
 $string['invalidsemantics'] = 'La bibliothèque utilisée dans cette ressource n\'est pas valide';
@@ -264,5 +264,5 @@ $string['couldnotcopy'] = 'Impossible de copier le fichier.';
 // Welcome messages
 $string['welcomeheader'] = 'Bienvenue dans le monde H5P!';
 $string['welcomegettingstarted'] = 'Pour démarrer avec H5P et Moodle, consultez nos tutoriels <a {$a->moodle_tutorial}>tutorial</a> et testez <a {$a->example_content}>nos exemples</a> sur le site H5P.org pour vous en inspirer.<br>Pour vous simplifier la taĉhe, les modules les plus populaires ont déjà été installés!';
-$string['welcomecommunity'] = 'Nous espérons que vous allez apprécier H5P et rejoindre nos communauté en constante augmentation au travers de nos <a {$a->forums}>forums</a> et notre chat <a {$a->gitter}>H5P sur Gitter</a>';
+$string['welcomecommunity'] = 'Nous espérons que vous allez apprécier H5P et rejoindre notre communauté en constante augmentation au travers de nos <a {$a->forums}>forums</a> et notre chat <a {$a->gitter}>H5P sur Gitter</a>';
 $string['welcomecontactus'] = 'Si vous avez des suggestions, n\'hésitez pas à <a {$a}>nous contacter</a>. Nous prenons toutes les suggestions très sérieuse en considération pour rendre H5P meilleur chaque jour !';
