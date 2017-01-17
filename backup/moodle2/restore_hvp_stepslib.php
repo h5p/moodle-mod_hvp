@@ -114,8 +114,29 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
     }
 
     protected function after_execute() {
+        global $DB;
+
         // TODO
         // Add hvp related files, no need to match by itemname (just internally handled context)
         $this->add_related_files('mod_hvp', 'content', 'id');
+
+        // Query the db with the 'old_contextid'.
+        if ($rows = $DB->get_records('files', ['contextid' => $this->task->get_old_contextid()])) {
+            // If records found, add to the db with the new 'contextid'.
+            $results = [];
+            foreach ($rows as $row) {
+                $row->contextid = $this->task->get_contextid();
+                $row->timecreated = time();
+                $row->timemodified = time();
+                $row->pathnamehash = sha1(
+                    '/' . $row->contextid . '/' . $row->component . '/' . $row->filearea . '/' . $row->itemid . $row->filepath . '.'
+                );
+                $results[] = $DB->insert_record('files', $row, true);
+            }
+        }
+
+        echo '<pre>';
+        var_dump($results);
+        echo '</pre>';
     }
 }

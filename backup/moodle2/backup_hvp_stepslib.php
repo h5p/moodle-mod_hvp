@@ -20,7 +20,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once($CFG->dirroot . '/backup/moodle2/backup_activity_task.class.php');
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Define all the backup steps that will be used by the backup_hvp_activity_task
@@ -40,6 +40,8 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
         $hvp = new backup_nested_element('hvp', array('id'), array(
             'course',
             'name',
+            'intro',
+            'introformat',
             'json_content',
             'embed_type',
             'disable',
