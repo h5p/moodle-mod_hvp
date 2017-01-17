@@ -107,7 +107,6 @@ function hvp_update_instance($hvp) {
 
     // Save content
     hvp_save_content($hvp);
-    hvp_grade_item_update($hvp, 'reset');
     return true;
 }
 
