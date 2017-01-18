@@ -125,18 +125,16 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
             // If records found, add to the db with the new 'contextid'.
             $results = [];
             foreach ($rows as $row) {
+                unset($row->id);
                 $row->contextid = $this->task->get_contextid();
+                $row->itemid = $this->task->get_activityid();
                 $row->timecreated = time();
                 $row->timemodified = time();
                 $row->pathnamehash = sha1(
-                    '/' . $row->contextid . '/' . $row->component . '/' . $row->filearea . '/' . $row->itemid . $row->filepath . '.'
+                    '/' . $row->contextid . '/' . $row->component . '/' . $row->filearea . '/' . $row->itemid . $row->filepath . $row->filename
                 );
                 $results[] = $DB->insert_record('files', $row, true);
             }
         }
-
-        echo '<pre>';
-        var_dump($results);
-        echo '</pre>';
     }
 }
