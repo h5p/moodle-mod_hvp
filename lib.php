@@ -329,7 +329,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
  *
  * @category grade
  * @param stdClass $hvp object with extra cmidnumber
- * @param mixed $grades Optional array/object of grade(s)
+ * @param mixed $grades Optional array/object of grade(s); 'reset' means reset grades in gradebook
  * @return int, 0 if ok, error code otherwise
  */
 function hvp_grade_item_update($hvp, $grades=null) {
@@ -361,6 +361,11 @@ function hvp_grade_item_update($hvp, $grades=null) {
         if (isset($gradeitem) && isset($gradeitem->grademax)) {
             $grades->rawgrade = ($hvp->rawgrade / $hvp->rawgrademax) * $gradeitem->grademax;
         }
+    }
+
+    if ($grades === 'reset') {
+        $params['reset'] = true;
+        $grades = null;
     }
 
     return grade_update('mod/hvp', $hvp->course, 'mod', 'hvp', $hvp->id, 0, $grades, $params);
