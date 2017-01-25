@@ -960,7 +960,7 @@ class framework implements \H5PFrameworkInterface {
         $dependencies = array();
         foreach ($data as $dependency) {
             unset($dependency->unidepid);
-            $dependencies[] = \H5PCore::snakeToCamel($dependency);
+            $dependencies[$dependency->machine_name] = \H5PCore::snakeToCamel($dependency);
         }
 
         return $dependencies;
