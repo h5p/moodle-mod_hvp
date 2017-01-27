@@ -33,43 +33,28 @@ defined('MOODLE_INTERNAL') || die();
 class mod_hvp_renderer extends plugin_renderer_base {
 
     /**
-     * Return additional asset files to the libraries.
+     * Alter which stylesheets are loaded for H5P. This is useful for adding
+     * your own custom styles or replacing existing ones.
      *
+     * @param object $scripts List of stylesheets that will be loaded
      * @param array $libraries Array of libraries indexed by the library's machineName
-     *
-     * @return array
      */
-    public function hvp_additional_asset_files($libraries) {
-        return array(
-            'styles'  => $this->hvp_add_styles($libraries),
-            'scripts' => $this->hvp_add_scripts($libraries)
-        );
+    public function hvp_alter_styles(&$scripts, $libraries) {
     }
 
     /**
-     * Return additional style files to the libraries.
+     * Alter which scripts are loaded for H5P. Useful for adding your
+     * own custom scripts or replacing existing ones.
      *
+     * @param object $scripts List of JavaScripts that will be loaded
      * @param array $libraries Array of libraries indexed by the library's machineName
-     *
-     * @return array Array of objects with properties path and version.
      */
-    public function hvp_add_styles($libraries) {
-        return array();
+    public function hvp_alter_scripts(&$scripts, $libraries) {
     }
 
     /**
-     * Return additional script files to the libraries.
-     *
-     * @param array $libraries Array of libraries indexed by the library's machineName
-     *
-     * @return array Array of objects with properties path and version.
-     */
-    public function hvp_add_scripts($libraries) {
-        return array();
-    }
-
-    /**
-     * Alter semantics before they are processed
+     * Alter semantics before they are processed. This is useful for changing
+     * how the editor looks and how content parameters are filtered.
      *
      * @param object $semantics Semantics as object
      * @param string $name Machine name of library
@@ -77,5 +62,19 @@ class mod_hvp_renderer extends plugin_renderer_base {
      * @param int $minorVersion Minor version of library
      */
     public function hvp_alter_semantics(&$semantics, $name, $majorVersion, $minorVersion) {
+
+    }
+
+    /**
+     * Alter parameters of H5P content after it has been filtered through
+     * semantics. This is useful for adapting the content to the current context.
+     *
+     * @param object $parameters The content parameters for the library
+     * @param string $name The machine readable name of the library
+     * @param int $majorVersion Major version of the library
+     * @param int $minorVersion Minor version of the library
+     */
+    public function hvp_alter_filtered_parameters(&$parameters, $name, $majorVersion, $minorVersion) {
+
     }
 }

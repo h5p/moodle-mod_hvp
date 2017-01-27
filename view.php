@@ -72,6 +72,15 @@ $displayOptions[\H5PCore::DISPLAY_OPTION_EMBED] = false;
 
 // Filter content parameters.
 $safeparameters = $core->filterParameters($content);
+$decoded_params = json_decode($safeparameters);
+$hvpoutput = $PAGE->get_renderer('mod_hvp');
+$hvpoutput->hvp_alter_filtered_parameters(
+    $decoded_params,
+    $content['library']['name'],
+    $content['library']['majorVersion'],
+    $content['library']['minorVersion']
+);
+$safeparameters = json_encode($decoded_params);
 
 $export = '';
 if ($displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD] && (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true)) {
@@ -106,9 +115,8 @@ $preloadeddependencies = $core->loadContentDependencies($content['id'], 'preload
 $files = $core->getDependenciesFiles($preloadeddependencies);
 
 // Add additional asset files if required.
-$hvpoutput = $PAGE->get_renderer('mod_hvp');
-$additionalfiles= $hvpoutput->hvp_additional_asset_files($preloadeddependencies);
-$files = array_merge_recursive($files, $additionalfiles);
+$hvpoutput->hvp_alter_scripts($files['scripts'], $preloadeddependencies);
+$hvpoutput->hvp_alter_styles($files['styles'], $preloadeddependencies);
 
 // Determine embed type.
 $embedtype = \H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);

@@ -223,7 +223,7 @@ class editor_framework implements \H5peditorStorage {
 
       $PAGE->set_context($context);
       $renderer = $PAGE->get_renderer('mod_hvp');
-      $additionalFiles = $renderer->hvp_additional_asset_files($libraryList);
-      $files = array_merge_recursive($files, $additionalFiles);
+      $renderer->hvp_alter_scripts($files['scripts'], $libraryList);
+      $renderer->hvp_alter_styles($files['styles'], $libraryList);
     }
 }
