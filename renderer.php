@@ -33,36 +33,38 @@ defined('MOODLE_INTERNAL') || die();
 class mod_hvp_renderer extends plugin_renderer_base {
 
     /**
-    * Return additional asset files to the libraries.
-    *
-    * @param array $libraries Array of libraries indexed by the library's machineName
-    * @return array
-    */
+     * Return additional asset files to the libraries.
+     *
+     * @param array $libraries Array of libraries indexed by the library's machineName
+     *
+     * @return array
+     */
     public function hvp_additional_asset_files($libraries) {
-        return array (
-            'styles' => $this->hvp_add_styles($libraries),
+        return array(
+            'styles'  => $this->hvp_add_styles($libraries),
             'scripts' => $this->hvp_add_scripts($libraries)
         );
     }
 
     /**
-    * Return additional style files to the libraries.
-    *
-    * @param array $libraries Array of libraries indexed by the library's machineName
-    * @return array Array of objects with properties path and version.
-    */
+     * Return additional style files to the libraries.
+     *
+     * @param array $libraries Array of libraries indexed by the library's machineName
+     *
+     * @return array Array of objects with properties path and version.
+     */
     public function hvp_add_styles($libraries) {
         return array();
     }
 
     /**
-    * Return additional script files to the libraries.
-    *
-    * @param array $libraries Array of libraries indexed by the library's machineName
-    * @return array Array of objects with properties path and version.
-    */
+     * Return additional script files to the libraries.
+     *
+     * @param array $libraries Array of libraries indexed by the library's machineName
+     *
+     * @return array Array of objects with properties path and version.
+     */
     public function hvp_add_scripts($libraries) {
         return array();
     }
-
 }

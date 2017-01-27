@@ -207,6 +207,23 @@ class editor_framework implements \H5peditorStorage {
      *  have majorVersion and minorVersion as properties.
      */
     public function alterLibraryFiles(&$files, $libraries) {
-        // TODO: h5p/h5p-moodle-plugin#12
+      global $PAGE;
+
+      // Refactor dependency list
+      $libraryList = array();
+      foreach ($libraries as $dependency) {
+        $libraryList[$dependency['machineName']] = array(
+          'majorVersion' => $dependency['majorVersion'],
+          'minorVersion' => $dependency['minorVersion']
+        );
+      }
+
+      $contextId = required_param('contextId', PARAM_INT);
+      $context = \context::instance_by_id($contextId);
+
+      $PAGE->set_context($context);
+      $renderer = $PAGE->get_renderer('mod_hvp');
+      $additionalFiles = $renderer->hvp_additional_asset_files($libraryList);
+      $files = array_merge_recursive($files, $additionalFiles);
     }
 }
