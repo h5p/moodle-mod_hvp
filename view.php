@@ -105,6 +105,11 @@ $settings['contents'][$cid] = array(
 $preloadeddependencies = $core->loadContentDependencies($content['id'], 'preloaded');
 $files = $core->getDependenciesFiles($preloadeddependencies);
 
+// Add additional asset files if required.
+$hvpoutput = $PAGE->get_renderer('mod_hvp');
+$additionalfiles= $hvpoutput->hvp_additional_asset_files($preloadeddependencies);
+$files = array_merge_recursive($files, $additionalfiles);
+
 // Determine embed type.
 $embedtype = \H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
 if ($embedtype === 'div') {
