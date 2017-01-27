@@ -67,4 +67,15 @@ class mod_hvp_renderer extends plugin_renderer_base {
     public function hvp_add_scripts($libraries) {
         return array();
     }
+
+    /**
+     * Alter semantics before they are processed
+     *
+     * @param object $semantics Semantics as object
+     * @param string $name Machine name of library
+     * @param int $majorVersion Major version of library
+     * @param int $minorVersion Minor version of library
+     */
+    public function hvp_alter_semantics(&$semantics, $name, $majorVersion, $minorVersion) {
+    }
 }
