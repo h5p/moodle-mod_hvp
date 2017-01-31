@@ -72,6 +72,15 @@ $displayOptions[\H5PCore::DISPLAY_OPTION_EMBED] = false;
 
 // Filter content parameters.
 $safeparameters = $core->filterParameters($content);
+$decoded_params = json_decode($safeparameters);
+$hvpoutput = $PAGE->get_renderer('mod_hvp');
+$hvpoutput->hvp_alter_filtered_parameters(
+    $decoded_params,
+    $content['library']['name'],
+    $content['library']['majorVersion'],
+    $content['library']['minorVersion']
+);
+$safeparameters = json_encode($decoded_params);
 
 $export = '';
 if ($displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD] && (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true)) {
@@ -107,6 +116,11 @@ $files = $core->getDependenciesFiles($preloadeddependencies);
 
 // Determine embed type.
 $embedtype = \H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
+
+// Add additional asset files if required.
+$hvpoutput->hvp_alter_scripts($files['scripts'], $preloadeddependencies, $embedtype);
+$hvpoutput->hvp_alter_styles($files['styles'], $preloadeddependencies, $embedtype);
+
 if ($embedtype === 'div') {
     $context = \context_system::instance();
     $hvppath = "/pluginfile.php/{$context->id}/mod_hvp";
