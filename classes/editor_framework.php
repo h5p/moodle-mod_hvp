@@ -223,7 +223,9 @@ class editor_framework implements \H5peditorStorage {
 
       $PAGE->set_context($context);
       $renderer = $PAGE->get_renderer('mod_hvp');
-      $renderer->hvp_alter_scripts($files['scripts'], $libraryList);
-      $renderer->hvp_alter_styles($files['styles'], $libraryList);
+
+      $embedType = 'editor';
+      $renderer->hvp_alter_scripts($files['scripts'], $libraryList, $embedType);
+      $renderer->hvp_alter_styles($files['styles'], $libraryList, $embedType);
     }
 }

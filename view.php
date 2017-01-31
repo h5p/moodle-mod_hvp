@@ -114,12 +114,13 @@ $settings['contents'][$cid] = array(
 $preloadeddependencies = $core->loadContentDependencies($content['id'], 'preloaded');
 $files = $core->getDependenciesFiles($preloadeddependencies);
 
-// Add additional asset files if required.
-$hvpoutput->hvp_alter_scripts($files['scripts'], $preloadeddependencies);
-$hvpoutput->hvp_alter_styles($files['styles'], $preloadeddependencies);
-
 // Determine embed type.
 $embedtype = \H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
+
+// Add additional asset files if required.
+$hvpoutput->hvp_alter_scripts($files['scripts'], $preloadeddependencies, $embedtype);
+$hvpoutput->hvp_alter_styles($files['styles'], $preloadeddependencies, $embedtype);
+
 if ($embedtype === 'div') {
     $context = \context_system::instance();
     $hvppath = "/pluginfile.php/{$context->id}/mod_hvp";

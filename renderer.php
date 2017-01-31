@@ -38,9 +38,9 @@ class mod_hvp_renderer extends plugin_renderer_base {
      *
      * @param object $scripts List of stylesheets that will be loaded
      * @param array $libraries Array of libraries indexed by the library's machineName
+     * @param string $embedType Possible values: div, iframe, external, editor
      */
-    public function hvp_alter_styles(&$scripts, $libraries) {
-    }
+    public function hvp_alter_styles(&$scripts, $libraries, $embedType) {}
 
     /**
      * Alter which scripts are loaded for H5P. Useful for adding your
@@ -48,9 +48,9 @@ class mod_hvp_renderer extends plugin_renderer_base {
      *
      * @param object $scripts List of JavaScripts that will be loaded
      * @param array $libraries Array of libraries indexed by the library's machineName
+     * @param string $embedType Possible values: div, iframe, external, editor
      */
-    public function hvp_alter_scripts(&$scripts, $libraries) {
-    }
+    public function hvp_alter_scripts(&$scripts, $libraries, $embedType) {}
 
     /**
      * Alter semantics before they are processed. This is useful for changing
@@ -61,9 +61,7 @@ class mod_hvp_renderer extends plugin_renderer_base {
      * @param int $majorVersion Major version of library
      * @param int $minorVersion Minor version of library
      */
-    public function hvp_alter_semantics(&$semantics, $name, $majorVersion, $minorVersion) {
-
-    }
+    public function hvp_alter_semantics(&$semantics, $name, $majorVersion, $minorVersion) {}
 
     /**
      * Alter parameters of H5P content after it has been filtered through
@@ -74,7 +72,5 @@ class mod_hvp_renderer extends plugin_renderer_base {
      * @param int $majorVersion Major version of the library
      * @param int $minorVersion Minor version of the library
      */
-    public function hvp_alter_filtered_parameters(&$parameters, $name, $majorVersion, $minorVersion) {
-
-    }
+    public function hvp_alter_filtered_parameters(&$parameters, $name, $majorVersion, $minorVersion) {}
 }
