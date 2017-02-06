@@ -55,9 +55,19 @@ $string['confirmdialogheader'] = 'Bekreft handling';
 $string['confirmdialogbody'] = 'Er du sikker på at du ønsker å gjøre dette? Handlingen er ikke reversibel.';
 $string['cancellabel'] = 'Avbryt';
 $string['confirmlabel'] = 'Bekreft';
+$string['noh5ps'] = 'Der finnes ikke noe interaktivt innhold for dette kurset.';
+
+// Update message email for admin
+$string['messageprovider:updates'] = 'Varsel om tilgjengelige H5P-oppdateringer';
+$string['updatesavailabletitle'] = 'Nye H5P-oppdateringer er tilgjengelig';
+$string['updatesavailablemsgpt1'] = 'Der er tilgjengelige oppdateringer for H5P-innholdstypene du har i din Moodle-installasjon.';
+$string['updatesavailablemsgpt2'] = 'Naviger til lenka under for ytterligere instruksjoner.';
+$string['updatesavailablemsgpt3'] = 'Den seneste oppdateringen ble sluppet: {$a}';
+$string['updatesavailablemsgpt4'] = 'Du kjører en versjon fra: {$a}';
 
 $string['lookforupdates'] = 'Se etter H5P-oppdateringer';
 $string['removetmpfiles'] = 'Fjern gamle midlertidige filer';
+$string['removeoldlogentries'] = 'Fjern gamle H5P-loggmeldinger';
 
 // Admin settings.
 $string['displayoptionnevershow'] = 'Vis aldri';
@@ -72,14 +82,30 @@ $string['enableembed'] = 'Inkluder-knapp';
 $string['enablecopyright'] = 'Opphavsretts-knapp';
 $string['enableabout'] = 'Om H5P-knapp';
 
+$string['externalcommunication'] = 'Ekstern kommuniksjon';
+$string['externalcommunication_help'] = 'Bidra til utviklingen av H5P ved å bidra med anonym bruksdata. Ved å skru av denne innstillingen vil du hindre installasjonen i å hente de seneste H5P-oppdateringene. Du kan lese mer om <a {$a}>hvilke data som samles</a> på h5p.org.';
 $string['enablesavecontentstate'] = 'Lagre tilstanden til innholdet';
 $string['enablesavecontentstate_help'] = 'Automatisk lagring av hva brukeren har svart og hvor langt brukeren har kommet. Dette betyr brukeren kan fortsette der han avsluttet.';
 $string['contentstatefrequency'] = 'Frekvens for tilstandslagring';
 $string['contentstatefrequency_help'] = 'Hvor ofte skal man lagre tilstanden (i antall sekunder). Øk dette tallet hvis du har problemer med for mange ajax-forespørsler';
+$string['enabledlrscontenttypes'] = 'Skru på LRS-avhengige innholdstyper';
+$string['enabledlrscontenttypes_help'] = 'Gjør det mulig å bruke innholdstyper som er avhengig av en såkalt Learning Record Store for å virke, slik som Questionnaire-innholdstypen.';
 
 // Admin menu.
-$string['settings'] = 'H5P Innstillinger';
-$string['libraries'] = 'H5P Bibliotek';
+$string['settings'] = 'H5P-innstillinger';
+$string['libraries'] = 'H5P-bibliotek';
+
+// Update libraries section.
+$string['updatelibraries'] = 'Oppdater alle bibliotek';
+$string['updatesavailable'] = 'Der finnes tilgjengelige oppdateringer for H5P-innholdstypene dine.';
+$string['whyupdatepart1'] = 'Du kan lese mer om hvorfor det er viktig å holde seg oppdatert og godene ved å gjøre det på <a {$a}>Why Update H5P</a>-siden.';
+$string['whyupdatepart2'] = 'Denne siden viser også en liste over de forskjellige endringene, hvor du kan lese om nye funksjoner som introduseres og problemer som er fikset.';
+$string['currentversion'] = 'Du har';
+$string['availableversion'] = 'Tilgjengelig oppdatering';
+$string['usebuttonbelow'] = 'Du kan bruke knappen under for å automatisk laste ned og oppdatere alle innholdstypene dine.';
+$string['downloadandupdate'] = 'Last ned & oppdater';
+$string['missingh5purl'] = 'Mangler URL for H5P-fil';
+$string['unabletodownloadh5p'] = 'Ute av stand til å laste ned H5P-fil';
 
 // Upload libraries section.
 $string['uploadlibraries'] = 'Last opp bilbliotek';
@@ -152,6 +178,7 @@ $string['invalidlibrary'] = 'Ugyldig bibliotek';
 $string['nosuchlibrary'] = 'Biblioteket finnes ikke';
 $string['noparameters'] = 'Ingen parametre';
 $string['invalidparameters'] = 'Ugyldige parametre';
+$string['missingcontentuserdata'] = 'Feil: Kunne ikke finne innholdsbrukerdata';
 
 $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
@@ -167,6 +194,7 @@ $string['hvp:viewresults'] = 'Vise resultater for H5P-innhold';
 $string['hvp:getcachedassets'] = 'Tilgang til bufret H5P-innholdsressurser';
 $string['hvp:getcontent'] = 'Tilgang til innholdet til H5P-fil i kurs';
 $string['hvp:getexport'] = 'Tilgang til eksportfil fra H5P i kurs';
+$string['hvp:updatesavailable'] = 'Få varsel når H5P-oppdateringer er tilgjengelige';
 
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'Du har ikke tillatelse til å oppgradere bibliotek.';
@@ -209,7 +237,6 @@ $string['invalidfile'] = 'Fila "{$a->%filename}" er ikke tillatt. Bare filer med
 $string['invalidmultiselectoption'] = 'Ugyldig valg gjort i flervalg.';
 $string['invalidselectoption'] = 'Ugyldig valg gjort.';
 $string['invalidsemanticstype'] = 'Intern H5P-feil: ukjent innholdstype "{$a->@type}" i semantikken. Fjerner det aktuelle innholdet!';
-$string['invalidsemantics'] = 'Biblioteket som er brukt i innholdet er ikke gyldig i henhold til definisjonen i semantikken';
 $string['copyrightinfo'] = 'Opphavsrettsinformasjon';
 $string['years'] = 'År';
 $string['undisclosed'] = 'Undisclosed';
@@ -234,3 +261,12 @@ $string['invalidaudioformat'] = 'Ugyldig lydfilformat. Bruk mp3 eller wav.';
 $string['invalidvideoformat'] = 'Ugyldig videofilformat. Bruk mp4 eller webm.';
 $string['couldnotsave'] = 'Klarte ikke å lagre fila.';
 $string['couldnotcopy'] = 'Klarte ikke å kopiere fila.';
+
+// Welcome messages
+$string['welcomeheader'] = 'Welcome to the world of H5P!';
+$string['welcomegettingstarted'] = 'To get started with H5P and Moodle take a look at our <a {$a->moodle_tutorial}>tutorial</a> and check out the <a {$a->example_content}>example content</a> at H5P.org for inspiration.<br>The most popuplar content types have been installed for your convenience!';
+$string['welcomecommunity'] = 'We hope you will enjoy H5P and get engaged in our growing community through our <a {$a->forums}>forums</a> and chat room <a {$a->gitter}>H5P at Gitter</a>';
+$string['welcomecontactus'] = 'If you have any feedback, don\'t hesitate to <a {$a}>contact us</a>. We take feedback very seriously and are dedicated to making H5P better every day!';
+$string['missingmbstring'] = 'PHP-utvidelsen mbstring mangler. H5P trenger denne for å kunne virke';
+$string['wrongversion'] = 'En ugyldig versjon av H5P-biblioteket {$a->%machineName} er brukt i innholdet. Innholdet bruker {$a->%contentLibrary}, mens det skal bruke {$a->%semanticsLibrary}.';
+$string['invalidlibrary'] = 'H5P-biblioteket {$a->%library} brukt i innholdet er ugyldig';

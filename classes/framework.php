@@ -296,7 +296,6 @@ class framework implements \H5PFrameworkInterface {
                 'Invalid selected option in multi-select.' => 'invalidmultiselectoption',
                 'Invalid selected option in select.' => 'invalidselectoption',
                 'H5P internal error: unknown content type "@type" in semantics. Removing content!' => 'invalidsemanticstype',
-                'Library used in content is not a valid library according to semantics' => 'invalidsemantics',
                 'Copyright information' => 'copyrightinfo',
                 'Title' => 'title',
                 'Author' => 'author',
@@ -324,7 +323,10 @@ class framework implements \H5PFrameworkInterface {
                 'Invalid audio file format. Use mp3 or wav.' => 'invalidaudioformat',
                 'Invalid video file format. Use mp4 or webm.' => 'invalidvideoformat',
                 'Could not save file.' => 'couldnotsave',
-                'Could not copy file.' => 'couldnotcopy'
+                'Could not copy file.' => 'couldnotcopy',
+                'The mbstring PHP extension is not loaded. H5P need this to function properly' => 'missingmbstring',
+                'The version of the H5P library %machineName used in this content is not valid. Content contains %contentLibrary, but it should be %semanticsLibrary.' => 'wrongversion',
+                'The H5P library %library used in the content is not valid' => 'invalidlibrary'
             ];
         }
 
