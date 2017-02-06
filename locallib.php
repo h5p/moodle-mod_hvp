@@ -50,10 +50,6 @@ function hvp_get_core_settings() {
             'setFinished' => $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished',
             'contentUserData' => $ajaxpath . \H5PCore::createToken('contentuserdata') . '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId',
         ),
-        'tokens' => array(
-          'result' => \H5PCore::createToken('result'),
-          'contentUserData' => \H5PCore::createToken('contentuserdata')
-        ),
         'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : false,
         'siteUrl' => $CFG->wwwroot,
         'l10n' => array(
