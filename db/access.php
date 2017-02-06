@@ -17,6 +17,16 @@
 /**
  * Capability definitions for the hvp module.
  *
+ * Available archetypes:
+ *  manager
+ *  coursecreator
+ *  editingteacher
+ *  teacher
+ *  student
+ *  guest
+ *  user
+ *  frontpage
+ *
  * @package    mod_hvp
  * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -100,7 +110,8 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'student' => CAP_ALLOW,
-            'user' => CAP_ALLOW
+            'user' => CAP_ALLOW,
+            'guest' => CAP_ALLOW
         )
     ),
 

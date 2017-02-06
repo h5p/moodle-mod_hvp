@@ -72,6 +72,15 @@ $displayOptions[\H5PCore::DISPLAY_OPTION_EMBED] = false;
 
 // Filter content parameters.
 $safeparameters = $core->filterParameters($content);
+$decoded_params = json_decode($safeparameters);
+$hvpoutput = $PAGE->get_renderer('mod_hvp');
+$hvpoutput->hvp_alter_filtered_parameters(
+    $decoded_params,
+    $content['library']['name'],
+    $content['library']['majorVersion'],
+    $content['library']['minorVersion']
+);
+$safeparameters = json_encode($decoded_params);
 
 $export = '';
 if ($displayOptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD] && (!isset($CFG->mod_hvp_export) || $CFG->mod_hvp_export === true)) {
@@ -107,22 +116,39 @@ $files = $core->getDependenciesFiles($preloadeddependencies);
 
 // Determine embed type.
 $embedtype = \H5PCore::determineEmbedType($content['embedType'], $content['library']['embedTypes']);
+
+// Add additional asset files if required.
+$hvpoutput->hvp_alter_scripts($files['scripts'], $preloadeddependencies, $embedtype);
+$hvpoutput->hvp_alter_styles($files['styles'], $preloadeddependencies, $embedtype);
+
 if ($embedtype === 'div') {
     $context = \context_system::instance();
     $hvppath = "/pluginfile.php/{$context->id}/mod_hvp";
 
     // Schedule JavaScripts for loading through Moodle.
     foreach ($files['scripts'] as $script) {
-        $url = $hvppath . $script->path . $script->version;
+        $url = $script->path . $script->version;
+
+        // Add URL prefix if not external
+        $isExternal = strpos($script->path, '://');
+        if ($isExternal === FALSE) {
+            $url = $hvppath . $url;
+        }
         $settings['loadedJs'][] = $url;
-        $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . $url), true);
+        $PAGE->requires->js(new moodle_url($isExternal ? $url : $CFG->httpswwwroot . $url), true);
     }
 
     // Schedule stylesheets for loading through Moodle.
     foreach ($files['styles'] as $style) {
-        $url = $hvppath . $style->path . $style->version;
+        $url = $style->path . $style->version;
+
+        // Add URL prefix if not external
+        $isExternal = strpos($style->path, '://');
+        if ($isExternal === FALSE) {
+            $url = $hvppath . $url;
+        }
         $settings['loadedCss'][] = $url;
-        $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . $url));
+        $PAGE->requires->css(new moodle_url($isExternal ? $url : $CFG->httpswwwroot . $url));
     }
 } else {
     // JavaScripts and stylesheets will be loaded through h5p.js.

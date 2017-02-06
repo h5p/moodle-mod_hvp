@@ -25,7 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/backup/moodle2/backup_stepslib.php');
 require_once($CFG->dirroot . '/mod/hvp/backup/moodle2/backup_hvp_stepslib.php');
 
 /**
@@ -44,6 +43,18 @@ class backup_hvp_activity_task extends backup_activity_task {
      */
     protected function define_my_steps() {
         $this->add_step(new backup_hvp_activity_structure_step('hvp_structure', 'hvp.xml'));
+
+        // Ideally this step would only run once per backup, unfortunately, the
+        // nature of the backup system does not allow for activities to have
+        // shared resources.
+        $this->add_step(new backup_hvp_libraries_structure_step('hvp_libraries', 'hvp_libraries.xml'));
+
+        // One suggestion for increasing performance would be to only add the
+        // libraries to one activity, but then that would have to be restored
+        // before the other activities.
+
+        // Another suggestion is to reduce the is to reduce the size of the XML
+        // by reading the data from JSON again after restoring.
     }
 
     /**

@@ -15,13 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package mod_hvp
- * @copyright 2016 Mediamaisteri Oy {@link http://www.mediamaisteri.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * Define all the restore steps that will be used by the restore_hvp_activity_task
+ * Restore structure step for both hvp content and hvp libraries
+ *
+ * @package     mod_hvp
+ * @category    backup
+ * @copyright   2016 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -30,14 +29,14 @@
 class restore_hvp_activity_structure_step extends restore_activity_structure_step {
 
     protected function define_structure() {
-
         $paths = array();
         $userinfo = $this->get_setting_value('userinfo');
 
+        // Restore activities
         $paths[] = new restore_path_element('hvp', '/activity/hvp');
-        $paths[] = new restore_path_element('library', '/activity/hvp/libraries/library');
 
         if ($userinfo) {
+            // Restore content state
             $paths[] = new restore_path_element('content_user_data', '/activity/hvp/content_user_data/entry');
         }
 
@@ -48,9 +47,9 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
     protected function process_hvp($data) {
         global $DB;
 
-        $data = (object)$data;
-        $oldid = $data->id;
+        $data = (object) $data;
         $data->course = $this->get_courseid();
+        $data->main_library_id = \restore_hvp_libraries_structure_step::get_library_id($data);
 
         $data->timecreated = $this->apply_date_offset($data->timecreated);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
@@ -61,61 +60,196 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
         $this->apply_activity_instance($newitemid);
     }
 
-    /**
-     * Connects the restored H5P content to content libraries
-     *
-     * This assumes that the libraries have already been installed
-     * into the system.
-     *
-     * @param array $data Library dependency defitinions of the content
-     */
-    protected function process_library($data) {
+    protected function process_content_user_data($data) {
         global $DB;
 
-        $data = (object)$data;
-        //$oldid = $data->id;
+        $data = (object) $data;
+        $data->user_id = $this->get_mappingid('user', $data->user_id);
+        $data->hvp_id = $this->get_new_parentid('hvp');
 
-        // TODO Cache a list of existing libraries somewhere, so we won't
-        // have to check them multiple times in case restoring more than
-        // one H5P activity.
-        $library = $DB->get_record('hvp_libraries', array(
-            'machine_name' => $data->machine_name,
-            'major_version' => $data->major_version,
-            'minor_version' => $data->minor_version,
-            'patch_version' => $data->patch_version,
-        ));
-
-        if (empty($library)) {
-            // TODO What to do now? It isn't possible to continue restoring
-            // the activity without the needed libraries.
-
-            print_error("Your system is missing the library {$data->machine_name} version {$data->major_version}.{$data->minor_version}.{$data->patch_version}");
-        }
-
-        $content_library = (object) array(
-            'id' => null,
-            'hvp_id' => $this->get_new_parentid('hvp'), // From hvp table
-            'library_id' => $library->id, // From hvp_libraries table
-            'dependency_type' => $data->dependency_type,
-            'drop_css' => $data->drop_css,
-            'weight' => $data->weight,
-        );
-
-        // Note that we're not in fact adding a new library but a connection
-        // between the restored H5P activity and an existing library.
-        $newitemid = $DB->insert_record('hvp_contents_libraries', $content_library);
-
-        // TODO
-        // $this->set_mapping('hvp_todo', $oldid, $newitemid);
-    }
-
-    protected function process_content_user_data($data) {
-
+        $DB->insert_record('hvp_content_user_data', $data);
     }
 
     protected function after_execute() {
-        // TODO
-        // Add hvp related files, no need to match by itemname (just internally handled context)
-        $this->add_related_files('mod_hvp', 'content', 'id');
+        // Add files for intro field
+        $this->add_related_files('mod_hvp', 'intro', null);
+
+        // Add hvp related files
+        $this->add_related_files('mod_hvp', 'content', 'hvp');
+    }
+}
+
+/**
+ * Structure step to restore H5P libraries
+ */
+class restore_hvp_libraries_structure_step extends restore_activity_structure_step {
+
+    protected function define_structure() {
+        $paths = array();
+
+        // Restore libraries first
+        $paths[] = new restore_path_element('hvp_library', '/hvp_libraries/library');
+
+        // Add translations
+        $paths[] = new restore_path_element('hvp_library_translation', '/hvp_libraries/library/translations/translation');
+
+        // and dependencies
+        $paths[] = new restore_path_element('hvp_library_dependency', '/hvp_libraries/library/dependencies/dependency');
+
+        // Return the paths wrapped into standard activity structure
+        return $this->prepare_activity_structure($paths);
+    }
+
+    protected function process_hvp_library($data) {
+        global $DB;
+
+        $data = (object)$data;
+        $oldid = $data->id;
+        unset($data->id);
+
+        $libraryid = self::get_library_id($data);
+        if (!$libraryid) {
+            // There is no updating of libraries. If an older patch version exists
+            // on the site that one will be used instead of the new one in the backup.
+            // This is due to the default behavior when files are restored in Moodle.
+
+            // Restore library
+            $libraryid = $DB->insert_record('hvp_libraries', $data);
+
+            // Update libraries cache
+            self::get_library_id($data, $libraryid);
+        }
+
+        // Keep track of libraries for translations and dependencies
+        $this->set_mapping('hvp_library', $oldid, $libraryid);
+
+        // Update any dependencies that require this library
+        $this->update_missing_dependencies($oldid, $libraryid);
+    }
+
+    protected function process_hvp_library_translation($data) {
+        global $DB;
+
+        $data = (object) $data;
+        $data->library_id = $this->get_new_parentid('hvp_library');
+
+        // check that translations doesnt exists
+        $translation = $DB->get_record_sql(
+            'SELECT id
+               FROM {hvp_libraries_languages}
+              WHERE library_id = ?
+                AND language_code = ?',
+              array($data->library_id,
+                    $data->language_code)
+        );
+
+        if (empty($translation)) {
+            // only restore translations if library has been restored
+            $newitemid = $DB->insert_record('hvp_libraries_languages', $data);
+        }
+    }
+
+    protected function process_hvp_library_dependency($data) {
+      global $DB;
+
+      $data = (object) $data;
+      $data->library_id = $this->get_new_parentid('hvp_library');
+
+      $new_required_library_id = $this->get_mappingid('hvp_library', $data->required_library_id);
+      if ($new_required_library_id) {
+          $data->required_library_id = $new_required_library_id;
+
+          // check that the dependency doesn't exists
+          $dependency = $DB->get_record_sql(
+              'SELECT id
+                 FROM {hvp_libraries_libraries}
+                WHERE library_id = ?
+                  AND required_library_id = ?',
+                array($data->library_id,
+                      $data->required_library_id)
+          );
+          if (empty($dependency)) {
+              $DB->insert_record('hvp_libraries_libraries', $data);
+          }
+      }
+      else {
+          // The required dependency hasn't been restored yet. We need to add this dependency later.
+          $this->update_missing_dependencies($data->required_library_id, null, $data);
+      }
+    }
+
+    protected function after_execute() {
+        // Add files for libraries
+        $context = \context_system::instance();
+        $this->add_related_files('mod_hvp', 'libraries', null, $context->id);
+    }
+
+    /**
+     * Cache to reduce queries.
+     */
+    public static function get_library_id(&$library, $set = null) {
+        static $keytoid;
+        global $DB;
+
+        $key = $library->machine_name . ' ' . $library->major_version . '.' . $library->minor_version;
+        if (is_null($keytoid)) {
+            $keytoid = array();
+        }
+        if ($set !== null) {
+            $keytoid[$key] = $set;
+        }
+        elseif (!isset($keytoid[$key])) {
+            $lib = $DB->get_record_sql(
+                'SELECT id
+                   FROM {hvp_libraries}
+                  WHERE machine_name = ?
+                    AND major_version = ?
+                    AND minor_version = ?',
+                  array($library->machine_name,
+                        $library->major_version,
+                        $library->minor_version)
+            );
+
+            // Non existing = false
+            $keytoid[$key] = (empty($lib) ? false : $lib->id);
+        }
+
+        return $keytoid[$key];
+    }
+
+    /**
+     * Keep track of missing dependencies since libraries aren't inserted
+     * in any special order
+     */
+    private function update_missing_dependencies($oldid, $newid, $setmissing = null) {
+        static $missingdeps;
+        global $DB;
+
+        if (is_null($missingdeps)) {
+            $missingdeps = array();
+        }
+
+        if ($setmissing !== null) {
+            $missingdeps[$oldid][] = $setmissing;
+        }
+        elseif (isset($missingdeps[$oldid])) {
+            foreach ($missingdeps[$oldid] as $missingdep) {
+                $missingdep->required_library_id = $newid;
+
+                // check that the dependency doesn't exists
+                $dependency = $DB->get_record_sql(
+                    'SELECT id
+                       FROM {hvp_libraries_libraries}
+                      WHERE library_id = ?
+                        AND required_library_id = ?',
+                      array($missingdep->library_id,
+                            $missingdep->required_library_id)
+                );
+                if (empty($dependency)) {
+                    $DB->insert_record('hvp_libraries_libraries', $missingdep);
+                }
+            }
+            unset($missingdeps[$oldid]);
+        }
     }
 }
