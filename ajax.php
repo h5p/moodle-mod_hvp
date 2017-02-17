@@ -23,6 +23,7 @@
 
 define('AJAX_SCRIPT', true);
 require(__DIR__ . '/../../config.php');
+require_once($CFG->libdir . '/filelib.php');
 require_once("locallib.php");
 
 $action = required_param('action', PARAM_ALPHA);
@@ -251,6 +252,58 @@ switch($action) {
         }
 
         $file->printResult();
+        break;
+
+    /**
+     * Handle file upload through the editor.
+     *
+     * Parameters:
+     *  raw token
+     *  raw contentTypeUrl
+     */
+    case 'libraryinstall':
+        global $DB;
+
+        $token = required_param('token', PARAM_RAW);
+
+        // Check permissions
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:updatelibraries', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontoupgrade', 'hvp'));
+            http_response_code(403);
+            break;
+        }
+
+        // Get content type url
+        $url = required_param('contentTypeUrl', PARAM_RAW);
+
+        // Generate local tmp file path
+        $local_folder = $CFG->tempdir . uniqid('/hvp-');
+        $local_file   = $local_folder . '.h5p';
+
+        if (!\download_file_content($url, NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
+            \H5PCore::ajaxError(get_string('unabletodownloadh5p', 'hvp'));
+            http_response_code(404);
+            break;
+        }
+
+        // Add folder and file paths to H5P Core
+        $interface = \mod_hvp\framework::instance('interface');
+        $interface->getUploadedH5pFolderPath($local_folder);
+        $interface->getUploadedH5pPath($local_file);
+
+        // Validate package
+        $h5pValidator = \mod_hvp\framework::instance('validator');
+        if (!$h5pValidator->isValidPackage(TRUE)) {
+            @unlink($local_file);
+            \H5PCore::ajaxError(get_string('unabletodownloadh5p', 'hvp'));
+            http_response_code(500);
+            break;
+        }
+
+        // Install H5P file into Moodle
+        $storage = \mod_hvp\framework::instance('storage');
+        $storage->savePackage(NULL, NULL, TRUE);
         break;
 
     /*
