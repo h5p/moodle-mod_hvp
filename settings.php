@@ -39,6 +39,10 @@ $ADMIN->add('modhvpfolder', $settings);
 $ADMIN->add('modhvpfolder', new admin_externalpage('h5plibraries',
     get_string('libraries', 'hvp'), new moodle_url('/mod/hvp/library_list.php')));
 
+// Add the content type cache page
+$ADMIN->add('modhvpfolder', new admin_externalpage('h5pctcache',
+    get_string('contenttypecacheheader', 'hvp'), new moodle_url('/mod/hvp/content_type_cache.php')));
+
 if ($ADMIN->fulltree) {
     // Settings is stored on the global $CFG object.
 
