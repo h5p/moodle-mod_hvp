@@ -91,11 +91,16 @@ $string['contentstatefrequency_help'] = 'In seconds, how often do you wish the u
 $string['enabledlrscontenttypes'] = 'Enable LRS dependent content types';
 $string['enabledlrscontenttypes_help'] = 'Makes it possible to use content types that rely upon a Learning Record Store to function properly, like the Questionnaire content type.';
 
-$string['contenttypecacheheader'] = 'Content type cache';
-
 // Admin menu.
+$string['contenttypecacheheader'] = 'H5P Content Type Cache';
 $string['settings'] = 'H5P Settings';
 $string['libraries'] = 'H5P Libraries';
+
+// Content type cache section
+$string['ctcacheconnectionfailed'] = 'Could not connect to the H5P Content Type Hub. Please try again later.';
+$string['ctcachenolibraries'] = 'No libraries was received from the Content Type Hub. Please try again later.';
+$string['ctcachesuccess'] = 'Library cache was successfully updated!';
+$string['ctcachelastupdatelabel'] = 'Last update';
 
 // Update libraries section.
 $string['updatelibraries'] = 'Update All Libraries';

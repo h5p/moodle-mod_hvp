@@ -190,5 +190,41 @@ function xmldb_hvp_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016122800, 'hvp');
     }
 
+    /**
+     * Add content type cache database
+     */
+    if ($oldversion < 2017021900) {
+        // Define table hvp_events to be created.
+        $table = new xmldb_table('hvp_libraries_hub_cache');
+
+        // Adding fields to table hvp_events.
+        $table->add_field('library_id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, XMLDB_SEQUENCE, NULL);
+        $table->add_field('machine_name', XMLDB_TYPE_CHAR, '255', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('title', XMLDB_TYPE_CHAR, '255', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('major_version', XMLDB_TYPE_INTEGER, '4', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('minor_version', XMLDB_TYPE_INTEGER, '4', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('patch_version', XMLDB_TYPE_INTEGER, '4', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('h5p_version', XMLDB_TYPE_CHAR, '127', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('short_description', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('long_description', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('icon', XMLDB_TYPE_CHAR, '511', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('created', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('updated', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('is_recommended', XMLDB_TYPE_INTEGER, '3', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('is_reviewed', XMLDB_TYPE_INTEGER, '3', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('times_downloaded', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('example_content', XMLDB_TYPE_CHAR, '511', NULL, XMLDB_NOTNULL, NULL, NULL);
+
+        // Adding keys to table hvp_events.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('library_id'));
+
+        // Conditionally launch create table for hvp_events.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_mod_savepoint(TRUE, 2017021900, 'hvp');
+    }
+
     return true;
 }
