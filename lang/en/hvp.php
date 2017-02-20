@@ -103,6 +103,7 @@ $string['ctcachesuccess'] = 'Library cache was successfully updated!';
 $string['ctcachelastupdatelabel'] = 'Last update';
 $string['ctcachebuttonlabel'] = 'Update content type cache';
 $string['ctcacheneverupdated'] = 'Never';
+$string['ctcachetaskname'] = 'Update content type cache';
 
 // Update libraries section.
 $string['updatelibraries'] = 'Update All Libraries';

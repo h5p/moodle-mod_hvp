@@ -12,6 +12,7 @@ global $PAGE, $SITE, $OUTPUT, $CFG;
 
 require_once("../../config.php");
 require_once($CFG->libdir . '/adminlib.php');
+require_once("locallib.php");
 
 // No guest autologin.
 require_login(0, FALSE);
@@ -31,55 +32,8 @@ $ct_cache_form = new content_type_cache_form();
 
 // On form submit
 if ($ct_cache_form->get_data()) {
-    // Get content type cache
-    $endpoint = 'http://hubendpoints';
-
-    $data      = file_get_contents($endpoint);
-    $interface = framework::instance('interface');
-
-    // No data received
-    if (!$data) {
-        $interface->setErrorMessage(get_string('ctcacheconnectionfailed', 'hvp'));
-        redirect($page_url);
-    }
-
-    $json = json_decode($data);
-
-    // No libraries received
-    if (!isset($json->libraries) || empty($json->libraries)) {
-        $interface->setErrorMessage(get_string('ctcachenolibraries', 'hvp'));
-        redirect($page_url);
-    }
-
-    global $DB;
-
-    // Replace existing cache
-    $DB->delete_records('hvp_libraries_hub_cache');
-    foreach ($json->libraries as $library) {
-        $DB->insert_record('hvp_libraries_hub_cache', (object) array(
-            'library_id'        => $library->library_id,
-            'machine_name'      => $library->machine_name,
-            'title'             => $library->title,
-            'major_version'     => $library->major_version,
-            'minor_version'     => $library->minor_version,
-            'patch_version'     => $library->patch_version,
-            'h5p_version'       => $library->h5p_version,
-            'short_description' => $library->short_description,
-            'long_description'  => $library->long_description,
-            'icon'              => $library->icon,
-            'created'           => $library->created,
-            'updated'           => $library->updated,
-            'is_recommended'    => $library->is_recommended,
-            'is_reviewed'       => $library->is_reviewed,
-            'times_downloaded'  => $library->times_downloaded,
-            'example_content'   => $library->example_content
-        ), FALSE, TRUE);
-    }
-
-    $interface->setInfoMessage(get_string('ctcachesuccess', 'hvp'));
-    set_config('content_type_cache_updated', time(), 'mod_hvp');
-
-    // reload page
+    // Update cache and reload page
+    hvp_update_content_type_cache();
     redirect($page_url);
 }
 
