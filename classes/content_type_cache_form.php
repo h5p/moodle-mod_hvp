@@ -38,13 +38,15 @@ class content_type_cache_form extends \moodleform {
         // Get and format date
         $last_update = get_config('mod_hvp', 'content_type_cache_updated');
 
+        $date_formatted = $last_update ? \userdate($last_update) :
+            get_string('ctcacheneverupdated', 'hvp');
+
         // Add last update info
         $mform->addElement('static', 'lastupdate',
-            get_string('ctcachelastupdatelabel', 'hvp'),
-            \userdate($last_update)
+            get_string('ctcachelastupdatelabel', 'hvp'), $date_formatted
         );
 
         // Update cache button
-        $this->add_action_buttons(FALSE, 'Update content type cache');
+        $this->add_action_buttons(FALSE, get_string('ctcachebuttonlabel', 'hvp'));
     }
 }

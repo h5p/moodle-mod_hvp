@@ -101,6 +101,8 @@ $string['ctcacheconnectionfailed'] = 'Could not connect to the H5P Content Type 
 $string['ctcachenolibraries'] = 'No libraries was received from the Content Type Hub. Please try again later.';
 $string['ctcachesuccess'] = 'Library cache was successfully updated!';
 $string['ctcachelastupdatelabel'] = 'Last update';
+$string['ctcachebuttonlabel'] = 'Update content type cache';
+$string['ctcacheneverupdated'] = 'Never';
 
 // Update libraries section.
 $string['updatelibraries'] = 'Update All Libraries';
