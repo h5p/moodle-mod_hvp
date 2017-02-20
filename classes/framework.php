@@ -42,7 +42,7 @@ class framework implements \H5PFrameworkInterface {
      * Get type of hvp instance
      *
      * @param string $type Type of hvp instance to get
-     * @return \H5PContentValidator|\H5PCore|\H5PMoodle|\H5PStorage|\H5PValidator|\mod_hvp\framework
+     * @return \H5PContentValidator|\H5PCore|\H5PStorage|\H5PValidator|\mod_hvp\framework
      */
     public static function instance($type = null) {
         global $CFG;

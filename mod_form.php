@@ -110,6 +110,15 @@ class mod_hvp_mod_form extends moodleform_mod {
     public function data_preprocessing(&$defaultvalues) {
         global $DB;
 
+        // Update content type cache if it is old
+        $interface = \mod_hvp\framework::instance('interface');
+        $ct_cache_last_update = $interface->getOption('content_type_cache_updated', 0);
+        $outdated_cache = $ct_cache_last_update + (60 * 60 * 24 * 7); // 1 week
+        if (time() > $outdated_cache) {
+            require_once(__DIR__ . '/locallib.php');
+            hvp_update_content_type_cache();
+        }
+
         $content = null;
         if (!empty($defaultvalues['id'])) {
             // Load Content
