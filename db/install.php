@@ -4,6 +4,7 @@ function xmldb_hvp_install() {
 
     // Try to install all the default content types
     require_once(__DIR__ . '/../autoloader.php');
+    require_once(__DIR__ . '/../locallib.php');
 
     // Override permission check for the install process, since caps hasn't
     // been set yet.
@@ -19,6 +20,9 @@ function xmldb_hvp_install() {
     if ($error !== null) {
       \mod_hvp\framework::messages('error', $error);
     }
+
+    // Update content type cache
+    \hvp_update_content_type_cache();
 
     // Print any messages
     echo '<h3>' . get_string('welcomeheader', 'hvp') . '</h3>' .

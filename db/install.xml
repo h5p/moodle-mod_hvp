@@ -69,7 +69,7 @@
         <INDEX NAME="meta" UNIQUE="false" FIELDS="machine_name, major_version, minor_version, patch_version, runnable"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="hvp_libraries" COMMENT="Stores information about libraries.">
+    <TABLE NAME="hvp_libraries_hub_cache" COMMENT="Caches content types from the H5P hub.">
       <FIELDS>
         <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key: The id of the library"/>
         <FIELD NAME="machine_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The library machine name"/>

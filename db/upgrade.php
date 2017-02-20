@@ -223,6 +223,14 @@ function xmldb_hvp_upgrade($oldversion) {
             $dbman->create_table($table);
         }
 
+        // Update the content type cache
+        require_once(__DIR__ . '/../locallib.php');
+        \hvp_update_content_type_cache();
+
+        // Print messages
+        \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
+        \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
+
         upgrade_mod_savepoint(TRUE, 2017021900, 'hvp');
     }
 
