@@ -81,6 +81,9 @@ $string['enabledownload'] = 'Download button';
 $string['enableembed'] = 'Embed button';
 $string['enablecopyright'] = 'Copyright button';
 $string['enableabout'] = 'About H5P button';
+$string['hubsettingsheader'] = 'Hub Settings';
+$string['disablehublabel'] = 'Disable hub';
+$string['disablehubdescription'] = 'It is strongly discouraged to disable the hub. It will disable all communication with the H5P hub, which mean you will not be able to create, reuse and share content and content types through the H5P hub interface. You will also have to install libraries manually through uploading them.';
 
 $string['externalcommunication'] = 'External communication';
 $string['externalcommunication_help'] = 'Aid in the development of H5P by contributing anonymous usage data. Disabling this option will prevent your site from fetching the newest H5P updates. You can read more about <a {$a}>which data is collected</a> on h5p.org.';
@@ -278,3 +281,4 @@ $string['maxpostsizetoosmall'] = 'Your PHP max post size option is too small. Yo
 $string['sslnotenabled'] = 'Your server does not have SSL enabled. SSL should be enabled to ensure a secure connection with the H5P hub.';
 $string['hubcommunicationdisabled'] = 'H5P hub communication has been disabled because one or more H5P requirements failed.';
 $string['reviseserversetupandretry'] = 'When you have revised your server setup you may re-enable H5P hub communication in H5P Settings.';
+$string['disablehubconfirmationmsg'] = 'Do you still want to enable the hub ?';
