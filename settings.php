@@ -65,6 +65,13 @@ if ($ADMIN->fulltree) {
                     get_string('enabledlrscontenttypes', 'hvp'),
                     get_string('enabledlrscontenttypes_help', 'hvp'), 0));
 
+    // Content state.
+    $settings->add(
+            new admin_setting_configtext('mod_hvp/site_uuid',
+                    'Site Key',
+                    'The site key is a secret that uniquely identifies this site with the Hub.',
+                    '', '/^(|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/', 36));
+
     $choices = array(
       H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptionnevershow', 'hvp'),
       H5PDisplayOptionBehaviour::ALWAYS_SHOW => get_string('displayoptionalwaysshow', 'hvp'),
