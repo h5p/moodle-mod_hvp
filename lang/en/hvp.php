@@ -270,3 +270,11 @@ $string['welcomecontactus'] = 'If you have any feedback, don\'t hesitate to <a {
 $string['missingmbstring'] = 'The mbstring PHP extension is not loaded. H5P need this to function properly';
 $string['wrongversion'] = 'The version of the H5P library {$a->%machineName} used in this content is not valid. Content contains {$a->%contentLibrary}, but it should be {$a->%semanticsLibrary}.';
 $string['invalidlibrary'] = 'The H5P library {$a->%library} used in the content is not valid';
+
+// Setup errors
+$string['oldphpversion'] = 'Your PHP version is too old. H5P needs at least version 5.2 to function properly';
+$string['maxuploadsizetoosmall'] = 'Your PHP max upload size option is too small. You should consider to increase it to more than 5MB.';
+$string['maxpostsizetoosmall'] = 'Your PHP max post size option is too small. You should consider to increase it to more than 5MB.';
+$string['sslnotenabled'] = 'Your server does not have SSL enabled. SSL should be enabled to ensure a secure connection with the H5P hub.';
+$string['hubcommunicationdisabled'] = 'H5P hub communication has been disabled because one or more H5P requirements failed.';
+$string['reviseserversetupandretry'] = 'When you have revised your server setup you may re-enable H5P hub communication in H5P Settings.';
