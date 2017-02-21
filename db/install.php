@@ -21,7 +21,7 @@ function xmldb_hvp_install() {
     }
 
     // Check that plugin is set up correctly
-    $core->check_setup_for_requirements();
+    $core->checkSetupForRequirements();
 
     // Print any messages
     echo '<h3>' . get_string('welcomeheader', 'hvp') . '</h3>' .
