@@ -327,7 +327,7 @@ class framework implements \H5PFrameworkInterface {
                 'The mbstring PHP extension is not loaded. H5P need this to function properly' => 'missingmbstring',
                 'The version of the H5P library %machineName used in this content is not valid. Content contains %contentLibrary, but it should be %semanticsLibrary.' => 'wrongversion',
                 'The H5P library %library used in the content is not valid' => 'invalidlibrary',
-                'Your PHP version is too old. H5P needs at least version 5.2 to function properly' => 'oldphpversion',
+                'Your PHP version is outdated. H5P requires version 5.2 to function properly. Version 5.6 or later is recommended.' => 'oldphpversion',
                 'Your PHP max upload size option is too small. You should consider to increase it to more than 5MB.' => 'maxuploadsizetoosmall',
                 'Your PHP max post size option is too small. You should consider to increase it to more than 5MB.' => 'maxpostsizetoosmall',
                 'Your server does not have SSL enabled. SSL should be enabled to ensure a secure connection with the H5P hub.' => 'sslnotenabled',
