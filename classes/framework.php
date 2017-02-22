@@ -1303,4 +1303,13 @@ class framework implements \H5PFrameworkInterface {
             ), FALSE, TRUE);
         }
     }
+
+    /**
+     * Get timestamp of time at user
+     *
+     * @return int Timestamp of localized time
+     */
+    public function getCurrentUserTime() {
+        return time();
+    }
 }
