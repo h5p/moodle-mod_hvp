@@ -81,7 +81,8 @@ function hvp_get_core_settings() {
         'user' => array(
             'name' => $USER->firstname . ' ' . $USER->lastname,
             'mail' => $USER->email
-        )
+        ),
+        'disableHub' => get_config('mod_hvp', 'disable_hub')
     );
 
     return $settings;
