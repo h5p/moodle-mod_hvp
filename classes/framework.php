@@ -326,7 +326,10 @@ class framework implements \H5PFrameworkInterface {
                 'Could not copy file.' => 'couldnotcopy',
                 'The mbstring PHP extension is not loaded. H5P need this to function properly' => 'missingmbstring',
                 'The version of the H5P library %machineName used in this content is not valid. Content contains %contentLibrary, but it should be %semanticsLibrary.' => 'wrongversion',
-                'The H5P library %library used in the content is not valid' => 'invalidlibrary'
+                'The H5P library %library used in the content is not valid' => 'invalidlibrary',
+                'Library cache was successfully updated!' => 'ctcachesuccess',
+                'No libraries was received from the Content Type Hub. Please try again later.' => 'ctcachenolibraries',
+                'Could not connect to the H5P Content Type Hub. Please try again later.' => 'ctcacheconnectionfailed'
             ];
         }
 
@@ -1254,5 +1257,50 @@ class framework implements \H5PFrameworkInterface {
                 return has_capability('mod/hvp:getexport', $context);
         }
         return FALSE;
+    }
+
+    /**
+     * Get content type cache from an external url.
+     *
+     * @param string $endpoint Endpoint containing content type cache
+     *
+     * @return object Json object with an array called 'libraries' containing
+     *  all content types that should be cached
+     */
+    public function getExternalContentTypeCache($endpoint) {
+        return file_get_contents($endpoint);
+    }
+
+    /**
+     * Replaces existing content type cache with the one passed in
+     *
+     * @param object $contentTypeCache Json with an array called 'libraries'
+     *  containing the new content type cache that should replace the old one.
+     */
+    public function replaceContentTypeCache($contentTypeCache) {
+        global $DB;
+
+        // Replace existing cache
+        $DB->delete_records('hvp_libraries_hub_cache');
+        foreach ($contentTypeCache->libraries as $library) {
+            $DB->insert_record('hvp_libraries_hub_cache', (object) array(
+                'library_id'        => $library->library_id,
+                'machine_name'      => $library->machine_name,
+                'title'             => $library->title,
+                'major_version'     => $library->major_version,
+                'minor_version'     => $library->minor_version,
+                'patch_version'     => $library->patch_version,
+                'h5p_version'       => $library->h5p_version,
+                'short_description' => $library->short_description,
+                'long_description'  => $library->long_description,
+                'icon'              => $library->icon,
+                'created'           => $library->created,
+                'updated'           => $library->updated,
+                'is_recommended'    => $library->is_recommended,
+                'is_reviewed'       => $library->is_reviewed,
+                'times_downloaded'  => $library->times_downloaded,
+                'example_content'   => $library->example_content
+            ), FALSE, TRUE);
+        }
     }
 }

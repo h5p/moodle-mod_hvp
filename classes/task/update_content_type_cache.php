@@ -24,9 +24,8 @@ class update_content_type_cache extends \core\task\scheduled_task {
     }
 
     public function execute() {
-        global $DB;
         // Update content type cache
-        require_once(__DIR__ . '/../../locallib.php');
-        \hvp_update_content_type_cache();
+        $core = \mod_hvp\framework::instance();
+        $core->updateContentTypeCache();
     }
 }

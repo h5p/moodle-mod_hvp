@@ -36,7 +36,7 @@ class content_type_cache_form extends \moodleform {
         $mform = $this->_form;
 
         // Get and format date
-        $last_update = get_config('mod_hvp', 'content_type_cache_updated');
+        $last_update = get_config('mod_hvp', 'content_type_cache_updated_at');
 
         $date_formatted = $last_update ? \userdate($last_update) :
             get_string('ctcacheneverupdated', 'hvp');
