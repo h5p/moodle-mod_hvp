@@ -104,7 +104,7 @@ if ($ADMIN->fulltree) {
 
     // Find missing requirements
     $core = \mod_hvp\framework::instance('core');
-    $core->checkSetupErrorMessage();
+    $errors = $core->checkSetupErrorMessage();
 
     $PAGE->requires->data_for_js('H5PDisableHubData', array(
         'selector' => '#id_s_mod_hvp_disable_hub',
@@ -113,7 +113,7 @@ if ($ADMIN->fulltree) {
         'confirmLabel' => get_string('confirmlabel', 'hvp'),
         'cancelLabel' => get_string('cancellabel', 'hvp'),
         'confirmationDialogMsg' => get_string('disablehubconfirmationmsg', 'hvp'),
-        'errors' => \mod_hvp\framework::messages('error')
+        'errors' => $errors
     ));
 }
 
