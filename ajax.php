@@ -197,7 +197,7 @@ switch($action) {
         // Update content type cache if enabled and too old
         $core = \mod_hvp\framework::instance('core');
         $interface = \mod_hvp\framework::instance('interface');
-        if (!$interface->getOption('hub_is_disabled', FALSE)) {
+        if ($interface->getOption('hub_is_enabled', TRUE)) {
             $ct_cache_last_update = $interface->getOption('content_type_cache_updated_at', 0);
             $outdated_cache = $ct_cache_last_update + (60 * 60 * 24 * 7); // 1 week
             if (time() > $outdated_cache) {
