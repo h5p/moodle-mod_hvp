@@ -82,7 +82,7 @@ function hvp_get_core_settings() {
             'name' => $USER->firstname . ' ' . $USER->lastname,
             'mail' => $USER->email
         ),
-        'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled')
+        'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? TRUE : FALSE
     );
 
     return $settings;
