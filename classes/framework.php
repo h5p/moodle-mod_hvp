@@ -332,7 +332,9 @@ class framework implements \H5PFrameworkInterface {
                 'Your PHP max post size option is too small. You should consider to increase it to more than 5MB.' => 'maxpostsizetoosmall',
                 'Your server does not have SSL enabled. SSL should be enabled to ensure a secure connection with the H5P hub.' => 'sslnotenabled',
                 'H5P hub communication has been disabled because one or more H5P requirements failed.' => 'hubcommunicationdisabled',
-                'When you have revised your server setup you may re-enable H5P hub communication in H5P Settings.' => 'reviseserversetupandretry'
+                'When you have revised your server setup you may re-enable H5P hub communication in H5P Settings.' => 'reviseserversetupandretry',
+                'A problem with the server write access was detected. Please make sure that your server can write to your data folder.' => 'nowriteaccess',
+                'Your PHP max upload size is bigger than your max post size. This is known to cause issues in some installations.' => 'uploadsizelargerthanpostsize'
             ];
         }
 

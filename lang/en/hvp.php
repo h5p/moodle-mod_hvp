@@ -82,7 +82,7 @@ $string['enableembed'] = 'Embed button';
 $string['enablecopyright'] = 'Copyright button';
 $string['enableabout'] = 'About H5P button';
 $string['hubsettingsheader'] = 'Hub Settings';
-$string['disablehublabel'] = 'Disable hub';
+$string['enablehublabel'] = 'Enable hub';
 $string['disablehubdescription'] = 'It is strongly discouraged to disable the hub. It will disable all communication with the H5P hub, which mean you will not be able to create, reuse and share content and content types through the H5P hub interface. You will also have to install libraries manually through uploading them.';
 
 $string['externalcommunication'] = 'External communication';
@@ -282,3 +282,5 @@ $string['sslnotenabled'] = 'Your server does not have SSL enabled. SSL should be
 $string['hubcommunicationdisabled'] = 'H5P hub communication has been disabled because one or more H5P requirements failed.';
 $string['reviseserversetupandretry'] = 'When you have revised your server setup you may re-enable H5P hub communication in H5P Settings.';
 $string['disablehubconfirmationmsg'] = 'Do you still want to enable the hub ?';
+$string['nowriteaccess'] = 'A problem with the server write access was detected. Please make sure that your server can write to your data folder.';
+$string['uploadsizelargerthanpostsize'] = 'Your PHP max upload size is bigger than your max post size. This is known to cause issues in some installations.';

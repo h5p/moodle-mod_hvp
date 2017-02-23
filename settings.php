@@ -86,10 +86,10 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('mod_hvp/hub_settings', get_string('hubsettingsheader', 'hvp'), ''));
     $settings->add(
         new admin_setting_configcheckbox(
-            'mod_hvp/disable_hub',
-            get_string('disablehublabel', 'hvp'),
+            'mod_hvp/hub_is_enabled',
+            get_string('enablehublabel', 'hvp'),
             get_string('disablehubdescription', 'hvp'),
-            0
+            1
         )
     );
 
@@ -107,7 +107,7 @@ if ($ADMIN->fulltree) {
     $errors = $core->checkSetupErrorMessage();
 
     $PAGE->requires->data_for_js('H5PDisableHubData', array(
-        'selector' => '#id_s_mod_hvp_disable_hub',
+        'selector' => '#id_s_mod_hvp_hub_is_enabled',
         'overlaySelector' => '#adminsettings',
         'header' => get_string('confirmdialogheader', 'hvp'),
         'confirmLabel' => get_string('confirmlabel', 'hvp'),
