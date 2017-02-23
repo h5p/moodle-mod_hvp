@@ -67,17 +67,31 @@ if ($ADMIN->fulltree) {
 
     // Content state.
     $settings->add(
-            new admin_setting_configtext('mod_hvp/site_uuid',
+            new admin_setting_configtext('mod_hvp/site_key',
                     'Site Key',
                     'The site key is a secret that uniquely identifies this site with the Hub.',
-                    '', '/^(|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/', 36));
+                    NULL, '/^(|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/', 36));
+
+    // JavaScript for hiding site key
+    $site_uuid = get_config('mod_hvp', 'site_uuid');
+    $PAGE->requires->js('/mod/hvp/library/js/jquery.js', TRUE);
+    $PAGE->requires->js('/mod/hvp/settings-hide-key.js', TRUE);
+    $PAGE->requires->js('/mod/hvp/library/js/h5p-display-options.js', TRUE);
+    $PAGE->requires->data_for_js('HVPSettingsHideKey', array(
+        'input' => 'id_s_mod_hvp_site_key',
+        'placeholder' => '********-****-****-****-************',
+        'value' => get_config('mod_hvp', 'site_uuid'),
+        'empty' => 'Empty',
+        'reveal' => 'Reveal',
+        'hide' => 'Hide',
+    ));
 
     $choices = array(
-      H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptionnevershow', 'hvp'),
-      H5PDisplayOptionBehaviour::ALWAYS_SHOW => get_string('displayoptionalwaysshow', 'hvp'),
-      H5PDisplayOptionBehaviour::CONTROLLED_BY_PERMISSIONS => get_string('displayoptionpermissions', 'hvp'),
-      H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_ON => get_string('displayoptionauthoron', 'hvp'),
-      H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_OFF => get_string('displayoptionauthoroff', 'hvp')
+        H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptionnevershow', 'hvp'),
+        H5PDisplayOptionBehaviour::ALWAYS_SHOW => get_string('displayoptionalwaysshow', 'hvp'),
+        H5PDisplayOptionBehaviour::CONTROLLED_BY_PERMISSIONS => get_string('displayoptionpermissions', 'hvp'),
+        H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_ON => get_string('displayoptionauthoron', 'hvp'),
+        H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_OFF => get_string('displayoptionauthoroff', 'hvp')
     );
 
     // Display options for H5P frame.
