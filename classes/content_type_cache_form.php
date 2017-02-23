@@ -43,8 +43,10 @@ class content_type_cache_form extends \moodleform {
 
         // Add last update info
         $mform->addElement('static', 'lastupdate',
-            get_string('ctcachelastupdatelabel', 'hvp'), $date_formatted
-        );
+            get_string('ctcachelastupdatelabel', 'hvp'), $date_formatted);
+
+        $mform->addElement('static', 'lastupdatedescription', '',
+            get_string('ctcachedescription', 'hvp'));
 
         // Update cache button
         $this->add_action_buttons(FALSE, get_string('ctcachebuttonlabel', 'hvp'));
