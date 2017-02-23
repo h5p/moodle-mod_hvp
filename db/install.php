@@ -20,9 +20,6 @@ function xmldb_hvp_install() {
       \mod_hvp\framework::messages('error', $error);
     }
 
-    // Update content type cache
-    $core->updateContentTypeCache();
-
     // Print any messages
     echo '<h3>' . get_string('welcomeheader', 'hvp') . '</h3>' .
          '<p>' .

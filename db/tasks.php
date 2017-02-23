@@ -50,14 +50,5 @@ $tasks = array(
         'day' => '*',
         'dayofweek' => '*',
         'month' => '*'
-    ),
-    array(
-        'classname' => 'mod_hvp\task\update_content_type_cache',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
     )
 );
