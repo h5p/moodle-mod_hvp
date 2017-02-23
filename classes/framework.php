@@ -1260,18 +1260,6 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Get content type cache from an external url.
-     *
-     * @param string $endpoint Endpoint containing content type cache
-     *
-     * @return object Json object with an array called 'libraries' containing
-     *  all content types that should be cached
-     */
-    public function getExternalContentTypeCache($endpoint) {
-        return file_get_contents($endpoint);
-    }
-
-    /**
      * Replaces existing content type cache with the one passed in
      *
      * @param object $contentTypeCache Json with an array called 'libraries'
