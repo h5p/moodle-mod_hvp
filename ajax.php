@@ -194,6 +194,17 @@ switch($action) {
 
         $editor = \mod_hvp\framework::instance('editor');
 
+        // Update content type cache if enabled and too old
+        $core = \mod_hvp\framework::instance('core');
+        $interface = \mod_hvp\framework::instance('interface');
+        if (!$interface->getOption('hub_is_disabled', FALSE)) {
+            $ct_cache_last_update = $interface->getOption('content_type_cache_updated_at', 0);
+            $outdated_cache = $ct_cache_last_update + (60 * 60 * 24 * 7); // 1 week
+            if (time() > $outdated_cache) {
+                $core->updateContentTypeCache();
+            }
+        }
+
         header('Cache-Control: no-cache');
         header('Content-type: application/json');
 

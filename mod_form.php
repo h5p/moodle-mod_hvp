@@ -109,15 +109,7 @@ class mod_hvp_mod_form extends moodleform_mod {
 
     public function data_preprocessing(&$defaultvalues) {
         global $DB;
-
-        // Update content type cache if it is old
         $core = \mod_hvp\framework::instance();
-        $interface = \mod_hvp\framework::instance('interface');
-        $ct_cache_last_update = $interface->getOption('content_type_cache_updated_at', 0);
-        $outdated_cache = $ct_cache_last_update + (60 * 60 * 24 * 7); // 1 week
-        if (time() > $outdated_cache) {
-            $core->updateContentTypeCache();
-        }
 
         $content = null;
         if (!empty($defaultvalues['id'])) {
