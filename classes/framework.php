@@ -326,7 +326,15 @@ class framework implements \H5PFrameworkInterface {
                 'Could not copy file.' => 'couldnotcopy',
                 'The mbstring PHP extension is not loaded. H5P need this to function properly' => 'missingmbstring',
                 'The version of the H5P library %machineName used in this content is not valid. Content contains %contentLibrary, but it should be %semanticsLibrary.' => 'wrongversion',
-                'The H5P library %library used in the content is not valid' => 'invalidlibrary'
+                'The H5P library %library used in the content is not valid' => 'invalidlibrary',
+                'Your PHP version is outdated. H5P requires version 5.2 to function properly. Version 5.6 or later is recommended.' => 'oldphpversion',
+                'Your PHP max upload size option is too small. You should consider to increase it to more than 5MB.' => 'maxuploadsizetoosmall',
+                'Your PHP max post size option is too small. You should consider to increase it to more than 5MB.' => 'maxpostsizetoosmall',
+                'Your server does not have SSL enabled. SSL should be enabled to ensure a secure connection with the H5P hub.' => 'sslnotenabled',
+                'H5P hub communication has been disabled because one or more H5P requirements failed.' => 'hubcommunicationdisabled',
+                'When you have revised your server setup you may re-enable H5P hub communication in H5P Settings.' => 'reviseserversetupandretry',
+                'A problem with the server write access was detected. Please make sure that your server can write to your data folder.' => 'nowriteaccess',
+                'Your PHP max upload size is bigger than your max post size. This is known to cause issues in some installations.' => 'uploadsizelargerthanpostsize'
             ];
         }
 

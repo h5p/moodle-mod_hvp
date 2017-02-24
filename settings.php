@@ -26,6 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/hvp/lib.php');
 
+global $PAGE;
+
 // Make sure core is loaded:
 $core = \mod_hvp\framework::instance('core');
 
@@ -100,6 +102,40 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configselect('mod_hvp/export', get_string('enabledownload', 'hvp'), '', H5PDisplayOptionBehaviour::ALWAYS_SHOW, $choices));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/copyright', get_string('enablecopyright', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/icon', get_string('enableabout', 'hvp'), '', 1));
+
+    // Disable hub setting
+    $settings->add(new admin_setting_heading('mod_hvp/hub_settings', get_string('hubsettingsheader', 'hvp'), ''));
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'mod_hvp/hub_is_enabled',
+            get_string('enablehublabel', 'hvp'),
+            get_string('disablehubdescription', 'hvp'),
+            1
+        )
+    );
+
+    // Load js for disable hub confirmation dialog functionality
+    $PAGE->requires->js('/mod/hvp/library/js/jquery.js', TRUE);
+    $PAGE->requires->js('/mod/hvp/library/js/h5p-event-dispatcher.js', TRUE);
+    $PAGE->requires->js('/mod/hvp/library/js/h5p-confirmation-dialog.js', TRUE);
+    $PAGE->requires->js('/mod/hvp/library/js/settings/h5p-disable-hub.js', TRUE);
+    $PAGE->requires->css('/mod/hvp/library/styles/h5p-confirmation-dialog.css');
+    $PAGE->requires->css('/mod/hvp/library/styles/h5p.css');
+    $PAGE->requires->css('/mod/hvp/library/styles/h5p-core-button.css');
+
+    // Find missing requirements
+    $core = \mod_hvp\framework::instance('core');
+    $errors = $core->checkSetupErrorMessage();
+
+    $PAGE->requires->data_for_js('H5PDisableHubData', array(
+        'selector' => '#id_s_mod_hvp_hub_is_enabled',
+        'overlaySelector' => '#adminsettings',
+        'header' => get_string('confirmdialogheader', 'hvp'),
+        'confirmLabel' => get_string('confirmlabel', 'hvp'),
+        'cancelLabel' => get_string('cancellabel', 'hvp'),
+        'confirmationDialogMsg' => get_string('disablehubconfirmationmsg', 'hvp'),
+        'errors' => $errors
+    ));
 }
 
 // Prevent Moodle from adding settings block in standard location.

@@ -81,6 +81,9 @@ $string['enabledownload'] = 'Download button';
 $string['enableembed'] = 'Embed button';
 $string['enablecopyright'] = 'Copyright button';
 $string['enableabout'] = 'About H5P button';
+$string['hubsettingsheader'] = 'Hub Settings';
+$string['enablehublabel'] = 'Enable hub';
+$string['disablehubdescription'] = 'It is strongly discouraged to disable the hub. It will disable all communication with the H5P hub, which mean you will not be able to create, reuse and share content and content types through the H5P hub interface. You will also have to install libraries manually through uploading them.';
 
 $string['externalcommunication'] = 'External communication';
 $string['externalcommunication_help'] = 'Aid in the development of H5P by contributing anonymous usage data. Disabling this option will prevent your site from fetching the newest H5P updates. You can read more about <a {$a}>which data is collected</a> on h5p.org.';
@@ -270,3 +273,14 @@ $string['welcomecontactus'] = 'If you have any feedback, don\'t hesitate to <a {
 $string['missingmbstring'] = 'The mbstring PHP extension is not loaded. H5P need this to function properly';
 $string['wrongversion'] = 'The version of the H5P library {$a->%machineName} used in this content is not valid. Content contains {$a->%contentLibrary}, but it should be {$a->%semanticsLibrary}.';
 $string['invalidlibrary'] = 'The H5P library {$a->%library} used in the content is not valid';
+
+// Setup errors
+$string['oldphpversion'] = 'Your PHP version is outdated. H5P requires version 5.2 to function properly. Version 5.6 or later is recommended.';
+$string['maxuploadsizetoosmall'] = 'Your PHP max upload size option is too small. You should consider to increase it to more than 5MB.';
+$string['maxpostsizetoosmall'] = 'Your PHP max post size option is too small. You should consider to increase it to more than 5MB.';
+$string['sslnotenabled'] = 'Your server does not have SSL enabled. SSL should be enabled to ensure a secure connection with the H5P hub.';
+$string['hubcommunicationdisabled'] = 'H5P hub communication has been disabled because one or more H5P requirements failed.';
+$string['reviseserversetupandretry'] = 'When you have revised your server setup you may re-enable H5P hub communication in H5P Settings.';
+$string['disablehubconfirmationmsg'] = 'Do you still want to enable the hub ?';
+$string['nowriteaccess'] = 'A problem with the server write access was detected. Please make sure that your server can write to your data folder.';
+$string['uploadsizelargerthanpostsize'] = 'Your PHP max upload size is bigger than your max post size. This is known to cause issues in some installations.';

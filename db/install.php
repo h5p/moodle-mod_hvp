@@ -20,6 +20,9 @@ function xmldb_hvp_install() {
       \mod_hvp\framework::messages('error', $error);
     }
 
+    // Check that plugin is set up correctly
+    $core->checkSetupForRequirements();
+
     // Print any messages
     echo '<h3>' . get_string('welcomeheader', 'hvp') . '</h3>' .
          '<p>' .

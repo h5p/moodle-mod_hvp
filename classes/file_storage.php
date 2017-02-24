@@ -626,4 +626,26 @@ class file_storage implements \H5PFileStorage {
         $fs = get_file_storage();
         return ($fs->get_file($contextid, 'mod_hvp', $filearea, 0, $filepath, $filename) !== false);
     }
+
+    /**
+     * Check if server setup has write permission to
+     * the required folders
+     *
+     * @return bool True if server has the proper write access
+     */
+    public function hasWriteAccess() {
+        global $CFG;
+
+        if (!is_dir($CFG->dataroot)) {
+            trigger_error('Path is not a directory ' . $CFG->dataroot, E_USER_WARNING);
+            return FALSE;
+        }
+
+        if (!is_writable($CFG->dataroot)) {
+            trigger_error('Unable to write to ' . $CFG->dataroot . ' – check directory permissions –', E_USER_WARNING);
+            return FALSE;
+        }
+
+        return TRUE;
+    }
 }
