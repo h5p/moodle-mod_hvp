@@ -1272,32 +1272,23 @@ class framework implements \H5PFrameworkInterface {
         $DB->delete_records('hvp_libraries_hub_cache');
         foreach ($contentTypeCache->libraries as $library) {
             $DB->insert_record('hvp_libraries_hub_cache', (object) array(
-                'library_id'        => $library->library_id,
-                'machine_name'      => $library->machine_name,
+                'id'        => $library->id,
+                'machine_name'      => $library->machineName,
                 'title'             => $library->title,
-                'major_version'     => $library->major_version,
-                'minor_version'     => $library->minor_version,
-                'patch_version'     => $library->patch_version,
-                'h5p_version'       => $library->h5p_version,
-                'short_description' => $library->short_description,
-                'long_description'  => $library->long_description,
+                'major_version'     => $library->majorVersion,
+                'minor_version'     => $library->minorVersion,
+                'patch_version'     => $library->patchVersion,
+                'h5p_version'       => $library->h5pVersion,
+                'short_description' => $library->summary,
+                'long_description'  => $library->description,
                 'icon'              => $library->icon,
-                'created'           => $library->created,
-                'updated'           => $library->updated,
-                'is_recommended'    => $library->is_recommended,
-                'is_reviewed'       => $library->is_reviewed,
-                'times_downloaded'  => $library->times_downloaded,
-                'example_content'   => $library->example_content
+                'created_at'           => $library->createdAt,
+                'updated_at'           => $library->updatedAt,
+                'is_recommended'    => $library->isRecommended,
+                'is_reviewed'       => $library->isReviewed,
+                'popularity'  => $library->popularity,
+                'example_content'   => $library->example
             ), FALSE, TRUE);
         }
-    }
-
-    /**
-     * Get timestamp of time at user
-     *
-     * @return int Timestamp of localized time
-     */
-    public function getCurrentUserTime() {
-        return time();
     }
 }

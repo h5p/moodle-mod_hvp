@@ -201,7 +201,15 @@ switch($action) {
             $ct_cache_last_update = $interface->getOption('content_type_cache_updated_at', 0);
             $outdated_cache = $ct_cache_last_update + (60 * 60 * 24 * 7); // 1 week
             if (time() > $outdated_cache) {
-                $core->updateContentTypeCache();
+                $success = $core->updateContentTypeCache();
+                if (!$success) {
+                    http_response_code(404);
+                    $core::ajaxError(
+                        $core->h5pF->t('Could not connect to the H5P Content Type Hub. Please try again later.'),
+                        'NO_RESPONSE'
+                    );
+                    break;
+                }
             }
         }
 

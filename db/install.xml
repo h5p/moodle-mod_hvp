@@ -71,7 +71,7 @@
     </TABLE>
     <TABLE NAME="hvp_libraries_hub_cache" COMMENT="Caches content types from the H5P hub.">
       <FIELDS>
-        <FIELD NAME="library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key: The id of the library"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" COMMENT="Primary Key: The id of the library"/>
         <FIELD NAME="machine_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The library machine name"/>
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The human readable name of this library"/>
         <FIELD NAME="major_version" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
@@ -81,15 +81,15 @@
         <FIELD NAME="short_description" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Short description of library"/>
         <FIELD NAME="long_description" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Long description of library"/>
         <FIELD NAME="icon" TYPE="char" LENGTH="511" NOTNULL="true" SEQUENCE="false" COMMENT="URL to icon"/>
-        <FIELD NAME="created" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Time that the library was uploaded"/>
-        <FIELD NAME="updated" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Time that the library has its latest update"/>
+        <FIELD NAME="created_at" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Time that the library was uploaded"/>
+        <FIELD NAME="updated_at" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Time that the library has its latest update"/>
         <FIELD NAME="is_recommended" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false" COMMENT="Whether the library is recommended by the HUB moderators"/>
         <FIELD NAME="is_reviewed" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false" COMMENT="Whether the library has been reviewed by the HUB moderators"/>
-        <FIELD NAME="times_downloaded" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="How many times the library has been downloaded"/>
+        <FIELD NAME="popularity" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="How many times the library has been downloaded"/>
         <FIELD NAME="example_content" TYPE="char" LENGTH="511" NOTNULL="false" SEQUENCE="false" COMMENT="URL to example content for this library"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="library_id"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="hvp_libraries_libraries" COMMENT="Library dependencies">

@@ -198,7 +198,7 @@ function xmldb_hvp_upgrade($oldversion) {
         $table = new xmldb_table('hvp_libraries_hub_cache');
 
         // Adding fields to table hvp_events.
-        $table->add_field('library_id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, XMLDB_SEQUENCE, NULL);
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, XMLDB_SEQUENCE, NULL);
         $table->add_field('machine_name', XMLDB_TYPE_CHAR, '255', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('title', XMLDB_TYPE_CHAR, '255', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('major_version', XMLDB_TYPE_INTEGER, '4', NULL, XMLDB_NOTNULL, NULL, NULL);
@@ -208,15 +208,15 @@ function xmldb_hvp_upgrade($oldversion) {
         $table->add_field('short_description', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('long_description', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('icon', XMLDB_TYPE_CHAR, '511', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('created', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('updated', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('created_at', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('updated_at', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('is_recommended', XMLDB_TYPE_INTEGER, '3', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('is_reviewed', XMLDB_TYPE_INTEGER, '3', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('times_downloaded', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('popularity', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('example_content', XMLDB_TYPE_CHAR, '511', NULL, XMLDB_NOTNULL, NULL, NULL);
 
         // Adding keys to table hvp_events.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('library_id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
         // Conditionally launch create table for hvp_events.
         if (!$dbman->table_exists($table)) {
