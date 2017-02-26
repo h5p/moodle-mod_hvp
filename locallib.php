@@ -131,7 +131,7 @@ function hvp_get_core_assets() {
  * @param int $id Content being edited. null for creating new content
  */
 function hvp_add_editor_assets($id = null) {
-    global $PAGE, $CFG, $COURSE;
+    global $PAGE, $CFG, $COURSE, $DB;
     $settings = \hvp_get_core_assets();
 
     // Use jQuery and styles from core.
@@ -200,6 +200,14 @@ function hvp_add_editor_assets($id = null) {
 
       // Override content URL
       $settings['contents']['cid-'.$id]['contentUrl'] = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/{$id}";
+    }
+
+    // Set content type cache
+    $interface = \mod_hvp\framework::instance('interface');
+    if ($interface->getOption('hub_is_enabled', TRUE)) {
+        $results = $DB->get_records('hvp_libraries_hub_cache');
+
+        $settings['editor']['contentTypeCache'] = (array) $results;
     }
 
     $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
