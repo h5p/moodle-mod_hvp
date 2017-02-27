@@ -142,4 +142,23 @@ $capabilities = array(
         'archetypes' => array(
         )
     ),
+
+    'mod/hvp:installanyh5pcontenttype' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+          'manager' => CAP_ALLOW,
+        )
+    ),
+
+    'mod/hvp:installrecommendedh5pcontenttype' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+          'manager' => CAP_ALLOW,
+          'editingteacher' => CAP_ALLOW,
+          'teacher' => CAP_ALLOW
+        )
+    ),
+
 );

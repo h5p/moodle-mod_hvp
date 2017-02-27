@@ -248,10 +248,25 @@ switch($action) {
             }
         }
 
+        // Determine access
+        $context = \context_system::instance();
+        $caninstallany = has_capability('mod/hvp:installanyh5pcontenttype', $context);
+        $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5pcontenttype', $context);
+
         // Set content type cache
         $results = $DB->get_records('hvp_libraries_hub_cache');
         $libraries = array();
         foreach ($results as $result) {
+            if ($caninstallany) {
+                $result->restricted = false;
+            }
+            elseif ($result->is_recommended && $caninstallrecommended) {
+                $result->restricted = false;
+            }
+            else {
+                $result->restricted = true;
+            }
+
             $libraries[] = $result;
         }
 
@@ -327,6 +342,15 @@ switch($action) {
             $response->error_code = 'NO_PERMISSION';
             $response->error_msg = 'The user does not have sufficient permission to install this library';
             http_response_code(403);
+            print json_encode($response);
+            break;
+        }
+
+        $is_recommended = optional_param('contentTypeRecommended', PARAM_BOOL);
+        if (!has_capability('mod/hvp:installanyh5pcontenttype', $context) ||
+            !($is_recommended && has_capability('mod/hvp:installrecommendedh5pcontenttype', $context))) {
+            $response->error_msg = 'No permission to install content type';
+            $response->error_code = 'ACCESS_DENIED';
             print json_encode($response);
             break;
         }
