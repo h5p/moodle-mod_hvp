@@ -281,3 +281,6 @@ $string['welcomecontactus'] = 'If you have any feedback, don\'t hesitate to <a {
 $string['missingmbstring'] = 'The mbstring PHP extension is not loaded. H5P need this to function properly';
 $string['wrongversion'] = 'The version of the H5P library {$a->%machineName} used in this content is not valid. Content contains {$a->%contentLibrary}, but it should be {$a->%semanticsLibrary}.';
 $string['invalidlibrary'] = 'The H5P library {$a->%library} used in the content is not valid';
+
+// Ajax messages
+$string['hubisdisabled'] = 'The hub is disabled. You can re-enable it in the H5P settings.';

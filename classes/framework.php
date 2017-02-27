@@ -329,7 +329,8 @@ class framework implements \H5PFrameworkInterface {
                 'The H5P library %library used in the content is not valid' => 'invalidlibrary',
                 'Library cache was successfully updated!' => 'ctcachesuccess',
                 'No libraries was received from the Content Type Hub. Please try again later.' => 'ctcachenolibraries',
-                'Could not connect to the H5P Content Type Hub. Please try again later.' => 'ctcacheconnectionfailed'
+                'Could not connect to the H5P Content Type Hub. Please try again later.' => 'ctcacheconnectionfailed',
+                'The hub is disabled. You can re-enable it in the H5P settings.' => 'hubisdisabled'
             ];
         }
 
