@@ -109,11 +109,11 @@ class mod_hvp_mod_form extends moodleform_mod {
 
     public function data_preprocessing(&$defaultvalues) {
         global $DB;
+        $core = \mod_hvp\framework::instance();
 
         $content = null;
         if (!empty($defaultvalues['id'])) {
             // Load Content
-            $core = \mod_hvp\framework::instance();
             $content = $core->loadContent($defaultvalues['id']);
             if ($content === null) {
                 print_error('invalidhvp');

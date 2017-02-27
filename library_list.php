@@ -56,6 +56,17 @@ if ($formdata = $uploadform->get_data()) {
 }
 
 $core = \mod_hvp\framework::instance();
+
+// Create content type cache form
+$ct_cache_form = new \mod_hvp\content_type_cache_form();
+
+// On form submit
+if ($ct_cache_form->get_data()) {
+    // Update cache and reload page
+    $core->updateContentTypeCache();
+    redirect($pageurl);
+}
+
 $numNotFiltered = $core->h5pF->getNumNotFiltered();
 $libraries = $core->h5pF->loadLibraries();
 
@@ -137,6 +148,11 @@ if (isset($updateform)) {
 // Upload Form
 echo '<h3 class="h5p-admin-header">' . get_string('uploadlibraries', 'hvp') . '</h3>';
 $uploadform->display();
+
+// Content type cache form
+echo '<h3>' . get_string('contenttypecacheheader', 'hvp') . '</h3>';
+$ct_cache_form->display();
+
 
 // Installed Libraries List
 echo '<h3 class="h5p-admin-header">' . get_string('installedlibraries', 'hvp')  . '</h3>';

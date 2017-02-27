@@ -132,7 +132,7 @@ function hvp_get_core_assets() {
  * @param int $id Content being edited. null for creating new content
  */
 function hvp_add_editor_assets($id = null) {
-    global $PAGE, $CFG, $COURSE;
+    global $PAGE, $CFG, $COURSE, $DB;
     $settings = \hvp_get_core_assets();
 
     // Use jQuery and styles from core.

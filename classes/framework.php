@@ -42,7 +42,7 @@ class framework implements \H5PFrameworkInterface {
      * Get type of hvp instance
      *
      * @param string $type Type of hvp instance to get
-     * @return \H5PContentValidator|\H5PCore|\H5PMoodle|\H5PStorage|\H5PValidator
+     * @return \H5PContentValidator|\H5PCore|\H5PStorage|\H5PValidator|\mod_hvp\framework
      */
     public static function instance($type = null) {
         global $CFG;
@@ -334,7 +334,11 @@ class framework implements \H5PFrameworkInterface {
                 'H5P hub communication has been disabled because one or more H5P requirements failed.' => 'hubcommunicationdisabled',
                 'When you have revised your server setup you may re-enable H5P hub communication in H5P Settings.' => 'reviseserversetupandretry',
                 'A problem with the server write access was detected. Please make sure that your server can write to your data folder.' => 'nowriteaccess',
-                'Your PHP max upload size is bigger than your max post size. This is known to cause issues in some installations.' => 'uploadsizelargerthanpostsize'
+                'Your PHP max upload size is bigger than your max post size. This is known to cause issues in some installations.' => 'uploadsizelargerthanpostsize',
+                'Library cache was successfully updated!' => 'ctcachesuccess',
+                'No libraries was received from the Content Type Hub. Please try again later.' => 'ctcachenolibraries',
+                'Could not connect to the H5P Content Type Hub. Please try again later.' => 'ctcacheconnectionfailed',
+                'The hub is disabled. You can re-enable it in the H5P settings.' => 'hubisdisabled'
             ];
         }
 
@@ -1262,5 +1266,38 @@ class framework implements \H5PFrameworkInterface {
                 return has_capability('mod/hvp:getexport', $context);
         }
         return FALSE;
+    }
+
+    /**
+     * Replaces existing content type cache with the one passed in
+     *
+     * @param object $contentTypeCache Json with an array called 'libraries'
+     *  containing the new content type cache that should replace the old one.
+     */
+    public function replaceContentTypeCache($contentTypeCache) {
+        global $DB;
+
+        // Replace existing cache
+        $DB->delete_records('hvp_libraries_hub_cache');
+        foreach ($contentTypeCache->libraries as $library) {
+            $DB->insert_record('hvp_libraries_hub_cache', (object) array(
+                'id'        => $library->id,
+                'machine_name'      => $library->machineName,
+                'title'             => $library->title,
+                'major_version'     => $library->majorVersion,
+                'minor_version'     => $library->minorVersion,
+                'patch_version'     => $library->patchVersion,
+                'h5p_version'       => $library->h5pVersion,
+                'short_description' => $library->summary,
+                'long_description'  => $library->description,
+                'icon'              => $library->icon,
+                'created_at'           => $library->createdAt,
+                'updated_at'           => $library->updatedAt,
+                'is_recommended'    => $library->isRecommended,
+                'is_reviewed'       => $library->isReviewed,
+                'popularity'  => $library->popularity,
+                'example_content'   => $library->example
+            ), FALSE, TRUE);
+        }
     }
 }

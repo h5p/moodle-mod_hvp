@@ -95,8 +95,19 @@ $string['enabledlrscontenttypes'] = 'Enable LRS dependent content types';
 $string['enabledlrscontenttypes_help'] = 'Makes it possible to use content types that rely upon a Learning Record Store to function properly, like the Questionnaire content type.';
 
 // Admin menu.
+$string['contenttypecacheheader'] = 'Content Type Cache';
 $string['settings'] = 'H5P Settings';
 $string['libraries'] = 'H5P Libraries';
+
+// Content type cache section
+$string['ctcacheconnectionfailed'] = 'Could not connect to the H5P Content Type Hub. Please try again later.';
+$string['ctcachenolibraries'] = 'No libraries was received from the Content Type Hub. Please try again later.';
+$string['ctcachesuccess'] = 'Library cache was successfully updated!';
+$string['ctcachelastupdatelabel'] = 'Last update';
+$string['ctcachebuttonlabel'] = 'Update content type cache';
+$string['ctcacheneverupdated'] = 'Never';
+$string['ctcachetaskname'] = 'Update content type cache';
+$string['ctcachedescription'] = 'Here you can update the content type cache from the H5P hub. This is used to show the available libraries in the H5P authoring tool. Making sure the content type cache is up to date will ensure that you can view and download the latest libraries.';
 
 // Update libraries section.
 $string['updatelibraries'] = 'Update All Libraries';
@@ -284,3 +295,6 @@ $string['reviseserversetupandretry'] = 'When you have revised your server setup 
 $string['disablehubconfirmationmsg'] = 'Do you still want to enable the hub ?';
 $string['nowriteaccess'] = 'A problem with the server write access was detected. Please make sure that your server can write to your data folder.';
 $string['uploadsizelargerthanpostsize'] = 'Your PHP max upload size is bigger than your max post size. This is known to cause issues in some installations.';
+
+// Ajax messages
+$string['hubisdisabled'] = 'The hub is disabled. You can re-enable it in the H5P settings.';
