@@ -211,9 +211,14 @@ switch($action) {
 
         break;
 
+    /**
+     * Load content type cache list to display available libraries in hub
+     */
     case 'contenttypecache':
         global $DB;
 
+        header('Cache-Control: no-cache');
+        header('Content-type: application/json');
 
         // Update content type cache if enabled and too old
         $core = \mod_hvp\framework::instance('core');
@@ -221,7 +226,6 @@ switch($action) {
         // Check if hub is enabled
         if (!$core->h5pF->getOption('hub_is_enabled', TRUE)) {
             http_response_code(403);
-            header('Cache-Control: no-cache');
             $core::ajaxError(
                 $core->h5pF->t('The hub is disabled. You can re-enable it in the H5P settings.'),
                 'HUB_DISABLED'
@@ -235,7 +239,6 @@ switch($action) {
             $success = $core->updateContentTypeCache();
             if (!$success) {
                 http_response_code(404);
-                header('Cache-Control: no-cache');
                 $core::ajaxError(
                     $core->h5pF->t('Could not connect to the H5P Content Type Hub. Please try again later.'),
                     'NO_RESPONSE'
@@ -245,14 +248,13 @@ switch($action) {
         }
 
         // Set content type cache
-        header('Cache-Control: no-cache');
-        header('Content-type: application/json');
         $results = $DB->get_records('hvp_libraries_hub_cache');
         $libraries = array();
         foreach ($results as $result) {
             $libraries[] = $result;
         }
 
+        http_response_code(200);
         print json_encode(array(
             'libraries' => $libraries
         ));
