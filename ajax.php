@@ -356,13 +356,14 @@ switch($action) {
         }
 
         // Get content type url
-        $url = required_param('contentTypeUrl', PARAM_RAW);
+        $id = required_param('id', PARAM_RAW);
+        $endpoint = 'http://api.h5p.org/v1/content-types/';
 
         // Generate local tmp file path
         $local_folder = $CFG->tempdir . uniqid('/hvp-');
         $local_file   = $local_folder . '.h5p';
 
-        if (!\download_file_content($url, NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
+        if (!\download_file_content($endpoint . $id, NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
             $response->error_code = 'DOWNLOAD_FAILED';
             $response->error_msg = 'Downloading the requested library failed.';
             http_response_code(404);
