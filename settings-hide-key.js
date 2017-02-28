@@ -14,7 +14,8 @@
 
     $input.attr('maxlength', 36)
       .attr('placeholder', $input.val() || HVPSettingsHideKey.value ? HVPSettingsHideKey.placeholder : HVPSettingsHideKey.empty)
-      .data('value', HVPSettingsHideKey.value);
+      .data('value', HVPSettingsHideKey.value)
+      .val('');
 
     $('<button/>', {
       'type': 'button',

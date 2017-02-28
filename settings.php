@@ -70,11 +70,12 @@ if ($ADMIN->fulltree) {
     // Content state.
     $settings->add(
             new admin_setting_configtext('mod_hvp/site_key',
-                    'Site Key',
-                    'The site key is a secret that uniquely identifies this site with the Hub.',
+                    get_string('sitekey', 'hvp'),
+                    get_string('sitekeydescription', 'hvp'),
                     NULL, '/^(|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/', 36));
 
     // JavaScript for hiding site key
+    $site_key = get_config('mod_hvp', 'site_key');
     $site_uuid = get_config('mod_hvp', 'site_uuid');
     $PAGE->requires->js('/mod/hvp/library/js/jquery.js', TRUE);
     $PAGE->requires->js('/mod/hvp/settings-hide-key.js', TRUE);
@@ -82,10 +83,10 @@ if ($ADMIN->fulltree) {
     $PAGE->requires->data_for_js('HVPSettingsHideKey', array(
         'input' => 'id_s_mod_hvp_site_key',
         'placeholder' => '********-****-****-****-************',
-        'value' => get_config('mod_hvp', 'site_uuid'),
-        'empty' => 'Empty',
-        'reveal' => 'Reveal',
-        'hide' => 'Hide',
+        'value' => $site_key ? $site_key : $site_uuid,
+        'empty' => get_string('empty', 'hvp'),
+        'reveal' => get_string('reveal', 'hvp'),
+        'hide' => get_string('hide', 'hvp')
     ));
 
     $choices = array(
