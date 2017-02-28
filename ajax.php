@@ -297,7 +297,8 @@ switch($action) {
                 'keywords'        => json_decode($result->keywords),
                 'categories'      => json_decode($result->categories),
                 'owner'           => $result->owner,
-                'installed'       => isset($result->installed)
+                'installed'       => isset($result->installed),
+                'restricted'      => $result->restricted
             );
         }
 
