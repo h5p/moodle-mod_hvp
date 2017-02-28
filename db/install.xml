@@ -92,6 +92,7 @@
         <FIELD NAME="tutorial" TYPE="char" LENGTH="511" NOTNULL="false" SEQUENCE="false" COMMENT="Tutorial URL"/>
         <FIELD NAME="keywords" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Keywords for library json encoded"/>
         <FIELD NAME="categories" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Categories for library json encoded"/>
+        <FIELD NAME="owner" TYPE="char" LENGTH="511" NOTNULL="false" SEQUENCE="false" COMMENT="Owner of the library"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

@@ -219,6 +219,7 @@ function xmldb_hvp_upgrade($oldversion) {
         $table->add_field('tutorial', XMLDB_TYPE_CHAR, '511', NULL, NULL, NULL, NULL);
         $table->add_field('keywords', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
         $table->add_field('categories', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
+        $table->add_field('owner', XMLDB_TYPE_CHAR, '511', NULL, NULL, NULL, NULL);
 
         // Adding keys to table hvp_events.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
