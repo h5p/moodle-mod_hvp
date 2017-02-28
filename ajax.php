@@ -254,20 +254,51 @@ switch($action) {
         $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5pcontenttype', $context);
 
         // Set content type cache
-        $results = $DB->get_records('hvp_libraries_hub_cache');
+        $results = $DB->get_records_sql(
+            'SELECT c.*, l.id as installed ' .
+            'FROM {hvp_libraries_hub_cache} as c ' .
+            'LEFT JOIN {hvp_libraries} as l ' .
+            'ON c.machine_name = l.machine_name ' .
+            'AND c.major_version = l.major_version ' .
+            'AND c.minor_version = l.minor_version ' .
+            'AND c.patch_version = l.patch_version'
+        );
         $libraries = array();
         foreach ($results as $result) {
             if ($caninstallany) {
-                $result->restricted = false;
+                $result->restricted = FALSE;
             }
             elseif ($result->is_recommended && $caninstallrecommended) {
-                $result->restricted = false;
+                $result->restricted = FALSE;
             }
             else {
-                $result->restricted = true;
+                $result->restricted = TRUE;
             }
 
-            $libraries[] = $result;
+            $libraries[] = array(
+                'machineName'     => $result->machine_name,
+                'majorVersion'    => $result->major_version,
+                'minorVersion'    => $result->minor_version,
+                'patchVersion'    => $result->patch_version,
+                'h5pMajorVersion' => $result->h5p_major_version,
+                'h5pMinorVersion' => $result->h5p_minor_version,
+                'title'           => $result->title,
+                'summary'         => $result->summary,
+                'description'     => $result->description,
+                'icon'            => $result->icon,
+                'createdAt'       => $result->created_at,
+                'updated_At'      => $result->updated_at,
+                'isRecommended'   => $result->is_recommended,
+                'popularity'      => $result->popularity,
+                'screenshots'     => json_decode($result->screenshots),
+                'license'         => $result->license,
+                'example'         => $result->example,
+                'tutorial'        => $result->tutorial,
+                'keywords'        => json_decode($result->keywords),
+                'categories'      => json_decode($result->categories),
+                'owner'           => $result->owner,
+                'installed'       => isset($result->installed)
+            );
         }
 
         http_response_code(200);
