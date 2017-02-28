@@ -346,7 +346,7 @@ switch($action) {
             break;
         }
 
-        $is_recommended = optional_param('contentTypeRecommended', PARAM_BOOL);
+        $is_recommended = optional_param('contentTypeRecommended', false, PARAM_BOOL);
         if (!has_capability('mod/hvp:installanyh5pcontenttype', $context) ||
             !($is_recommended && has_capability('mod/hvp:installrecommendedh5pcontenttype', $context))) {
             $response->error_msg = 'No permission to install content type';
