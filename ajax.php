@@ -362,14 +362,14 @@ switch($action) {
         // Verify permission to install library
         if (!\H5PCore::validToken('h5p_editor_ajax', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'), 'INVALID_TOKEN');
-            exit;
+            break;
         }
 
         // Determine which content type to install from post data
         $name = required_param('id', PARAM_RAW);
         if (!$name) {
             H5PCore::ajaxError(get_string('nocontenttype', 'hvp'), 'NO_CONTENT_TYPE');
-            exit;
+            break;
         }
 
         // Look up content type to ensure it's valid(and to check permissions)
@@ -381,7 +381,7 @@ switch($action) {
         );
         if (!$content_type) {
             H5PCore::ajaxError(get_string('invalidcontenttype', 'hvp'), 'INVALID_CONTENT_TYPE');
-            exit;
+            break;
         }
 
         // Check if the user has access to install or update content types
@@ -390,7 +390,7 @@ switch($action) {
         $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5plibraries', $context);
         if (!$can_install_all || !$can_install_recommended) {
             H5PCore::ajaxError(get_string('installdenied', 'hvp'), 'INSTALL_DENIED');
-            exit;
+            break;
         }
 
         if (!$can_install_all && $can_install_recommended) {
@@ -408,10 +408,7 @@ switch($action) {
         $local_file   = $local_folder . '.h5p';
 
         if (!\download_file_content($endpoint . $id, NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
-            $response->error_code = 'DOWNLOAD_FAILED';
-            $response->error_msg = 'Downloading the requested library failed.';
-            http_response_code(404);
-            print json_encode($response);
+            H5PCore::ajaxError(get_string('downloadfailed', 'hvp'), 'DOWNLOAD_FAILED');
             break;
         }
 
@@ -424,18 +421,20 @@ switch($action) {
         $h5pValidator = \mod_hvp\framework::instance('validator');
         if (!$h5pValidator->isValidPackage(TRUE)) {
             @unlink($local_file);
-            $response->error_code = 'VALIDATION_FAILED';
-            $response->error_msg = 'The requested H5P was not valid';
-            http_response_code(500);
-            print json_encode($response);
+            $errors = \mod_hvp\framework::messages('error');
+            if (empty($errors)) {
+                $errors = get_string('validationfailed', 'hvp');
+            }
+            H5PCore::ajaxError($errors, 'VALIDATION_FAILED');
             break;
         }
 
         // Install H5P file into Moodle
         $storage = \mod_hvp\framework::instance('storage');
         $storage->savePackage(NULL, NULL, TRUE);
-        $response->success = true;
-        print json_encode($response);
+
+        // Successfully installed.
+        H5PCore::ajaxSuccess();
         break;
 
     /*

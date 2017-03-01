@@ -141,6 +141,8 @@ $string['missingparameters'] = 'Missing parameters';
 $string['nocontenttype'] = 'No content type was specified.';
 $string['invalidcontenttype'] = 'The chosen content type is invalid.';
 $string['installdenied'] = 'No permission to install content type.';
+$string['downloadfailed'] = 'Downloading the requested library failed.';
+$string['validationfailed'] = 'The requested H5P was not valid';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Title';
