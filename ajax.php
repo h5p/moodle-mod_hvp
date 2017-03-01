@@ -359,7 +359,7 @@ switch($action) {
     case 'libraryinstall':
         global $DB;
 
-        // Verify permission to install library
+        // Verify token
         if (!\H5PCore::validToken('h5p_editor_ajax', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'), 'INVALID_TOKEN');
             break;
@@ -400,14 +400,13 @@ switch($action) {
         }
 
         // Get content type url
-        $id = required_param('id', PARAM_RAW);
         $endpoint = 'http://api.h5p.org/v1/content-types/';
 
         // Generate local tmp file path
         $local_folder = $CFG->tempdir . uniqid('/hvp-');
         $local_file   = $local_folder . '.h5p';
 
-        if (!\download_file_content($endpoint . $id, NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
+        if (!\download_file_content($endpoint . $name, NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
             H5PCore::ajaxError(get_string('downloadfailed', 'hvp'), 'DOWNLOAD_FAILED');
             break;
         }
