@@ -250,8 +250,8 @@ switch($action) {
 
         // Determine access
         $context = \context_system::instance();
-        $caninstallany = has_capability('mod/hvp:installanyh5pcontenttype', $context);
-        $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5pcontenttype', $context);
+        $caninstallany = has_capability('mod/hvp:updatelibraries', $context);
+        $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5plibraries', $context);
 
         // Set content type cache
         $results = $DB->get_records_sql(
@@ -359,31 +359,44 @@ switch($action) {
     case 'libraryinstall':
         global $DB;
 
-        // Do not cache, since libraries at url may change.
-        header('Cache-Control: no-cache');
-
-        $token = required_param('token', PARAM_RAW);
-        $response = (object) array(
-            'success' => 'false'
-        );
-
-        // Check permissions
-        $context = \context_system::instance();
-        if (!has_capability('mod/hvp:updatelibraries', $context)) {
-            $response->error_code = 'NO_PERMISSION';
-            $response->error_msg = 'The user does not have sufficient permission to install this library';
-            http_response_code(403);
-            print json_encode($response);
-            break;
+        // Verify permission to install library
+        if (!\H5PCore::validToken('h5p_editor_ajax', required_param('token', PARAM_RAW))) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'), 'INVALID_TOKEN');
+            exit;
         }
 
-        $is_recommended = optional_param('contentTypeRecommended', false, PARAM_BOOL);
-        if (!has_capability('mod/hvp:installanyh5pcontenttype', $context) ||
-            !($is_recommended && has_capability('mod/hvp:installrecommendedh5pcontenttype', $context))) {
-            $response->error_msg = 'No permission to install content type';
-            $response->error_code = 'ACCESS_DENIED';
-            print json_encode($response);
-            break;
+        // Determine which content type to install from post data
+        $name = required_param('id', PARAM_RAW);
+        if (!$name) {
+            H5PCore::ajaxError(get_string('nocontenttype', 'hvp'), 'NO_CONTENT_TYPE');
+            exit;
+        }
+
+        // Look up content type to ensure it's valid(and to check permissions)
+        $content_type = $DB->get_record_sql(
+                "SELECT id, is_recommended
+                   FROM {hvp_libraries_hub_cache}
+                  WHERE machine_name = ?",
+                array($name)
+        );
+        if (!$content_type) {
+            H5PCore::ajaxError(get_string('invalidcontenttype', 'hvp'), 'INVALID_CONTENT_TYPE');
+            exit;
+        }
+
+        // Check if the user has access to install or update content types
+        $context = \context_system::instance();
+        $caninstallany = has_capability('mod/hvp:updatelibraries', $context);
+        $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5plibraries', $context);
+        if (!$can_install_all || !$can_install_recommended) {
+            H5PCore::ajaxError(get_string('installdenied', 'hvp'), 'INSTALL_DENIED');
+            exit;
+        }
+
+        if (!$can_install_all && $can_install_recommended) {
+            // Override core permission check
+            $core = \mod_hvp\framework::instance('core');
+            $core->mayUpdateLibraries(TRUE);
         }
 
         // Get content type url

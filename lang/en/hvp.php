@@ -138,6 +138,9 @@ $string['upload'] = 'Upload';
 $string['installedlibraries'] = 'Installed Libraries';
 $string['invalidtoken'] = 'Invalid security token.';
 $string['missingparameters'] = 'Missing parameters';
+$string['nocontenttype'] = 'No content type was specified.';
+$string['invalidcontenttype'] = 'The chosen content type is invalid.';
+$string['installdenied'] = 'No permission to install content type.';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Title';
@@ -214,6 +217,7 @@ $string['hvp:getcachedassets'] = 'Get cached H5P content assets';
 $string['hvp:getcontent'] = 'Get/view content of H5P file in course';
 $string['hvp:getexport'] = 'Get export file from H5P in course';
 $string['hvp:updatesavailable'] = 'Get notification when H5P updates are available';
+$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
 
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
