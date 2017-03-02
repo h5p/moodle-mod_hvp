@@ -359,13 +359,18 @@ switch($action) {
     case 'libraryinstall':
         global $DB;
 
+        // Require post to install
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            break;
+        }
+
         // Verify token
         if (!\H5PCore::validToken('h5p_editor_ajax', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'), 'INVALID_TOKEN');
             break;
         }
 
-        // Determine which content type to install from post data
+        // Determine which content type to install
         $name = required_param('id', PARAM_RAW);
         if (!$name) {
             H5PCore::ajaxError(get_string('nocontenttype', 'hvp'), 'NO_CONTENT_TYPE');
