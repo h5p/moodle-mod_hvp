@@ -255,30 +255,29 @@ switch($action) {
 
 
         // Get latest version of local libraries
-        $local_libraries = $DB->get_records_sql(
-            "
-              SELECT *
-              FROM
-              (SELECT
-               m.id as library_id,
-               m.machine_name,
-               m.major_version,
-               m.minor_version,
-               m.patch_version,
-               m.restricted
-              FROM {hvp_libraries} AS m
-                JOIN (
-                  SELECT
-                    l.machine_name,
-                    MAX(l.major_version * 1000000 + l.minor_version * 1000 + l.patch_version) AS maxversion
-                  FROM {hvp_libraries} AS l
-                  WHERE l.runnable = 1
-                  GROUP BY l.machine_name) AS m1
-                ON m.machine_name = m1.machine_name 
-                AND m.major_version * 1000000 + m.minor_version * 1000 + m.patch_version = maxversion
-              )as libs
-            "
-        );
+        $max_major_version_sql = "
+            SELECT hl.machine_name, MAX(hl.major_version) AS major_version
+            FROM {hvp_libraries} hl
+            WHERE hl.runnable = 1
+            GROUP BY hl.machine_name";
+
+        $max_minor_version_sql = "
+            SELECT hl2.machine_name, hl2.major_version, MAX(hl2.minor_version) AS minor_version
+            FROM ({$max_major_version_sql}) hl1
+            JOIN {hvp_libraries} hl2
+            ON hl1.machine_name = hl2.machine_name
+            AND hl1.major_version = hl2.major_version
+            GROUP BY hl2.machine_name";
+
+        $local_libraries = $DB->get_records_sql("
+            SELECT hl4.id AS library_id, hl4.machine_name, hl4.major_version,
+                hl4.minor_version, hl4.patch_version
+            FROM {hvp_libraries} hl4
+            JOIN ({$max_minor_version_sql}) hl3
+            ON hl4.machine_name = hl3.machine_name
+            AND hl4.major_version = hl3.major_version
+            AND hl4.minor_version = hl3.minor_version
+            GROUP BY hl4.machine_name");
 
         $cached_libraries = $DB->get_records("hvp_libraries_hub_cache");
 
