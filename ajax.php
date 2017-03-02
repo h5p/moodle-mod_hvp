@@ -393,12 +393,12 @@ switch($action) {
         $context = \context_system::instance();
         $caninstallany = has_capability('mod/hvp:updatelibraries', $context);
         $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5plibraries', $context);
-        if (!$can_install_all || !$can_install_recommended) {
+        if (!$caninstallany || !$caninstallrecommended) {
             H5PCore::ajaxError(get_string('installdenied', 'hvp'), 'INSTALL_DENIED');
             break;
         }
 
-        if (!$can_install_all && $can_install_recommended) {
+        if (!$caninstallany && $caninstallrecommended) {
             // Override core permission check
             $core = \mod_hvp\framework::instance('core');
             $core->mayUpdateLibraries(TRUE);
