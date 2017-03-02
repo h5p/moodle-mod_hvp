@@ -131,7 +131,7 @@ function xmldb_hvp_upgrade($oldversion) {
 
         // Define field intro to be added to hvp.
         $intro = new xmldb_field('intro', XMLDB_TYPE_TEXT, null, null, null, null, null, 'name');
-        
+
         // Add field intro if not defined already.
         if (!$dbman->field_exists($table, $intro)) {
             $dbman->add_field($table, $intro);
@@ -211,7 +211,7 @@ function xmldb_hvp_upgrade($oldversion) {
         $table->add_field('icon', XMLDB_TYPE_CHAR, '511', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('created_at', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('updated_at', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('is_recommended', XMLDB_TYPE_INTEGER, '3', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('is_recommended', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('popularity', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('screenshots', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
         $table->add_field('license', XMLDB_TYPE_CHAR, '511', NULL, NULL, NULL, NULL);
