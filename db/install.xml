@@ -61,6 +61,7 @@
         <FIELD NAME="semantics" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The semantics definition in json format"/>
         <FIELD NAME="restricted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Restricts the ability to create new content using this library"/>
         <FIELD NAME="tutorial_url" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false" COMMENT="URL to a tutorial for this library"/>
+        <FIELD NAME="has_icon" TYPE="int" LENGTH="1" UNSIGNED="true" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether or not this library contains an icon.svg"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
