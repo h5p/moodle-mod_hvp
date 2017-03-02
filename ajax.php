@@ -403,13 +403,14 @@ switch($action) {
         }
 
         // Get content type url
-        $endpoint = 'http://api.h5p.org/v1/content-types/';
+        $protocol = (extension_loaded('openssl') ? 'https' : 'http');
+        $endpoint = H5PCore::$hubEndpoints[H5PCore::CONTENT_TYPES];
 
         // Generate local tmp file path
         $local_folder = $CFG->tempdir . uniqid('/hvp-');
         $local_file   = $local_folder . '.h5p';
 
-        if (!\download_file_content($endpoint . $name, NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
+        if (!\download_file_content("{$protocol}://{$endpoint}{$name}", NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
             H5PCore::ajaxError(get_string('downloadfailed', 'hvp'), 'DOWNLOAD_FAILED');
             break;
         }
