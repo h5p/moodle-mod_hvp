@@ -1298,14 +1298,14 @@ class framework implements \H5PFrameworkInterface {
                 'icon'              => $ct->icon,
                 'created_at'        => (new \DateTime($ct->createdAt))->getTimestamp(),
                 'updated_at'        => (new \DateTime($ct->updatedAt))->getTimestamp(),
-                'is_recommended'    => $ct->isRecommended,
+                'is_recommended'    => $ct->isRecommended === TRUE ? 1 : 0,
                 'popularity'        => $ct->popularity,
                 'screenshots'       => json_encode($ct->screenshots),
                 'license'           => $ct->license,
                 'example'           => $ct->example,
-                'tutorial'          => $ct->tutorial,
-                'keywords'          => json_encode($ct->keywords),
-                'categories'        => json_encode($ct->categories),
+                'tutorial'          => isset($ct->tutorial) ? $ct->tutorial : '',
+                'keywords'          => json_encode(isset($ct->keywords) ? $ct->keywords : array()),
+                'categories'        => json_encode(isset($ct->categories) ? $ct->categories : array()),
                 'owner'             => $ct->owner
             ), FALSE, TRUE);
         }
