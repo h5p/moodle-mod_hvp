@@ -126,7 +126,7 @@ if ($ADMIN->fulltree) {
 
     // Find missing requirements
     $core = \mod_hvp\framework::instance('core');
-    $errors = $core->checkSetupErrorMessage();
+    $errors = $core->checkSetupErrorMessage()->errors;
 
     $PAGE->requires->data_for_js('H5PDisableHubData', array(
         'selector' => '#id_s_mod_hvp_hub_is_enabled',
