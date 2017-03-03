@@ -298,8 +298,8 @@ $string['invalidlibrary'] = 'The H5P library {$a->%library} used in the content 
 
 // Setup errors
 $string['oldphpversion'] = 'Your PHP version is outdated. H5P requires version 5.2 to function properly. Version 5.6 or later is recommended.';
-$string['maxuploadsizetoosmall'] = 'Your PHP max upload size option is too small. You should consider to increase it to more than 5MB.';
-$string['maxpostsizetoosmall'] = 'Your PHP max post size option is too small. You should consider to increase it to more than 5MB.';
+$string['maxuploadsizetoosmall'] = 'Your PHP max upload size is quite small. With your current setup, you may not upload files larger than {$a->%number} MB. This might be a problem when trying to upload H5Ps, images and videos. Please consider to increase it to more than 5MB.';
+$string['maxpostsizetoosmall'] = 'Your PHP max post size is quite small. With your current setup, you may not upload files larger than {$a->%number} MB. This might be a problem when trying to upload H5Ps, images and videos. Please consider to increase it to more than 5MB';
 $string['sslnotenabled'] = 'Your server does not have SSL enabled. SSL should be enabled to ensure a secure connection with the H5P hub.';
 $string['hubcommunicationdisabled'] = 'H5P hub communication has been disabled because one or more H5P requirements failed.';
 $string['reviseserversetupandretry'] = 'When you have revised your server setup you may re-enable H5P hub communication in H5P Settings.';
