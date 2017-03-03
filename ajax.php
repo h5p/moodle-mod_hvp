@@ -376,7 +376,7 @@ switch($action) {
 
         // Look up content type to ensure it's valid(and to check permissions)
         $content_type = $DB->get_record_sql(
-                "SELECT id, is_recommended
+                "SELECT *
                    FROM {hvp_libraries_hub_cache}
                   WHERE machine_name = ?",
                 array($name)
@@ -395,9 +395,9 @@ switch($action) {
             break;
         }
 
+        $core = \mod_hvp\framework::instance('core');
         if (!$caninstallany && $caninstallrecommended) {
             // Override core permission check
-            $core = \mod_hvp\framework::instance('core');
             $core->mayUpdateLibraries(TRUE);
         }
 
@@ -435,8 +435,18 @@ switch($action) {
         $storage = \mod_hvp\framework::instance('storage');
         $storage->savePackage(NULL, NULL, TRUE);
 
+        // Get updated values for content type
+        $installed_ct = $DB->get_record('hvp_libraries', array(
+            'machine_name' => $content_type->machine_name,
+            'major_version' => $content_type->major_version,
+            'minor_version' => $content_type->minor_version,
+            'patch_version' => $content_type->patch_version));
+
+        $cached_content_types = array($core->getCachedLibsMap($content_type));
+        $core->mergeLocalLibsIntoCachedLibs(array($installed_ct), $cached_content_types);
+
         // Successfully installed.
-        H5PCore::ajaxSuccess();
+        H5PCore::ajaxSuccess($cached_content_types[0]);
         break;
 
     /*
