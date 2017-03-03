@@ -129,18 +129,18 @@ function xmldb_hvp_upgrade($oldversion) {
 
         $table = new xmldb_table('hvp');
 
-        // Define field timecreated to be added to hvp.
+        // Define field intro to be added to hvp.
         $intro = new xmldb_field('intro', XMLDB_TYPE_TEXT, null, null, null, null, null, 'name');
 
-        // Conditionally launch add field timecreated.
+        // Add field intro if not defined already.
         if (!$dbman->field_exists($table, $intro)) {
             $dbman->add_field($table, $intro);
         }
 
-        // Define field timemodified to be added to hvp.
+        // Define field introformat to be added to hvp.
         $introformat = new xmldb_field('introformat', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'intro');
 
-        // Conditionally launch add field timemodified.
+        // Add field introformat if not defined already.
         if (!$dbman->field_exists($table, $introformat)) {
             $dbman->add_field($table, $introformat);
         }
@@ -194,10 +194,10 @@ function xmldb_hvp_upgrade($oldversion) {
      * Add content type cache database
      */
     if ($oldversion < 2017021900) {
-        // Define table hvp_events to be created.
+        // Define table hvp_libraries_hub_cache to be created.
         $table = new xmldb_table('hvp_libraries_hub_cache');
 
-        // Adding fields to table hvp_events.
+        // Adding fields to table hvp_libraries_hub_cache.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, XMLDB_SEQUENCE, NULL);
         $table->add_field('machine_name', XMLDB_TYPE_CHAR, '255', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('major_version', XMLDB_TYPE_INTEGER, '4', NULL, XMLDB_NOTNULL, NULL, NULL);
@@ -211,7 +211,7 @@ function xmldb_hvp_upgrade($oldversion) {
         $table->add_field('icon', XMLDB_TYPE_CHAR, '511', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('created_at', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('updated_at', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('is_recommended', XMLDB_TYPE_INTEGER, '3', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('is_recommended', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('popularity', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('screenshots', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
         $table->add_field('license', XMLDB_TYPE_CHAR, '511', NULL, NULL, NULL, NULL);
@@ -221,10 +221,10 @@ function xmldb_hvp_upgrade($oldversion) {
         $table->add_field('categories', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
         $table->add_field('owner', XMLDB_TYPE_CHAR, '511', NULL, NULL, NULL, NULL);
 
-        // Adding keys to table hvp_events.
+        // Adding keys to table hvp_libraries_hub_cache.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
-        // Conditionally launch create table for hvp_events.
+        // Conditionally create table for hvp_libraries_hub_cache.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
@@ -238,6 +238,23 @@ function xmldb_hvp_upgrade($oldversion) {
         \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
         upgrade_mod_savepoint(TRUE, 2017021900, 'hvp');
+    }
+
+    /**
+     * Add has_icon to libraries folder
+     */
+    if ($oldversion < 2017030200) {
+        $table = new xmldb_table('hvp_libraries');
+
+        // Define field has_icon to be added to hvp_libraries.
+        $has_icon = new xmldb_field('has_icon', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+
+        // Add field has_icon if it does not exist
+        if (!$dbman->field_exists($table, $has_icon)) {
+            $dbman->add_field($table, $has_icon);
+        }
+
+        upgrade_mod_savepoint(TRUE, 2017030200, 'hvp');
     }
 
     return true;

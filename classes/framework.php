@@ -644,6 +644,7 @@ class framework implements \H5PFrameworkInterface {
             'preloaded_css' => $preloadedCss,
             'drop_library_css' => $dropLibraryCss,
             'semantics' => $libraryData['semantics'],
+            'has_icon' => $libraryData['hasIcon'],
         );
 
         if ($new) {
@@ -1109,7 +1110,8 @@ class framework implements \H5PFrameworkInterface {
             'fullscreen' => $library->fullscreen,
             'runnable' => $library->runnable,
             'semantics' => $library->semantics,
-            'restricted' => $library->restricted
+            'restricted' => $library->restricted,
+            'hasIcon' => $library->has_icon
         );
 
         $dependencies = $DB->get_records_sql(
@@ -1264,6 +1266,9 @@ class framework implements \H5PFrameworkInterface {
                 global $DB;
                 $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
                 return has_capability('mod/hvp:getexport', $context);
+            case \H5PPermission::CREATE_RESTRICTED:
+                $context = \context_system::instance();
+                return has_capability('mod/hvp:userestrictedlibraries', $context);
         }
         return FALSE;
     }

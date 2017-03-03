@@ -253,18 +253,36 @@ switch($action) {
         $caninstallany = has_capability('mod/hvp:updatelibraries', $context);
         $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5plibraries', $context);
 
-        // Set content type cache
-        $results = $DB->get_records_sql(
-            'SELECT c.*, l.id as installed ' .
-            'FROM {hvp_libraries_hub_cache} as c ' .
-            'LEFT JOIN {hvp_libraries} as l ' .
-            'ON c.machine_name = l.machine_name ' .
-            'AND c.major_version = l.major_version ' .
-            'AND c.minor_version = l.minor_version ' .
-            'AND c.patch_version = l.patch_version'
-        );
+
+        // Get latest version of local libraries
+        $max_major_version_sql = "
+            SELECT hl.machine_name, MAX(hl.major_version) AS major_version
+            FROM {hvp_libraries} hl
+            WHERE hl.runnable = 1
+            GROUP BY hl.machine_name";
+
+        $max_minor_version_sql = "
+            SELECT hl2.machine_name, hl2.major_version, MAX(hl2.minor_version) AS minor_version
+            FROM ({$max_major_version_sql}) hl1
+            JOIN {hvp_libraries} hl2
+            ON hl1.machine_name = hl2.machine_name
+            AND hl1.major_version = hl2.major_version
+            GROUP BY hl2.machine_name";
+
+        $local_libraries = $DB->get_records_sql("
+            SELECT hl4.id AS library_id, hl4.machine_name, hl4.major_version,
+                hl4.minor_version, hl4.patch_version
+            FROM {hvp_libraries} hl4
+            JOIN ({$max_minor_version_sql}) hl3
+            ON hl4.machine_name = hl3.machine_name
+            AND hl4.major_version = hl3.major_version
+            AND hl4.minor_version = hl3.minor_version
+            GROUP BY hl4.machine_name");
+
+        $cached_libraries = $DB->get_records("hvp_libraries_hub_cache");
+
         $libraries = array();
-        foreach ($results as $result) {
+        foreach ($cached_libraries as &$result) {
             if ($caninstallany) {
                 $result->restricted = FALSE;
             }
@@ -275,32 +293,10 @@ switch($action) {
                 $result->restricted = TRUE;
             }
 
-            $libraries[] = array(
-                'machineName'     => $result->machine_name,
-                'majorVersion'    => $result->major_version,
-                'minorVersion'    => $result->minor_version,
-                'patchVersion'    => $result->patch_version,
-                'h5pMajorVersion' => $result->h5p_major_version,
-                'h5pMinorVersion' => $result->h5p_minor_version,
-                'title'           => $result->title,
-                'summary'         => $result->summary,
-                'description'     => $result->description,
-                'icon'            => $result->icon,
-                'createdAt'       => $result->created_at,
-                'updated_At'      => $result->updated_at,
-                'isRecommended'   => $result->is_recommended,
-                'popularity'      => $result->popularity,
-                'screenshots'     => json_decode($result->screenshots),
-                'license'         => $result->license,
-                'example'         => $result->example,
-                'tutorial'        => $result->tutorial,
-                'keywords'        => json_decode($result->keywords),
-                'categories'      => json_decode($result->categories),
-                'owner'           => $result->owner,
-                'installed'       => isset($result->installed),
-                'restricted'      => $result->restricted
-            );
+            $libraries[] = $core->getCachedLibsMap($result);
         }
+
+        $core->mergeLocalLibsIntoCachedLibs($local_libraries, $libraries);
 
         http_response_code(200);
         print json_encode(array(
@@ -406,13 +402,14 @@ switch($action) {
         }
 
         // Get content type url
-        $endpoint = 'http://api.h5p.org/v1/content-types/';
+        $protocol = (extension_loaded('openssl') ? 'https' : 'http');
+        $endpoint = H5PCore::$hubEndpoints[H5PCore::CONTENT_TYPES];
 
         // Generate local tmp file path
         $local_folder = $CFG->tempdir . uniqid('/hvp-');
         $local_file   = $local_folder . '.h5p';
 
-        if (!\download_file_content($endpoint . $name, NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
+        if (!\download_file_content("{$protocol}://{$endpoint}{$name}", NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
             H5PCore::ajaxError(get_string('downloadfailed', 'hvp'), 'DOWNLOAD_FAILED');
             break;
         }

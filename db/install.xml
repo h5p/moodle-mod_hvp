@@ -61,6 +61,7 @@
         <FIELD NAME="semantics" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The semantics definition in json format"/>
         <FIELD NAME="restricted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Restricts the ability to create new content using this library"/>
         <FIELD NAME="tutorial_url" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false" COMMENT="URL to a tutorial for this library"/>
+        <FIELD NAME="has_icon" TYPE="int" LENGTH="1" UNSIGNED="true" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether or not this library contains an icon.svg"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -84,7 +85,7 @@
         <FIELD NAME="icon" TYPE="char" LENGTH="511" NOTNULL="true" SEQUENCE="false" COMMENT="URL to icon"/>
         <FIELD NAME="created_at" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Time that the library was uploaded"/>
         <FIELD NAME="updated_at" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Time that the library has its latest update"/>
-        <FIELD NAME="is_recommended" TYPE="int" LENGTH="3" NOTNULL="true" SEQUENCE="false" COMMENT="Whether the library is recommended by the HUB moderators"/>
+        <FIELD NAME="is_recommended" TYPE="int" LENGTH="1" UNSIGNED="true" NOTNULL="true" SEQUENCE="false" COMMENT="Whether the library is recommended by the HUB moderators"/>
         <FIELD NAME="popularity" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="How many times the library has been downloaded"/>
         <FIELD NAME="screenshots" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Screenshot URLs json encoded"/>
         <FIELD NAME="license" TYPE="char" LENGTH="511" NOTNULL="false" SEQUENCE="false" COMMENT="License of the library"/>
