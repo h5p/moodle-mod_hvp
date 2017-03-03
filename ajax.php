@@ -394,7 +394,7 @@ switch($action) {
         $context = \context_system::instance();
         $caninstallany = has_capability('mod/hvp:updatelibraries', $context);
         $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5plibraries', $context);
-        if (!$caninstallany || !$caninstallrecommended) {
+        if (!$caninstallany && !$caninstallrecommended) {
             H5PCore::ajaxError(get_string('installdenied', 'hvp'), 'INSTALL_DENIED');
             break;
         }
