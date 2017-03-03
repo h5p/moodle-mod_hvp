@@ -1266,6 +1266,9 @@ class framework implements \H5PFrameworkInterface {
                 global $DB;
                 $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
                 return has_capability('mod/hvp:getexport', $context);
+            case \H5PPermission::CREATE_RESTRICTED:
+                $context = \context_system::instance();
+                return has_capability('mod/hvp:userestrictedlibraries', $context);
         }
         return FALSE;
     }

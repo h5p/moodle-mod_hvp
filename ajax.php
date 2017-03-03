@@ -293,7 +293,7 @@ switch($action) {
                 $result->restricted = TRUE;
             }
 
-            $libraries[] = $core->getCachedLibAsList($result);
+            $libraries[] = $core->getCachedLibsMap($result);
         }
 
         $core->mergeLocalLibsIntoCachedLibs($local_libraries, $libraries);
