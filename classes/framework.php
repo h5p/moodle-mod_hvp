@@ -355,6 +355,16 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
+     * Implements getLibraryFileUrl
+     */
+    public function getLibraryFileUrl($libraryFolderName, $fileName) {
+      global $CFG;
+      $context = \context_system::instance();
+      $basepath = $CFG->httpswwwroot . '/';
+      return "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryFolderName}/{$fileName}";
+    }
+
+    /**
      * Implements getUploadedH5PFolderPath
      */
     public function getUploadedH5pFolderPath($setPath = null) {
@@ -624,6 +634,9 @@ class framework implements \H5PFrameworkInterface {
         }
         if (!isset($libraryData['fullscreen'])) {
             $libraryData['fullscreen'] = 0;
+        }
+        if (!isset($libraryData['hasIcon'])) {
+            $libraryData['hasIcon'] = 0;
         }
         // TODO: Can we move the above code to H5PCore? It's the same for multiple
         // implementations. Perhaps core can update the data objects before calling
