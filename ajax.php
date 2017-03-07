@@ -499,7 +499,7 @@ switch($action) {
         @unlink($local_folder);
 
         // Successfully installed.
-        H5PCore::ajaxSuccess($json);
+        H5PCore::ajaxSuccess(json_decode($json));
         break;
 
     /*
