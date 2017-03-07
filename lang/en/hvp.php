@@ -309,3 +309,4 @@ $string['uploadsizelargerthanpostsize'] = 'Your PHP max upload size is bigger th
 
 // Ajax messages
 $string['hubisdisabled'] = 'The hub is disabled. You can re-enable it in the H5P settings.';
+$string['invalidh5ppost'] = 'Could not get posted H5P.';

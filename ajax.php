@@ -439,6 +439,69 @@ switch($action) {
         H5PCore::ajaxSuccess();
         break;
 
+    /**
+     * Install libraries from h5p and retrieve content json
+     *
+     * Parameters:
+     *  file h5p
+     */
+    case 'libraryupload':
+
+        // Require post to upload/install h5ps
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            break;
+        }
+
+        // Verify token
+        if (!\H5PCore::validToken('h5p_editor_ajax', required_param('token', PARAM_RAW))) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'), 'INVALID_TOKEN');
+            break;
+        }
+
+        // Verify h5p upload
+        if (!$_FILES['h5p']) {
+            H5PCore::ajaxError(get_string('invalidh5ppost', 'hvp'), 'NO_CONTENT_TYPE');
+            exit;
+        }
+
+        // Generate local tmp file path
+        $local_folder = $CFG->tempdir . uniqid('/hvp-');
+        $local_file   = $local_folder . '.h5p';
+
+        // Move so core can validate the H5P
+        move_uploaded_file($_FILES['h5p']['tmp_name'], $local_file);
+
+        // Add folder and file paths to H5P Core
+        $interface = \mod_hvp\framework::instance('interface');
+        $interface->getUploadedH5pFolderPath($local_folder);
+        $interface->getUploadedH5pPath($local_file);
+
+        // Validate package
+        $h5pValidator = \mod_hvp\framework::instance('validator');
+        if (!$h5pValidator->isValidPackage()) {
+            @unlink($local_file);
+            $errors = \mod_hvp\framework::messages('error');
+            if (empty($errors)) {
+                $errors = get_string('validationfailed', 'hvp');
+            }
+            H5PCore::ajaxError($errors, 'VALIDATION_FAILED');
+            break;
+        }
+
+        // Install H5P file into Moodle
+        $storage = \mod_hvp\framework::instance('storage');
+        $storage->savePackage(NULL, NULL, TRUE);
+
+        // Retrieve json
+        $json = file_get_contents($local_folder . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . 'content.json');
+
+        // clean up
+        @unlink($local_folder);
+
+        // Successfully installed.
+        H5PCore::ajaxSuccess($json);
+        break;
+
     /*
      * Throw error if AJAX isnt handeled
      */
