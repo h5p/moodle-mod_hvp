@@ -221,6 +221,11 @@ switch($action) {
         header('Cache-Control: no-cache');
         header('Content-type: application/json');
 
+        if (!\H5PCore::validToken('editorajax', required_param('token', PARAM_RAW))) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            break;
+        }
+
         // Update content type cache if enabled and too old
         $core = \mod_hvp\framework::instance('core');
 
