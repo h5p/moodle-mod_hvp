@@ -295,6 +295,10 @@ class file_storage implements \H5PFileStorage {
 
         $js = $fs->get_file($context->id, 'mod_hvp', 'cachedassets', 0, '/', "{$key}.js");
         if ($js) {
+            if (!$fs->content_exists($js->get_contenthash())) {
+                // File is missing from file system, trigger clean up
+                return null;
+            }
             $files['scripts'] = array((object) array(
                 'path' => "/cachedassets/{$key}.js",
                 'version' => ''
@@ -303,6 +307,10 @@ class file_storage implements \H5PFileStorage {
 
         $css = $fs->get_file($context->id, 'mod_hvp', 'cachedassets', 0, '/', "{$key}.css");
         if ($css) {
+            if (!$fs->content_exists($css->get_contenthash())) {
+                // File is missing from file system, trigger clean up
+                return null;
+            }
             $files['styles'] = array((object) array(
                 'path' => "/cachedassets/{$key}.css",
                 'version' => ''
