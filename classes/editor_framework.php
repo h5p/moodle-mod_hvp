@@ -24,6 +24,8 @@
 
 namespace mod_hvp;
 
+use H5peditorFile;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once __DIR__ . '/../autoloader.php';
@@ -227,5 +229,50 @@ class editor_framework implements \H5peditorStorage {
       $embedType = 'editor';
       $renderer->hvp_alter_scripts($files['scripts'], $libraryList, $embedType);
       $renderer->hvp_alter_styles($files['styles'], $libraryList, $embedType);
+    }
+
+    /**
+     * Saves a file or moves it temporarily. This is often necessary in order to
+     * validate and store uploaded or fetched H5Ps.
+     *
+     * @param string $data Uri of data that should be saved as a temporary file
+     * @param boolean $move_file Can be set to TRUE to move the data instead of saving it
+     *
+     * @return bool|object Returns false if saving failed or an object with path
+     * of the directory and file that is temporarily saved
+     */
+    public static function saveFileTemporarily($data, $move_file) {
+        global $CFG;
+
+        // Generate local tmp file path
+        $unique_h5p_id = uniqid('hvp-');
+        $file_name = $unique_h5p_id . '.h5p';
+        $directory = $CFG->tempdir . DIRECTORY_SEPARATOR . $unique_h5p_id;
+
+        if (!is_dir($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        file_put_contents($directory . DIRECTORY_SEPARATOR . $file_name, $data);
+
+        // Add folder and file paths to H5P Core
+        $interface = framework::instance('interface');
+        $interface->getUploadedH5pFolderPath($directory);
+        $interface->getUploadedH5pPath($directory . DIRECTORY_SEPARATOR . $file_name);
+
+        return (object) array(
+            'dir' => $directory,
+            'fileName' => $file_name
+        );
+    }
+
+    /**
+     * Marks a file for later cleanup, useful when files are not instantly cleaned
+     * up. E.g. for files that are uploaded through the editor.
+     *
+     * @param H5peditorFile $file
+     */
+    public static function markFileForCleanup($file) {
+        // TODO: Implement markFileForCleanup() method.
     }
 }

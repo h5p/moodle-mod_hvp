@@ -42,11 +42,11 @@ class framework implements \H5PFrameworkInterface {
      * Get type of hvp instance
      *
      * @param string $type Type of hvp instance to get
-     * @return \H5PContentValidator|\H5PCore|\H5PStorage|\H5PValidator|\mod_hvp\framework
+     * @return \H5PContentValidator|\H5PCore|\H5PStorage|\H5PValidator|\mod_hvp\framework|\H5peditor
      */
     public static function instance($type = null) {
         global $CFG;
-        static $interface, $core, $editor, $editorinterface;
+        static $interface, $core, $editor, $editorinterface, $editorajaxinterface;
 
         if (!isset($interface)) {
             $interface = new \mod_hvp\framework();
@@ -77,8 +77,13 @@ class framework implements \H5PFrameworkInterface {
                 if (empty($editorinterface)) {
                     $editorinterface = new \mod_hvp\editor_framework();
                 }
+
+                if (empty($editorajaxinterface)) {
+                    $editorajaxinterface = new editor_ajax();
+                }
+
                 if (empty($editor)) {
-                    $editor = new \H5peditor($core, $editorinterface);
+                    $editor = new \H5peditor($core, $editorinterface, $editorajaxinterface);
                 }
                 return $editor;
             case 'core':
@@ -177,6 +182,8 @@ class framework implements \H5PFrameworkInterface {
      * Implements fetchExternalData
      *
      * @param string $url Url starting with http(s)://
+     * @param $data
+     *
      * @return bool|null|\stdClass|string Data object if successful fetch
      */
     public function fetchExternalData($url, $data = null) {
@@ -1282,6 +1289,13 @@ class framework implements \H5PFrameworkInterface {
             case \H5PPermission::CREATE_RESTRICTED:
                 $context = \context_system::instance();
                 return has_capability('mod/hvp:userestrictedlibraries', $context);
+            case \H5PPermission::UPDATE_LIBRARIES:
+                $context = \context_system::instance();
+                return has_capability('mod/hvp:updatelibraries', $context);
+            case \H5PPermission::INSTALL_RECOMMENDED:
+                $context = \context_system::instance();
+                return has_capability('mod/hvp:installrecommendedh5plibraries', $context);
+
         }
         return FALSE;
     }

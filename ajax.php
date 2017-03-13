@@ -192,14 +192,12 @@ switch($action) {
         $name = optional_param('machineName', '', PARAM_TEXT);
         $major = optional_param('majorVersion', 0, PARAM_INT);
         $minor = optional_param('minorVersion', 0, PARAM_INT);
-
         $editor = \mod_hvp\framework::instance('editor');
 
-        header('Cache-Control: no-cache');
-        header('Content-type: application/json');
-
         if (!empty($name)) {
-            print $editor->getLibraryData($name, $major, $minor, \mod_hvp\framework::get_language());
+            $editor->ajax->action(H5PEditorEndpoints::SINGLE_LIBRARY, $name,
+                $major, $minor, \mod_hvp\framework::get_language());
+
             new \mod_hvp\event(
                     'library', NULL,
                     NULL, NULL,
@@ -207,7 +205,7 @@ switch($action) {
             );
         }
         else {
-            print $editor->getLibraries();
+            $editor->ajax->action(H5PEditorEndpoints::LIBRARIES);
         }
 
         break;
@@ -216,97 +214,8 @@ switch($action) {
      * Load content type cache list to display available libraries in hub
      */
     case 'contenttypecache':
-        global $DB;
-
-        header('Cache-Control: no-cache');
-        header('Content-type: application/json');
-
-        if (!\H5PCore::validToken('editorajax', required_param('token', PARAM_RAW))) {
-            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-            break;
-        }
-
-        // Update content type cache if enabled and too old
-        $core = \mod_hvp\framework::instance('core');
-
-        // Check if hub is enabled
-        if (!$core->h5pF->getOption('hub_is_enabled', TRUE)) {
-            http_response_code(403);
-            $core::ajaxError(
-                $core->h5pF->t('The hub is disabled. You can re-enable it in the H5P settings.'),
-                'HUB_DISABLED'
-            );
-            break;
-        }
-
-        $ct_cache_last_update = $core->h5pF->getOption('content_type_cache_updated_at', 0);
-        $outdated_cache = $ct_cache_last_update + (60 * 60 * 24 * 7); // 1 week
-        if (time() > $outdated_cache) {
-            $success = $core->updateContentTypeCache();
-            if (!$success) {
-                http_response_code(404);
-                $core::ajaxError(
-                    $core->h5pF->t('Could not connect to the H5P Content Type Hub. Please try again later.'),
-                    'NO_RESPONSE'
-                );
-                break;
-            }
-        }
-
-        // Determine access
-        $context = \context_system::instance();
-        $caninstallany = has_capability('mod/hvp:updatelibraries', $context);
-        $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5plibraries', $context);
-
-
-        // Get latest version of local libraries
-        $max_major_version_sql = "
-            SELECT hl.machine_name, MAX(hl.major_version) AS major_version
-            FROM {hvp_libraries} hl
-            WHERE hl.runnable = 1
-            GROUP BY hl.machine_name";
-
-        $max_minor_version_sql = "
-            SELECT hl2.machine_name, hl2.major_version, MAX(hl2.minor_version) AS minor_version
-            FROM ({$max_major_version_sql}) hl1
-            JOIN {hvp_libraries} hl2
-            ON hl1.machine_name = hl2.machine_name
-            AND hl1.major_version = hl2.major_version
-            GROUP BY hl2.machine_name";
-
-        $local_libraries = $DB->get_records_sql("
-            SELECT hl4.id AS library_id, hl4.machine_name, hl4.major_version,
-                hl4.minor_version, hl4.patch_version, hl4.has_icon
-            FROM {hvp_libraries} hl4
-            JOIN ({$max_minor_version_sql}) hl3
-            ON hl4.machine_name = hl3.machine_name
-            AND hl4.major_version = hl3.major_version
-            AND hl4.minor_version = hl3.minor_version
-            GROUP BY hl4.machine_name");
-
-        $cached_libraries = $DB->get_records("hvp_libraries_hub_cache");
-
-        $libraries = array();
-        foreach ($cached_libraries as &$result) {
-            if ($caninstallany) {
-                $result->restricted = FALSE;
-            }
-            elseif ($result->is_recommended && $caninstallrecommended) {
-                $result->restricted = FALSE;
-            }
-            else {
-                $result->restricted = TRUE;
-            }
-
-            $libraries[] = $core->getCachedLibsMap($result);
-        }
-
-        $core->mergeLocalLibsIntoCachedLibs($local_libraries, $libraries);
-
-        http_response_code(200);
-        print json_encode(array(
-            'libraries' => $libraries
-        ));
+        $editor = \mod_hvp\framework::instance('editor');
+        $editor->ajax->action(H5PEditorEndpoints::CONTENT_TYPE_CACHE);
         break;
 
     /*
@@ -359,89 +268,10 @@ switch($action) {
      *  raw contentTypeUrl
      */
     case 'libraryinstall':
-        global $DB;
-
-        // Require post to install
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            break;
-        }
-
-        // Verify token
-        if (!\H5PCore::validToken('h5p_editor_ajax', required_param('token', PARAM_RAW))) {
-            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'), 'INVALID_TOKEN');
-            break;
-        }
-
-        // Determine which content type to install
-        $name = required_param('id', PARAM_RAW);
-        if (!$name) {
-            H5PCore::ajaxError(get_string('nocontenttype', 'hvp'), 'NO_CONTENT_TYPE');
-            break;
-        }
-
-        // Look up content type to ensure it's valid(and to check permissions)
-        $content_type = $DB->get_record_sql(
-                "SELECT id, is_recommended
-                   FROM {hvp_libraries_hub_cache}
-                  WHERE machine_name = ?",
-                array($name)
-        );
-        if (!$content_type) {
-            H5PCore::ajaxError(get_string('invalidcontenttype', 'hvp'), 'INVALID_CONTENT_TYPE');
-            break;
-        }
-
-        // Check if the user has access to install or update content types
-        $context = \context_system::instance();
-        $caninstallany = has_capability('mod/hvp:updatelibraries', $context);
-        $caninstallrecommended = has_capability('mod/hvp:installrecommendedh5plibraries', $context);
-        if (!$caninstallany && !$caninstallrecommended) {
-            H5PCore::ajaxError(get_string('installdenied', 'hvp'), 'INSTALL_DENIED');
-            break;
-        }
-
-        if (!$caninstallany && $caninstallrecommended) {
-            // Override core permission check
-            $core = \mod_hvp\framework::instance('core');
-            $core->mayUpdateLibraries(TRUE);
-        }
-
-        // Get content type url
-        $protocol = (extension_loaded('openssl') ? 'https' : 'http');
-        $endpoint = H5PCore::$hubEndpoints[H5PCore::CONTENT_TYPES];
-
-        // Generate local tmp file path
-        $local_folder = $CFG->tempdir . uniqid('/hvp-');
-        $local_file   = $local_folder . '.h5p';
-
-        if (!\download_file_content("{$protocol}://{$endpoint}{$name}", NULL, NULL, FALSE, 300, 20, FALSE, $local_file)) {
-            H5PCore::ajaxError(get_string('downloadfailed', 'hvp'), 'DOWNLOAD_FAILED');
-            break;
-        }
-
-        // Add folder and file paths to H5P Core
-        $interface = \mod_hvp\framework::instance('interface');
-        $interface->getUploadedH5pFolderPath($local_folder);
-        $interface->getUploadedH5pPath($local_file);
-
-        // Validate package
-        $h5pValidator = \mod_hvp\framework::instance('validator');
-        if (!$h5pValidator->isValidPackage(TRUE)) {
-            @unlink($local_file);
-            $errors = \mod_hvp\framework::messages('error');
-            if (empty($errors)) {
-                $errors = get_string('validationfailed', 'hvp');
-            }
-            H5PCore::ajaxError($errors, 'VALIDATION_FAILED');
-            break;
-        }
-
-        // Install H5P file into Moodle
-        $storage = \mod_hvp\framework::instance('storage');
-        $storage->savePackage(NULL, NULL, TRUE);
-
-        // Successfully installed.
-        H5PCore::ajaxSuccess();
+        $token = required_param('token', PARAM_TEXT);
+        $machineName = required_param('id', PARAM_TEXT);
+        $editor = \mod_hvp\framework::instance('editor');
+        $editor->ajax->action(H5PEditorEndpoints::LIBRARY_INSTALL, $token, $machineName);
         break;
 
     /**

@@ -44,6 +44,8 @@ function hvp_autoloader($class) {
 
         // Editor.
         'H5peditor' => 'editor/h5peditor.class.php',
+        'H5PEditorAjax' => 'editor/h5peditor-ajax.class.php',
+        'H5PEditorAjaxInterface' => 'editor/h5peditor-ajax.interface.php',
         'H5peditorFile' => 'editor/h5peditor-file.class.php',
         'H5peditorStorage' => 'editor/h5peditor-storage.interface.php',
 
