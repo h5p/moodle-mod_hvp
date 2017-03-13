@@ -300,7 +300,8 @@ switch($action) {
 
         http_response_code(200);
         print json_encode(array(
-            'libraries' => $libraries
+            'libraries' => $libraries,
+            'recentlyUsed' => hvp_get_recently_used()
         ));
         break;
 
