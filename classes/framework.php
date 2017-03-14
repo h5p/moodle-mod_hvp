@@ -345,7 +345,15 @@ class framework implements \H5PFrameworkInterface {
                 'Library cache was successfully updated!' => 'ctcachesuccess',
                 'No libraries was received from the Content Type Hub. Please try again later.' => 'ctcachenolibraries',
                 'Could not connect to the H5P Content Type Hub. Please try again later.' => 'ctcacheconnectionfailed',
-                'The hub is disabled. You can re-enable it in the H5P settings.' => 'hubisdisabled'
+                'The hub is disabled. You can re-enable it in the H5P settings.' => 'hubisdisabled',
+                'File not found on server. Check file upload settings.' => 'filenotfoundonserver',
+                'Invalid security token.' => 'invalidtoken',
+                'No content type was specified.' => 'nocontenttype',
+                'The chosen content type is invalid.' => 'invalidcontenttype',
+                'No permission to install content type.' => 'installdenied',
+                'Validating h5p package failed.' => 'validatingh5pfailed',
+                'Failed to download the requested H5P.' => 'failedtodownloadh5p',
+                'A post message is required to access the given endpoint' => 'postmessagerequired'
             ];
         }
 

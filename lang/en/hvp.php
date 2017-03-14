@@ -143,6 +143,7 @@ $string['invalidcontenttype'] = 'The chosen content type is invalid.';
 $string['installdenied'] = 'No permission to install content type.';
 $string['downloadfailed'] = 'Downloading the requested library failed.';
 $string['validationfailed'] = 'The requested H5P was not valid';
+$string['validatingh5pfailed'] = 'Validating h5p package failed.';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Title';
@@ -310,3 +311,6 @@ $string['uploadsizelargerthanpostsize'] = 'Your PHP max upload size is bigger th
 // Ajax messages
 $string['hubisdisabled'] = 'The hub is disabled. You can re-enable it in the H5P settings.';
 $string['invalidh5ppost'] = 'Could not get posted H5P.';
+$string['filenotfoundonserver'] = 'File not found on server. Check file upload settings.';
+$string['failedtodownloadh5p'] = 'Failed to download the requested H5P.';
+$string['postmessagerequired'] = 'A post message is required to access the given endpoint';
