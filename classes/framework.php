@@ -353,7 +353,8 @@ class framework implements \H5PFrameworkInterface {
                 'No permission to install content type.' => 'installdenied',
                 'Validating h5p package failed.' => 'validatingh5pfailed',
                 'Failed to download the requested H5P.' => 'failedtodownloadh5p',
-                'A post message is required to access the given endpoint' => 'postmessagerequired'
+                'A post message is required to access the given endpoint' => 'postmessagerequired',
+                'Could not get posted H5P.' => 'invalidh5ppost'
             ];
         }
 

@@ -92,4 +92,15 @@ class editor_ajax implements \H5PEditorAjaxInterface {
         // TODO: HFP-537 include data for recently used in CT cache
         return array();
     }
+
+    /**
+     * Checks if the provided token is valid for this endpoint
+     *
+     * @param string $token The token that will be validated for.
+     *
+     * @return bool True if successful validation
+     */
+    public function validateEditorToken($token) {
+        return \H5PCore::validToken('editorajax', $token);
+    }
 }
