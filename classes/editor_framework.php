@@ -241,19 +241,26 @@ class editor_framework implements \H5peditorStorage {
      * @return bool|object Returns false if saving failed or an object with path
      * of the directory and file that is temporarily saved
      */
-    public static function saveFileTemporarily($data, $move_file) {
+    public static function saveFileTemporarily($data, $move_file = FALSE) {
         global $CFG;
 
         // Generate local tmp file path
         $unique_h5p_id = uniqid('hvp-');
         $file_name = $unique_h5p_id . '.h5p';
         $directory = $CFG->tempdir . DIRECTORY_SEPARATOR . $unique_h5p_id;
+        $file_path = $directory . DIRECTORY_SEPARATOR . $file_name;
 
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
         }
 
-        file_put_contents($directory . DIRECTORY_SEPARATOR . $file_name, $data);
+        // Move file or save data to new file so core can validate H5P
+        if ($move_file) {
+            move_uploaded_file($data, $file_path);
+        }
+        else {
+            file_put_contents($file_path, $data);
+        }
 
         // Add folder and file paths to H5P Core
         $interface = framework::instance('interface');
@@ -270,9 +277,14 @@ class editor_framework implements \H5peditorStorage {
      * Marks a file for later cleanup, useful when files are not instantly cleaned
      * up. E.g. for files that are uploaded through the editor.
      *
-     * @param H5peditorFile $file
+     * @param int $file Id of file that should be cleaned up
      */
     public static function markFileForCleanup($file) {
-        // TODO: Implement markFileForCleanup() method.
+        global $DB;
+
+        // Track temporary files for later cleanup
+        $DB->insert_record_raw('hvp_tmpfiles', array(
+            'id' => $file
+        ), false, false, true);
     }
 }

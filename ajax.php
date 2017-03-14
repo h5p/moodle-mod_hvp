@@ -226,38 +226,10 @@ switch($action) {
      *  int contextId
      */
     case 'files':
-        global $DB;
-        // TODO: Check permissions
-
-        if (!\H5PCore::validToken('editorajax', required_param('token', PARAM_RAW))) {
-            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-            exit;
-        }
-
-        // Get Content ID and Context ID for upload
+        $token = required_param('token', PARAM_RAW);
         $contentid = required_param('contentId', PARAM_INT);
-        $contextid = required_param('contextId', PARAM_INT);
-
-        // Create file
-        $file = new H5peditorFile(\mod_hvp\framework::instance('interface'));
-        if (!$file->isLoaded()) {
-            H5PCore::ajaxError(get_string('filenotfound', 'hvp'));
-            break;
-        }
-
-        // Make sure file is valid
-        if ($file->validate()) {
-            $core = \mod_hvp\framework::instance('core');
-            // Save the valid file
-            $file_id = $core->fs->saveFile($file, $contentid, $contextid);
-
-            // Track temporary files for later cleanup
-            $DB->insert_record_raw('hvp_tmpfiles', array(
-                'id' => $file_id
-            ), false, false, true);
-        }
-
-        $file->printResult();
+        $editor = \mod_hvp\framework::instance('editor');
+        $editor->ajax->action(H5PEditorEndpoints::FILES, $token, $contentid);
         break;
 
     /**
@@ -268,7 +240,7 @@ switch($action) {
      *  raw contentTypeUrl
      */
     case 'libraryinstall':
-        $token = required_param('token', PARAM_TEXT);
+        $token = required_param('token', PARAM_RAW);
         $machineName = required_param('id', PARAM_TEXT);
         $editor = \mod_hvp\framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::LIBRARY_INSTALL, $token, $machineName);
@@ -281,60 +253,9 @@ switch($action) {
      *  file h5p
      */
     case 'libraryupload':
-
-        // Require post to upload/install h5ps
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            break;
-        }
-
-        // Verify token
-        if (!\H5PCore::validToken('h5p_editor_ajax', required_param('token', PARAM_RAW))) {
-            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'), 'INVALID_TOKEN');
-            break;
-        }
-
-        // Verify h5p upload
-        if (!$_FILES['h5p']) {
-            H5PCore::ajaxError(get_string('invalidh5ppost', 'hvp'), 'NO_CONTENT_TYPE');
-            exit;
-        }
-
-        // Generate local tmp file path
-        $local_folder = $CFG->tempdir . uniqid('/hvp-');
-        $local_file   = $local_folder . '.h5p';
-
-        // Move so core can validate the H5P
-        move_uploaded_file($_FILES['h5p']['tmp_name'], $local_file);
-
-        // Add folder and file paths to H5P Core
-        $interface = \mod_hvp\framework::instance('interface');
-        $interface->getUploadedH5pFolderPath($local_folder);
-        $interface->getUploadedH5pPath($local_file);
-
-        // Validate package
-        $h5pValidator = \mod_hvp\framework::instance('validator');
-        if (!$h5pValidator->isValidPackage()) {
-            @unlink($local_file);
-            $errors = \mod_hvp\framework::messages('error');
-            if (empty($errors)) {
-                $errors = get_string('validationfailed', 'hvp');
-            }
-            H5PCore::ajaxError($errors, 'VALIDATION_FAILED');
-            break;
-        }
-
-        // Install H5P file into Moodle
-        $storage = \mod_hvp\framework::instance('storage');
-        $storage->savePackage(NULL, NULL, TRUE);
-
-        // Retrieve json
-        $json = file_get_contents($local_folder . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . 'content.json');
-
-        // clean up
-        @unlink($local_folder);
-
-        // Successfully installed.
-        H5PCore::ajaxSuccess(json_decode($json));
+        $token = required_param('token', PARAM_RAW);
+        $editor = \mod_hvp\framework::instance('editor');
+        $editor->ajax->action(H5PEditorEndpoints::LIBRARY_UPLOAD, $token);
         break;
 
     /*
