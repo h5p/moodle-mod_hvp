@@ -89,8 +89,22 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      * most recently used.
      */
     public function getAuthorsRecentlyUsedLibraries() {
-        // TODO: HFP-537 include data for recently used in CT cache
-        return array();
+        global $DB;
+        global $USER;
+        $recently_used = array();
+
+        $results = $DB->get_records_sql(
+            "SELECT library_name, max(created_at) AS max_created_at
+            FROM {hvp_events}
+           WHERE type='content' AND sub_type = 'create' AND user_id = ?
+        GROUP BY library_name
+        ORDER BY max_created_at DESC", array($USER->id));
+
+        foreach ($results as $row) {
+            $recently_used[] = $row->library_name;
+        }
+
+        return $recently_used;
     }
 
     /**
