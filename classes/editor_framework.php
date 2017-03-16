@@ -290,9 +290,15 @@ class editor_framework implements \H5peditorStorage {
 
     /**
      * Clean up temporary files
+     *
+     * @param string $filePath Path to file or directory
      */
-    public static function removeTmpUploadedFiles() {
-        $interface = framework::instance('interface');
-        \H5PCore::deleteFileTree($interface->getUploadedH5pFolderPath());
+    public static function removeTemporarilySavedFiles($filePath) {
+        if (is_dir($filePath)) {
+            \H5PCore::deleteFileTree($filePath);
+        }
+        else {
+            @unlink($filePath);
+        }
     }
 }
