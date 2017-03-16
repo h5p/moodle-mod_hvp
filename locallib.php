@@ -387,10 +387,11 @@ function hvp_get_recently_used() {
     $recently_used = array();
 
     $results = $DB->get_records_sql(
-             "SELECT distinct library_name
+             "SELECT library_name, max(created_at) AS max_created_at
                 FROM {hvp_events}
                WHERE type='content' AND sub_type = 'create' AND user_id = ?
-            ORDER BY created_at DESC", array($USER->id));
+            GROUP BY library_name
+            ORDER BY max_created_at DESC", array($USER->id));
 
     foreach ($results as $row) {
         $recently_used[] = $row->library_name;
