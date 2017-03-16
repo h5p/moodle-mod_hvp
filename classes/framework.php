@@ -354,7 +354,11 @@ class framework implements \H5PFrameworkInterface {
                 'Validating h5p package failed.' => 'validatingh5pfailed',
                 'Failed to download the requested H5P.' => 'failedtodownloadh5p',
                 'A post message is required to access the given endpoint' => 'postmessagerequired',
-                'Could not get posted H5P.' => 'invalidh5ppost'
+                'Could not get posted H5P.' => 'invalidh5ppost',
+                'Site could not be registered with the hub. Please contact your site administrator.' => 'sitecouldnotberegistered',
+                'The H5P Hub has been disabled until this problem can be resolved. You may still upload libraries through the "H5P Libraries" page.' => 'hubisdisableduploadlibraries',
+                'Your site was successfully registered with the H5P Hub.' => 'successfullyregisteredwithhub',
+                'You have been provided a unique key that identifies you with the Hub when receiving new updates. The key is available for viewing in the "H5P Settings" page.' => 'sitekeyregistered'
             ];
         }
 

@@ -307,6 +307,10 @@ $string['reviseserversetupandretry'] = 'When you have revised your server setup 
 $string['disablehubconfirmationmsg'] = 'Do you still want to enable the hub ?';
 $string['nowriteaccess'] = 'A problem with the server write access was detected. Please make sure that your server can write to your data folder.';
 $string['uploadsizelargerthanpostsize'] = 'Your PHP max upload size is bigger than your max post size. This is known to cause issues in some installations.';
+$string['sitecouldnotberegistered'] = 'Site could not be registered with the hub. Please contact your site administrator.';
+$string['hubisdisableduploadlibraries'] = 'The H5P Hub has been disabled until this problem can be resolved. You may still upload libraries through the "H5P Libraries" page.';
+$string['successfullyregisteredwithhub'] = 'Your site was successfully registered with the H5P Hub.';
+$string['sitekeyregistered'] = 'You have been provided a unique key that identifies you with the Hub when receiving new updates. The key is available for viewing in the "H5P Settings" page.';
 
 // Ajax messages
 $string['hubisdisabled'] = 'The hub is disabled. You can re-enable it in the H5P settings.';

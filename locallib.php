@@ -380,3 +380,22 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
 
     return $library;
 }
+
+function hvp_get_recently_used() {
+    global $DB;
+    global $USER;
+    $recently_used = array();
+
+    $results = $DB->get_records_sql(
+             "SELECT library_name, max(created_at) AS max_created_at
+                FROM {hvp_events}
+               WHERE type='content' AND sub_type = 'create' AND user_id = ?
+            GROUP BY library_name
+            ORDER BY max_created_at DESC", array($USER->id));
+
+    foreach ($results as $row) {
+        $recently_used[] = $row->library_name;
+    }
+
+    return $recently_used;
+}
