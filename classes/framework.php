@@ -338,7 +338,11 @@ class framework implements \H5PFrameworkInterface {
                 'Library cache was successfully updated!' => 'ctcachesuccess',
                 'No libraries was received from the Content Type Hub. Please try again later.' => 'ctcachenolibraries',
                 'Could not connect to the H5P Content Type Hub. Please try again later.' => 'ctcacheconnectionfailed',
-                'The hub is disabled. You can re-enable it in the H5P settings.' => 'hubisdisabled'
+                'The hub is disabled. You can re-enable it in the H5P settings.' => 'hubisdisabled',
+                'Site could not be registered with the hub. Please contact your site administrator.' => 'sitecouldnotberegistered',
+                'The H5P Hub has been disabled until this problem can be resolved. You may still upload libraries through the "H5P Libraries" page.' => 'hubisdisableduploadlibraries',
+                'Your site was successfully registered with the H5P Hub.' => 'successfullyregisteredwithhub',
+                'You have been provided a unique key that identifies you with the Hub when receiving new updates. The key is available for viewing in the "H5P Settings" page.' => 'sitekeyregistered'
             ];
         }
 
