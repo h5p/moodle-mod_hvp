@@ -67,7 +67,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      *
      * @return array|object|null Returns results from querying the database
      */
-    public function getContentTypeCache($machineName) {
+    public function getContentTypeCache($machineName = NULL) {
         global $DB;
 
         if ($machineName) {

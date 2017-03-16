@@ -255,7 +255,8 @@ switch($action) {
     case 'libraryupload':
         $token = required_param('token', PARAM_RAW);
         $editor = \mod_hvp\framework::instance('editor');
-        $editor->ajax->action(H5PEditorEndpoints::LIBRARY_UPLOAD, $token);
+        $uploadPath = $_FILES['h5p']['tmp_name'];
+        $editor->ajax->action(H5PEditorEndpoints::LIBRARY_UPLOAD, $token, $uploadPath);
         break;
 
     /*

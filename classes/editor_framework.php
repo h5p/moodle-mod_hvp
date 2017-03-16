@@ -287,4 +287,12 @@ class editor_framework implements \H5peditorStorage {
             'id' => $file
         ), false, false, true);
     }
+
+    /**
+     * Clean up temporary files
+     */
+    public static function removeTmpUploadedFiles() {
+        $interface = framework::instance('interface');
+        \H5PCore::deleteFileTree($interface->getUploadedH5pFolderPath());
+    }
 }
