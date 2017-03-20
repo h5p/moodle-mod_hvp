@@ -7,6 +7,10 @@
     var $editor = $('.h5p-editor');
     var $fileField = $('input[name="h5pfile"]');
 
+    if (H5PIntegration.hubIsEnabled) {
+      $('input[name="h5paction"]').closest('.form-group.row.fitem').hide();
+    }
+
     H5PEditor.init(
       $('#mform1'),
       $('input[name="h5paction"]'),
