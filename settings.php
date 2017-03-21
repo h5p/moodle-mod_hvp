@@ -120,9 +120,14 @@ if ($ADMIN->fulltree) {
     $PAGE->requires->js('/mod/hvp/library/js/h5p-event-dispatcher.js', TRUE);
     $PAGE->requires->js('/mod/hvp/library/js/h5p-confirmation-dialog.js', TRUE);
     $PAGE->requires->js('/mod/hvp/library/js/settings/h5p-disable-hub.js', TRUE);
-    $PAGE->requires->css('/mod/hvp/library/styles/h5p-confirmation-dialog.css');
-    $PAGE->requires->css('/mod/hvp/library/styles/h5p.css');
-    $PAGE->requires->css('/mod/hvp/library/styles/h5p-core-button.css');
+
+    // Skip applying css when page has already loaded, since Moodle does not
+    // allow us to require the css at this point.
+    if ($PAGE->state !== 2) {
+        $PAGE->requires->css('/mod/hvp/library/styles/h5p-confirmation-dialog.css');
+        $PAGE->requires->css('/mod/hvp/library/styles/h5p.css');
+        $PAGE->requires->css('/mod/hvp/library/styles/h5p-core-button.css');
+    }
 
     // Find missing requirements
     $core = \mod_hvp\framework::instance('core');
