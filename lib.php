@@ -278,13 +278,15 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             $h5pinterface = \mod_hvp\framework::instance('interface');
             $h5pcore = \mod_hvp\framework::instance('core');
 
+            $matches = array();
+
             // Get content id from filename:
-            if (!preg_match('/(\d*).h5p/', $args[0], $matches)) {
+            if (!preg_match('/(\d*).h5p$/', $args[0], $matches)) {
               // did not find any content ID :(
               return false;
             }
 
-            $contentid = $matches[0];
+            $contentid = $matches[1];
             $content = $h5pinterface->loadContent($contentid);
             $displayOptions = $h5pcore->getDisplayOptionsForView($content['disable'], $contentid);
 
