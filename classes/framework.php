@@ -936,7 +936,10 @@ class framework implements \H5PFrameworkInterface {
      */
     public function loadContent($id) {
         global $DB;
-
+        if (!is_numeric($id)) {
+          $id = explode('.', $id);
+          $id = $id[0];
+        }
         $data = $DB->get_record_sql(
                 "SELECT hc.id
                       , hc.name
