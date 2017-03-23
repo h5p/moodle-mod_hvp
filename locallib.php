@@ -189,7 +189,8 @@ function hvp_add_editor_assets($id = null) {
       'ajaxPath' => "{$url}ajax.php?contextId={$context->id}&token={$editorajaxtoken}&action=",
       'libraryUrl' => $url . 'editor/',
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
-      'assets' => $assets
+      'assets' => $assets,
+      'apiVersion' => H5PCore::$coreApi
     );
 
     if ($id !== null) {
