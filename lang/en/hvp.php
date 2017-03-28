@@ -112,7 +112,7 @@ $string['ctcachelastupdatelabel'] = 'Last update';
 $string['ctcachebuttonlabel'] = 'Update content type cache';
 $string['ctcacheneverupdated'] = 'Never';
 $string['ctcachetaskname'] = 'Update content type cache';
-$string['ctcachedescription'] = 'Here you can update the content type cache from the H5P hub. This is used to show the available libraries in the H5P authoring tool. Making sure the content type cache is up to date will ensure that you can view and download the latest libraries.';
+$string['ctcachedescription'] = 'Making sure the content type cache is up to date will ensure that you can view, download and use the latest libraries. This is different from updating the libraries themselves.';
 
 // Update libraries section.
 $string['updatelibraries'] = 'Update All Libraries';
