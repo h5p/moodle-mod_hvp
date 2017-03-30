@@ -44,13 +44,6 @@ $ADMIN->add('modhvpfolder', new admin_externalpage('h5plibraries',
 if ($ADMIN->fulltree) {
     // Settings is stored on the global $CFG object.
 
-    // Stats tracking
-    $settings->add(
-            new admin_setting_configcheckbox('mod_hvp/external_communication',
-                    get_string('externalcommunication', 'hvp'),
-                    get_string('externalcommunication_help', 'hvp', 'href="https://h5p.org/tracking-the-usage-of-h5p" target="_blank"'),
-                    1));
-
     // Content state.
     $settings->add(
             new admin_setting_configcheckbox('mod_hvp/enable_save_content_state',

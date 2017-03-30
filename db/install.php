@@ -41,6 +41,9 @@ function xmldb_hvp_install() {
             'href="https://h5p.org/contact" target="_blank"') .
          '</p>';
 
+    // Notify of communication with H5P Hub
+    echo '<p>H5P fetches content types directly from the H5P Hub. In order to do this the H5P plugin will communicate with the Hub once a day to fetch information about new and updated content types. It will send in anonymous data to the Hub about H5P usage. Read more at <a href="https://h5p.org/h5p-plugin-communication">the plugin communication page at H5P.org</a>.</p>';
+
     \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
     \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 }

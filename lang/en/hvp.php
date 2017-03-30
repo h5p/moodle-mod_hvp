@@ -83,15 +83,13 @@ $string['enablecopyright'] = 'Copyright button';
 $string['enableabout'] = 'About H5P button';
 $string['hubsettingsheader'] = 'Hub Settings';
 $string['enablehublabel'] = 'Enable hub';
-$string['disablehubdescription'] = 'It is strongly discouraged to disable the hub. It will disable all communication with the H5P hub, which mean you will not be able to create, reuse and share content and content types through the H5P hub interface. You will also have to install libraries manually through uploading them.';
+$string['disablehubdescription'] = 'It is strongly discouraged to disable the hub. Enabling the hub will allow communication with the H5P hub, allowing you to create, reuse and share content and content types through the H5P Hub interface. Anonymous usage data will also be sent to the H5P Hub. Disabling this option will force you to install libraries manually through upload.';
 $string['empty'] = 'Empty';
 $string['reveal'] = 'Reveal';
 $string['hide'] = 'Hide';
 $string['sitekey'] = 'Site Key';
 $string['sitekeydescription'] = 'The site key is a secret that uniquely identifies this site with the Hub.';
 
-$string['externalcommunication'] = 'External communication';
-$string['externalcommunication_help'] = 'Aid in the development of H5P by contributing anonymous usage data. Disabling this option will prevent your site from fetching the newest H5P updates. You can read more about <a {$a}>which data is collected</a> on h5p.org.';
 $string['enablesavecontentstate'] = 'Save content state';
 $string['enablesavecontentstate_help'] = 'Automatically save the current state of interactive content for each user. This means that the user may pick up where he left off.';
 $string['contentstatefrequency'] = 'Save content state frequency';

@@ -254,6 +254,16 @@ function xmldb_hvp_upgrade($oldversion) {
             $dbman->add_field($table, $has_icon);
         }
 
+        // Display hub communication info
+        if (!get_config('mod_hvp', 'external_communication')) {
+            \mod_hvp\framework::messages('info', 'H5P now fetches content types directly from the H5P Hub. In order to do this the H5P plugin will communicate with H5P.org once per day to fetch information about new and updated content types. It will send in anonymous data to the hub about H5P usage. If you do not want to use the new Hub client and get information about new content types automatically, you may disable the H5P Hub in the H5P settings.');
+            \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
+        }
+
+        // Enable hub and delete old communication variable
+        set_config('hub_is_enabled', true, 'mod_hvp');
+        unset_config('hub_is_enabled', 'mod_hvp');
+
         upgrade_mod_savepoint(TRUE, 2017030200, 'hvp');
     }
 

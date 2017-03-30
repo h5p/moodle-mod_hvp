@@ -82,8 +82,6 @@ $string['enableembed'] = 'Katma tuşu';
 $string['enablecopyright'] = 'Telif hakkı tuşu';
 $string['enableabout'] = 'H5P bilgisi tuşu';
 
-$string['externalcommunication'] = 'Harici iletişim';
-$string['externalcommunication_help'] = 'Anonim kullanım bilgisi sağlayarak H5P gelişimine katkı sağlayın. Bu seçenek devre dışı kalırsa siteniz en yeni H5P güncellemeleri hakkında bilgileri alamaz. Bu konuda daha fazla bilgi h5p.org adresinde <a {$a}>hangi veriler</a> sayfasında.';
 $string['enablesavecontentstate'] = 'İçerik durumunu kaydet';
 $string['enablesavecontentstate_help'] = 'Her bir kullanıcı için mevcut etkileşimsel çerik durumunu kendiliğinden kaydet. Böylece kullanıcı bıraktığı yerden devam edebilir.';
 $string['contentstatefrequency'] = 'İçerik durumunu kaydetme sıklığı';

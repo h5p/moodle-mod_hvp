@@ -79,8 +79,6 @@ $string['enablecopyright'] = 'Urheberrecht-Knopf';
 $string['enableabout'] = 'Über-H5P-Knopf';
 
 
-$string['externalcommunication'] = 'Externe Kommunikation';
-$string['externalcommunication_help'] = 'Die Entwicklung von H5P durch die Übermittlung von anonymen Nutzungsdaten unterstützen. Wenn diese Option ausgeschalten wird, wird diese Seite nicht mehr die akutellsten H5P-Updates erhalten. Mehr Informationen darüber,<a {$a}>welche Daten gesammelt werden</a> sind auf h5p.org verfügbar.';
 $string['enablesavecontentstate'] = 'Inhalte automatisch speichern';
 $string['enablesavecontentstate_help'] = 'Automatisch den Status des interaktiven Inhalts für jeden Nutzer speichern. Das bedeutet, dass die Nutzer da weitermachen können, wo sie aufgehört haben.';
 $string['contentstatefrequency'] = 'Speicherhäufigkeit';

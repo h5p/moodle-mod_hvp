@@ -82,8 +82,6 @@ $string['enableembed'] = 'Inkluder-knapp';
 $string['enablecopyright'] = 'Opphavsretts-knapp';
 $string['enableabout'] = 'Om H5P-knapp';
 
-$string['externalcommunication'] = 'Ekstern kommuniksjon';
-$string['externalcommunication_help'] = 'Bidra til utviklingen av H5P ved å bidra med anonym bruksdata. Ved å skru av denne innstillingen vil du hindre installasjonen i å hente de seneste H5P-oppdateringene. Du kan lese mer om <a {$a}>hvilke data som samles</a> på h5p.org.';
 $string['enablesavecontentstate'] = 'Lagre tilstanden til innholdet';
 $string['enablesavecontentstate_help'] = 'Automatisk lagring av hva brukeren har svart og hvor langt brukeren har kommet. Dette betyr brukeren kan fortsette der han avsluttet.';
 $string['contentstatefrequency'] = 'Frekvens for tilstandslagring';

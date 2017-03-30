@@ -41,7 +41,7 @@ class look_for_updates extends \core\task\scheduled_task {
         global $USER;
 
         // Check to make sure external communications hasn't been disabled
-        $extcom = !!get_config('mod_hvp', 'external_communication');
+        $extcom = !!get_config('mod_hvp', 'hub_is_enabled');
         $extcomnotify = !!get_config('mod_hvp', 'external_communication_notify');
         if ($extcom || !$extcomnotify) {
             $core = \mod_hvp\framework::instance();

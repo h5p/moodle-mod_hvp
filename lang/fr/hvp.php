@@ -82,8 +82,6 @@ $string['enableembed'] = 'Bouton d\'intégration';
 $string['enablecopyright'] = 'Bouton de copyright';
 $string['enableabout'] = 'Bouton à propos de H5P';
 
-$string['externalcommunication'] = 'communication externe';
-$string['externalcommunication_help'] = 'Aidez au développement de H5P en fournissant des données de façon anonyme. Désactiver cette option empêchera votre site de détecter les nouvelles mise à jour H5P. <a {$a}>En savoir plus</a> sur les données collectées sur le site h5p.org.';
 $string['enablesavecontentstate'] = 'Sauvegarder l\'état du contenu actuel';
 $string['enablesavecontentstate_help'] = 'Sauvegarder automatiquement l\'état actuel du contenu interactif pour chaque utilisateur. Ceci signifie que l\'utilisateur pourra reprendre là où il en est resté la fois précédente.';
 $string['contentstatefrequency'] = 'Fréquence des sauvegardes d\'état de vos contenus';
