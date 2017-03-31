@@ -88,7 +88,7 @@
         <FIELD NAME="is_recommended" TYPE="int" LENGTH="1" UNSIGNED="true" NOTNULL="true" SEQUENCE="false" COMMENT="Whether the library is recommended by the HUB moderators"/>
         <FIELD NAME="popularity" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="How many times the library has been downloaded"/>
         <FIELD NAME="screenshots" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Screenshot URLs json encoded"/>
-        <FIELD NAME="license" TYPE="char" LENGTH="511" NOTNULL="false" SEQUENCE="false" COMMENT="License of the library"/>
+        <FIELD NAME="license" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Library license(s) json encoded"/>
         <FIELD NAME="example" TYPE="char" LENGTH="511" NOTNULL="true" SEQUENCE="false" COMMENT="URL to example content for this library"/>
         <FIELD NAME="tutorial" TYPE="char" LENGTH="511" NOTNULL="false" SEQUENCE="false" COMMENT="Tutorial URL"/>
         <FIELD NAME="keywords" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Keywords for library json encoded"/>

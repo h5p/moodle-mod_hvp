@@ -214,7 +214,7 @@ function xmldb_hvp_upgrade($oldversion) {
         $table->add_field('is_recommended', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('popularity', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('screenshots', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
-        $table->add_field('license', XMLDB_TYPE_CHAR, '511', NULL, NULL, NULL, NULL);
+        $table->add_field('license', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
         $table->add_field('example', XMLDB_TYPE_CHAR, '511', NULL, XMLDB_NOTNULL, NULL, NULL);
         $table->add_field('tutorial', XMLDB_TYPE_CHAR, '511', NULL, NULL, NULL, NULL);
         $table->add_field('keywords', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);

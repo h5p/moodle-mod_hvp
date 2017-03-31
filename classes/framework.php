@@ -1341,7 +1341,7 @@ class framework implements \H5PFrameworkInterface {
                 'is_recommended'    => $ct->isRecommended === TRUE ? 1 : 0,
                 'popularity'        => $ct->popularity,
                 'screenshots'       => json_encode($ct->screenshots),
-                'license'           => $ct->license,
+                'license'           => json_encode(isset($ct->license) ? $ct->license : array()),
                 'example'           => $ct->example,
                 'tutorial'          => isset($ct->tutorial) ? $ct->tutorial : '',
                 'keywords'          => json_encode(isset($ct->keywords) ? $ct->keywords : array()),
