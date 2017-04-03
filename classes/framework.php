@@ -186,8 +186,23 @@ class framework implements \H5PFrameworkInterface {
      *
      * @return bool|null|\stdClass|string Data object if successful fetch
      */
-    public function fetchExternalData($url, $data = null) {
-        $response = download_file_content($url, null, $data);
+    public function fetchExternalData($url, $data = NULL, $blocking = TRUE, $stream = NULL) {
+        global $CFG;
+
+        if ($stream !== NULL) {
+            // Download file
+
+            // Generate local tmp file path
+            $local_folder = $CFG->tempdir . uniqid('/hvp-');
+            $stream = $local_folder . '.h5p';
+
+            // Add folder and file paths to H5P Core
+            $interface = \mod_hvp\framework::instance('interface');
+            $interface->getUploadedH5pFolderPath($local_folder);
+            $interface->getUploadedH5pPath($stream);
+        }
+
+        $response = download_file_content($url, null, $data, false, 300, 20, false, $stream);
         return ($response === false ? null : $response);
     }
 
@@ -409,10 +424,6 @@ class framework implements \H5PFrameworkInterface {
 
         if ($setPath !== null) {
             $path = $setPath;
-        }
-
-        if (!isset($path)) {
-            throw new \coding_exception('Using getUploadedH5pPath() before path is set');
         }
 
         return $path;
