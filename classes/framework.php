@@ -191,6 +191,7 @@ class framework implements \H5PFrameworkInterface {
 
         if ($stream !== NULL) {
             // Download file
+            @set_time_limit(0);
 
             // Generate local tmp file path
             $local_folder = $CFG->tempdir . uniqid('/hvp-');
