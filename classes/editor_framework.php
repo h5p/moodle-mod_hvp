@@ -278,9 +278,15 @@ class editor_framework implements \H5peditorStorage {
      * up. E.g. for files that are uploaded through the editor.
      *
      * @param int $file Id of file that should be cleaned up
+     * @param int|null $content_id Content id of file
      */
-    public static function markFileForCleanup($file) {
+    public static function markFileForCleanup($file, $content_id = null) {
         global $DB;
+
+        // Let H5P Core clean up
+        if ($content_id) {
+            return;
+        }
 
         // Track temporary files for later cleanup
         $DB->insert_record_raw('hvp_tmpfiles', array(
