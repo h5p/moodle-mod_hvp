@@ -129,11 +129,6 @@ class framework implements \H5PFrameworkInterface {
 
     /**
      * Implements fetchExternalData
-     *
-     * @param string $url Url starting with http(s)://
-     * @param $data
-     *
-     * @return bool|null|\stdClass|string Data object if successful fetch
      */
     public function fetchExternalData($url, $data = NULL, $blocking = TRUE, $stream = NULL) {
         global $CFG;
