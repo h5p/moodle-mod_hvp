@@ -93,18 +93,6 @@ $string['enabledlrscontenttypes_help'] = 'Gjør det mulig å bruke innholdstyper
 $string['settings'] = 'H5P-innstillinger';
 $string['libraries'] = 'H5P-bibliotek';
 
-// Update libraries section.
-$string['updatelibraries'] = 'Oppdater alle bibliotek';
-$string['updatesavailable'] = 'Der finnes tilgjengelige oppdateringer for H5P-innholdstypene dine.';
-$string['whyupdatepart1'] = 'Du kan lese mer om hvorfor det er viktig å holde seg oppdatert og godene ved å gjøre det på <a {$a}>Why Update H5P</a>-siden.';
-$string['whyupdatepart2'] = 'Denne siden viser også en liste over de forskjellige endringene, hvor du kan lese om nye funksjoner som introduseres og problemer som er fikset.';
-$string['currentversion'] = 'Du har';
-$string['availableversion'] = 'Tilgjengelig oppdatering';
-$string['usebuttonbelow'] = 'Du kan bruke knappen under for å automatisk laste ned og oppdatere alle innholdstypene dine.';
-$string['downloadandupdate'] = 'Last ned & oppdater';
-$string['missingh5purl'] = 'Mangler URL for H5P-fil';
-$string['unabletodownloadh5p'] = 'Ute av stand til å laste ned H5P-fil';
-
 // Upload libraries section.
 $string['uploadlibraries'] = 'Last opp bilbliotek';
 $string['options'] = 'Innstillinger';
@@ -192,7 +180,6 @@ $string['hvp:viewresults'] = 'Vise resultater for H5P-innhold';
 $string['hvp:getcachedassets'] = 'Tilgang til bufret H5P-innholdsressurser';
 $string['hvp:getcontent'] = 'Tilgang til innholdet til H5P-fil i kurs';
 $string['hvp:getexport'] = 'Tilgang til eksportfil fra H5P i kurs';
-$string['hvp:updatesavailable'] = 'Få varsel når H5P-oppdateringer er tilgjengelige';
 
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'Du har ikke tillatelse til å oppgradere bibliotek.';

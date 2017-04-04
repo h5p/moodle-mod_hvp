@@ -57,15 +57,6 @@ $string['cancellabel'] = 'Cancel';
 $string['confirmlabel'] = 'Confirm';
 $string['noh5ps'] = 'There\'s no interactive content available for this course.';
 
-// Update message email for admin
-$string['messageprovider:updates'] = 'Notification of available H5P updates';
-$string['updatesavailabletitle'] = 'New H5P updates are available';
-$string['updatesavailablemsgpt1'] = 'There are updates available for the H5P content types you\'ve installed on your Moodle site.';
-$string['updatesavailablemsgpt2'] = 'Head over to the page linked to below for further instructions.';
-$string['updatesavailablemsgpt3'] = 'The latest update was released on: {$a}';
-$string['updatesavailablemsgpt4'] = 'Your are running a version from: {$a}';
-
-$string['lookforupdates'] = 'Look for H5P updates';
 $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
 
@@ -111,18 +102,6 @@ $string['ctcachebuttonlabel'] = 'Update content type cache';
 $string['ctcacheneverupdated'] = 'Never';
 $string['ctcachetaskname'] = 'Update content type cache';
 $string['ctcachedescription'] = 'Making sure the content type cache is up to date will ensure that you can view, download and use the latest libraries. This is different from updating the libraries themselves.';
-
-// Update libraries section.
-$string['updatelibraries'] = 'Update All Libraries';
-$string['updatesavailable'] = 'There are updates available for your H5P content types.';
-$string['whyupdatepart1'] = 'You can read about why it\'s important to update and the benefits from doing so on the <a {$a}>Why Update H5P</a> page.';
-$string['whyupdatepart2'] = 'The page also list the different changelogs, where you can read about the new features introduced and the issues that have been fixed.';
-$string['currentversion'] = 'You are running';
-$string['availableversion'] = 'Available update';
-$string['usebuttonbelow'] = 'You can use the button below to automatically download and update all of your content types.';
-$string['downloadandupdate'] = 'Download & Update';
-$string['missingh5purl'] = 'Missing URL for H5P file';
-$string['unabletodownloadh5p'] = 'Unable to download H5P file';
 
 // Upload libraries section.
 $string['uploadlibraries'] = 'Upload Libraries';
@@ -217,7 +196,6 @@ $string['hvp:viewresults'] = 'View result for H5P content';
 $string['hvp:getcachedassets'] = 'Get cached H5P content assets';
 $string['hvp:getcontent'] = 'Get/view content of H5P file in course';
 $string['hvp:getexport'] = 'Get export file from H5P in course';
-$string['hvp:updatesavailable'] = 'Get notification when H5P updates are available';
 $string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
 
 // Capabilities error messages

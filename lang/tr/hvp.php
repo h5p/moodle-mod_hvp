@@ -57,15 +57,6 @@ $string['cancellabel'] = 'İptal';
 $string['confirmlabel'] = 'Onayla';
 $string['noh5ps'] = 'Bu kurs içn etkileşimsel içerik yok.';
 
-// Update message email for admin
-$string['messageprovider:updates'] = 'Mevcut H5P güncellemeleri için bildirim';
-$string['updatesavailabletitle'] = 'Yeni H5P güncellemeleri var.';
-$string['updatesavailablemsgpt1'] = 'Moodle sitenize yüklediğiniz H5P içerik tipleri için güncellemeler var.';
-$string['updatesavailablemsgpt2'] = 'Daha fazla yönerge için aşağıda bağlantısı verilen sayfaya gidin.';
-$string['updatesavailablemsgpt3'] = 'En son güncellemenin yayınlanma tarihi: {$a}';
-$string['updatesavailablemsgpt4'] = 'İşletmekte olduğunuz sürümün tarihi: {$a}';
-
-$string['lookforupdates'] = 'H5P güncellemelerine bak';
 $string['removetmpfiles'] = 'Eski H5P geçici dosyalarını kaldır';
 $string['removeoldlogentries'] = 'Eski H5P kütük girdilerini kaldır';
 
@@ -90,18 +81,6 @@ $string['contentstatefrequency_help'] = 'Saniye değeriyle, kullanıcının iler
 // Admin menu.
 $string['settings'] = 'H5P Ayarları';
 $string['libraries'] = 'H5P Kitaplıkları';
-
-// Update libraries section.
-$string['updatelibraries'] = 'Tüm Kitaplıkları İçeri Aktar';
-$string['updatesavailable'] = 'H5P içerik tipleriniz için güncellemeler var.';
-$string['whyupdatepart1'] = '<a {$a}>H5P neden güncellenmeli</a> sayfasında güncellemenin neden gerektiğini ve avantajlarını okuyabilirsiniz.';
-$string['whyupdatepart2'] = 'Sayfada ayrıca değişiklik kütükleri de yer almakta; burada yeni getirilen özelikleri ve yapılan düzeltmeleri görebilirsiniz.';
-$string['currentversion'] = 'Şu anki sürümünüz';
-$string['availableversion'] = 'Mevcut güncelleme';
-$string['usebuttonbelow'] = 'Aşağıdaki tuşu kullanarak içerik türlerinizin tamamının kendiliğinden indirilip yüklenmesini sağlayabilirsiniz.';
-$string['downloadandupdate'] = 'İndir ve Güncelle';
-$string['missingh5purl'] = 'H5P dosyası için eksik URL';
-$string['unabletodownloadh5p'] = 'H5P dosya indirilemedi';
 
 // Upload libraries section.
 $string['uploadlibraries'] = 'Kitaplıkları Yükle';
@@ -190,7 +169,6 @@ $string['hvp:viewresults'] = 'H5P içeriği için sonucu gör';
 $string['hvp:getcachedassets'] = 'Ön belleğe alınmış H5P içerik değerlerini al';
 $string['hvp:getcontent'] = 'Kurs içìndeki H5P dosyası içeriğini al/gör';
 $string['hvp:getexport'] = 'Kurs içindeki H5P içeriğinden dışa aktarma dosyası al';
-$string['hvp:updatesavailable'] = 'H5P güncellemeleri olduğunda bildirim al';
 
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'Kitaplıkları yükseltme yetkiniz yok.';

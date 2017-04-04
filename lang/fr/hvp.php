@@ -57,15 +57,6 @@ $string['cancellabel'] = 'Annuler';
 $string['confirmlabel'] = 'Confirmer';
 $string['noh5ps'] = 'Il n\'y a aucune ressource interactive disponible pour ce cours.';
 
-// Update message email for admin
-$string['messageprovider:updates'] = 'Notifications des mises à jour H5P disponibles';
-$string['updatesavailabletitle'] = 'De nouvelles mises à jour H5P sont disponibles';
-$string['updatesavailablemsgpt1'] = 'Des mises à jour de H5P sont disponibles pour certaines activités installées sur votre moodle.';
-$string['updatesavailablemsgpt2'] = 'Cliquez sur le lien ci-dessous pour plus d\'informations.';
-$string['updatesavailablemsgpt3'] = 'La dernière mise à jour a été installée le : {$a}';
-$string['updatesavailablemsgpt4'] = 'Vous utilisez la version issue de : {$a}';
-
-$string['lookforupdates'] = 'Rechercher des mises à jour H5P';
 $string['removetmpfiles'] = 'Supprimer les anciens fichiers temporaires H5P';
 $string['removeoldlogentries'] = 'Supprimer les anciennes entrées de logs H5P';
 
@@ -90,18 +81,6 @@ $string['contentstatefrequency_help'] = 'Fréquence des sauvegardes automatiques
 // Admin menu.
 $string['settings'] = 'Paramètres H5P';
 $string['libraries'] = 'Bibliothèques H5P';
-
-// Update libraries section.
-$string['updatelibraries'] = 'Mettre à jour toutes les bibliothèques';
-$string['updatesavailable'] = 'Des mises à jour sont disponibles pour vos activités H5P.';
-$string['whyupdatepart1'] = 'Lisez pourquoi il est important de mettre à jour et les bénéfices que vous en tirez sur la page <a {$a}>Pourquoi mettre à jour H5P</a> .';
-$string['whyupdatepart2'] = 'Cette page liste également les changelogs qui mentionnent les nouvelles fonctionnalités ainsi que les bugs fixés.';
-$string['currentversion'] = 'Votre version actuelle est';
-$string['availableversion'] = 'Versions disponibles';
-$string['usebuttonbelow'] = 'Vous pouvez utiliser le bouton ci-dessous pour télécharger et mettre à jour automatiquement vos activités H5P.';
-$string['downloadandupdate'] = 'Télécharger et mettre à jour';
-$string['missingh5purl'] = 'Il manque l\'url du fichier H5P';
-$string['unabletodownloadh5p'] = 'Impossible de télécharger le fichier H5P';
 
 // Upload libraries section.
 $string['uploadlibraries'] = 'Uploader les bibliothèques';
@@ -190,7 +169,6 @@ $string['hvp:viewresults'] = 'Visualiser les résultats';
 $string['hvp:getcachedassets'] = 'Récupérer les assets mis en cache';
 $string['hvp:getcontent'] = 'Visualiser le contenu d\'un fichier H5P dans un cours';
 $string['hvp:getexport'] = 'Récupérer un fichier H5P dans un cours';
-$string['hvp:updatesavailable'] = 'Être notifié quand des mises à jour H5P sont disponibles';
 
 // Capabilities error messages
 $string['nopermissiontoupgrade'] = 'Vous n\'avez pas les droits pour mettre à jour les bibliothèques.';

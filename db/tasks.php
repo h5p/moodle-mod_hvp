@@ -25,15 +25,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $tasks = array(
     array(
-        'classname' => 'mod_hvp\task\look_for_updates',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
         'classname' => 'mod_hvp\task\remove_tmpfiles',
         'blocking' => 0,
         'minute' => 'R',

@@ -115,57 +115,6 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Make it easy to download and install H5P libraries.
-     *
-     * @param boolean $onlyupdate Prevent install of new libraries
-     * @return string|null Error or null if everything's OK.
-     */
-    public static function downloadH5pLibraries($onlyupdate = false) {
-        global $CFG;
-
-        $update_available = \get_config('mod_hvp', 'update_available');
-        $current_update = \get_config('mod_hvp', 'current_update');
-        if ($update_available === $current_update) {
-            // Prevent re-submission of forms/action
-            return null;
-        }
-
-        // URL for file to download
-        $download_url = \get_config('mod_hvp', 'update_available_path');
-        if (!$download_url) {
-            return get_string('missingh5purl', 'hvp');
-        }
-
-        // Generate local tmp file path
-        $local_folder = $CFG->tempdir . uniqid('/hvp-');
-        $local_file = $local_folder . '.h5p';
-
-        if (!\download_file_content($download_url, null, null, false, 300, 20, false, $local_file)) {
-            return get_string('unabletodownloadh5p', 'hvp');
-        }
-
-        // Add folder and file paths to H5P Core
-        $interface = \mod_hvp\framework::instance('interface');
-        $interface->getUploadedH5pFolderPath($local_folder);
-        $interface->getUploadedH5pPath($local_file);
-
-        // Validate package
-        $h5pValidator = \mod_hvp\framework::instance('validator');
-        if (!$h5pValidator->isValidPackage(true, $onlyupdate)) {
-            @unlink($local_file);
-            $messages = \mod_hvp\framework::messages('error');
-            return implode('<br/>', $messages);
-        }
-
-        // Install H5P file into Moodle
-        $storage = \mod_hvp\framework::instance('storage');
-        $storage->savePackage(null, null, true);
-        \set_config('current_update', $update_available, 'mod_hvp');
-
-        return null;
-    }
-
-    /**
      * Implements getPlatformInfo
      */
     public function getPlatformInfo() {
