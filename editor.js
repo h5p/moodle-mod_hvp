@@ -8,7 +8,7 @@
     var $fileField = $('input[name="h5pfile"]');
 
     if (H5PIntegration.hubIsEnabled) {
-      $('input[name="h5paction"]').closest('.form-group.row.fitem').hide();
+      $('input[name="h5paction"]').closest('.fitem').hide();
     }
 
     H5PEditor.init(
