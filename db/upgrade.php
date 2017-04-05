@@ -193,7 +193,7 @@ function xmldb_hvp_upgrade($oldversion) {
     /**
      * Add content type cache database
      */
-    if ($oldversion < 2017021900) {
+    if ($oldversion < 2017040500) {
         // Define table hvp_libraries_hub_cache to be created.
         $table = new xmldb_table('hvp_libraries_hub_cache');
 
@@ -237,13 +237,9 @@ function xmldb_hvp_upgrade($oldversion) {
         \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
         \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
-        upgrade_mod_savepoint(TRUE, 2017021900, 'hvp');
-    }
-
-    /**
-     * Add has_icon to libraries folder
-     */
-    if ($oldversion < 2017030200) {
+        /**
+         * Add has_icon to libraries folder
+         */
         $table = new xmldb_table('hvp_libraries');
 
         // Define field has_icon to be added to hvp_libraries.
@@ -264,7 +260,7 @@ function xmldb_hvp_upgrade($oldversion) {
         set_config('hub_is_enabled', true, 'mod_hvp');
         unset_config('hub_is_enabled', 'mod_hvp');
 
-        upgrade_mod_savepoint(TRUE, 2017030200, 'hvp');
+        upgrade_mod_savepoint(TRUE, 2017040500, 'hvp');
     }
 
     return true;
