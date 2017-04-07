@@ -670,16 +670,31 @@ class file_storage implements \H5PFileStorage {
      * content from the current temporary upload folder to the editor path.
      *
      * @param string $source path to source directory
-     * @param string $target path of target directory. Defaults to editor path
+     * @param string $contentId path of target directory. Defaults to editor path
      *
      * @return object|null Object containing h5p json and content json data
      */
-    public function moveContentDirectory($source, $target = NULL) {
-        // Requires context
-        $contextid = required_param('contextId', PARAM_INT);
-
+    public function moveContentDirectory($source, $contentId = NULL) {
         if ($source === NULL) {
             return NULL;
+        }
+
+        // Default to 0 (editor)
+        if (!isset($contentId)) {
+            $contentId = 0;
+        }
+
+        // Find content context
+        if ($contentId > 0) {
+            // Grab cm context
+            $cm = \get_coursemodule_from_instance('hvp', $contentId);
+            $context = \context_module::instance($cm->id);
+            $contextId = $context->id;
+        }
+
+        // Get context from parameters
+        if (!isset($contextId)) {
+            $contextId = required_param('contextId', PARAM_INT);
         }
 
         // Get h5p and content json
@@ -691,10 +706,10 @@ class file_storage implements \H5PFileStorage {
         $contentFiles = array_diff(scandir($contentSource), array('.','..', 'content.json'));
         foreach ($contentFiles as $file) {
             if (is_dir("{$contentSource}/{$file}")) {
-                self::moveFileTreeToEditor("{$contentSource}/{$file}", $contextid);
+                self::moveFileTree("{$contentSource}/{$file}", $contextId, $contentId);
             }
             else {
-                self::moveFileToEditor("{$contentSource}/{$file}", $contextid);
+                self::moveFile("{$contentSource}/{$file}", $contextId, $contentId);
             }
         }
 
@@ -708,9 +723,10 @@ class file_storage implements \H5PFileStorage {
      * Move a single file to editor
      *
      * @param string $source_file Path to source fil
-     * @param int $contextid
+     * @param int $contextId Id of context
+     * @param int $contentId Id of content, 0 if editor
      */
-    private static function moveFileToEditor($source_file, $contextid) {
+    private static function moveFile($source_file, $contextId, $contentId) {
         $fs = get_file_storage();
 
         $path_parts = pathinfo($source_file);
@@ -718,17 +734,49 @@ class file_storage implements \H5PFileStorage {
         $file_path  = $path_parts['dirname'];
         $folder_name = basename($file_path);
 
-        // Create file record for editor
-        $record = array(
-            'contextid' => $contextid,
-            'component' => 'mod_hvp',
-            'filearea' => 'editor',
-            'itemid' => 0,
-            'filepath' => '/' . $folder_name . '/',
-            'filename' => $file_name
-        );
+        if ($contentId > 0) {
+            // Create file record for content
+            $record = array(
+                'contextid' => $contextId,
+                'component' => 'mod_hvp',
+                'filearea' => $contentId > 0 ? 'content' : 'editor',
+                'itemid' => $contentId,
+                'filepath' => '/' . $folder_name . '/',
+                'filename' => $file_name
+            );
+        }
+        else {
+            // Create file record for editor
+            $record = array(
+                'contextid' => $contextId,
+                'component' => 'mod_hvp',
+                'filearea' => 'editor',
+                'itemid' => 0,
+                'filepath' => '/' . $folder_name . '/',
+                'filename' => $file_name
+            );
+        }
 
         $source_data = file_get_contents($source_file);
+
+        // Check if file already exists
+        $fileExists = $fs->file_exists($record['contextid'], 'mod_hvp',
+            $record['filearea'], $record['itemid'], $record['filepath'],
+            $record['filename']
+        );
+
+        if ($fileExists) {
+            // Delete it to make sure that it is replaced with correct content
+            $file = $fs->get_file($record['contextid'], 'mod_hvp',
+                $record['filearea'], $record['itemid'], $record['filepath'],
+                $record['filename']
+            );
+            if ($file) {
+                $file->delete();
+            }
+        }
+
+
         $fs->create_file_from_string($record, $source_data);
     }
 
@@ -736,11 +784,12 @@ class file_storage implements \H5PFileStorage {
      * Move a complete file tree to the editor
      *
      * @param string $source_file_tree Path of file tree that should be moved
-     * @param int $contextid
+     * @param int $contextId Id of context
+     * @param int $contentId Id of content, 0 for editor
      *
      * @throws \Exception
      */
-    private static function moveFileTreeToEditor($source_file_tree, $contextid) {
+    private static function moveFileTree($source_file_tree, $contextId, $contentId) {
         $dir = opendir($source_file_tree);
         if ($dir === FALSE) {
             trigger_error('Unable to open directory ' . $source_file_tree, E_USER_WARNING);
@@ -750,10 +799,10 @@ class file_storage implements \H5PFileStorage {
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..') && $file != '.git' && $file != '.gitignore') {
                 if (is_dir("{$source_file_tree}/{$file}")) {
-                    self::moveFileTreeToEditor("{$source_file_tree}/{$file}", $contextid);
+                    self::moveFileTree("{$source_file_tree}/{$file}", $contextId, $contentId);
                 }
                 else {
-                    self::moveFileToEditor("{$source_file_tree}/{$file}", $contextid);
+                    self::moveFile("{$source_file_tree}/{$file}", $contextId, $contentId);
                 }
             }
         }
