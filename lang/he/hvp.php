@@ -53,6 +53,7 @@ $string['cancellabel'] = 'ביטול';
 $string['confirmlabel'] = 'אישור';
 $string['noh5ps'] = 'לא קיים תוכן H5P אינטראקטיבי בקורס זה.';
 
+$string['lookforupdates'] = 'Look for H5P updates';
 $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
 

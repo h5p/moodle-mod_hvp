@@ -57,6 +57,7 @@ $string['cancellabel'] = 'Annuler';
 $string['confirmlabel'] = 'Confirmer';
 $string['noh5ps'] = 'Il n\'y a aucune ressource interactive disponible pour ce cours.';
 
+$string['lookforupdates'] = 'Rechercher des mises à jour H5P';
 $string['removetmpfiles'] = 'Supprimer les anciens fichiers temporaires H5P';
 $string['removeoldlogentries'] = 'Supprimer les anciennes entrées de logs H5P';
 

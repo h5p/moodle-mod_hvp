@@ -21,34 +21,29 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_hvp\task;
+
 defined('MOODLE_INTERNAL') || die();
 
-$tasks = array(
-    array(
-        'classname' => 'mod_hvp\task\look_for_updates',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'mod_hvp\task\remove_tmpfiles',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
-        'classname' => 'mod_hvp\task\remove_old_log_entries',
-        'blocking' => 0,
-        'minute' => 'R',
-        'hour' => 'R',
-        'day' => '*',
-        'dayofweek' => '*',
-        'month' => '*'
-    )
-);
+/**
+ * The mod_hvp look for updates task class
+ *
+ * @package    mod_hvp
+ * @copyright  2016 Joubel AS <contact@joubel.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class look_for_updates extends \core\task\scheduled_task {
+    public function get_name() {
+        return get_string('lookforupdates', 'mod_hvp');
+    }
+
+    public function execute() {
+        global $USER;
+
+        // Check to make sure external communications hasn't been disabled
+        if (get_config('mod_hvp', 'hub_is_enabled') || get_config('mod_hvp', 'send_usage_statistics')) {
+            $core = \mod_hvp\framework::instance();
+            $core->fetchLibrariesMetadata();
+        }
+    }
+}

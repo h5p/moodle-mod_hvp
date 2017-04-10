@@ -57,6 +57,7 @@ $string['cancellabel'] = 'İptal';
 $string['confirmlabel'] = 'Onayla';
 $string['noh5ps'] = 'Bu kurs içn etkileşimsel içerik yok.';
 
+$string['lookforupdates'] = 'H5P güncellemelerine bak';
 $string['removetmpfiles'] = 'Eski H5P geçici dosyalarını kaldır';
 $string['removeoldlogentries'] = 'Eski H5P kütük girdilerini kaldır';
 

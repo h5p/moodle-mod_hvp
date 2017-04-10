@@ -57,6 +57,7 @@ $string['cancellabel'] = 'Cancel';
 $string['confirmlabel'] = 'Confirm';
 $string['noh5ps'] = 'There\'s no interactive content available for this course.';
 
+$string['updatelibraries'] = 'Update All Libraries';
 $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
 
@@ -72,15 +73,17 @@ $string['enabledownload'] = 'Download button';
 $string['enableembed'] = 'Embed button';
 $string['enablecopyright'] = 'Copyright button';
 $string['enableabout'] = 'About H5P button';
-$string['hubsettingsheader'] = 'Hub Settings';
-$string['enablehublabel'] = 'Enable hub';
-$string['disablehubdescription'] = 'It is strongly discouraged to disable the hub. Enabling the hub will allow communication with the H5P hub, allowing you to create, reuse and share content and content types through the H5P Hub interface. Anonymous usage data will also be sent to the H5P Hub. Disabling this option will force you to install libraries manually through upload.';
+$string['hubsettingsheader'] = 'Content Types';
+$string['enablehublabel'] = 'Use H5P Hub';
+$string['disablehubdescription'] = "It's strongly encouraged to keep this option enabled. The H5P Hub provides an easy interface for getting new content types and keeping existing content types up to date. In the future, it will also make it easier to share and reuse content. Disabling this option you will have to install and update content types through file uploads.";
 $string['empty'] = 'Empty';
 $string['reveal'] = 'Reveal';
 $string['hide'] = 'Hide';
 $string['sitekey'] = 'Site Key';
 $string['sitekeydescription'] = 'The site key is a secret that uniquely identifies this site with the Hub.';
 
+$string['sendusagestatistics'] = 'Contribute usage statistics';
+$string['sendusagestatistics_help'] = 'Usage statistics numbers will automatically be reported to help the developers better understand how H5P is used and to determine potential areas of improvement.';
 $string['enablesavecontentstate'] = 'Save content state';
 $string['enablesavecontentstate_help'] = 'Automatically save the current state of interactive content for each user. This means that the user may pick up where he left off.';
 $string['contentstatefrequency'] = 'Save content state frequency';

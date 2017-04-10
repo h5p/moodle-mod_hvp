@@ -54,13 +54,7 @@ if ($ADMIN->fulltree) {
                     get_string('contentstatefrequency', 'hvp'),
                     get_string('contentstatefrequency_help', 'hvp'), 30, PARAM_INT));
 
-    // Content state.
-    $settings->add(
-            new admin_setting_configcheckbox('mod_hvp/enable_lrs_content_types',
-                    get_string('enabledlrscontenttypes', 'hvp'),
-                    get_string('enabledlrscontenttypes_help', 'hvp'), 0));
-
-    // Content state.
+    // Site Key
     $settings->add(
             new admin_setting_configtext('mod_hvp/site_key',
                     get_string('sitekey', 'hvp'),
@@ -82,6 +76,12 @@ if ($ADMIN->fulltree) {
         'hide' => get_string('hide', 'hvp')
     ));
 
+    // Send usage statistics
+    $settings->add(
+            new admin_setting_configcheckbox('mod_hvp/send_usage_statistics',
+                    get_string('sendusagestatistics', 'hvp'),
+                    get_string('sendusagestatistics_help', 'hvp'), 1));
+
     $choices = array(
         H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptionnevershow', 'hvp'),
         H5PDisplayOptionBehaviour::ALWAYS_SHOW => get_string('displayoptionalwaysshow', 'hvp'),
@@ -97,8 +97,16 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('mod_hvp/copyright', get_string('enablecopyright', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/icon', get_string('enableabout', 'hvp'), '', 1));
 
-    // Disable hub setting
+    // Content Types header
     $settings->add(new admin_setting_heading('mod_hvp/hub_settings', get_string('hubsettingsheader', 'hvp'), ''));
+
+    // LRS
+    $settings->add(
+            new admin_setting_configcheckbox('mod_hvp/enable_lrs_content_types',
+                    get_string('enabledlrscontenttypes', 'hvp'),
+                    get_string('enabledlrscontenttypes_help', 'hvp'), 0));
+
+    // Use H5P Hub
     $settings->add(
         new admin_setting_configcheckbox(
             'mod_hvp/hub_is_enabled',

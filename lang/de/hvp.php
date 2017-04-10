@@ -53,6 +53,7 @@ $string['confirmdialogbody'] = 'Zum Fortfahren bestätigen. Dieser Vorgang kann 
 $string['cancellabel'] = 'Abbrechen';
 $string['confirmlabel'] = 'Bestätigen';
 
+$string['lookforupdates'] = 'Nach H5P-Aktualisierungen suchen';
 $string['removetmpfiles'] = 'Entfernen alter temporärer H5P-Dateien';
 $string['removeoldlogentries'] = 'Entfernen alter H5P-Logdateien';
 
