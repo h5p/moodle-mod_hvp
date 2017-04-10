@@ -877,8 +877,7 @@ class framework implements \H5PFrameworkInterface {
     public function alterLibrarySemantics(&$semantics, $name, $majorVersion, $minorVersion) {
         global $PAGE;
 
-        $context = \context_system::instance();
-        $PAGE->set_context($context);
+        $PAGE->set_context(null);
 
         $renderer = $PAGE->get_renderer('mod_hvp');
         $renderer->hvp_alter_semantics($semantics, $name, $majorVersion, $minorVersion);
