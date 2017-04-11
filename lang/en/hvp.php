@@ -75,7 +75,7 @@ $string['enablecopyright'] = 'Copyright button';
 $string['enableabout'] = 'About H5P button';
 $string['hubsettingsheader'] = 'Content Types';
 $string['enablehublabel'] = 'Use H5P Hub';
-$string['disablehubdescription'] = "It's strongly encouraged to keep this option enabled. The H5P Hub provides an easy interface for getting new content types and keeping existing content types up to date. In the future, it will also make it easier to share and reuse content. Disabling this option you will have to install and update content types through file uploads.";
+$string['disablehubdescription'] = "It's strongly encouraged to keep this option enabled. The H5P Hub provides an easy interface for getting new content types and keeping existing content types up to date. In the future, it will also make it easier to share and reuse content. If this option is disabled you'll have to install and update content types through file upload forms.";
 $string['empty'] = 'Empty';
 $string['reveal'] = 'Reveal';
 $string['hide'] = 'Hide';
@@ -97,8 +97,8 @@ $string['settings'] = 'H5P Settings';
 $string['libraries'] = 'H5P Libraries';
 
 // Content type cache section
-$string['ctcacheconnectionfailed'] = 'Could not connect to the H5P Content Type Hub. Please try again later.';
-$string['ctcachenolibraries'] = 'No libraries was received from the Content Type Hub. Please try again later.';
+$string['ctcacheconnectionfailed'] = "Couldn't communicate with the H5P Hub. Please try again later.";
+$string['ctcachenolibraries'] = 'No content types were received from the H5P Hub. Please try again later.';
 $string['ctcachesuccess'] = 'Library cache was successfully updated!';
 $string['ctcachelastupdatelabel'] = 'Last update';
 $string['ctcachebuttonlabel'] = 'Update content type cache';
