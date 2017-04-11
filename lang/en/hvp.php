@@ -57,6 +57,7 @@ $string['cancellabel'] = 'Cancel';
 $string['confirmlabel'] = 'Confirm';
 $string['noh5ps'] = 'There\'s no interactive content available for this course.';
 
+$string['lookforupdates'] = 'Look for H5P updates';
 $string['updatelibraries'] = 'Update All Libraries';
 $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
