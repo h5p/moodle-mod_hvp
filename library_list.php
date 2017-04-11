@@ -46,14 +46,17 @@ if ($formdata = $uploadform->get_data()) {
 
 $core = \mod_hvp\framework::instance();
 
-// Create content type cache form
-$ct_cache_form = new \mod_hvp\content_type_cache_form();
+$hubOn = $core->h5pF->getOption('hub_is_enabled', TRUE);
+if ($hubOn) {
+    // Create content type cache form
+    $ct_cache_form = new \mod_hvp\content_type_cache_form();
 
-// On form submit
-if ($ct_cache_form->get_data()) {
-    // Update cache and reload page
-    $core->updateContentTypeCache();
-    redirect($pageurl);
+    // On form submit
+    if ($ct_cache_form->get_data()) {
+        // Update cache and reload page
+        $core->updateContentTypeCache();
+        redirect($pageurl);
+    }
 }
 
 $numNotFiltered = $core->h5pF->getNumNotFiltered();
@@ -128,20 +131,15 @@ echo $OUTPUT->header();
 // Page Header
 echo '<h2>' . get_string('libraries', 'hvp') . '</h2>';
 
-if (isset($updateform)) {
-    // Update All Libraries
-    echo '<h3 class="h5p-admin-header">' . get_string('updatelibraries', 'hvp') . '</h3>';
-    $updateform->display();
+if ($hubOn) {
+    // Content type cache form
+    echo '<h3>' . get_string('contenttypecacheheader', 'hvp') . '</h3>';
+    $ct_cache_form->display();
 }
 
 // Upload Form
 echo '<h3 class="h5p-admin-header">' . get_string('uploadlibraries', 'hvp') . '</h3>';
 $uploadform->display();
-
-// Content type cache form
-echo '<h3>' . get_string('contenttypecacheheader', 'hvp') . '</h3>';
-$ct_cache_form->display();
-
 
 // Installed Libraries List
 echo '<h3 class="h5p-admin-header">' . get_string('installedlibraries', 'hvp')  . '</h3>';
