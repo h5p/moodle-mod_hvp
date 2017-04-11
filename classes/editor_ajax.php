@@ -48,7 +48,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
             GROUP BY hl2.machine_name";
 
         return $DB->get_records_sql("
-            SELECT hl4.id, hl4.machine_name, hl4.major_version,
+            SELECT hl4.id, hl4.machine_name, hl4.title, hl4.major_version,
                 hl4.minor_version, hl4.patch_version, hl4.has_icon, hl4.restricted
             FROM {hvp_libraries} hl4
             JOIN ({$max_minor_version_sql}) hl3
