@@ -8,7 +8,9 @@
     var $fileField = $('input[name="h5pfile"]');
 
     if (H5PIntegration.hubIsEnabled) {
-      $('input[name="h5paction"]').closest('.fitem').hide();
+      // TODO: This can easily break in new themes. Improve robustness of this
+      // by not including h5paction in form, when it should not be used.
+      $('input[name="h5paction"]').parents('.fitem').last().hide();
     }
 
     H5PEditor.init(
