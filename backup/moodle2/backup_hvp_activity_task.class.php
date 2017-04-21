@@ -42,19 +42,16 @@ class backup_hvp_activity_task extends backup_activity_task {
      * Defines a backup step to store the instance data in the hvp.xml file
      */
     protected function define_my_steps() {
+        // Add hvp activity data and content files
         $this->add_step(new backup_hvp_activity_structure_step('hvp_structure', 'hvp.xml'));
 
-        // Ideally this step would only run once per backup, unfortunately, the
-        // nature of the backup system does not allow for activities to have
-        // shared resources.
-        $this->add_step(new backup_hvp_libraries_structure_step('hvp_libraries', 'hvp_libraries.xml'));
+        // Exclude hvp libraries step for local 'imports'
+        if (backup_controller_dbops::backup_includes_files($this->plan->get_backupid())) {
 
-        // One suggestion for increasing performance would be to only add the
-        // libraries to one activity, but then that would have to be restored
-        // before the other activities.
-
-        // Another suggestion is to reduce the is to reduce the size of the XML
-        // by reading the data from JSON again after restoring.
+            // Note that this step will only run once per backup as it generates
+            // a shared resource.
+            $this->add_step(new backup_hvp_libraries_structure_step('hvp_libraries', 'hvp_libraries.xml'));
+        }
     }
 
     /**

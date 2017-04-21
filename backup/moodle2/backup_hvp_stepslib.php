@@ -115,6 +115,22 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
  */
 class backup_hvp_libraries_structure_step extends backup_structure_step {
 
+    protected function execute_condition() {
+        $fullpath = $this->task->get_taskbasepath();
+        if (empty($fullpath)) {
+            throw new backup_step_exception('backup_structure_step_undefined_fullpath');
+        }
+
+        // Modify filename to use a globally shared file for all libraries
+        $this->filename = "../{$this->filename}";
+
+        // Append the filename to the fullpath
+        $fullpath = rtrim($fullpath, '/') . '/' . $this->filename;
+
+        // Determine if already generated
+        return !file_exists($fullpath);
+    }
+
     protected function define_structure() {
 
         // Define each element separate.

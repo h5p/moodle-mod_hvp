@@ -84,6 +84,43 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
  */
 class restore_hvp_libraries_structure_step extends restore_activity_structure_step {
 
+    protected function execute_condition() {
+        static $librariesRestored;
+
+        // Prevent this step from running more than once
+        // since all hvp_libraries.xml files are the same.
+        if (!empty($librariesRestored)) {
+            return false;
+        }
+        $librariesRestored = true;
+
+        // Get full path to activity backup location
+        $fullpath = $this->task->get_taskbasepath();
+        if (empty($fullpath)) {
+            throw new backup_step_exception('backup_structure_step_undefined_fullpath');
+        }
+        $fullpath = rtrim($fullpath, '/');
+
+        // Check for the activity's local hvp_libraries.xml file
+        $local = "{$fullpath}/{$this->filename}";
+        if (file_exists("{$fullpath}/{$this->filename}")) {
+            // Use that
+            return true;
+        }
+
+        // Look for a global hvp_libraries.xml file
+        if (file_exists("{$fullpath}/../{$this->filename}")) {
+            // Use it
+            $this->filename = "../{$this->filename}";
+            return true;
+        }
+
+        // Not able to find a hvp_libraries.xml, skip restore and let the admin
+        // be responsible for providing the approperiate libraries.
+        // (Could also be using Import which doesn't need libraries)
+        return false;
+    }
+
     protected function define_structure() {
         $paths = array();
 
