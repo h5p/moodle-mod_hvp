@@ -21,7 +21,7 @@ In addition to being an authoring tool for rich content, H5P enables you to impo
 
 User interactions and scores are tracked using xAPI and are available through the Moodle Gradebook.
 
-You add interactive H5P content by uploading a .h5p file. You can create and download .h5p files on h5p.org';
+You add interactive H5P content by creating content using the built-in authoring tool or uploading H5P files found on other H5P enabled sites.';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
 $string['modulenameplural'] = 'Interactive Content';
 $string['pluginadministration'] = 'H5P';
