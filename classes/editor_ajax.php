@@ -45,7 +45,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
             JOIN {hvp_libraries} hl2
             ON hl1.machine_name = hl2.machine_name
             AND hl1.major_version = hl2.major_version
-            GROUP BY hl2.machine_name";
+            GROUP BY hl2.machine_name, hl2.major_version";
 
         return $DB->get_records_sql("
             SELECT hl4.id, hl4.machine_name, hl4.title, hl4.major_version,
@@ -54,8 +54,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
             JOIN ({$max_minor_version_sql}) hl3
             ON hl4.machine_name = hl3.machine_name
             AND hl4.major_version = hl3.major_version
-            AND hl4.minor_version = hl3.minor_version
-            GROUP BY hl4.machine_name"
+            AND hl4.minor_version = hl3.minor_version"
         );
     }
 
