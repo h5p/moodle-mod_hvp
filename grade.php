@@ -25,6 +25,7 @@ require_once(dirname(__FILE__) . '/../../config.php');
 
 $id = required_param('id', PARAM_INT);
 $userid = optional_param('userid', 0, PARAM_INT);
+# id=26&itemnumber=0&userid=2
 
 if (! $cm = get_coursemodule_from_id('hvp', $id)) {
     print_error('invalidcoursemodule');
@@ -34,10 +35,11 @@ if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
 }
 require_course_login($course, false, $cm);
 
-if ($userid === (int)$USER->id) {
-    // If it's the same user, redirect to content.
-    redirect(new moodle_url('/mod/hvp/view.php', array('id' => $cm->id)));
-}
+// TODO: Uncomment
+//if ($userid === (int)$USER->id) {
+//    // If it's the same user, redirect to content.
+//    redirect(new moodle_url('/mod/hvp/view.php', array('id' => $cm->id)));
+//}
 
 // Load H5P Content.
 $hvp = $DB->get_record_sql(

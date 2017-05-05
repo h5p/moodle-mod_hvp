@@ -107,7 +107,17 @@ class results {
                 ),
                 $result->rawgrade === null ? '—' : (int) $result->rawgrade,
                 $result->rawgrade === null ? '—' : (int) $result->rawgrademax,
-                empty($result->timemodified) ? '—' : date('Y/m/d – H:i', $result->timemodified)
+                empty($result->timemodified) ? '—' : date('Y/m/d – H:i', $result->timemodified),
+                \html_writer::link(
+                    new \moodle_url('/mod/hvp/review.php',
+                        array(
+                            'id' => $this->content_id,
+                            'course' => $course,
+                            'user' => $result->user_id
+                        )
+                    ),
+                    'Review'
+                )
             );
         }
 
