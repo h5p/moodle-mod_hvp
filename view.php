@@ -156,8 +156,19 @@ if ($embedtype === 'div') {
     $settings['contents'][$cid]['styles'] = $core->getAssetsUrls($files['styles']);
 }
 
+// xAPI collector token
+$xAPIResultUrl = new moodle_url('/mod/hvp/ajax.php',
+    array(
+        'token' => \H5PCore::createToken('xapiresult'),
+        'action' => 'xapiresult'
+    ));
+$settings['ajax']['xAPIResult'] = $xAPIResultUrl->out(false);
+
 // Print JavaScript settings to page.
 $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
+
+// Add xAPI collector script
+$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/xapi-collector.js'), true);
 
 // Print page HTML.
 echo $OUTPUT->header();
