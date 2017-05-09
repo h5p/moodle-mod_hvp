@@ -263,5 +263,35 @@ function xmldb_hvp_upgrade($oldversion) {
         upgrade_mod_savepoint(TRUE, 2017040500, 'hvp');
     }
 
+    /**
+     * Add report rendering
+     */
+    if ($oldversion < 2017050900) {
+
+        // Define table
+        $table = new xmldb_table('hvp_xapi_results');
+
+        // Add fields
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, XMLDB_SEQUENCE, NULL);
+        $table->add_field('content_id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('user_id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('parent_id', XMLDB_TYPE_INTEGER, '10', NULL, NULL, NULL, NULL);
+        $table->add_field('interaction_type', XMLDB_TYPE_CHAR, '127', NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('description', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('correct_responses_pattern', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('response', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
+        $table->add_field('additionals', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
+
+        // Add keys and index
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_index('result', XMLDB_INDEX_UNIQUE, array('content_id', 'user_id'));
+
+
+        // Create table if it does not exist
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+    }
+
     return true;
 }
