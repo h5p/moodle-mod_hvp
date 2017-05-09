@@ -25,6 +25,7 @@ define('AJAX_SCRIPT', true);
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once("locallib.php");
+require_once(__DIR__ . '/reporting/h5p-report-xapi-data.class.php');
 
 $action = required_param('action', PARAM_ALPHA);
 switch($action) {
@@ -259,6 +260,48 @@ switch($action) {
         $contentId = optional_param('contentId', 0, PARAM_INT);
         $editor->ajax->action(H5PEditorEndpoints::LIBRARY_UPLOAD, $token, $uploadPath, $contentId);
         break;
+
+    /**
+     * Record xAPI result from view
+     */
+    case 'xapiresult':
+        global $DB, $USER;
+
+        // Validate token
+        $token = required_param('token', PARAM_ALPHANUM);
+        $isValidToken = H5PCore::validToken('xapiresult', $token);
+        if (!$isValidToken) {
+            \H5PCore::ajaxError($this->core->h5pF->t('Invalid security token.'),
+                'INVALID_TOKEN');
+            break;
+        }
+
+        $contentId = required_param('contentId', PARAM_INT);
+        $xAPIResult = required_param('xAPIResult', PARAM_RAW);
+
+        // Delete any old results
+        $deleted = $DB->delete_records('hvp_xapi_results', array(
+            'content_id' => $contentId,
+            'user_id' => $USER->id
+        ));
+
+        // Store results
+        $xAPIData = new H5PReportXAPIData(json_decode($xAPIResult));
+        $inserted = $DB->insert_record('hvp_xapi_results', (object) array(
+            'content_id' => $contentId,
+            'user_id' => $USER->id,
+            'parent_id' => $xAPIData->getParentID(),
+            'interaction_type' => $xAPIData->getInteractionType(),
+            'description' => $xAPIData->getDescription(),
+            'correct_responses_pattern' => $xAPIData->getCorrectResponsesPattern(),
+            'response' => $xAPIData->getResponse(),
+            'additionals' => $xAPIData->getAdditionals()
+        ));
+
+        // Successfully inserted xAPI result
+        \H5PCore::ajaxSuccess();
+        break;
+
 
     /*
      * Throw error if AJAX isnt handeled
