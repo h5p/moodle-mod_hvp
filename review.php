@@ -23,15 +23,15 @@
 
 require_once(dirname(__FILE__) . '/../../config.php');
 
-require_once(dirname(__FILE__) . '/h5p-php-report/h5p-report.class.php');
-require_once(dirname(__FILE__) . '/h5p-php-report/h5p-report-xapi-data.class.php');
-require_once(dirname(__FILE__) . '/h5p-php-report/type-processors/type-processor.class.php');
-require_once(dirname(__FILE__) . '/h5p-php-report/type-processors/choice-processor.class.php');
-require_once(dirname(__FILE__) . '/h5p-php-report/type-processors/compound-processor.class.php');
-require_once(dirname(__FILE__) . '/h5p-php-report/type-processors/fill-in-processor.class.php');
-require_once(dirname(__FILE__) . '/h5p-php-report/type-processors/long-choice-processor.class.php');
-require_once(dirname(__FILE__) . '/h5p-php-report/type-processors/matching-processor.class.php');
-require_once(dirname(__FILE__) . '/h5p-php-report/type-processors/true-false-processor.class.php');
+require_once(dirname(__FILE__) . '/reporting/h5p-report.class.php');
+require_once(dirname(__FILE__) . '/reporting/h5p-report-xapi-data.class.php');
+require_once(dirname(__FILE__) . '/reporting/type-processors/type-processor.class.php');
+require_once(dirname(__FILE__) . '/reporting/type-processors/choice-processor.class.php');
+require_once(dirname(__FILE__) . '/reporting/type-processors/compound-processor.class.php');
+require_once(dirname(__FILE__) . '/reporting/type-processors/fill-in-processor.class.php');
+require_once(dirname(__FILE__) . '/reporting/type-processors/long-choice-processor.class.php');
+require_once(dirname(__FILE__) . '/reporting/type-processors/matching-processor.class.php');
+require_once(dirname(__FILE__) . '/reporting/type-processors/true-false-processor.class.php');
 
 
 $id = required_param('id', PARAM_INT);
@@ -82,6 +82,8 @@ $statement_object = (object) array(
 );
 
 $report = new H5PReportXAPIData($statement_object);
+
+// TODO: Fetch from db
 $xapiData = (object) array (
     'interaction_type' => $report->getInteractionType(),
     'description' => $report->getDescription(),
@@ -94,7 +96,7 @@ $xapiData = (object) array (
 $html = $reporter->generateReport($xapiData);
 $styles = $reporter->getStylesUsed();
 foreach ($styles as $style) {
-    $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/h5p-php-report/' . $style));
+    $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $style));
 }
 
 // Print page HTML
