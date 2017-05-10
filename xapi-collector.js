@@ -4,13 +4,13 @@
 (function ($) {
   $(document).ready(function () {
     // No external dispatcher
-    if (!H5P || !H5P.externalDispatcher) {
+    if (!(window.H5P && H5P.externalDispatcher)) {
       console.debug('External dispatcher not found');
       return;
     }
 
     // No ajax path
-    if (!H5PIntegration || !H5PIntegration.ajax || !H5PIntegration.ajax.xAPIResult) {
+    if (!(window.H5PIntegration && H5PIntegration.ajax && H5PIntegration.ajax.xAPIResult)) {
       console.debug('No ajax path found');
       return;
     }
