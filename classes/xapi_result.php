@@ -37,10 +37,12 @@ class xapi_result {
         $xAPIJson = json_decode($xAPIResult);
         if (!$xAPIJson) {
             \H5PCore::ajaxError('Invalid json in xAPI data.');
+            return;
         }
 
         if (!self::validate_xAPI_data($xAPIJson)) {
             \H5PCore::ajaxError('Invalid xAPI data.');
+            return;
         }
 
         // Delete any old results
