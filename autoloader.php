@@ -49,6 +49,17 @@ function hvp_autoloader($class) {
         'H5peditorFile' => 'editor/h5peditor-file.class.php',
         'H5peditorStorage' => 'editor/h5peditor-storage.interface.php',
 
+        // Reporting.
+        'H5PReport' => 'reporting/h5p-report.class.php',
+        'H5PReportXAPIData' => 'reporting/h5p-report-xapi-data.class.php',
+        'ChoiceProcessor' => 'reporting/type-processors/choice-processor.class.php',
+        'CompoundProcessor' => 'reporting/type-processors/compound-processor.class.php',
+        'FillInProcessor' => 'reporting/type-processors/fill-in-processor.class.php',
+        'LongChoiceProcessor' => 'reporting/type-processors/long-choice-processor.class.php',
+        'MatchingProcessor' => 'reporting/type-processors/matching-processor.class.php',
+        'TrueFalseProcessor' => 'reporting/type-processors/true-false-processor.class.php',
+        'TypeProcessor' => 'reporting/type-processors/type-processor.class.php',
+
         // Plugin specific classes are loaded by Moodle.
         );
     }

@@ -284,7 +284,7 @@ function xmldb_hvp_upgrade($oldversion) {
 
         // Add keys and index
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_index('result', XMLDB_INDEX_UNIQUE, array('content_id', 'user_id'));
+        $table->add_index('result', XMLDB_INDEX_UNIQUE, array('id', 'content_id', 'user_id'));
 
 
         // Create table if it does not exist
