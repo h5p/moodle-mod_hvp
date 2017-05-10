@@ -23,17 +23,6 @@
 
 require_once(dirname(__FILE__) . '/../../config.php');
 
-require_once(dirname(__FILE__) . '/reporting/h5p-report.class.php');
-require_once(dirname(__FILE__) . '/reporting/h5p-report-xapi-data.class.php');
-require_once(dirname(__FILE__) . '/reporting/type-processors/type-processor.class.php');
-require_once(dirname(__FILE__) . '/reporting/type-processors/choice-processor.class.php');
-require_once(dirname(__FILE__) . '/reporting/type-processors/compound-processor.class.php');
-require_once(dirname(__FILE__) . '/reporting/type-processors/fill-in-processor.class.php');
-require_once(dirname(__FILE__) . '/reporting/type-processors/long-choice-processor.class.php');
-require_once(dirname(__FILE__) . '/reporting/type-processors/matching-processor.class.php');
-require_once(dirname(__FILE__) . '/reporting/type-processors/true-false-processor.class.php');
-
-
 $id = required_param('id', PARAM_INT);
 $courseid = optional_param('course', SITEID, PARAM_INT); // course id (defaults to Site).
 $userid = optional_param('user', 0, PARAM_INT);
@@ -68,32 +57,41 @@ $pageurl = new moodle_url('/mod/hvp/review.php', array(
     'id' => $hvp->id
 ));
 $PAGE->set_url($pageurl);
-$title = "Results for {$hvp->title}";
-$PAGE->set_title('title');
+$PAGE->set_title($hvp->title);
 $PAGE->set_heading('heading');
 
-$test_statement = json_decode('{"actor":{"name":"Admin User","mbox":"mailto:thomas.marstrander@joubel.com","objectType":"Agent"},"verb":{"id":"http://adlnet.gov/expapi/verbs/answered","display":{"en-US":"answered"}},"object":{"id":"http://localhost/mod/hvp/view.php?id=26","objectType":"Activity","definition":{"extensions":{"http://h5p.org/x-api/h5p-local-content-id":22},"name":{"en-US":"fill-in-the-blanks-837 (1)"},"description":{"en-US":"<p>Insert the missing words in this text about berries found in Norwegian forests and mountainous regions.</p>\n<p>Bilberries <em>(Vaccinium myrtillus)</em>,&nbsp;also known as __________berries are edible, nearly black berries found in nutrient-poor soils.</p>\n<p>__________berries <em>(Rubus chamaemorus)</em>&nbsp;are edible orange berries similar to raspberries or blackberries found in alpine and arctic tundra.&nbsp;</p>\n<p>Redcurrant <em>(Ribes rubrum) </em>are red translucent berries with a diameter of 8–10 mm, and are closely related to its black colored relative __________currant.&nbsp;</p>\n"},"type":"http://adlnet.gov/expapi/activities/cmi.interaction","interactionType":"fill-in","correctResponsesPattern":["{case_matters=false}blue[,]Cloud[,]black"]}},"context":{"contextActivities":{"category":[{"id":"http://h5p.org/libraries/H5P.Blanks-1.7","objectType":"Activity"}]}},"result":{"score":{"min":0,"max":3,"raw":2,"scaled":0.6667},"completion":true,"duration":"PT8.65S","response":"blue[,]jeje[,]black"}}');
+$xAPIResults = $DB->get_records('hvp_xapi_results', array(
+    'content_id' => $id,
+    'user_id' => $userid
+));
+
+if (!$xAPIResults) {
+    print_error('No xAPI results was found for this user and content combination.');
+}
+
+// Make it easy to map questions by id
+$questionsById = array();
+foreach ($xAPIResults as $record) {
+    $questionsById[$record->id] = $record;
+}
+
+// Assemble our question tree
+$baseQuestion = NULL;
+foreach ($questionsById as $question) {
+    if ($question->parent_id === NULL) {
+        // This is the root of our tree
+        $baseQuestion = $question;
+    }
+    elseif (isset($questionsById[$question->parent_id])) {
+        // Add to parent
+        $questionsById[$question->parent_id]->children[] = $question;
+    }
+}
 
 // Initialize reporter
 $reporter = H5PReport::getInstance();
 
-$statement_object = (object) array(
-    'statement' => $test_statement
-);
-
-$report = new H5PReportXAPIData($statement_object);
-
-// TODO: Fetch from db
-$xapiData = (object) array (
-    'interaction_type' => $report->getInteractionType(),
-    'description' => $report->getDescription(),
-    'correct_responses_pattern' => $report->getCorrectResponsesPattern(),
-    'additionals' => $report->getAdditionals(),
-    'children' => null, # $report->getChildren(),
-    'response' => $report->getResponse(),
-);
-
-$html = $reporter->generateReport($xapiData);
+$html = $reporter->generateReport($baseQuestion);
 $styles = $reporter->getStylesUsed();
 foreach ($styles as $style) {
     $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $style));
@@ -104,7 +102,7 @@ echo $OUTPUT->header();
 echo '<div class="clearer"></div>';
 
 // Print H5P Content
-echo "<h2>Hello kitty</h2>";
+echo "<h2>" . $hvp->title . "</h2>";
 echo "<div>" . $html . "</div>";
 
 echo $OUTPUT->footer();
