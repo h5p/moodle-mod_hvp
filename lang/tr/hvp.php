@@ -142,6 +142,8 @@ $string['nextpage'] = 'Sonraki sayfa';
 $string['previouspage'] = 'Önceki sayfa';
 $string['search'] = 'Ara';
 $string['empty'] = 'Sonuç yok';
+$string['viewreportlabel'] = 'Report';
+$string['dataviewreportlabel'] = 'View Report';
 
 // Editor
 $string['javascriptloading'] = 'JavaScript bekleniyor ...';

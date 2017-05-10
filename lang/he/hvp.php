@@ -138,6 +138,8 @@ $string['nextpage'] = 'לעמוד הבא';
 $string['previouspage'] = 'לעמוד הקודם';
 $string['search'] = 'חיפוש';
 $string['empty'] = 'לא נמצאו תכנים';
+$string['viewreportlabel'] = 'Report';
+$string['dataviewreportlabel'] = 'View Report';
 
 // Editor
 $string['javascriptloading'] = 'מחכים ל JavaScript...';

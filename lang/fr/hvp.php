@@ -142,6 +142,8 @@ $string['nextpage'] = 'Page suivante';
 $string['previouspage'] = 'Page précédente';
 $string['search'] = 'Rechercher';
 $string['empty'] = 'Aucun résultat disponible';
+$string['viewreportlabel'] = 'Report';
+$string['dataviewreportlabel'] = 'View Report';
 
 // Editor
 $string['javascriptloading'] = 'Chargement de JavaScript...';

@@ -152,6 +152,8 @@ $string['nextpage'] = 'Neste side';
 $string['previouspage'] = 'Forrige side';
 $string['search'] = 'Søk';
 $string['empty'] = 'Ingen resultater tilgjengelig';
+$string['viewreportlabel'] = 'Report';
+$string['dataviewreportlabel'] = 'View Report';
 
 // Editor
 $string['javascriptloading'] = 'Venter på JavaScript...';

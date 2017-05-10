@@ -172,6 +172,8 @@ $string['nextpage'] = 'Next page';
 $string['previouspage'] = 'Previous page';
 $string['search'] = 'Search';
 $string['empty'] = 'No results available';
+$string['viewreportlabel'] = 'Report';
+$string['dataviewreportlabel'] = 'View Report';
 
 // Editor
 $string['javascriptloading'] = 'Waiting for JavaScript...';

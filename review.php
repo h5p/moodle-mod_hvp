@@ -21,20 +21,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+global $PAGE, $DB, $CFG, $OUTPUT;
 require_once(dirname(__FILE__) . '/../../config.php');
 
-$id = required_param('id', PARAM_INT);
+$id       = required_param('id', PARAM_INT);
 $courseid = optional_param('course', SITEID, PARAM_INT); // course id (defaults to Site).
-$userid = optional_param('user', 0, PARAM_INT);
+$userid   = optional_param('user', 0, PARAM_INT);
 
-
-if (! $cm = get_coursemodule_from_instance('hvp', $id)) {
+if (!$cm = get_coursemodule_from_instance('hvp', $id)) {
     print_error('invalidcoursemodule');
 }
-if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
     print_error('coursemisconf');
 }
-require_course_login($course, false, $cm);
+require_course_login($course, FALSE, $cm);
 
 // Load H5P Content.
 $hvp = $DB->get_record_sql(
@@ -48,7 +48,7 @@ $hvp = $DB->get_record_sql(
           WHERE h.id = ?",
     array($id));
 
-if ($hvp === false) {
+if ($hvp === FALSE) {
     print_error('invalidhvp');
 }
 
@@ -62,37 +62,30 @@ $PAGE->set_heading('heading');
 
 $xAPIResults = $DB->get_records('hvp_xapi_results', array(
     'content_id' => $id,
-    'user_id' => $userid
+    'user_id'    => $userid
 ));
 
 if (!$xAPIResults) {
     print_error('No xAPI results was found for this user and content combination.');
 }
 
-// Make it easy to map questions by id
-$questionsById = array();
-foreach ($xAPIResults as $record) {
-    $questionsById[$record->id] = $record;
-}
-
 // Assemble our question tree
 $baseQuestion = NULL;
-foreach ($questionsById as $question) {
+foreach ($xAPIResults as $question) {
     if ($question->parent_id === NULL) {
         // This is the root of our tree
         $baseQuestion = $question;
     }
-    elseif (isset($questionsById[$question->parent_id])) {
+    elseif (isset($xAPIResults[$question->parent_id])) {
         // Add to parent
-        $questionsById[$question->parent_id]->children[] = $question;
+        $xAPIResults[$question->parent_id]->children[] = $question;
     }
 }
 
 // Initialize reporter
-$reporter = H5PReport::getInstance();
-
-$html = $reporter->generateReport($baseQuestion);
-$styles = $reporter->getStylesUsed();
+$reporter   = H5PReport::getInstance();
+$reportHtml = $reporter->generateReport($baseQuestion);
+$styles     = $reporter->getStylesUsed();
 foreach ($styles as $style) {
     $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $style));
 }
@@ -101,8 +94,8 @@ foreach ($styles as $style) {
 echo $OUTPUT->header();
 echo '<div class="clearer"></div>';
 
-// Print H5P Content
+// Print title and report
 echo "<h2>" . $hvp->title . "</h2>";
-echo "<div>" . $html . "</div>";
+echo "<div>" . $reportHtml . "</div>";
 
 echo $OUTPUT->footer();

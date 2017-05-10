@@ -97,18 +97,19 @@ class results {
         // Make data readable for humans
         $rows = array();
         foreach ($results as $result)  {
-            $rows[] = array(
-                \html_writer::link(
-                    new \moodle_url('/user/view.php', array(
-                        'id' => $result->user_id,
-                        'course' => $course
-                    )),
-                    \fullname($result)
-                ),
-                $result->rawgrade === null ? '—' : (int) $result->rawgrade,
-                $result->rawgrade === null ? '—' : (int) $result->rawgrademax,
-                empty($result->timemodified) ? '—' : date('Y/m/d – H:i', $result->timemodified),
-                \html_writer::link(
+            $userLink = \html_writer::link(
+                new \moodle_url('/user/view.php', array(
+                    'id' => $result->user_id,
+                    'course' => $course
+                )),
+                \fullname($result)
+            );
+
+            $reviewLink = '—';
+
+            // Check if result has xAPI data
+            if ($result->id) {
+                $reviewLink = \html_writer::link(
                     new \moodle_url('/mod/hvp/review.php',
                         array(
                             'id' => $this->content_id,
@@ -116,8 +117,16 @@ class results {
                             'user' => $result->user_id
                         )
                     ),
-                    'Review'
-                )
+                    get_string('viewreportlabel', 'hvp')
+                );
+            }
+
+            $rows[] = array(
+                $userLink,
+                $result->rawgrade === null ? '—' : (int) $result->rawgrade,
+                $result->rawgrade === null ? '—' : (int) $result->rawgrademax,
+                empty($result->timemodified) ? '—' : date('Y/m/d – H:i', $result->timemodified),
+                $reviewLink
             );
         }
 
@@ -157,6 +166,10 @@ class results {
         $order[] = 'g.timemodified';
         $order_by = $this->get_order_sql($order);
 
+        // Join on xAPI results
+        $join .= ' LEFT JOIN {hvp_xapi_results} x ON i.iteminstance = x.content_id AND g.userid = x.user_id';
+        $group_by = ' GROUP BY g.id, g.userid, i.iteminstance';
+
         // Get from statement
         $from = $this->get_from_sql();
 
@@ -166,10 +179,12 @@ class results {
                        {$fields}
                        g.rawgrade,
                        g.rawgrademax,
-                       g.timemodified
+                       g.timemodified,
+                       x.id
                   {$from}
                   {$join}
                   {$where}
+                  {$group_by}
                   {$order_by}
                 ", $args,
                 $this->offset,
