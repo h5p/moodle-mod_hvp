@@ -34,7 +34,7 @@ if (!$cm = get_coursemodule_from_instance('hvp', $id)) {
 if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
     print_error('coursemisconf');
 }
-require_course_login($course, FALSE, $cm);
+require_login($course, FALSE, $cm);
 
 // Load H5P Content.
 $hvp = $DB->get_record_sql(

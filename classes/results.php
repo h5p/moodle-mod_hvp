@@ -108,7 +108,7 @@ class results {
             $reviewLink = '—';
 
             // Check if result has xAPI data
-            if ($result->id) {
+            if ($result->xapiid) {
                 $reviewLink = \html_writer::link(
                     new \moodle_url('/mod/hvp/review.php',
                         array(
@@ -180,7 +180,7 @@ class results {
                        g.rawgrade,
                        g.rawgrademax,
                        g.timemodified,
-                       x.id
+                       x.id as xapiid
                   {$from}
                   {$join}
                   {$where}
