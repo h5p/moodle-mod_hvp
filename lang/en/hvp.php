@@ -174,6 +174,7 @@ $string['search'] = 'Search';
 $string['empty'] = 'No results available';
 $string['viewreportlabel'] = 'Report';
 $string['dataviewreportlabel'] = 'View Report';
+$string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
 
 // Editor
 $string['javascriptloading'] = 'Waiting for JavaScript...';

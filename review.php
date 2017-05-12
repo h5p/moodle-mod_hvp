@@ -21,7 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-global $PAGE, $DB, $CFG, $OUTPUT;
+global $PAGE, $DB, $CFG, $OUTPUT, $COURSE;
 require_once(dirname(__FILE__) . '/../../config.php');
 
 $id       = required_param('id', PARAM_INT);
@@ -57,7 +57,7 @@ $pageurl = new moodle_url('/mod/hvp/review.php', array(
 ));
 $PAGE->set_url($pageurl);
 $PAGE->set_title($hvp->title);
-$PAGE->set_heading('heading');
+$PAGE->set_heading($COURSE->fullname);
 
 $xAPIResults = $DB->get_records('hvp_xapi_results', array(
     'content_id' => $id,
@@ -65,7 +65,7 @@ $xAPIResults = $DB->get_records('hvp_xapi_results', array(
 ));
 
 if (!$xAPIResults) {
-    print_error('No xAPI results was found for this user and content combination.');
+    print_error('invalidxapiresult', 'hvp');
 }
 
 // Assemble our question tree
