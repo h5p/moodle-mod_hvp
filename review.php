@@ -25,7 +25,6 @@ global $PAGE, $DB, $CFG, $OUTPUT;
 require_once(dirname(__FILE__) . '/../../config.php');
 
 $id       = required_param('id', PARAM_INT);
-$courseid = optional_param('course', SITEID, PARAM_INT); // course id (defaults to Site).
 $userid   = optional_param('user', 0, PARAM_INT);
 
 if (!$cm = get_coursemodule_from_instance('hvp', $id)) {
