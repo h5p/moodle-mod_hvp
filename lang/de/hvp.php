@@ -167,6 +167,7 @@ $string['hvp:userestrictedlibraries'] = 'Verwendung eingeschränkter H5P-Bibliot
 $string['hvp:savecontentuserdata'] = 'H5P-Nutzerinhalt speichern';
 $string['hvp:saveresults'] = 'Ergebnis des H5P-Inhalts speichern';
 $string['hvp:viewresults'] = 'Ergebnis des H5P-Inhalts ansehen';
+$string['hvp:viewallresults'] = 'View result for all users in course';
 $string['hvp:getcachedassets'] = 'Zwischengespeicherte H5P-Inhaltswerte erhalten';
 $string['hvp:getcontent'] = 'H5P-Dateiinhalt im Kurs verwenden/ansehen';
 $string['hvp:getexport'] = 'Exportierte H5P Datei im Kurs verwenden';

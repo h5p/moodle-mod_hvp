@@ -166,6 +166,7 @@ $string['hvp:userestrictedlibraries'] = 'שימוש בספריות H5P שמור�
 $string['hvp:savecontentuserdata'] = 'שמירת נתוני משתמש מתוך פעילות H5P';
 $string['hvp:saveresults'] = 'שמירת תוצאות שימוש ברכיב H5P';
 $string['hvp:viewresults'] = 'צפיה בתוצאות שימוש ברכיב H5P';
+$string['hvp:viewallresults'] = 'View result for all users in course';
 $string['hvp:getcachedassets'] = 'אחזור משאבי מטמון של רכיב H5P';
 $string['hvp:getcontent'] = 'צפיה בתוכן פעילות H5P מתוך הקורס';
 $string['hvp:getexport'] = 'יצוא תוכן פעילות H5P מתוך הקורס';

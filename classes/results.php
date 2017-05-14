@@ -81,18 +81,22 @@ class results {
      * Print results data
      */
     public function print_results() {
-        global $DB;
+        global $DB, $USER;
 
         // Check permission
         $course = $DB->get_field('hvp', 'course', array('id' => $this->content_id));
         $context = \context_course::instance($course);
-        if (!has_capability('mod/hvp:viewresults', $context)) {
+        $view_own_results = has_capability('mod/hvp:viewresults', $context);
+        $view_all_results = has_capability('mod/hvp:viewallresults', $context);
+        if (!$view_own_results && !$view_all_results) {
             \H5PCore::ajaxError(get_string('nopermissiontoviewresult', 'hvp'));
             http_response_code(403);
             exit;
         }
 
-        $results = $this->get_results();
+        // Only get own results if can't view all.
+        $uid = $view_all_results ? NULL : (int)$USER->id;
+        $results = $this->get_results($uid);
 
         // Make data readable for humans
         $rows = array();
@@ -143,13 +147,15 @@ class results {
      * Builds the SQL query required to retrieve results for the given
      * interactive content.
      *
+     * @param int $uid Only get results for uid
+     *
      * @throws \coding_exception
      * @return array
      */
-    protected function get_results() {
+    protected function get_results($uid=NULL) {
         // Add extra fields, joins and where for the different result lists
         if ($this->content_id !== 0) {
-            list($fields, $join, $where, $order, $args) = $this->get_content_sql();
+            list($fields, $join, $where, $order, $args) = $this->get_content_sql($uid);
         }
         else {
             throw new \coding_exception('missing content_id');
@@ -288,9 +294,10 @@ class results {
      * (An alternative to this could be getting all the results for a
      * specified user.)
      *
+     * @param int $uid Only get users with this id
      * @return array $fields, $join, $where, $order, $args
      */
-    protected function get_content_sql() {
+    protected function get_content_sql($uid=NULL) {
         global $DB;
 
         $usernamefields = implode(', ', self::get_ordered_user_name_fields());
@@ -298,6 +305,12 @@ class results {
         $join = " LEFT JOIN {user} u ON u.id = g.userid";
         $where = array("i.iteminstance = ?");
         $args = array($this->content_id);
+
+        // Only get entries with own user id
+        if (isset($uid)) {
+          array_push($where, "u.id = ?");
+          array_push($args, $uid);
+        }
 
         if (isset($this->filters[0])) {
             $keywordswhere = array();

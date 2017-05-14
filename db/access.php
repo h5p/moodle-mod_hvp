@@ -102,6 +102,16 @@ $capabilities = array(
         )
     ),
 
+    'mod/hvp:viewallresults' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW
+        )
+    ),
+
     'mod/hvp:getcachedassets' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,

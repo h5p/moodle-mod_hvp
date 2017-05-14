@@ -21,10 +21,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+global $DB, $PAGE, $USER, $COURSE;
 require_once(dirname(__FILE__) . '/../../config.php');
 
 $id = required_param('id', PARAM_INT);
-$userid = optional_param('userid', 0, PARAM_INT);
+$userid = optional_param('userid', (int)$USER->id, PARAM_INT);
 
 if (! $cm = get_coursemodule_from_id('hvp', $id)) {
     print_error('invalidcoursemodule');
@@ -34,9 +35,22 @@ if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
 }
 require_course_login($course, false, $cm);
 
+// Check permission
+$course_context = context_course::instance($COURSE->id);
+$can_view_own = has_capability('mod/hvp:viewresults', $course_context);
+$can_view_all = has_capability('mod/hvp:viewallresults', $course_context);
+
+// Check if user has permission to view own content
 if ($userid === (int)$USER->id) {
-    // If it's the same user, redirect to content.
+  // Require either capability to view own or all content.
+  if (!$can_view_own && !$can_view_all) {
+    // Not allowed to see any results, redirect.
     redirect(new moodle_url('/mod/hvp/view.php', array('id' => $cm->id)));
+  }
+}
+else {
+  // Other user's content, require view all user results capability
+  require_capability('mod/hvp:viewallresults', $course_context);
 }
 
 // Load H5P Content.
