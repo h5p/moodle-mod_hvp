@@ -381,3 +381,47 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
 
     return $library;
 }
+
+/**
+ * Check permissions to view given user's results
+ *
+ * @param int $userid Id of the user the results belong to
+ * @param context $context Current context, usually course context
+ *
+ * @return bool True if current user has permission to view given user results
+ */
+function hvp_has_view_results_permission($userid, $context) {
+  global $USER;
+
+  // Check if user can view all results
+  if (has_capability('mod/hvp:viewallresults', $context)) {
+    return true;
+  }
+
+  // Check if viewing own results, and have permission for it
+  return $userid === (int)$USER->id ?
+    has_capability('mod/hvp:viewresults', $context) : false;
+}
+
+/**
+ * Require view results capability for this page
+ *
+ * @param int $userid User id who owns results
+ * @param context $context Current context
+ * @param int $redirectcontentid Redirect to this content id if not allowed
+ *  to view own results
+ */
+function hvp_require_view_results_permission($userid, $context, $redirectcontentid=NULL) {
+  global $USER;
+
+  if (!hvp_has_view_results_permission($userid, $context)) {
+    if ($userid === (int)$USER->id && isset($redirectcontentid)) {
+      // Not allowed to view own results, redirect
+      redirect(new moodle_url('/mod/hvp/view.php', array('id' => $redirectcontentid)));
+    }
+    else {
+      // Other user's results, require capability to view all results
+      require_capability('mod/hvp:viewallresults', $context);
+    }
+  }
+}

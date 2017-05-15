@@ -23,6 +23,7 @@
 
 global $USER, $PAGE, $DB, $CFG, $OUTPUT, $COURSE;
 require_once(dirname(__FILE__) . '/../../config.php');
+require_once("locallib.php");
 
 $id       = required_param('id', PARAM_INT);
 $userid   = optional_param('user', (int)$USER->id, PARAM_INT);
@@ -37,21 +38,7 @@ require_login($course, FALSE, $cm);
 
 // Check permission
 $course_context = context_course::instance($COURSE->id);
-$can_view_own = has_capability('mod/hvp:viewresults', $course_context);
-$can_view_all = has_capability('mod/hvp:viewallresults', $course_context);
-
-// Check if user has permission to view own content
-if ($userid === (int)$USER->id) {
-  // Require either capability to view own or all content.
-  if (!$can_view_own && !$can_view_all) {
-    // Not allowed to see any results, redirect.
-    redirect(new moodle_url('/mod/hvp/view.php', array('id' => $cm->id)));
-  }
-}
-else {
-  // Other user's content, require view all user results capability
-  require_capability('mod/hvp:viewallresults', $course_context);
-}
+hvp_require_view_results_permission($userid, $course_context, $cm->id);
 
 // Load H5P Content.
 $hvp = $DB->get_record_sql(
@@ -112,7 +99,16 @@ echo $OUTPUT->header();
 echo '<div class="clearer"></div>';
 
 // Print title and report
-echo "<h2>" . $hvp->title . "</h2>";
+$title = $hvp->title;
+
+// Show user name if other then self
+if ($userid !== (int)$USER->id) {
+  $userresult = $DB->get_record('user', array("id" => $userid), 'username');
+  if (isset($userresult) && isset($userresult->username)) {
+    $title .= ": {$userresult->username}";
+  }
+}
+echo "<h2>{$title}</h2>";
 echo "<div>" . $reportHtml . "</div>";
 
 echo $OUTPUT->footer();
