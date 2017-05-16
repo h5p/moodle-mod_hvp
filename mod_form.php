@@ -28,7 +28,7 @@ require_once($CFG->dirroot . '/course/moodleform_mod.php');
 class mod_hvp_mod_form extends moodleform_mod {
 
     public function definition() {
-        global $CFG, $DB, $OUTPUT, $COURSE;
+        global $CFG, $DB, $OUTPUT, $COURSE, $PAGE;
 
         $mform =& $this->_form;
 
@@ -63,7 +63,7 @@ class mod_hvp_mod_form extends moodleform_mod {
             array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
 
         // Editor placeholder.
-        if ($CFG->theme == 'boost') {
+        if ($CFG->theme == 'boost' || in_array('boost', $PAGE->theme->parents)) {
           $h5peditor = array();
           $h5peditor[] = $mform->createElement('html', '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') .  '</div>');
           $mform->addGroup($h5peditor, 'h5peditorgroup', get_string('editor', 'hvp'));
