@@ -203,6 +203,11 @@ function hvp_delete_instance($id) {
     $h5pstorage = \mod_hvp\framework::instance('storage');
     $h5pstorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug, 'coursemodule' => $cm->id));
 
+    // Delete xAPI statements
+    $DB->delete_records('hvp_xapi_results', array (
+      'content_id' => $hvp->id
+    ));
+
     // Get library details
     $library = $DB->get_record_sql(
             "SELECT machine_name AS name, major_version, minor_version
