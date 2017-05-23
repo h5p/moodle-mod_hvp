@@ -289,7 +289,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
               return false;
             }
 
-            $contentid = $matches[0];
+            $contentid = $matches[1];
             $content = $h5pinterface->loadContent($contentid);
             $displayOptions = $h5pcore->getDisplayOptionsForView($content['disable'], $contentid);
 
