@@ -124,6 +124,10 @@ class results {
                     get_string('viewreportlabel', 'hvp')
                 );
             }
+            else if ($result->rawgrade !== null) {
+              $reviewLink = get_string('reportnotsupported', 'hvp');
+            }
+
 
             $rows[] = array(
                 $userLink,

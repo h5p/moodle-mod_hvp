@@ -143,9 +143,9 @@ $string['previouspage'] = 'Page précédente';
 $string['search'] = 'Rechercher';
 $string['empty'] = 'Aucun résultat disponible';
 $string['viewreportlabel'] = 'Report';
-$string['dataviewreportlabel'] = 'View Report';
+$string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
-
+$string['reportnotsupported'] = 'Not supported';
 // Editor
 $string['javascriptloading'] = 'Chargement de JavaScript...';
 $string['action'] = 'Action';

@@ -63,6 +63,7 @@ $pageurl = new moodle_url('/mod/hvp/review.php', array(
 $PAGE->set_url($pageurl);
 $PAGE->set_title($hvp->title);
 $PAGE->set_heading($COURSE->fullname);
+$PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/xapi-custom-report.css'));
 
 $xAPIResults = $DB->get_records('hvp_xapi_results', array(
     'content_id' => $id,
@@ -108,7 +109,9 @@ if ($userid !== (int)$USER->id) {
     $title .= ": {$userresult->username}";
   }
 }
-echo "<h2>{$title}</h2>";
-echo "<div>" . $reportHtml . "</div>";
+echo "<div class='h5p-report-container'>
+        <h2>{$title}</h2>
+        <div class='h5p-report-view'>{$reportHtml}</div>
+      </div>";
 
 echo $OUTPUT->footer();

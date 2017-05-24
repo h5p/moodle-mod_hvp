@@ -173,8 +173,9 @@ $string['previouspage'] = 'Previous page';
 $string['search'] = 'Search';
 $string['empty'] = 'No results available';
 $string['viewreportlabel'] = 'Report';
-$string['dataviewreportlabel'] = 'View Report';
+$string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
+$string['reportnotsupported'] = 'Not supported';
 
 // Editor
 $string['javascriptloading'] = 'Waiting for JavaScript...';
