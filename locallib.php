@@ -41,6 +41,8 @@ function hvp_get_core_settings() {
     $basepath = $CFG->httpswwwroot . '/';
     $ajaxpath = "{$basepath}mod/hvp/ajax.php?contextId={$coursecontext->id}&token=";
 
+    $core = \mod_hvp\framework::instance('core');
+
     $settings = array(
         'baseUrl' => $basepath,
         'url' => "{$basepath}pluginfile.php/{$coursecontext->id}/mod_hvp",
@@ -52,32 +54,7 @@ function hvp_get_core_settings() {
         ),
         'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : false,
         'siteUrl' => $CFG->wwwroot,
-        'l10n' => array(
-            'H5P' => array(
-                'fullscreen' => get_string('fullscreen', 'hvp'),
-                'disableFullscreen' => get_string('disablefullscreen', 'hvp'),
-                'download' => get_string('download', 'hvp'),
-                'copyrights' => get_string('copyright', 'hvp'),
-                'copyrightInformation' => get_string('copyright', 'hvp'),
-                'close' => get_string('close', 'hvp'),
-                'title' => get_string('title', 'hvp'),
-                'author' => get_string('author', 'hvp'),
-                'year' => get_string('year', 'hvp'),
-                'source' => get_string('source', 'hvp'),
-                'license' => get_string('license', 'hvp'),
-                'thumbnail' => get_string('thumbnail', 'hvp'),
-                'noCopyrights' => get_string('nocopyright', 'hvp'),
-                'downloadDescription' => get_string('downloadtitle', 'hvp'),
-                'copyrightsDescription' => get_string('copyrighttitle', 'hvp'),
-                'h5pDescription' => get_string('h5ptitle', 'hvp'),
-                'contentChanged' => get_string('contentchanged', 'hvp'),
-                'startingOver' => get_string('startingover', 'hvp'),
-                'confirmDialogHeader' => get_string('confirmdialogheader', 'hvp'),
-                'confirmDialogBody' => get_string('confirmdialogbody', 'hvp'),
-                'cancelLabel' => get_string('cancellabel', 'hvp'),
-                'confirmLabel' => get_string('confirmlabel', 'hvp')
-            )
-        ),
+        'l10n' => array('H5P' => $core->getLocalization()),
         'user' => array(
             'name' => $USER->firstname . ' ' . $USER->lastname,
             'mail' => $USER->email
