@@ -353,18 +353,18 @@ class framework implements \H5PFrameworkInterface {
                 'Please confirm that you wish to proceed. This action is not reversible.' => 'confirmdialogbody',
                 'Cancel' => 'cancellabel',
                 'Confirm' => 'confirmlabel',
-                '4.0 International', 'licenseCC40',
-                '3.0 Unported', 'licenseCC30',
-                '2.5 Generic', 'licenseCC25',
-                '2.0 Generic', 'licenseCC20',
-                '1.0 Generic', 'licenseCC10',
+                '4.0 International' => 'licenseCC40',
+                '3.0 Unported' => 'licenseCC30',
+                '2.5 Generic' => 'licenseCC25',
+                '2.0 Generic' => 'licenseCC20',
+                '1.0 Generic' => 'licenseCC10',
                 'General Public License' => 'licenseGPL',
                 'Version 3' => 'licenseV3',
                 'Version 2' => 'licenseV2',
                 'Version 1' => 'licenseV1',
                 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication' => 'licenseCC010',
                 'CC0 1.0 Universal' => 'licenseCC010U',
-                'License version' => 'licenseversion'
+                'License version' => 'licenseversion',
             ];
         }
 
