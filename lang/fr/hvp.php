@@ -269,4 +269,5 @@ $string['licenseV3'] = 'Version 3';
 $string['licenseV2'] = 'Version 2';
 $string['licenseV1'] = 'Version 1';
 $string['licenseCC010'] = 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication';
-
+$string['licenseCC010U'] = 'CC0 1.0 Universal';
+$string['licenseversion'] = 'License version';
