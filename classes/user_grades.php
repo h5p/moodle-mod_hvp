@@ -21,7 +21,7 @@ class user_grades {
 
         if (!\H5PCore::validToken('result', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-            exit;
+            return;
         }
 
         // Content parameters
@@ -41,7 +41,7 @@ class user_grades {
         if (!has_capability('mod/hvp:saveresults', $context)) {
             \H5PCore::ajaxError(get_string('nopermissiontosaveresult', 'hvp'));
             http_response_code(403);
-            exit;
+            return;
         }
 
         // Create grade object and set grades
@@ -79,6 +79,5 @@ class user_grades {
         );
 
         \H5PCore::ajaxSuccess();
-        exit;
     }
 }

@@ -38,8 +38,6 @@ class look_for_updates extends \core\task\scheduled_task {
     }
 
     public function execute() {
-        global $USER;
-
         // Check to make sure external communications hasn't been disabled
         if (get_config('mod_hvp', 'hub_is_enabled') || get_config('mod_hvp', 'send_usage_statistics')) {
             $core = \mod_hvp\framework::instance();

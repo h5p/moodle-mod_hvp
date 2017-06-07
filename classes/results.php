@@ -91,13 +91,32 @@ class results {
         if (!$view_own_results && !$view_all_results) {
             \H5PCore::ajaxError(get_string('nopermissiontoviewresult', 'hvp'));
             http_response_code(403);
-            exit;
+            return;
         }
 
         // Only get own results if can't view all.
         $uid = $view_all_results ? NULL : (int)$USER->id;
         $results = $this->get_results($uid);
+        $rows = $this->get_human_readable_results($results, $course);
 
+        // Print
+        header('Cache-Control: no-cache');
+        header('Content-type: application/json');
+        print json_encode(array(
+            'num' => $this->get_results_num(),
+            'rows' => $rows
+        ));
+    }
+
+    /**
+     * Constructs human readable results
+     *
+     * @param $results
+     * @param $course
+     *
+     * @return array
+     */
+    private function get_human_readable_results($results, $course) {
         // Make data readable for humans
         $rows = array();
         foreach ($results as $result)  {
@@ -125,7 +144,7 @@ class results {
                 );
             }
             else if ($result->rawgrade !== null) {
-              $reviewLink = get_string('reportnotsupported', 'hvp');
+                $reviewLink = get_string('reportnotsupported', 'hvp');
             }
 
 
@@ -138,13 +157,7 @@ class results {
             );
         }
 
-        // Print
-        header('Cache-Control: no-cache');
-        header('Content-type: application/json');
-        print json_encode(array(
-            'num' => $this->get_results_num(),
-            'rows' => $rows
-        ));
+        return $rows;
     }
 
     /**
@@ -210,7 +223,7 @@ class results {
     protected function get_results_num() {
         global $DB;
 
-        list($fields, $join, $where, $order, $args) = $this->get_content_sql();
+        list(, $join, $where, , $args) = $this->get_content_sql();
         $where[] = "i.itemtype = 'mod'";
         $where[] = "i.itemmodule = 'hvp'";
         $where = 'WHERE ' . implode(' AND ', $where);

@@ -33,6 +33,9 @@ require_once($CFG->dirroot . '/mod/hvp/library/h5p-file-storage.interface.php');
  * @since      Moodle 2.7
  * @copyright  2016 Joubel AS
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class file_storage implements \H5PFileStorage {
 
@@ -98,12 +101,7 @@ class file_storage implements \H5PFileStorage {
     }
 
     /**
-     * Creates a stored copy of the content folder.
-     *
-     * @param string $id
-     *  Path on file system to content directory.
-     * @param int $newId
-     *  What makes this content unique.
+     * @inheritdoc
      */
     public function cloneContent($id, $newId) {
         // Not implemented in Moodle.

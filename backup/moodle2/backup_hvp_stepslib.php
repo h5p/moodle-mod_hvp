@@ -57,7 +57,7 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
         ));
 
         // User data
-        $content_user_data_entries = new backup_nested_element('content_user_data');
+        $entries = new backup_nested_element('content_user_data');
         $content_user_data = new backup_nested_element('entry', array(
             'user_id', // Annotated
             'sub_content_id'
@@ -70,8 +70,8 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
 
         // Build the tree
 
-        $hvp->add_child($content_user_data_entries);
-        $content_user_data_entries->add_child($content_user_data);
+        $hvp->add_child($entries);
+        $entries->add_child($content_user_data);
 
         // Define sources
 

@@ -29,7 +29,7 @@
  * @return bool Success
  */
 function xmldb_hvp_upgrade($oldversion) {
-    global $CFG, $DB;
+    global $DB;
 
     $dbman = $DB->get_manager();
 

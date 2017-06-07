@@ -36,6 +36,8 @@ require_once($CFG->libdir . '/adminlib.php');
  * @package    mod_hvp
  * @copyright  2016 Joubel AS
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class framework implements \H5PFrameworkInterface {
 
@@ -129,7 +131,7 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Implements fetchExternalData
+     * @inheritdoc
      */
     public function fetchExternalData($url, $data = NULL, $blocking = TRUE, $stream = NULL) {
         global $CFG;
@@ -441,7 +443,7 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Implements setUnsupportedLibraries.
+     * @inheritdoc
      */
     public function setUnsupportedLibraries($libraries) {
         // Not supported
@@ -793,20 +795,7 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Implements updateContent
-     *
-     * Inserts or updates H5P content.
-     *
-     * @param array $content
-     *   An associative array containing:
-     *   - id: The content id
-     *   - params: The content in json format
-     *   - library: An associative array containing:
-     *     - libraryId: The id of the main library for this content
-     * @param int $contentMainId
-     *   Main id for the content if this is a system that supports versioning
-     *
-     * @return bool|int
+     * @inheritdoc
      */
     public function updateContent($content, $contentMainId = null) {
         global $DB;
@@ -856,14 +845,14 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Implements insertContent
+     * @inheritdoc
      */
     public function insertContent($content, $contentMainId = null) {
         return $this->updateContent($content);
     }
 
     /**
-     * Implements resetContentUserData
+     * @inheritdoc
      */
     public function resetContentUserData($contentId) {
         global $DB;
@@ -877,14 +866,14 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Implements getWhitelist
+     * @inheritdoc
      */
     public function getWhitelist($isLibrary, $defaultContentWhitelist, $defaultLibraryWhitelist) {
         return $defaultContentWhitelist . ($isLibrary ? ' ' . $defaultLibraryWhitelist : '');
     }
 
     /**
-     * Implements copyLibraryUsage
+     * @inheritdoc
      */
     public function copyLibraryUsage($contentId, $copyFromId, $contentMainId = null) {
         global $DB;
@@ -1022,7 +1011,7 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Implements getOption().
+     * @inheritdoc
      */
     public function getOption($name, $default = false) {
         $value = get_config('mod_hvp', $name);
@@ -1279,7 +1268,7 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Implements afterExportCreated
+     * @inheritdoc
      */
     public function afterExportCreated($content, $filename) {
     }

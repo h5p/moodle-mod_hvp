@@ -102,7 +102,6 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
         $fullpath = rtrim($fullpath, '/');
 
         // Check for the activity's local hvp_libraries.xml file
-        $local = "{$fullpath}/{$this->filename}";
         if (file_exists("{$fullpath}/{$this->filename}")) {
             // Use that
             return true;
@@ -182,7 +181,7 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
 
         if (empty($translation)) {
             // only restore translations if library has been restored
-            $newitemid = $DB->insert_record('hvp_libraries_languages', $data);
+            $DB->insert_record('hvp_libraries_languages', $data);
         }
     }
 
@@ -192,9 +191,9 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
       $data = (object) $data;
       $data->library_id = $this->get_new_parentid('hvp_library');
 
-      $new_required_library_id = $this->get_mappingid('hvp_library', $data->required_library_id);
-      if ($new_required_library_id) {
-          $data->required_library_id = $new_required_library_id;
+      $new_library_id = $this->get_mappingid('hvp_library', $data->required_library_id);
+      if ($new_library_id) {
+          $data->required_library_id = $new_library_id;
 
           // check that the dependency doesn't exists
           $dependency = $DB->get_record_sql(

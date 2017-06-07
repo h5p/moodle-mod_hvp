@@ -109,7 +109,7 @@ function hvp_get_core_assets() {
  * @param int $id Content being edited. null for creating new content
  */
 function hvp_add_editor_assets($id = null) {
-    global $PAGE, $CFG, $COURSE, $DB;
+    global $PAGE, $CFG, $COURSE;
     $settings = \hvp_get_core_assets();
 
     // Use jQuery and styles from core.
@@ -154,7 +154,7 @@ function hvp_add_editor_assets($id = null) {
     // Add JavaScript settings
     $context = \context_course::instance($COURSE->id);
     $filespathbase = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/";
-    $contentvalidator = $core = \mod_hvp\framework::instance('contentvalidator');
+    $contentvalidator = \mod_hvp\framework::instance('contentvalidator');
     $editorajaxtoken = \H5PCore::createToken('editorajax');
     $settings['editor'] = array(
       'filesPath' => $filespathbase . ($id ? "content/{$id}" : 'editor'),

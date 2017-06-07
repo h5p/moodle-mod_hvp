@@ -29,6 +29,8 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @copyright   2016 onward Eiz Edddin Al Katrib <eiz@barasoft.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class mod_hvp_renderer extends plugin_renderer_base {
 

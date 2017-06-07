@@ -39,8 +39,6 @@ class content_user_data {
      * @throws \coding_exception
      */
     public static function handle_ajax() {
-        global $DB;
-
         // Query String Parameters.
         $content_id = required_param('content_id', PARAM_INT);
         $data_id = required_param('data_type', PARAM_RAW);
@@ -52,58 +50,76 @@ class content_user_data {
         $invalidate = optional_param('invalidate', null, PARAM_INT);
 
         if ($content_id === null || $data_id === null || $sub_content_id === null) {
+            // Missing parameters.
             \H5PCore::ajaxError(get_string('missingparameters', 'hvp'));
-            exit; // Missing parameters.
+            return;
         }
 
         // Saving data
         if ($data !== NULL && $pre_load !== NULL && $invalidate !== NULL) {
-
-            // Validate token
-            if (!\H5PCore::validToken('contentuserdata', required_param('token', PARAM_RAW))) {
-                \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-                exit;
-            }
-
-            // Use context id if supplied
-            $context_id = optional_param('contextId', null, PARAM_INT);
-            if ($context_id) {
-                $context = \context::instance_by_id($context_id);
-            }
-            else { // Otherwise try to find it from content id
-                $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
-            }
-
-            // Check permissions
-            if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
-                \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
-                http_response_code(403);
-                exit;
-            }
-
-            if ($data === '0') {
-                // Delete user data.
-                self::delete_user_data($content_id, $sub_content_id, $data_id);
-            } else {
-                // Save user data.
-                self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
-            }
-            \H5PCore::ajaxSuccess();
+            self::store_data($content_id, $sub_content_id, $data_id, $data, $pre_load, $invalidate);
         }
         else {
-            // Fetch user data
-            $user_data = self::get_user_data($content_id, $sub_content_id, $data_id);
-
-            if ($user_data === false) {
-                // Did not find data, return nothing
-                \H5PCore::ajaxSuccess();
-            }
-            else {
-                // Found data, return encoded data
-                \H5PCore::ajaxSuccess($user_data->data);
-            }
+            self::fetch_existing_data($content_id, $sub_content_id, $data_id);
         }
-        exit;
+    }
+
+    /**
+     * Stores content user data
+     *
+     * @param $content_id
+     * @param $sub_content_id
+     * @param $data_id
+     * @param $data
+     * @param $pre_load
+     * @param $invalidate
+     */
+    private static function store_data($content_id, $sub_content_id, $data_id, $data, $pre_load, $invalidate) {
+        global $DB;
+
+        // Validate token
+        if (!\H5PCore::validToken('contentuserdata', required_param('token', PARAM_RAW))) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            return;
+        }
+
+        // Use context id if supplied
+        $context_id = optional_param('contextId', null, PARAM_INT);
+        if ($context_id) {
+            $context = \context::instance_by_id($context_id);
+        }
+        else { // Otherwise try to find it from content id
+            $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
+        }
+
+        // Check permissions
+        if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
+            http_response_code(403);
+            return;
+        }
+
+        if ($data === '0') {
+            // Delete user data.
+            self::delete_user_data($content_id, $sub_content_id, $data_id);
+        } else {
+            // Save user data.
+            self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
+        }
+        \H5PCore::ajaxSuccess();
+    }
+
+    /**
+     * Return existing content user data
+     *
+     * @param $content_id
+     * @param $sub_content_id
+     * @param $data_id
+     */
+    private static function fetch_existing_data($content_id, $sub_content_id, $data_id) {
+        // Fetch user data
+        $user_data = self::get_user_data($content_id, $sub_content_id, $data_id);
+        \H5PCore::ajaxSuccess($user_data ? $user_data->data : NULL);
     }
 
     /**
