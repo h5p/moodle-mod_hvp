@@ -44,10 +44,10 @@ class restore_hvp_activity_task extends restore_activity_task {
      * Define (add) particular steps this activity can have
      */
     protected function define_my_steps() {
-        // Add H5P libraries
+        // Add H5P libraries.
         $this->add_step(new restore_hvp_libraries_structure_step('hvp_structure', 'hvp_libraries.xml'));
 
-        // Add H5P content
+        // Add H5P content.
         $this->add_step(new restore_hvp_activity_structure_step('hvp_structure', 'hvp.xml'));
     }
 

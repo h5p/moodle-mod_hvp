@@ -25,6 +25,8 @@
 
 namespace mod_hvp;
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Class content_user_data handles user data and corresponding db operations.
  *
@@ -40,59 +42,57 @@ class content_user_data {
      */
     public static function handle_ajax() {
         // Query String Parameters.
-        $content_id = required_param('content_id', PARAM_INT);
-        $data_id = required_param('data_type', PARAM_RAW);
-        $sub_content_id = required_param('sub_content_id', PARAM_INT);
+        $contentid = required_param('content_id', PARAM_INT);
+        $dataid = required_param('data_type', PARAM_RAW);
+        $subcontentid = required_param('sub_content_id', PARAM_INT);
 
         // Form Data.
         $data = optional_param('data', null, PARAM_RAW);
-        $pre_load = optional_param('preload', null, PARAM_INT);
+        $preload = optional_param('preload', null, PARAM_INT);
         $invalidate = optional_param('invalidate', null, PARAM_INT);
 
-        if ($content_id === null || $data_id === null || $sub_content_id === null) {
+        if ($contentid === null || $dataid === null || $subcontentid === null) {
             // Missing parameters.
             \H5PCore::ajaxError(get_string('missingparameters', 'hvp'));
             return;
         }
 
-        // Saving data
-        if ($data !== NULL && $pre_load !== NULL && $invalidate !== NULL) {
-            self::store_data($content_id, $sub_content_id, $data_id, $data, $pre_load, $invalidate);
-        }
-        else {
-            self::fetch_existing_data($content_id, $sub_content_id, $data_id);
+        // Saving data.
+        if ($data !== null && $preload !== null && $invalidate !== null) {
+            self::store_data($contentid, $subcontentid, $dataid, $data, $preload, $invalidate);
+        } else {
+            self::fetch_existing_data($contentid, $subcontentid, $dataid);
         }
     }
 
     /**
      * Stores content user data
      *
-     * @param $content_id
-     * @param $sub_content_id
-     * @param $data_id
+     * @param $contentid
+     * @param $subcontentid
+     * @param $dataid
      * @param $data
-     * @param $pre_load
+     * @param $preload
      * @param $invalidate
      */
-    private static function store_data($content_id, $sub_content_id, $data_id, $data, $pre_load, $invalidate) {
+    private static function store_data($contentid, $subcontentid, $dataid, $data, $preload, $invalidate) {
         global $DB;
 
-        // Validate token
+        // Validate token.
         if (!\H5PCore::validToken('contentuserdata', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
             return;
         }
 
-        // Use context id if supplied
-        $context_id = optional_param('contextId', null, PARAM_INT);
-        if ($context_id) {
-            $context = \context::instance_by_id($context_id);
-        }
-        else { // Otherwise try to find it from content id
-            $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
+        // Use context id if supplied.
+        $contextid = optional_param('contextId', null, PARAM_INT);
+        if ($contextid) {
+            $context = \context::instance_by_id($contextid);
+        } else { // Otherwise try to find it from content id.
+            $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $contentid)));
         }
 
-        // Check permissions
+        // Check permissions.
         if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
             \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
             http_response_code(403);
@@ -101,10 +101,10 @@ class content_user_data {
 
         if ($data === '0') {
             // Delete user data.
-            self::delete_user_data($content_id, $sub_content_id, $data_id);
+            self::delete_user_data($contentid, $subcontentid, $dataid);
         } else {
             // Save user data.
-            self::save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data);
+            self::save_user_data($contentid, $subcontentid, $dataid, $preload, $invalidate, $data);
         }
         \H5PCore::ajaxSuccess();
     }
@@ -112,33 +112,33 @@ class content_user_data {
     /**
      * Return existing content user data
      *
-     * @param $content_id
-     * @param $sub_content_id
-     * @param $data_id
+     * @param $contentid
+     * @param $subcontentid
+     * @param $dataid
      */
-    private static function fetch_existing_data($content_id, $sub_content_id, $data_id) {
-        // Fetch user data
-        $user_data = self::get_user_data($content_id, $sub_content_id, $data_id);
-        \H5PCore::ajaxSuccess($user_data ? $user_data->data : NULL);
+    private static function fetch_existing_data($contentid, $subcontentid, $dataid) {
+        // Fetch user data.
+        $userdata = self::get_user_data($contentid, $subcontentid, $dataid);
+        \H5PCore::ajaxSuccess($userdata ? $userdata->data : null);
     }
 
     /**
      * Get user data for content.
      *
-     * @param $content_id
-     * @param $sub_content_id
-     * @param $data_id
+     * @param $contentid
+     * @param $subcontentid
+     * @param $dataid
      *
      * @return mixed
      */
-    public static function get_user_data($content_id, $sub_content_id, $data_id) {
+    public static function get_user_data($contentid, $subcontentid, $dataid) {
         global $DB, $USER;
 
         $result = $DB->get_record('hvp_content_user_data', array(
                 'user_id' => $USER->id,
-                'hvp_id' => $content_id,
-                'sub_content_id' => $sub_content_id,
-                'data_id' => $data_id
+                'hvp_id' => $contentid,
+                'sub_content_id' => $subcontentid,
+                'data_id' => $dataid
             )
         );
 
@@ -148,88 +148,88 @@ class content_user_data {
     /**
      * Save user data for specific content in database.
      *
-     * @param $content_id
-     * @param $sub_content_id
-     * @param $data_id
-     * @param $pre_load
+     * @param $contentid
+     * @param $subcontentid
+     * @param $dataid
+     * @param $preload
      * @param $invalidate
      * @param $data
      */
-    public static function save_user_data($content_id, $sub_content_id, $data_id, $pre_load, $invalidate, $data) {
+    public static function save_user_data($contentid, $subcontentid, $dataid, $preload, $invalidate, $data) {
         global $DB, $USER;
 
         // Determine if we should update or insert.
-        $update = self::get_user_data($content_id, $sub_content_id, $data_id);
+        $update = self::get_user_data($contentid, $subcontentid, $dataid);
 
         // Wash values to ensure 0 or 1.
-        $pre_load = ($pre_load === '0' || $pre_load === 0) ? 0 : 1;
+        $preload = ($preload === '0' || $preload === 0) ? 0 : 1;
         $invalidate = ($invalidate === '0' || $invalidate === 0) ? 0 : 1;
 
         // New data to be inserted.
-        $new_data = (object)array(
+        $newdata = (object)array(
             'user_id' => $USER->id,
-            'hvp_id' => $content_id,
-            'sub_content_id' => $sub_content_id,
-            'data_id' => $data_id,
+            'hvp_id' => $contentid,
+            'sub_content_id' => $subcontentid,
+            'data_id' => $dataid,
             'data' => $data,
-            'preloaded' => $pre_load,
+            'preloaded' => $preload,
             'delete_on_content_change' => $invalidate
         );
 
         // Does not exist.
         if ($update === false) {
             // Insert new data.
-            $DB->insert_record('hvp_content_user_data', $new_data);
+            $DB->insert_record('hvp_content_user_data', $newdata);
         } else {
             // Get old data id.
-            $new_data->id = $update->id;
+            $newdata->id = $update->id;
 
             // Update old data.
-            $DB->update_record('hvp_content_user_data', $new_data);
+            $DB->update_record('hvp_content_user_data', $newdata);
         }
     }
 
     /**
      * Delete user data with specific content from database
      *
-     * @param $content_id
-     * @param $sub_content_id
-     * @param $data_id
+     * @param $contentid
+     * @param $subcontentid
+     * @param $dataid
      */
-    public static function delete_user_data($content_id, $sub_content_id, $data_id) {
+    public static function delete_user_data($contentid, $subcontentid, $dataid) {
         global $DB, $USER;
 
         $DB->delete_records('hvp_content_user_data', array(
             'user_id' => $USER->id,
-            'hvp_id' => $content_id,
-            'sub_content_id' => $sub_content_id,
-            'data_id' => $data_id
+            'hvp_id' => $contentid,
+            'sub_content_id' => $subcontentid,
+            'data_id' => $dataid
         ));
     }
 
     /**
      * Load user data for specific content
      *
-     * @param $content_id
-     * @return mixed User data for specific content if found, else NULL
+     * @param $contentid
+     * @return mixed User data for specific content if found, else null
      */
-    public static function load_pre_loaded_user_data($content_id) {
+    public static function load_pre_loaded_user_data($contentid) {
         global $DB, $USER;
 
-        $pre_loaded_user_data = array();
+        $preloadeduserdata = array();
 
         $results = $DB->get_records('hvp_content_user_data', array(
             'user_id' => $USER->id,
-            'hvp_id' => $content_id,
+            'hvp_id' => $contentid,
             'sub_content_id' => 0,
             'preloaded' => 1
         ));
 
-        // Get data for data ids
-        foreach ($results as $content_user_data) {
-            $pre_loaded_user_data[$content_user_data->data_id] = $content_user_data->data;
+        // Get data for data ids.
+        foreach ($results as $contentuserdata) {
+            $preloadeduserdata[$contentuserdata->data_id] = $contentuserdata->data;
         }
 
-        return $pre_loaded_user_data;
+        return $preloadeduserdata;
     }
 }

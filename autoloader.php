@@ -40,7 +40,7 @@ function hvp_autoloader($class) {
         'H5PDevelopment' => 'library/h5p-development.class.php',
         'H5PFileStorage' => 'library/h5p-file-storage.interface.php',
         'H5PDefaultStorage' => 'library/h5p-default-storage.class.php',
-        'H5PEventBase' =>  'library/h5p-event-base.class.php',
+        'H5PEventBase' => 'library/h5p-event-base.class.php',
 
         // Editor.
         'H5peditor' => 'editor/h5peditor.class.php',

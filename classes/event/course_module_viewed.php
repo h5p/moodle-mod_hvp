@@ -39,8 +39,7 @@ class course_module_viewed extends \core\event\course_module_viewed
     /**
      * Set basic properties for the event.
      */
-    protected function init()
-    {
+    protected function init() {
         $this->data['objecttable'] = 'hvp';
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;

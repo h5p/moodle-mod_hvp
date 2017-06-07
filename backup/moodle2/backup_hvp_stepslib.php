@@ -32,10 +32,10 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
 
     protected function define_structure() {
 
-        // To know if we are including userinfo
+        // To know if we are including user info.
         $userinfo = $this->get_setting_value('userinfo');
 
-        // Define each element separated
+        // Define each element separated.
         $hvp = new backup_nested_element('hvp', array('id'), array(
             'name',
             'machine_name',
@@ -56,10 +56,10 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
             'timemodified'
         ));
 
-        // User data
+        // User data.
         $entries = new backup_nested_element('content_user_data');
-        $content_user_data = new backup_nested_element('entry', array(
-            'user_id', // Annotated
+        $contentuserdata = new backup_nested_element('entry', array(
+            'user_id', // Annotated.
             'sub_content_id'
             ), array(
             'data_id',
@@ -68,12 +68,12 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
             'delete_on_content_change',
         ));
 
-        // Build the tree
+        // Build the tree.
 
         $hvp->add_child($entries);
-        $entries->add_child($content_user_data);
+        $entries->add_child($contentuserdata);
 
-        // Define sources
+        // Define sources.
 
         // Uses library name and version instead of main_library_id.
         $hvp->set_source_sql('SELECT h.id, hl.machine_name,
@@ -87,24 +87,24 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
                                 JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
                                WHERE h.id = ?', array(backup::VAR_ACTIVITYID));
 
-        // All the rest of elements only happen if we are including user info
+        // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
-            $content_user_data->set_source_table('hvp_content_user_data', array('hvp_id' => backup::VAR_PARENTID));
+            $contentuserdata->set_source_table('hvp_content_user_data', array('hvp_id' => backup::VAR_PARENTID));
         }
 
-        // Define id annotations
-        $content_user_data->annotate_ids('user', 'user_id');
+        // Define id annotations.
+        $contentuserdata->annotate_ids('user', 'user_id');
         // In an ideal world we would use the main_library_id and annotate that
         // but since we cannot know the required dependencies of the content
         // without parsing json_content and crawling the libraries_libraries
         // (library dependencies) table it's much easier to just include all
         // installed libraries.
 
-        // Define file annotations
+        // Define file annotations.
         $hvp->annotate_files('mod_hvp', 'intro', null, null);
         $hvp->annotate_files('mod_hvp', 'content', null, null);
 
-        // Return the root element (hvp), wrapped into standard activity structure
+        // Return the root element (hvp), wrapped into standard activity structure.
         return $this->prepare_activity_structure($hvp);
     }
 }
@@ -121,13 +121,13 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
             throw new backup_step_exception('backup_structure_step_undefined_fullpath');
         }
 
-        // Modify filename to use a globally shared file for all libraries
+        // Modify filename to use a globally shared file for all libraries.
         $this->filename = "../{$this->filename}";
 
-        // Append the filename to the fullpath
+        // Append the filename to the full path.
         $fullpath = rtrim($fullpath, '/') . '/' . $this->filename;
 
-        // Determine if already generated
+        // Determine if already generated.
         return !file_exists($fullpath);
     }
 
@@ -135,7 +135,7 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
 
         // Define each element separate.
 
-        // Libraries
+        // Libraries.
         $libraries = new backup_nested_element('hvp_libraries');
         $library = new backup_nested_element('library', array('id'), array(
             'title',
@@ -154,7 +154,7 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
             'tutorial_url'
         ));
 
-        // Library translations
+        // Library translations.
         $translations = new backup_nested_element('translations');
         $translation = new backup_nested_element('translation', array(
             'language_code'
@@ -162,7 +162,7 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
             'language_json'
         ));
 
-        // Library dependencies
+        // Library dependencies.
         $dependencies = new backup_nested_element('dependencies');
         $dependency = new backup_nested_element('dependency', array(
             'required_library_id'
@@ -170,7 +170,7 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
             'dependency_type'
         ));
 
-        // Build the tree
+        // Build the tree.
         $libraries->add_child($library);
 
         $library->add_child($translations);
@@ -179,7 +179,7 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
         $library->add_child($dependencies);
         $dependencies->add_child($dependency);
 
-        // Define sources
+        // Define sources.
 
         $library->set_source_table('hvp_libraries', array());
 
@@ -187,11 +187,11 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
 
         $dependency->set_source_table('hvp_libraries_libraries', array('library_id' => backup::VAR_PARENTID));
 
-        // Define file annotations
+        // Define file annotations.
         $context = \context_system::instance();
         $library->annotate_files('mod_hvp', 'libraries', null, $context->id);
 
-        // Return root element
+        // Return root element.
         return $libraries;
     }
 }
