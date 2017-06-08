@@ -23,20 +23,20 @@
 
 require_once('../../config.php');
 
-// Get Course ID
+// Get Course ID.
 $id = optional_param('id', 0, PARAM_INT);
 
-// Set URL
+// Set URL.
 $url = new \moodle_url('/mod/hvp/index.php', array('id' => $id));
 $PAGE->set_url($url);
 
-// Load Course
+// Load Course.
 $course = $DB->get_record('course', array('id' => $id));
 if (!$course) {
-  print_error('invalidcourseid');
+    print_error('invalidcourseid');
 }
 
-// Require login
+// Require login.
 require_course_login($course);
 $PAGE->set_pagelayout('incourse');
 $coursecontext = context_course::instance($course->id);
@@ -49,13 +49,13 @@ $event = \mod_hvp\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-// Set title and heading
+// Set title and heading.
 $PAGE->set_title($course->shortname . ': ' . get_string('modulenameplural', 'mod_hvp'));
 $PAGE->set_heading($course->fullname);
 
 echo $OUTPUT->header();
 
-// Load H5P list data
+// Load H5P list data.
 $rawh5ps = $DB->get_records_sql("SELECT cm.id AS coursemodule,
                                      cw.section,
                                      cm.visible,
@@ -78,25 +78,24 @@ if (!$rawh5ps) {
     die;
 }
 
-$modinfo = get_fast_modinfo($course, NULL);
+$modinfo = get_fast_modinfo($course, null);
 if (empty($modinfo->instances['hvp'])) {
-  $h5ps = $rawh5ps;
-}
-else {
-  // Lets try to order these bad boys
-  $h5ps = array();
-  foreach($modinfo->instances['hvp'] as $cm) {
-    if (!$cm->uservisible || !isset($rawh5ps[$cm->id])) {
-      continue; // Not visible or not found
+    $h5ps = $rawh5ps;
+} else {
+    // Lets try to order these bad boys.
+    $h5ps = [];
+    foreach ($modinfo->instances['hvp'] as $cm) {
+        if (!$cm->uservisible || !isset($rawh5ps[$cm->id])) {
+            continue; // Not visible or not found.
+        }
+        if (!empty($cm->extra)) {
+            $rawh5ps[$cm->id]->extra = $cm->extra;
+        }
+        $h5ps[] = $rawh5ps[$cm->id];
     }
-    if (!empty($cm->extra)) {
-      $rawh5ps[$cm->id]->extra = $cm->extra;
-    }
-    $h5ps[] = $rawh5ps[$cm->id];
-  }
 }
 
-// Print H5P list
+// Print H5P list.
 $table = new html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 
@@ -105,33 +104,33 @@ $table->align = array();
 
 $usesections = course_format_uses_sections($course->format);
 if ($usesections) {
-    // Section name
+    // Section name.
     $table->head[] = get_string('sectionname', 'format_'.$course->format);
     $table->align[] = 'center';
 }
 
-// Activity name
+// Activity name.
 $table->head[] = get_string('name');
 $table->align[] = 'left';
 
-// Content type
+// Content type.
 $table->head[] = 'Content Type';
 $table->align[] = 'left';
 
-// Add data rows
+// Add data rows.
 foreach ($h5ps as $h5p) {
-    $row = array();
+    $row = [];
 
     if ($usesections) {
-      // Section name
-      $row[] = get_section_name($course, $h5p->section);
+        // Section name.
+        $row[] = get_section_name($course, $h5p->section);
     }
 
-    // Activity name
+    // Activity name.
     $attrs = ($h5p->visible ? '' : ' class="dimmed"');
     $row[] = "<a href=\"view.php?id={$h5p->coursemodule}\"{$attrs}>{$h5p->name}</a>";
 
-    // Activity type
+    // Activity type.
     $row[] = $h5p->librarytitle;
 
     $table->data[] = $row;

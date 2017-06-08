@@ -669,7 +669,7 @@ class file_storage implements \H5PFileStorage {
 
         // Find content context.
         if ($contentId > 0) {
-            // Grab cm context
+            // Grab cm context.
             $cm = \get_coursemodule_from_instance('hvp', $contentId);
             $context = \context_module::instance($cm->id);
             $contextid = $context->id;
@@ -681,17 +681,17 @@ class file_storage implements \H5PFileStorage {
         }
 
         // Get h5p and content json.
-        $contentSource = $source . DIRECTORY_SEPARATOR . 'content';
+        $contentsource = $source . DIRECTORY_SEPARATOR . 'content';
         $h5pjson = file_get_contents($source . DIRECTORY_SEPARATOR . 'h5p.json');
-        $contentjson = file_get_contents($contentSource . DIRECTORY_SEPARATOR . 'content.json');
+        $contentjson = file_get_contents($contentsource . DIRECTORY_SEPARATOR . 'content.json');
 
         // Move all temporary content files to editor.
-        $contentFiles = array_diff(scandir($contentSource), array('.','..', 'content.json'));
-        foreach ($contentFiles as $file) {
-            if (is_dir("{$contentSource}/{$file}")) {
-                self::moveFileTree("{$contentSource}/{$file}", $contextid, $contentId);
+        $contentfiles = array_diff(scandir($contentsource), array('.', '..', 'content.json'));
+        foreach ($contentfiles as $file) {
+            if (is_dir("{$contentsource}/{$file}")) {
+                self::moveFileTree("{$contentsource}/{$file}", $contextid, $contentId);
             } else {
-                self::moveFile("{$contentSource}/{$file}", $contextid, $contentId);
+                self::moveFile("{$contentsource}/{$file}", $contextid, $contentId);
             }
         }
 
@@ -711,10 +711,10 @@ class file_storage implements \H5PFileStorage {
     private static function moveFile($source_file, $contextId, $contentId) {
         $fs = get_file_storage();
 
-        $path_parts = pathinfo($source_file);
-        $file_name  = $path_parts['basename'];
-        $file_path  = $path_parts['dirname'];
-        $folder_name = basename($file_path);
+        $pathparts = pathinfo($source_file);
+        $filename  = $pathparts['basename'];
+        $filepath  = $pathparts['dirname'];
+        $foldername = basename($filepath);
 
         if ($contentId > 0) {
             // Create file record for content.
@@ -723,8 +723,8 @@ class file_storage implements \H5PFileStorage {
                 'component' => 'mod_hvp',
                 'filearea' => $contentId > 0 ? 'content' : 'editor',
                 'itemid' => $contentId,
-                'filepath' => '/' . $folder_name . '/',
-                'filename' => $file_name
+                'filepath' => '/' . $foldername . '/',
+                'filename' => $filename
             );
         } else {
             // Create file record for editor.
@@ -733,20 +733,20 @@ class file_storage implements \H5PFileStorage {
                 'component' => 'mod_hvp',
                 'filearea' => 'editor',
                 'itemid' => 0,
-                'filepath' => '/' . $folder_name . '/',
-                'filename' => $file_name
+                'filepath' => '/' . $foldername . '/',
+                'filename' => $filename
             );
         }
 
-        $source_data = file_get_contents($source_file);
+        $sourcedata = file_get_contents($source_file);
 
         // Check if file already exists.
-        $fileExists = $fs->file_exists($record['contextid'], 'mod_hvp',
+        $fileexists = $fs->file_exists($record['contextid'], 'mod_hvp',
             $record['filearea'], $record['itemid'], $record['filepath'],
             $record['filename']
         );
 
-        if ($fileExists) {
+        if ($fileexists) {
             // Delete it to make sure that it is replaced with correct content.
             $file = $fs->get_file($record['contextid'], 'mod_hvp',
                 $record['filearea'], $record['itemid'], $record['filepath'],
@@ -757,8 +757,7 @@ class file_storage implements \H5PFileStorage {
             }
         }
 
-
-        $fs->create_file_from_string($record, $source_data);
+        $fs->create_file_from_string($record, $sourcedata);
     }
 
     /**

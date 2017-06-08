@@ -40,8 +40,8 @@ class remove_old_log_entries extends \core\task\scheduled_task {
     public function execute() {
         global $DB;
 
-        require_once __DIR__ . '/../../autoloader.php';
-        $older_than = (time() - \H5PEventBase::$log_time);
-        $DB->execute("DELETE FROM {hvp_events} WHERE created_at < {$older_than}");
+        require_once(__DIR__ . '/../../autoloader.php');
+        $olderthan = (time() - \H5PEventBase::$log_time);
+        $DB->execute("DELETE FROM {hvp_events} WHERE created_at < {$olderthan}");
     }
 }

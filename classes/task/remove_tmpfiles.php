@@ -47,17 +47,17 @@ class remove_tmpfiles extends \core\task\scheduled_task {
                 array(time() - 86400)
         );
         if (empty($tmpfiles)) {
-            return; // Nothing to clean up
+            return; // Nothing to clean up.
         }
 
         $fs = get_file_storage();
         foreach ($tmpfiles as $tmpfile) {
-            // Delete file
+            // Delete file.
             $file = $fs->get_file_by_id($tmpfile->id);
             $file->delete();
 
-            // Remove tmpfile entry
-            $DB->delete_records('hvp_tmpfiles', array('id' => $tmpfile->id)) ;
+            // Remove tmpfile entry.
+            $DB->delete_records('hvp_tmpfiles', array('id' => $tmpfile->id));
         }
     }
 }

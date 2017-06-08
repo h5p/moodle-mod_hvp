@@ -35,16 +35,16 @@ defined('MOODLE_INTERNAL') || die();
  */
 class results {
 
-    // Type specific inputs
-    protected $content_id;
+    // Type specific inputs.
+    protected $contentid;
 
-    // Generic result inputs
-    protected $offset, $limit, $orderBy, $orderDir, $filters;
+    // Generic result inputs.
+    protected $offset, $limit, $orderby, $orderdir, $filters;
 
     /**
      * Start handling results by filtering input parameters.
      */
-    function __construct() {
+    public function __construct() {
         $this->filter_input();
     }
 
@@ -54,26 +54,26 @@ class results {
      * @throws \coding_exception
      */
     protected function filter_input() {
-        // Type specifc
-        $this->content_id = optional_param('content_id', 0, PARAM_INT);
+        // Type specifc.
+        $this->contentid = optional_param('contentid', 0, PARAM_INT);
 
-        // Used to handle pagination
+        // Used to handle pagination.
         $this->offset = optional_param('offset', 0, PARAM_INT);
 
-        // Max number of items to display on one page
+        // Max number of items to display on one page.
         $this->limit = optional_param('limit', 20, PARAM_INT);
         if ($this->limit > 100) {
-            // Avoid wrong usage
+            // Avoid wrong usage.
             throw new \coding_exception('limit to high');
         }
 
-        // Field to order by
-        $this->orderBy = optional_param('sortBy', 0, PARAM_INT);
+        // Field to order by.
+        $this->orderby = optional_param('sortBy', 0, PARAM_INT);
 
-        // Direction to order in
-        $this->orderDir = optional_param('sortDir', 0, PARAM_INT);
+        // Direction to order in.
+        $this->orderdir = optional_param('sortDir', 0, PARAM_INT);
 
-        // List of fields to filter results on
+        // List of fields to filter results on.
         $this->filters = optional_param_array('filters', array(), PARAM_RAW_TRIMMED);
     }
 
@@ -83,23 +83,22 @@ class results {
     public function print_results() {
         global $DB, $USER;
 
-        // Check permission
-        $course = $DB->get_field('hvp', 'course', array('id' => $this->content_id));
+        // Check permission.
+        $course = $DB->get_field('hvp', 'course', array('id' => $this->contentid));
         $context = \context_course::instance($course);
-        $view_own_results = has_capability('mod/hvp:viewresults', $context);
-        $view_all_results = has_capability('mod/hvp:viewallresults', $context);
-        if (!$view_own_results && !$view_all_results) {
+        $viewownresults = has_capability('mod/hvp:viewresults', $context);
+        $viewallresults = has_capability('mod/hvp:viewallresults', $context);
+        if (!$viewownresults && !$viewallresults) {
             \H5PCore::ajaxError(get_string('nopermissiontoviewresult', 'hvp'));
             http_response_code(403);
             return;
         }
 
         // Only get own results if can't view all.
-        $uid = $view_all_results ? NULL : (int)$USER->id;
+        $uid = $viewallresults ? null : (int)$USER->id;
         $results = $this->get_results($uid);
         $rows = $this->get_human_readable_results($results, $course);
 
-        // Print
         header('Cache-Control: no-cache');
         header('Content-type: application/json');
         print json_encode(array(
@@ -117,10 +116,10 @@ class results {
      * @return array
      */
     private function get_human_readable_results($results, $course) {
-        // Make data readable for humans
+        // Make data readable for humans.
         $rows = array();
-        foreach ($results as $result)  {
-            $userLink = \html_writer::link(
+        foreach ($results as $result) {
+            $userlink = \html_writer::link(
                 new \moodle_url('/user/view.php', array(
                     'id' => $result->user_id,
                     'course' => $course
@@ -128,32 +127,30 @@ class results {
                 \fullname($result)
             );
 
-            $reviewLink = '—';
+            $reviewlink = '—';
 
-            // Check if result has xAPI data
+            // Check if result has xAPI data.
             if ($result->xapiid) {
-                $reviewLink = \html_writer::link(
+                $reviewlink = \html_writer::link(
                     new \moodle_url('/mod/hvp/review.php',
                         array(
-                            'id' => $this->content_id,
+                            'id' => $this->contentid,
                             'course' => $course,
                             'user' => $result->user_id
                         )
                     ),
                     get_string('viewreportlabel', 'hvp')
                 );
+            } else if ($result->rawgrade !== null) {
+                $reviewlink = get_string('reportnotsupported', 'hvp');
             }
-            else if ($result->rawgrade !== null) {
-                $reviewLink = get_string('reportnotsupported', 'hvp');
-            }
-
 
             $rows[] = array(
-                $userLink,
+                $userlink,
                 $result->rawgrade === null ? '—' : (int) $result->rawgrade,
                 $result->rawgrade === null ? '—' : (int) $result->rawgrademax,
                 empty($result->timemodified) ? '—' : date('Y/m/d – H:i', $result->timemodified),
-                $reviewLink
+                $reviewlink
             );
         }
 
@@ -169,34 +166,33 @@ class results {
      * @throws \coding_exception
      * @return array
      */
-    protected function get_results($uid=NULL) {
-        // Add extra fields, joins and where for the different result lists
-        if ($this->content_id !== 0) {
+    protected function get_results($uid=null) {
+        // Add extra fields, joins and where for the different result lists.
+        if ($this->contentid !== 0) {
             list($fields, $join, $where, $order, $args) = $this->get_content_sql($uid);
-        }
-        else {
+        } else {
             throw new \coding_exception('missing content_id');
         }
 
-        // Build where statement
+        // Build where statement.
         $where[] = "i.itemtype = 'mod'";
         $where[] = "i.itemmodule = 'hvp'";
         $where = 'WHERE ' . implode(' AND ', $where);
 
-        // Order results by the select column and direction
+        // Order results by the select column and direction.
         $order[] = 'g.rawgrade';
         $order[] = 'g.rawgrademax';
         $order[] = 'g.timemodified';
-        $order_by = $this->get_order_sql($order);
+        $orderby = $this->get_order_sql($order);
 
-        // Join on xAPI results
+        // Join on xAPI results.
         $join .= ' LEFT JOIN {hvp_xapi_results} x ON i.iteminstance = x.content_id AND g.userid = x.user_id';
-        $group_by = ' GROUP BY g.id, u.id, i.iteminstance, x.id';
+        $groupby = ' GROUP BY g.id, u.id, i.iteminstance, x.id';
 
-        // Get from statement
+        // Get from statement.
         $from = $this->get_from_sql();
 
-        // Execute query and get results
+        // Execute query and get results.
         return $this->get_sql_results("
                 SELECT g.id,
                        {$fields}
@@ -207,8 +203,8 @@ class results {
                   {$from}
                   {$join}
                   {$where}
-                  {$group_by}
-                  {$order_by}
+                  {$groupby}
+                  {$orderby}
                 ", $args,
                 $this->offset,
                 $this->limit);
@@ -240,27 +236,27 @@ class results {
      * @return string
      */
     protected function get_order_sql($fields) {
-        // Make sure selected order field is valid
-        if (!isset($fields[$this->orderBy])) {
+        // Make sure selected order field is valid.
+        if (!isset($fields[$this->orderby])) {
             throw new \coding_exception('invalid order field');
         }
 
-        // Find selected sortable field
-        $field = $fields[$this->orderBy];
+        // Find selected sortable field.
+        $field = $fields[$this->orderby];
 
         if (is_object($field)) {
             // Some fields are reverse sorted by default, e.g. text fields.
             // This feels more natural for the humans.
             if (!empty($field->reverse)) {
-                $this->orderDir = !$this->orderDir;
+                $this->orderdir = !$this->orderdir;
             }
 
             $field = $field->name;
         }
 
-        $dir = ($this->orderDir ? 'ASC' : 'DESC');
+        $dir = ($this->orderdir ? 'ASC' : 'DESC');
         if ($field === 'u.firstname') {
-            // Order by all user name fields
+            // Order by all user name fields.
             $field = implode(" {$dir}, ", self::get_ordered_user_name_fields());
         }
 
@@ -290,9 +286,8 @@ class results {
             $displayname = \fullname((object)$available);
             if (empty($displayname)) {
                 $ordered = array("{$prefix}firstname", "{$prefix}lastname");
-            }
-            else {
-                // Find fields in order
+            } else {
+                // Find fields in order.
                 $matches = array();
                 preg_match_all('/' . implode('|', $available) . '/', $displayname, $matches);
                 $ordered = $matches[0];
@@ -314,40 +309,40 @@ class results {
      * @param int $uid Only get users with this id
      * @return array $fields, $join, $where, $order, $args
      */
-    protected function get_content_sql($uid=NULL) {
+    protected function get_content_sql($uid=null) {
         global $DB;
 
         $usernamefields = implode(', ', self::get_ordered_user_name_fields());
         $fields = " u.id AS user_id, {$usernamefields}, ";
         $join = " LEFT JOIN {user} u ON u.id = g.userid";
         $where = array("i.iteminstance = ?");
-        $args = array($this->content_id);
+        $args = array($this->contentid);
 
-        // Only get entries with own user id
+        // Only get entries with own user id.
         if (isset($uid)) {
-          array_push($where, "u.id = ?");
-          array_push($args, $uid);
+            array_push($where, "u.id = ?");
+            array_push($args, $uid);
         }
 
         if (isset($this->filters[0])) {
             $keywordswhere = array();
 
-            // Split up keywords using whitespace and comma
+            // Split up keywords using whitespace and comma.
             foreach (preg_split("/[\s,]+/", $this->filters[0]) as $keyword) {
-                // Search all user name fields
+                // Search all user name fields.
                 $usernamewhere = array();
                 foreach (self::get_ordered_user_name_fields() as $usernamefield) {
                     $usernamewhere[] = $DB->sql_like($usernamefield, '?', false);
                     $args[] = '%' . $keyword . '%';
                 }
 
-                // Add user name fields where to keywords where
+                // Add user name fields where to keywords where.
                 if (!empty($usernamewhere)) {
                     $keywordswhere[] = '(' . implode(' OR ', $usernamewhere) . ')';
                 }
             }
 
-            // Add keywords where to SQL where
+            // Add keywords where to SQL where.
             if (!empty($keywordswhere)) {
                 $where[] = '(' . implode(' AND ', $keywordswhere) . ')';
             }

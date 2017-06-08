@@ -59,7 +59,7 @@ function hvp_get_core_settings() {
             'name' => $USER->firstname . ' ' . $USER->lastname,
             'mail' => $USER->email
         ),
-        'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? TRUE : FALSE
+        'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? true : false
     );
 
     return $settings;
@@ -125,33 +125,33 @@ function hvp_add_editor_assets($id = null) {
     // Make sure files are reloaded for each plugin update.
     $cachebuster = \hvp_get_cache_buster();
 
-    // Add editor styles
+    // Add editor styles.
     foreach (H5peditor::$styles as $style) {
         $assets['css'][] = $url . 'editor/' . $style . $cachebuster;
     }
 
-    // Add editor JavaScript
+    // Add editor JavaScript.
     foreach (H5peditor::$scripts as $script) {
-        // We do not want the creator of the iframe inside the iframe
+        // We do not want the creator of the iframe inside the iframe.
         if ($script !== 'scripts/h5peditor-editor.js') {
             $assets['js'][] = $url . 'editor/' . $script . $cachebuster;
         }
     }
 
-    // Add JavaScript with library framework integration (editor part)
+    // Add JavaScript with library framework integration (editor part).
     $PAGE->requires->js(new moodle_url('/mod/hvp/editor/scripts/h5peditor-editor.js' . $cachebuster), true);
     $PAGE->requires->js(new moodle_url('/mod/hvp/editor/scripts/h5peditor-init.js' . $cachebuster), true);
     $PAGE->requires->js(new moodle_url('/mod/hvp/editor.js' . $cachebuster), true);
 
-    // Add translations
+    // Add translations.
     $language = \mod_hvp\framework::get_language();
     $languagescript = "editor/language/{$language}.js";
     if (!file_exists("{$CFG->dirroot}/mod/hvp/{$languagescript}")) {
-      $languagescript = 'editor/language/en.js';
+        $languagescript = 'editor/language/en.js';
     }
     $PAGE->requires->js(new moodle_url('/mod/hvp/' . $languagescript . $cachebuster), true);
 
-    // Add JavaScript settings
+    // Add JavaScript settings.
     $context = \context_course::instance($COURSE->id);
     $filespathbase = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/";
     $contentvalidator = \mod_hvp\framework::instance('contentvalidator');
@@ -171,14 +171,14 @@ function hvp_add_editor_assets($id = null) {
     );
 
     if ($id !== null) {
-      $settings['editor']['nodeVersionId'] = $id;
+        $settings['editor']['nodeVersionId'] = $id;
 
-      // Find cm context
-      $cm = \get_coursemodule_from_instance('hvp', $id);
-      $context = \context_module::instance($cm->id);
+        // Find cm context.
+        $cm      = \get_coursemodule_from_instance('hvp', $id);
+        $context = \context_module::instance($cm->id);
 
-      // Override content URL
-      $settings['contents']['cid-'.$id]['contentUrl'] = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/{$id}";
+        // Override content URL.
+        $settings['contents']['cid-' . $id]['contentUrl'] = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/{$id}";
     }
 
     $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
@@ -213,7 +213,7 @@ function hvp_admin_add_generic_css_and_js($page, $liburl, $settings = null) {
     $page->requires->css(new moodle_url($liburl . 'styles/h5p.css' . hvp_get_cache_buster()));
     $page->requires->css(new moodle_url($liburl . 'styles/h5p-admin.css' . hvp_get_cache_buster()));
 
-    // Add settings:
+    // Add settings.
     $page->requires->data_for_js('h5p', hvp_get_core_settings(), true);
 }
 
@@ -291,7 +291,7 @@ function hvp_content_upgrade_progress($libraryid) {
                 'filtered' => ''
             ));
 
-            // Log content upgrade successful
+            // Log content upgrade successful.
             new \mod_hvp\event(
                     'content', 'upgrade',
                     $id, $DB->get_field_sql("SELECT name FROM {hvp} WHERE id = ?", array($id)),
@@ -365,19 +365,18 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
  * @param int $userid Id of the user the results belong to
  * @param context $context Current context, usually course context
  *
- * @return bool True if current user has permission to view given user results
+ * @return bool true if current user has permission to view given user results
  */
 function hvp_has_view_results_permission($userid, $context) {
-  global $USER;
+    global $USER;
 
-  // Check if user can view all results
-  if (has_capability('mod/hvp:viewallresults', $context)) {
-    return true;
-  }
+    // Check if user can view all results.
+    if (has_capability('mod/hvp:viewallresults', $context)) {
+        return true;
+    }
 
-  // Check if viewing own results, and have permission for it
-  return $userid === (int)$USER->id ?
-    has_capability('mod/hvp:viewresults', $context) : false;
+    // Check if viewing own results, and have permission for it.
+    return $userid === (int) $USER->id ? has_capability('mod/hvp:viewresults', $context) : false;
 }
 
 /**
@@ -388,17 +387,16 @@ function hvp_has_view_results_permission($userid, $context) {
  * @param int $redirectcontentid Redirect to this content id if not allowed
  *  to view own results
  */
-function hvp_require_view_results_permission($userid, $context, $redirectcontentid=NULL) {
-  global $USER;
+function hvp_require_view_results_permission($userid, $context, $redirectcontentid = null) {
+    global $USER;
 
-  if (!hvp_has_view_results_permission($userid, $context)) {
-    if ($userid === (int)$USER->id && isset($redirectcontentid)) {
-      // Not allowed to view own results, redirect
-      redirect(new moodle_url('/mod/hvp/view.php', array('id' => $redirectcontentid)));
+    if (!hvp_has_view_results_permission($userid, $context)) {
+        if ($userid === (int) $USER->id && isset($redirectcontentid)) {
+            // Not allowed to view own results, redirect.
+            redirect(new moodle_url('/mod/hvp/view.php', ['id' => $redirectcontentid]));
+        } else {
+            // Other user's results, require capability to view all results.
+            require_capability('mod/hvp:viewallresults', $context);
+        }
     }
-    else {
-      // Other user's results, require capability to view all results
-      require_capability('mod/hvp:viewallresults', $context);
-    }
-  }
 }

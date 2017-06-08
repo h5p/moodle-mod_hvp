@@ -21,6 +21,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 global $USER, $PAGE, $DB, $CFG, $OUTPUT, $COURSE;
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once("locallib.php");
@@ -34,11 +36,11 @@ if (!$cm = get_coursemodule_from_instance('hvp', $id)) {
 if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
     print_error('coursemisconf');
 }
-require_login($course, FALSE, $cm);
+require_login($course, false, $cm);
 
-// Check permission
-$course_context = context_course::instance($COURSE->id);
-hvp_require_view_results_permission($userid, $course_context, $cm->id);
+// Check permission.
+$coursecontext = context_course::instance($COURSE->id);
+hvp_require_view_results_permission($userid, $coursecontext, $cm->id);
 
 // Load H5P Content.
 $hvp = $DB->get_record_sql(
@@ -52,7 +54,7 @@ $hvp = $DB->get_record_sql(
           WHERE h.id = ?",
     array($id));
 
-if ($hvp === FALSE) {
+if ($hvp === false) {
     print_error('invalidhvp');
 }
 
@@ -65,53 +67,52 @@ $PAGE->set_title($hvp->title);
 $PAGE->set_heading($COURSE->fullname);
 $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/xapi-custom-report.css'));
 
-$xAPIResults = $DB->get_records('hvp_xapi_results', array(
+$xapiresults = $DB->get_records('hvp_xapi_results', array(
     'content_id' => $id,
     'user_id'    => $userid
 ));
 
-if (!$xAPIResults) {
+if (!$xapiresults) {
     print_error('invalidxapiresult', 'hvp');
 }
 
-// Assemble our question tree
-$baseQuestion = NULL;
-foreach ($xAPIResults as $question) {
-    if ($question->parent_id === NULL) {
-        // This is the root of our tree
-        $baseQuestion = $question;
-    }
-    elseif (isset($xAPIResults[$question->parent_id])) {
-        // Add to parent
-        $xAPIResults[$question->parent_id]->children[] = $question;
+// Assemble our question tree.
+$basequestion = null;
+foreach ($xapiresults as $question) {
+    if ($question->parent_id === null) {
+        // This is the root of our tree.
+        $basequestion = $question;
+    } else if (isset($xapiresults[$question->parent_id])) {
+        // Add to parent.
+        $xapiresults[$question->parent_id]->children[] = $question;
     }
 }
 
-// Initialize reporter
+// Initialize reporter.
 $reporter   = H5PReport::getInstance();
-$reportHtml = $reporter->generateReport($baseQuestion);
+$reporthtml = $reporter->generateReport($basequestion);
 $styles     = $reporter->getStylesUsed();
 foreach ($styles as $style) {
     $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $style));
 }
 
-// Print page HTML
+// Print page HTML.
 echo $OUTPUT->header();
 echo '<div class="clearer"></div>';
 
-// Print title and report
+// Print title and report.
 $title = $hvp->title;
 
-// Show user name if other then self
-if ($userid !== (int)$USER->id) {
-  $userresult = $DB->get_record('user', array("id" => $userid), 'username');
-  if (isset($userresult) && isset($userresult->username)) {
-    $title .= ": {$userresult->username}";
-  }
+// Show user name if other then self.
+if ($userid !== (int) $USER->id) {
+    $userresult = $DB->get_record('user', ["id" => $userid], 'username');
+    if (isset($userresult) && isset($userresult->username)) {
+        $title .= ": {$userresult->username}";
+    }
 }
 echo "<div class='h5p-report-container'>
         <h2>{$title}</h2>
-        <div class='h5p-report-view'>{$reportHtml}</div>
+        <div class='h5p-report-view'>{$reporthtml}</div>
       </div>";
 
 echo $OUTPUT->footer();

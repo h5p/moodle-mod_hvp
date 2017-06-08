@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * The mod_hvp content user data.
@@ -10,6 +24,8 @@
  */
 
 namespace mod_hvp;
+
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class xapi_result handles xapi results and corresponding db operations.
@@ -23,7 +39,7 @@ class xapi_result {
      */
     public static function handle_ajax() {
 
-        // Validate token
+        // Validate token.
         if (!self::validate_token()) {
             $core = framework::instance();
             \H5PCore::ajaxError($core->h5pF->t('Invalid security token.'),
@@ -31,27 +47,27 @@ class xapi_result {
             return;
         }
 
-        $contentId = required_param('contentId', PARAM_INT);
-        $xAPIResult = required_param('xAPIResult', PARAM_RAW);
+        $contentid = required_param('contentId', PARAM_INT);
+        $xapiresult = required_param('xAPIResult', PARAM_RAW);
 
-        $xAPIJson = json_decode($xAPIResult);
-        if (!$xAPIJson) {
+        $xapijson = json_decode($xapiresult);
+        if (!$xapijson) {
             \H5PCore::ajaxError('Invalid json in xAPI data.');
             return;
         }
 
-        if (!self::validate_xAPI_data($xAPIJson)) {
+        if (!self::validate_xAPI_data($xapijson)) {
             \H5PCore::ajaxError('Invalid xAPI data.');
             return;
         }
 
-        // Delete any old results
-        self::remove_xAPI_data($contentId);
+        // Delete any old results.
+        self::remove_xAPI_data($contentid);
 
-        // Store results
-        self::store_xAPI_data($contentId, $xAPIJson);
+        // Store results.
+        self::store_xAPI_data($contentid, $xapijson);
 
-        // Successfully inserted xAPI result
+        // Successfully inserted xAPI result.
         \H5PCore::ajaxSuccess();
     }
 
@@ -89,7 +105,7 @@ class xapi_result {
         global $DB, $USER;
 
         $xAPIData = new \H5PReportXAPIData($xAPIData, $parentId);
-        $insertedId = $DB->insert_record('hvp_xapi_results', (object) array(
+        $insertedid = $DB->insert_record('hvp_xapi_results', (object) array(
             'content_id' => $contentId,
             'user_id' => $USER->id,
             'parent_id' => $xAPIData->getParentID(),
@@ -103,7 +119,7 @@ class xapi_result {
         // Save sub content statements data
         if ($xAPIData->isCompound()) {
             foreach ($xAPIData->getChildren($contentId) as $child) {
-                self::store_xAPI_data($contentId, $child, $insertedId);
+                self::store_xAPI_data($contentId, $child, $insertedid);
             }
         }
     }

@@ -28,7 +28,7 @@ require_once($CFG->dirroot . '/mod/hvp/lib.php');
 
 global $PAGE;
 
-// Make sure core is loaded:
+// Make sure core is loaded.
 $core = \mod_hvp\framework::instance('core');
 
 // Redefine the H5P admin menu entry to be expandable.
@@ -36,7 +36,7 @@ $modltifolder = new admin_category('modhvpfolder', new lang_string('pluginname',
 // Add the Settings admin menu entry.
 $ADMIN->add('modsettings', $modltifolder);
 $settings->visiblename = new lang_string('settings', 'mod_hvp');
-// Add the Libraries admin menu entry:
+// Add the Libraries admin menu entry.
 $ADMIN->add('modhvpfolder', $settings);
 $ADMIN->add('modhvpfolder', new admin_externalpage('h5plibraries',
     get_string('libraries', 'hvp'), new moodle_url('/mod/hvp/library_list.php')));
@@ -54,30 +54,10 @@ if ($ADMIN->fulltree) {
                     get_string('contentstatefrequency', 'hvp'),
                     get_string('contentstatefrequency_help', 'hvp'), 30, PARAM_INT));
 
-    // Site Key
-    //TODO: Implement functionality for changing site key
-//    $settings->add(
-//            new admin_setting_configtext('mod_hvp/site_key',
-//                    get_string('sitekey', 'hvp'),
-//                    get_string('sitekeydescription', 'hvp'),
-//                    NULL, '/^(|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/', 36));
+    $PAGE->requires->js('/mod/hvp/library/js/jquery.js', true);
+    $PAGE->requires->js('/mod/hvp/library/js/h5p-display-options.js', true);
 
-    // JavaScript for hiding site key
-//    $site_key = get_config('mod_hvp', 'site_key');
-//    $site_uuid = get_config('mod_hvp', 'site_uuid');
-    $PAGE->requires->js('/mod/hvp/library/js/jquery.js', TRUE);
-//    $PAGE->requires->js('/mod/hvp/settings-hide-key.js', TRUE);
-    $PAGE->requires->js('/mod/hvp/library/js/h5p-display-options.js', TRUE);
-//    $PAGE->requires->data_for_js('HVPSettingsHideKey', array(
-//        'input' => 'id_s_mod_hvp_site_key',
-//        'placeholder' => '********-****-****-****-************',
-//        'value' => $site_key ? $site_key : $site_uuid,
-//        'empty' => get_string('empty', 'hvp'),
-//        'reveal' => get_string('reveal', 'hvp'),
-//        'hide' => get_string('hide', 'hvp')
-//    ));
-
-    // Send usage statistics
+    // Send usage statistics.
     $settings->add(
             new admin_setting_configcheckbox('mod_hvp/send_usage_statistics',
                     get_string('sendusagestatistics', 'hvp'),
@@ -98,16 +78,16 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('mod_hvp/copyright', get_string('enablecopyright', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/icon', get_string('enableabout', 'hvp'), '', 1));
 
-    // Content Types header
+    // Content Types header.
     $settings->add(new admin_setting_heading('mod_hvp/hub_settings', get_string('hubsettingsheader', 'hvp'), ''));
 
-    // LRS
+    // LRS.
     $settings->add(
             new admin_setting_configcheckbox('mod_hvp/enable_lrs_content_types',
                     get_string('enabledlrscontenttypes', 'hvp'),
                     get_string('enabledlrscontenttypes_help', 'hvp'), 0));
 
-    // Use H5P Hub
+    // Use H5P Hub.
     $settings->add(
         new admin_setting_configcheckbox(
             'mod_hvp/hub_is_enabled',
@@ -117,13 +97,13 @@ if ($ADMIN->fulltree) {
         )
     );
 
-    // Load js for disable hub confirmation dialog functionality
-    $PAGE->requires->js('/mod/hvp/library/js/jquery.js', TRUE);
-    $PAGE->requires->js('/mod/hvp/library/js/h5p-event-dispatcher.js', TRUE);
-    $PAGE->requires->js('/mod/hvp/library/js/h5p-confirmation-dialog.js', TRUE);
-    $PAGE->requires->js('/mod/hvp/library/js/settings/h5p-disable-hub.js', TRUE);
+    // Load js for disable hub confirmation dialog functionality.
+    $PAGE->requires->js('/mod/hvp/library/js/jquery.js', true);
+    $PAGE->requires->js('/mod/hvp/library/js/h5p-event-dispatcher.js', true);
+    $PAGE->requires->js('/mod/hvp/library/js/h5p-confirmation-dialog.js', true);
+    $PAGE->requires->js('/mod/hvp/library/js/settings/h5p-disable-hub.js', true);
 
-    // Skip applying css when page has already loaded, since Moodle does not
+    // Skip applying css when page has already loaded, since Moodle does not.
     // allow us to require the css at this point.
     if ($PAGE->state !== 2) {
         $PAGE->requires->css('/mod/hvp/library/styles/h5p-confirmation-dialog.css');
@@ -131,7 +111,7 @@ if ($ADMIN->fulltree) {
         $PAGE->requires->css('/mod/hvp/library/styles/h5p-core-button.css');
     }
 
-    // Find missing requirements
+    // Find missing requirements.
     $core = \mod_hvp\framework::instance('core');
     $errors = $core->checkSetupErrorMessage()->errors;
 

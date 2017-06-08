@@ -152,11 +152,10 @@ function xmldb_hvp_upgrade($oldversion) {
     if ($oldversion < 2016110100) {
 
         // Change context of activity files from COURSE to MODULE.
-
         $filearea = 'content';
         $component = 'mod_hvp';
 
-        // Find activity ID and correct context ID
+        // Find activity ID and correct context ID.
         $hvpsresult = $DB->get_records_sql(
                 "SELECT f.id AS fileid, f.itemid, c.id, f.filepath, f.filename, f.pathnamehash
                    FROM {files} f
@@ -169,13 +168,13 @@ function xmldb_hvp_upgrade($oldversion) {
         );
 
         foreach ($hvpsresult as $hvp) {
-            // Need to re-hash pathname after changing context
+            // Need to re-hash pathname after changing context.
             $pathnamehash = file_storage::get_pathname_hash($hvp->id, $component, $filearea, $hvp->itemid, $hvp->filepath, $hvp->filename);
 
-            // Double check that hash doesn't exist (avoid duplicate entries)
+            // Double check that hash doesn't exist (avoid duplicate entries).
             if (!$DB->get_field_sql("SELECT contextid FROM {files} WHERE pathnamehash = '{$pathnamehash}'")) {
-              // Update context ID and pathname hash for files
-              $DB->execute("UPDATE {files} SET contextid = {$hvp->id}, pathnamehash = '{$pathnamehash}' WHERE pathnamehash = '{$hvp->pathnamehash}'");
+                // Update context ID and pathname hash for files.
+                $DB->execute("UPDATE {files} SET contextid = {$hvp->id}, pathnamehash = '{$pathnamehash}' WHERE pathnamehash = '{$hvp->pathnamehash}'");
             }
         }
 
@@ -190,36 +189,34 @@ function xmldb_hvp_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016122800, 'hvp');
     }
 
-    /**
-     * Add content type cache database
-     */
+     // Add content type cache database.
     if ($oldversion < 2017040500) {
         // Define table hvp_libraries_hub_cache to be created.
         $table = new xmldb_table('hvp_libraries_hub_cache');
 
         // Adding fields to table hvp_libraries_hub_cache.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, XMLDB_SEQUENCE, NULL);
-        $table->add_field('machine_name', XMLDB_TYPE_CHAR, '255', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('major_version', XMLDB_TYPE_INTEGER, '4', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('minor_version', XMLDB_TYPE_INTEGER, '4', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('patch_version', XMLDB_TYPE_INTEGER, '4', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('h5p_major_version', XMLDB_TYPE_INTEGER, '4', NULL, NULL, NULL, NULL);
-        $table->add_field('h5p_minor_version', XMLDB_TYPE_INTEGER, '4', NULL, NULL, NULL, NULL);
-        $table->add_field('title', XMLDB_TYPE_CHAR, '255', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('summary', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('description', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('icon', XMLDB_TYPE_CHAR, '511', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('created_at', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('updated_at', XMLDB_TYPE_INTEGER, '11', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('is_recommended', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('popularity', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('screenshots', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
-        $table->add_field('license', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
-        $table->add_field('example', XMLDB_TYPE_CHAR, '511', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('tutorial', XMLDB_TYPE_CHAR, '511', NULL, NULL, NULL, NULL);
-        $table->add_field('keywords', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
-        $table->add_field('categories', XMLDB_TYPE_TEXT, NULL, NULL, NULL, NULL, NULL);
-        $table->add_field('owner', XMLDB_TYPE_CHAR, '511', NULL, NULL, NULL, NULL);
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('machine_name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('major_version', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('minor_version', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('patch_version', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('h5p_major_version', XMLDB_TYPE_INTEGER, '4', null, null, null, null);
+        $table->add_field('h5p_minor_version', XMLDB_TYPE_INTEGER, '4', null, null, null, null);
+        $table->add_field('title', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('summary', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('icon', XMLDB_TYPE_CHAR, '511', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('created_at', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('updated_at', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('is_recommended', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null);
+        $table->add_field('popularity', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('screenshots', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('license', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('example', XMLDB_TYPE_CHAR, '511', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('tutorial', XMLDB_TYPE_CHAR, '511', null, null, null, null);
+        $table->add_field('keywords', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('categories', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('owner', XMLDB_TYPE_CHAR, '511', null, null, null, null);
 
         // Adding keys to table hvp_libraries_hub_cache.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
@@ -229,65 +226,60 @@ function xmldb_hvp_upgrade($oldversion) {
             $dbman->create_table($table);
         }
 
-        // Update the content type cache
+        // Update the content type cache.
         $core = \mod_hvp\framework::instance();
         $core->updateContentTypeCache();
 
-        // Print messages
+        // Print messages.
         \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
         \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
-        /**
-         * Add has_icon to libraries folder
-         */
+        // Add has_icon to libraries folder.
         $table = new xmldb_table('hvp_libraries');
 
         // Define field has_icon to be added to hvp_libraries.
-        $has_icon = new xmldb_field('has_icon', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
+        $hasicon = new xmldb_field('has_icon', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-        // Add field has_icon if it does not exist
-        if (!$dbman->field_exists($table, $has_icon)) {
-            $dbman->add_field($table, $has_icon);
+        // Add field has_icon if it does not exist.
+        if (!$dbman->field_exists($table, $hasicon)) {
+            $dbman->add_field($table, $hasicon);
         }
 
-        // Display hub communication info
+        // Display hub communication info.
         if (!get_config('mod_hvp', 'external_communication')) {
             \mod_hvp\framework::messages('info', 'H5P now fetches content types directly from the H5P Hub. In order to do this, the H5P plugin will communicate with H5P.org once per day to fetch information about new and updated content types. It will send in anonymous data to the hub about H5P usage. You may disable the data contribution and/or the H5P Hub in the H5P settings.');
             \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
         }
 
-        // Enable hub and delete old communication variable
+        // Enable hub and delete old communication variable.
         set_config('hub_is_enabled', true, 'mod_hvp');
         unset_config('hub_is_enabled', 'mod_hvp');
 
-        upgrade_mod_savepoint(TRUE, 2017040500, 'hvp');
+        upgrade_mod_savepoint(true, 2017040500, 'hvp');
     }
 
-    /**
-     * Add report rendering
-     */
+    // Add report rendering.
     if ($oldversion < 2017050900) {
 
-        // Define table
+        // Define table.
         $table = new xmldb_table('hvp_xapi_results');
 
-        // Add fields
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, XMLDB_SEQUENCE, NULL);
-        $table->add_field('content_id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('user_id', XMLDB_TYPE_INTEGER, '10', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('parent_id', XMLDB_TYPE_INTEGER, '10', NULL, NULL, NULL, NULL);
-        $table->add_field('interaction_type', XMLDB_TYPE_CHAR, '127', NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('description', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('correct_responses_pattern', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('response', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
-        $table->add_field('additionals', XMLDB_TYPE_TEXT, NULL, NULL, XMLDB_NOTNULL, NULL, NULL);
+        // Add fields.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('content_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('user_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('parent_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('interaction_type', XMLDB_TYPE_CHAR, '127', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('correct_responses_pattern', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('response', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('additionals', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
 
-        // Add keys and index
+        // Add keys and index.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->add_index('result', XMLDB_INDEX_UNIQUE, array('id', 'content_id', 'user_id'));
 
-
-        // Create table if it does not exist
+        // Create table if it does not exist.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }

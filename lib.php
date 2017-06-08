@@ -82,7 +82,7 @@ function hvp_supports($feature) {
  * @return int The id of the newly inserted newmodule record
  */
 function hvp_add_instance($hvp) {
-    // Save content
+    // Save content.
     $hvp->id = hvp_save_content($hvp);
 
     // Set and create grade item.
@@ -102,10 +102,10 @@ function hvp_add_instance($hvp) {
  * @return boolean Success/Fail
  */
 function hvp_update_instance($hvp) {
-    // Make ID available for core to save
+    // Make ID available for core to save.
     $hvp->id = $hvp->instance;
 
-    // Save content
+    // Save content.
     hvp_save_content($hvp);
     hvp_grade_item_update($hvp);
     return true;
@@ -119,30 +119,29 @@ function hvp_update_instance($hvp) {
  * @return int Content ID
  */
 function hvp_save_content($hvp) {
-    // Determine disabled content features
+    // Determine disabled content features.
     $hvp->disable = hvp_get_disabled_content_features($hvp);
 
-    // Determine if we're uploading or creating
+    // Determine if we're uploading or creating.
     if ($hvp->h5paction === 'upload') {
-        // Save uploaded package
+        // Save uploaded package.
         $hvp->uploaded = true;
         $h5pstorage = \mod_hvp\framework::instance('storage');
         $h5pstorage->savePackage((array)$hvp);
         $hvp->id = $h5pstorage->contentId;
-    }
-    else {
-        // Save newly created or edited content
+    } else {
+        // Save newly created or edited content.
         $core = \mod_hvp\framework::instance();
         $editor = \mod_hvp\framework::instance('editor');
 
         if (!empty($hvp->id)) {
-            // Load existing content to get old parameters for comparison
+            // Load existing content to get old parameters for comparison.
             $content = $core->loadContent($hvp->id);
             $oldlib = $content['library'];
             $oldparams = json_decode($content['params']);
         }
 
-        // Make params and library available for core to save
+        // Make params and library available for core to save.
         $hvp->params = $hvp->h5pparams;
         $hvp->library = H5PCore::libraryFromString($hvp->h5plibrary);
         $hvp->library['libraryId'] = $core->h5pF->getLibraryId($hvp->library['machineName'], $hvp->library['majorVersion'], $hvp->library['minorVersion']);
@@ -151,11 +150,11 @@ function hvp_save_content($hvp) {
         // We need to process the parameters to move any images or files and
         // to determine which dependencies the content has.
 
-        // Prepare current parameters
+        // Prepare current parameters.
         $params = json_decode($hvp->params);
 
         // Move any uploaded images or files. Determine content dependencies.
-        $editor->processParameters($hvp, $hvp->library, $params, isset($oldlib) ? $oldlib : NULL, isset($oldparams) ? $oldparams : NULL);
+        $editor->processParameters($hvp, $hvp->library, $params, isset($oldlib) ? $oldlib : null, isset($oldparams) ? $oldparams : null);
     }
 
     return $hvp->id;
@@ -169,13 +168,13 @@ function hvp_save_content($hvp) {
  * @return int Disabled flags
  */
 function hvp_get_disabled_content_features($hvp) {
-  $disablesettings = array(
-      \H5PCore::DISPLAY_OPTION_FRAME => isset($hvp->frame) ? $hvp->frame : 0,
-      \H5PCore::DISPLAY_OPTION_DOWNLOAD => isset($hvp->export) ? $hvp->export : 0,
-      \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($hvp->copyright) ? $hvp->copyright : 0
-  );
-  $core = \mod_hvp\framework::instance();
-  return $core->getStorableDisplayOptions($disablesettings, 0);
+    $disablesettings = [
+        \H5PCore::DISPLAY_OPTION_FRAME     => isset($hvp->frame) ? $hvp->frame : 0,
+        \H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($hvp->export) ? $hvp->export : 0,
+        \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($hvp->copyright) ? $hvp->copyright : 0,
+    ];
+    $core            = \mod_hvp\framework::instance();
+    return $core->getStorableDisplayOptions($disablesettings, 0);
 }
 
 /**
@@ -191,24 +190,24 @@ function hvp_get_disabled_content_features($hvp) {
 function hvp_delete_instance($id) {
     global $DB;
 
-    // Load content record
+    // Load content record.
     if (! $hvp = $DB->get_record('hvp', array('id' => "$id"))) {
         return false;
     }
 
-    // Load CM
+    // Load CM.
     $cm = \get_coursemodule_from_instance('hvp', $id);
 
-    // Delete content
+    // Delete content.
     $h5pstorage = \mod_hvp\framework::instance('storage');
     $h5pstorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug, 'coursemodule' => $cm->id));
 
-    // Delete xAPI statements
+    // Delete xAPI statements.
     $DB->delete_records('hvp_xapi_results', array (
       'content_id' => $hvp->id
     ));
 
-    // Get library details
+    // Get library details.
     $library = $DB->get_record_sql(
             "SELECT machine_name AS name, major_version, minor_version
                FROM {hvp_libraries}
@@ -216,7 +215,7 @@ function hvp_delete_instance($id) {
             array($hvp->main_library_id)
     );
 
-    // Log content delete
+    // Log content delete.
     new \mod_hvp\event(
             'content', 'delete',
             $hvp->id, $hvp->name,
@@ -253,7 +252,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // Check permissions
+            // Check permissions.
             if (!has_capability('mod/hvp:getcachedassets', $context)) {
                 return false;
             }
@@ -266,7 +265,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // Check permissions
+            // Check permissions.
             if (!has_capability('mod/hvp:getcontent', $context)) {
                 return false;
             }
@@ -279,22 +278,22 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // Get core:
+            // Get core.
             $h5pinterface = \mod_hvp\framework::instance('interface');
             $h5pcore = \mod_hvp\framework::instance('core');
 
-            // Get content id from filename:
+            // Get content id from filename.
             if (!preg_match('/(\d*).h5p/', $args[0], $matches)) {
-              // did not find any content ID :(
-              return false;
+                // did not find any content ID.
+                return FALSE;
             }
 
             $contentid = $matches[1];
             $content = $h5pinterface->loadContent($contentid);
-            $displayOptions = $h5pcore->getDisplayOptionsForView($content['disable'], $contentid);
+            $displayoptions = $h5pcore->getDisplayOptionsForView($content['disable'], $contentid);
 
-            // Check permissions
-            if (!$displayOptions['export']) {
+            // Check permissions.
+            if (!$displayoptions['export']) {
                 return false;
             }
 
@@ -306,7 +305,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // Check permissions
+            // Check permissions.
             if (!has_capability('mod/hvp:addinstance', $context)) {
                 return false;
             }
@@ -351,11 +350,10 @@ function hvp_grade_item_update($hvp, $grades=null) {
         $params['grademax'] = $hvp->maximumgrade;
     }
 
-    // Recalculate rawgrade relative to grademax
+    // Recalculate rawgrade relative to grademax.
     if (isset($hvp->rawgrade) && isset($hvp->rawgrademax)) {
         // Get max grade Obs: do not try to use grade_get_grades because it
-        // requires context which we don't have inside an ajax
-        // $gradinginfo = grade_get_grades($hvp->course, 'mod', 'hvp', $hvp->id);
+        // requires context which we don't have inside an ajax.
         $gradeitem = grade_item::fetch(array(
             'itemtype' => 'mod',
             'itemmodule' => 'hvp',
@@ -380,7 +378,7 @@ function hvp_grade_item_update($hvp, $grades=null) {
  * Update activity grades
  *
  * @category grade
- * @param stdClass $hvp Null means all hvps (with extra cmidnumber property)
+ * @param stdClass $hvp null means all hvps (with extra cmidnumber property)
  * @param int $userid specific user only, 0 means all
  * @param bool $nullifnone If true and the user has no grade then a grade item with rawgrade == null will be inserted
  */

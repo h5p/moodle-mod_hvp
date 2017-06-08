@@ -26,7 +26,7 @@ namespace mod_hvp;
 
 defined('MOODLE_INTERNAL') || die();
 
-// Load moodleform class
+// Load moodleform class.
 require_once("$CFG->libdir/formslib.php");
 
 /**
@@ -44,14 +44,14 @@ class upload_libraries_form extends \moodleform {
     public function definition() {
         global $CFG, $OUTPUT;
 
-        // Get form
+        // Get form.
         $mform = $this->_form;
 
-        // Add File Picker
+        // Add File Picker.
         $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null,
                    array('maxbytes' => $CFG->maxbytes, 'accepted_types' => '*.h5p'));
 
-        // Add options
+        // Add options.
         $mform->addElement('checkbox', 'onlyupdate', get_string('options', 'hvp'), get_string('onlyupdate', 'hvp'), array('group' => 1));
         $mform->setType('onlyupdate', PARAM_BOOL);
         $mform->setDefault('onlyupdate', false);
@@ -61,7 +61,7 @@ class upload_libraries_form extends \moodleform {
         $mform->setDefault('disablefileextensioncheck', false);
         $mform->addElement('static', '', '', $OUTPUT->notification(get_string('disablefileextensioncheckwarning', 'hvp'), 'notifymessage'));
 
-        // Upload button
+        // Upload button.
         $this->add_action_buttons(false, get_string('upload', 'hvp'));
     }
 
@@ -70,8 +70,8 @@ class upload_libraries_form extends \moodleform {
      *
      * @param array $default_values default values for form
      */
-    function data_preprocessing(&$default_values) {
-        // Aaah.. we meet again h5pfile!
+    public function data_preprocessing(&$default_values) {
+        // Aaah.. we meet again h5pfile!.
         $draftitemid = file_get_submitted_draft_itemid('h5pfile');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_hvp', 'package', 0);
         $default_values['h5pfile'] = $draftitemid;
@@ -85,11 +85,11 @@ class upload_libraries_form extends \moodleform {
      * @return array of "element_name"=>"error_description" if there are errors,
      *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
-    function validation($data, $files) {
+    public function validation($data, $files) {
         global $CFG;
         $errors = array();
 
-        // Check for file
+        // Check for file.
         if (empty($data['h5pfile'])) {
             $errors['h5pfile'] = get_string('required');
             return $errors;
@@ -101,7 +101,7 @@ class upload_libraries_form extends \moodleform {
             return $errors;
         }
 
-        // Add file so that core framework can find it
+        // Add file so that core framework can find it.
         $file = reset($files);
         $interface = \mod_hvp\framework::instance('interface');
 
@@ -111,12 +111,12 @@ class upload_libraries_form extends \moodleform {
         $interface->getUploadedH5pPath($path);
         $file->copy_content_to($path);
 
-        // Validate package
-        $h5pValidator = \mod_hvp\framework::instance('validator');
-        if (!$h5pValidator->isValidPackage(true, isset($data['onlyupdate']))) {
-          $infomessages =  implode('<br/>', \mod_hvp\framework::messages('info'));
-          $errormessages = implode('<br/>', \mod_hvp\framework::messages('error'));
-          $errors['h5pfile'] = ($errormessages ? $errormessages . '<br/>' : '') . $infomessages;
+        // Validate package.
+        $h5pvalidator = \mod_hvp\framework::instance('validator');
+        if (!$h5pvalidator->isValidPackage(true, isset($data['onlyupdate']))) {
+            $infomessages      = implode('<br/>', \mod_hvp\framework::messages('info'));
+            $errormessages     = implode('<br/>', \mod_hvp\framework::messages('error'));
+            $errors['h5pfile'] = ($errormessages ? $errormessages . '<br/>' : '') . $infomessages;
         }
         return $errors;
     }
