@@ -57,7 +57,7 @@ $string['cancellabel'] = 'Avbryt';
 $string['confirmlabel'] = 'Bekreft';
 $string['noh5ps'] = 'Der finnes ikke noe interaktivt innhold for dette kurset.';
 
-// Update message email for admin
+// Update message email for admin.
 $string['messageprovider:updates'] = 'Varsel om tilgjengelige H5P-oppdateringer';
 $string['updatesavailabletitle'] = 'Nye H5P-oppdateringer er tilgjengelig';
 $string['updatesavailablemsgpt1'] = 'Der er tilgjengelige oppdateringer for H5P-innholdstypene du har i din Moodle-installasjon.';
@@ -157,7 +157,7 @@ $string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
 $string['reportnotsupported'] = 'Not supported';
 
-// Editor
+// Editor.
 $string['javascriptloading'] = 'Venter på JavaScript...';
 $string['action'] = 'Handling';
 $string['upload'] = 'Laste opp';
@@ -173,7 +173,7 @@ $string['missingcontentuserdata'] = 'Feil: Kunne ikke finne innholdsbrukerdata';
 $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
-// Capabilities
+// Capabilities.
 $string['hvp:addinstance'] = 'Legg til en ny H5P-aktivitet';
 $string['hvp:restrictlibraries'] = 'Begrense et H5P-bibliotek';
 $string['hvp:updatelibraries'] = 'Oppdatere versjonen til et H5P-bibliotek';
@@ -186,14 +186,14 @@ $string['hvp:getcachedassets'] = 'Tilgang til bufret H5P-innholdsressurser';
 $string['hvp:getcontent'] = 'Tilgang til innholdet til H5P-fil i kurs';
 $string['hvp:getexport'] = 'Tilgang til eksportfil fra H5P i kurs';
 
-// Capabilities error messages
+// Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Du har ikke tillatelse til å oppgradere bibliotek.';
 $string['nopermissiontorestrict'] = 'Du har ikke tillatelse til å begrense tilgang til bibliotek.';
 $string['nopermissiontosavecontentuserdata'] = 'Du har ikke tillatelse til å lagre brukerdata.';
 $string['nopermissiontosaveresult'] = 'Du har ikke tillatelse til å lagre resultater for dette innholdet.';
 $string['nopermissiontoviewresult'] = 'Du har ikke tillatelse til å se resultater for dette innholdet.';
 
-// Editor translations
+// Editor translations.
 $string['noziparchive'] = 'PHP-versjonen du bruker støtter ikke ZipArchive.';
 $string['noextension'] = 'Fila du lastet opp er ikke en gyldig H5P (Den har ikke .h5p som filendelse)';
 $string['nounzip'] = 'Fila du lastet opp er ikke en gyldig H5P (Jeg klarer ikke å unzippe den)';
@@ -238,7 +238,7 @@ $string['invalidvideoformat'] = 'Ugyldig videofilformat. Bruk mp4 eller webm.';
 $string['couldnotsave'] = 'Klarte ikke å lagre fila.';
 $string['couldnotcopy'] = 'Klarte ikke å kopiere fila.';
 
-// Welcome messages
+// Welcome messages.
 $string['welcomeheader'] = 'Welcome to the world of H5P!';
 $string['welcomegettingstarted'] = 'To get started with H5P and Moodle take a look at our <a {$a->moodle_tutorial}>tutorial</a> and check out the <a {$a->example_content}>example content</a> at H5P.org for inspiration.';
 $string['welcomecommunity'] = 'We hope you will enjoy H5P and get engaged in our growing community through our <a {$a->forums}>forums</a> and chat room <a {$a->gitter}>H5P at Gitter</a>';
@@ -247,7 +247,7 @@ $string['missingmbstring'] = 'PHP-utvidelsen mbstring mangler. H5P trenger denne
 $string['wrongversion'] = 'En ugyldig versjon av H5P-biblioteket {$a->%machineName} er brukt i innholdet. Innholdet bruker {$a->%contentLibrary}, mens det skal bruke {$a->%semanticsLibrary}.';
 $string['invalidlibrary'] = 'H5P-biblioteket {$a->%library} brukt i innholdet er ugyldig';
 
-// Licensing
+// Licensing.
 $string['copyrightinfo'] = 'Opphavsrettsinformasjon';
 $string['years'] = 'År';
 $string['undisclosed'] = 'Undisclosed';

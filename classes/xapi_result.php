@@ -101,7 +101,7 @@ class xapi_result {
      * @param object $xAPIData xAPI data
      * @param int $parentId Parent id
      */
-    private static function store_xAPI_data($contentId, $xAPIData, $parentId=NULL) {
+    private static function store_xAPI_data($contentId, $xAPIData, $parentId = null) {
         global $DB, $USER;
 
         $xAPIData = new \H5PReportXAPIData($xAPIData, $parentId);
@@ -116,7 +116,7 @@ class xapi_result {
             'additionals' => $xAPIData->getAdditionals()
         ));
 
-        // Save sub content statements data
+        // Save sub content statements data.
         if ($xAPIData->isCompound()) {
             foreach ($xAPIData->getChildren($contentId) as $child) {
                 self::store_xAPI_data($contentId, $child, $insertedid);

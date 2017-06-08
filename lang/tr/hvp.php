@@ -147,7 +147,7 @@ $string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
 $string['reportnotsupported'] = 'Not supported';
 
-// Editor
+// Editor.
 $string['javascriptloading'] = 'JavaScript bekleniyor ...';
 $string['action'] = 'Eylem';
 $string['upload'] = 'Yükle';
@@ -163,7 +163,7 @@ $string['missingcontentuserdata'] = 'Hata: İçerik kullanıcısı verisi buluna
 $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
-// Capabilities
+// Capabilities.
 $string['hvp:addinstance'] = 'Yeni bir H5P Etkinliği ekle';
 $string['hvp:restrictlibraries'] = 'Bir H5P kitaplığını kısıtla';
 $string['hvp:updatelibraries'] = 'Bir H5P kitaplığı sürümünü yükle';
@@ -176,14 +176,14 @@ $string['hvp:getcachedassets'] = 'Ön belleğe alınmış H5P içerik değerleri
 $string['hvp:getcontent'] = 'Kurs içìndeki H5P dosyası içeriğini al/gör';
 $string['hvp:getexport'] = 'Kurs içindeki H5P içeriğinden dışa aktarma dosyası al';
 
-// Capabilities error messages
+// Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Kitaplıkları yükseltme yetkiniz yok.';
 $string['nopermissiontorestrict'] = 'Kitaplıkları kısıtlama yetkiniz yok.';
 $string['nopermissiontosavecontentuserdata'] = 'İçerik kullanıcısı verilerini kaydetme yetkiniz yok.';
 $string['nopermissiontosaveresult'] = 'Bu içerik için sonucu kaydetme yetkiniz yok.';
 $string['nopermissiontoviewresult'] = 'Bu içerik için sonuçları görme yetkiniz yokY.';
 
-// Editor translations
+// Editor translations.
 $string['noziparchive'] = 'PHP sürümünüz ZipArchive desteklemiyor.';
 $string['noextension'] = 'Yüklediğiniz dosya geçerli bir HTML5 Paketi değil (Dosya uzantısı .h5p değil.)';
 $string['nounzip'] = 'Yüklediğiniz dosya geçerli bir HTML5 Paketi değil (Dosya açılamadı)';
@@ -229,13 +229,13 @@ $string['invalidvideoformat'] = 'Video dosyası türü geçersiz. mp4 ya da webm
 $string['couldnotsave'] = 'Dosya kaydedilemedi.';
 $string['couldnotcopy'] = 'Dosya kopyalanamadı.';
 
-// Welcome messages
+// Welcome messages.
 $string['welcomeheader'] = 'H5P dünyasına hoşgeldiniz!';
 $string['welcomegettingstarted'] = 'H5P ve Moodle kullanımına bakmak için <a {$a->moodle_tutorial}>kullanım</a> turumuza bakabilir ve h5p.org üzerinde <a {$a->example_content}>örnek içerik</a> le bir fikir edinebilirsiniz.';
 $string['welcomecommunity'] = 'Umarız H5P kullanmaktan memnun kalır ve sürekli büyüyen topluluğumuza<a {$a->forums}>forumlarımız</a> ve <a {$a->gitter}>Gitter adresinde H5P</a> üzerindeki sohbet odamızla katılırsınız';
 $string['welcomecontactus'] = 'Herhangi bir geribildiriminiz varsa<a {$a}>bize iletin</a>. Geribildirimleri titizlikle ele alıyor ve her geçen gün H5P yazılımını geliştirmeye çabalıyoruz!';
 
-// Licensing
+// Licensing.
 $string['copyrightinfo'] = 'Telif hakkı bilgisi';
 $string['years'] = 'Yıl';
 $string['undisclosed'] = 'Belirtilmedi';

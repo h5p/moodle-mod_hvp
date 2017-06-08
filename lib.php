@@ -284,8 +284,8 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
 
             // Get content id from filename.
             if (!preg_match('/(\d*).h5p/', $args[0], $matches)) {
-                // did not find any content ID.
-                return FALSE;
+                // Did not find any content ID.
+                return false;
             }
 
             $contentid = $matches[1];

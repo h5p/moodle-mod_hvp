@@ -144,7 +144,7 @@ $string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
 $string['reportnotsupported'] = 'Not supported';
 
-//Editor
+// Editor.
 $string['javascriptloading'] = 'Warte auf JavaScript';
 $string['action'] = 'Aktion';
 $string['upload'] = 'Hochladen';
@@ -160,7 +160,7 @@ $string['missingcontentuserdata'] = 'Fehler: Konnte den Nutzerinhalt nicht finde
 $string['maximumgrade'] = 'Beste Bewertung';
 $string['maximumgradeerror'] = 'Bitte gib einen positive ganze Zahl als maximale Punktzahl für diese Aktivität an.';
 
-// Capabilities
+// Capabilities.
 $string['hvp:addinstance'] = 'Neue H5P-Aktivität hinzufügen';
 $string['hvp:restrictlibraries'] = 'H5P-Bibliothek beschränken';
 $string['hvp:updatelibraries'] = 'Aktualisieren einer H5P-Bibliothek';
@@ -173,14 +173,14 @@ $string['hvp:getcachedassets'] = 'Zwischengespeicherte H5P-Inhaltswerte erhalten
 $string['hvp:getcontent'] = 'H5P-Dateiinhalt im Kurs verwenden/ansehen';
 $string['hvp:getexport'] = 'Exportierte H5P Datei im Kurs verwenden';
 
-// Capabilities error messages
+// Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Die nötigen Rechte, um die Bibliothek zu aktualisieren, sind nicht vorhanden.';
 $string['nopermissiontorestrict'] = 'Die nötigen Rechte, um Bibliotheken zu beschränken, sind nicht vorhanden.';
 $string['nopermissiontosavecontentuserdata'] = 'Die nötigen Rechte, um Nutzerinhalte zu speichern, sind nicht vorhanden.';
 $string['nopermissiontosaveresult'] = 'Die nötigen Rechte, um die Ergebnisse dieses Inhalts zu speichern, sind nicht vorhanden.';
 $string['nopermissiontoviewresult'] = 'Die nötigen Rechte, um die Ergebnisse dieses Inhalts anzusehen, sind nicht vorhanden.';
 
-// Editor translations
+// Editor translations.
 $string['noziparchive'] = 'Diese PHP-Version unterstützt ZipArchive nicht.';
 $string['noextension'] = 'Die hochgeladene Datei ist kein gültiges HTML5-Paket (Keine .h5p Dateiendung)';
 $string['nounzip'] = 'Die hochgeladene Datei ist kein gültiges HTML5-Paket (Kann nicht entpackt werden)';
@@ -225,13 +225,13 @@ $string['invalidvideoformat'] = 'Ungültiges Video-Dateiformat. Verwende mp4 ode
 $string['couldnotsave'] = 'Konnte die Datei nicht speichern.';
 $string['couldnotcopy'] = 'Konnte die Datei nicht kopieren.';
 
-// Welcome messages
+// Welcome messages.
 $string['welcomeheader'] = 'Willkommen in der Welt von H5P!';
 $string['welcomegettingstarted'] = 'Um mit H5P und Moodle loszulegen, befindet sich hier ein <a {$a->moodle_tutorial}>Tutorial</a> und es gibt<a {$a->example_content}>Beispielinhalte</a> auf H5P.org als Inspiration.';
 $string['welcomecommunity'] = 'Wir hoffen, dass Ihnen H5P gefällt und bieten die Möglichkeit, im <a {$a->forums}>Forum</a> und im Chat-Room <a {$a->gitter}>H5P bei Gitter</a> aktiv zu werden.';
 $string['welcomecontactus'] = 'Für Feedback bitte nicht zögern, uns zu <a {$a}>kontaktieren</a>. Wir nehmen Feedback sehr ernst und bemühen uns, H5P jeden Tag besser zu machen!';
 
-// Licensing
+// Licensing.
 $string['copyrightinfo'] = 'Urheberrechtsinformationen';
 $string['years'] = 'Jahr(e)';
 $string['undisclosed'] = 'Unbestimmt';

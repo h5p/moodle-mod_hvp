@@ -97,7 +97,7 @@ $string['contenttypecacheheader'] = 'Content Type Cache';
 $string['settings'] = 'H5P Settings';
 $string['libraries'] = 'H5P Libraries';
 
-// Content type cache section
+// Content type cache section.
 $string['ctcacheconnectionfailed'] = "Couldn't communicate with the H5P Hub. Please try again later.";
 $string['ctcachenolibraries'] = 'No content types were received from the H5P Hub. Please try again later.';
 $string['ctcachesuccess'] = 'Library cache was successfully updated!';
@@ -177,7 +177,7 @@ $string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
 $string['reportnotsupported'] = 'Not supported';
 
-// Editor
+// Editor.
 $string['javascriptloading'] = 'Waiting for JavaScript...';
 $string['action'] = 'Action';
 $string['upload'] = 'Upload';
@@ -193,7 +193,7 @@ $string['missingcontentuserdata'] = 'Error: Could not find content user data';
 $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
-// Capabilities
+// Capabilities.
 $string['hvp:addinstance'] = 'Add a new H5P Activity';
 $string['hvp:restrictlibraries'] = 'Restrict a H5P library';
 $string['hvp:updatelibraries'] = 'Update the version of an H5P library';
@@ -207,14 +207,14 @@ $string['hvp:getcontent'] = 'Get/view content of H5P file in course';
 $string['hvp:getexport'] = 'Get export file from H5P in course';
 $string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
 
-// Capabilities error messages
+// Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
 $string['nopermissiontorestrict'] = 'You do not have permission to restrict libraries.';
 $string['nopermissiontosavecontentuserdata'] = 'You do not have permission to save content user data.';
 $string['nopermissiontosaveresult'] = 'You do not have permission to save result for this content.';
 $string['nopermissiontoviewresult'] = 'You do not have permission to view results for this content.';
 
-// Editor translations
+// Editor translations.
 $string['noziparchive'] = 'Your PHP version does not support ZipArchive.';
 $string['noextension'] = 'The file you uploaded is not a valid HTML5 Package (It does not have the .h5p file extension)';
 $string['nounzip'] = 'The file you uploaded is not a valid HTML5 Package (We are unable to unzip it)';
@@ -259,7 +259,7 @@ $string['invalidvideoformat'] = 'Invalid video file format. Use mp4 or webm.';
 $string['couldnotsave'] = 'Could not save file.';
 $string['couldnotcopy'] = 'Could not copy file.';
 
-// Welcome messages
+// Welcome messages.
 $string['welcomeheader'] = 'Welcome to the world of H5P!';
 $string['welcomegettingstarted'] = 'To get started with H5P and Moodle take a look at our <a {$a->moodle_tutorial}>tutorial</a> and check out the <a {$a->example_content}>example content</a> at H5P.org for inspiration.';
 $string['welcomecommunity'] = 'We hope you will enjoy H5P and get engaged in our growing community through our <a {$a->forums}>forums</a> and chat room <a {$a->gitter}>H5P at Gitter</a>';
@@ -268,7 +268,7 @@ $string['missingmbstring'] = 'The mbstring PHP extension is not loaded. H5P need
 $string['wrongversion'] = 'The version of the H5P library {$a->%machineName} used in this content is not valid. Content contains {$a->%contentLibrary}, but it should be {$a->%semanticsLibrary}.';
 $string['invalidlibrary'] = 'The H5P library {$a->%library} used in the content is not valid';
 
-// Setup errors
+// Setup errors.
 $string['oldphpversion'] = 'Your PHP version is outdated. H5P requires version 5.2 to function properly. Version 5.6 or later is recommended.';
 $string['maxuploadsizetoosmall'] = 'Your PHP max upload size is quite small. With your current setup, you may not upload files larger than {$a->%number} MB. This might be a problem when trying to upload H5Ps, images and videos. Please consider to increase it to more than 5MB.';
 $string['maxpostsizetoosmall'] = 'Your PHP max post size is quite small. With your current setup, you may not upload files larger than {$a->%number} MB. This might be a problem when trying to upload H5Ps, images and videos. Please consider to increase it to more than 5MB';
@@ -283,14 +283,14 @@ $string['hubisdisableduploadlibraries'] = 'The H5P Hub has been disabled until t
 $string['successfullyregisteredwithhub'] = 'Your site was successfully registered with the H5P Hub.';
 $string['sitekeyregistered'] = 'You have been provided a unique key that identifies you with the Hub when receiving new updates. The key is available for viewing in the "H5P Settings" page.';
 
-// Ajax messages
+// Ajax messages.
 $string['hubisdisabled'] = 'The hub is disabled. You can re-enable it in the H5P settings.';
 $string['invalidh5ppost'] = 'Could not get posted H5P.';
 $string['filenotfoundonserver'] = 'File not found on server. Check file upload settings.';
 $string['failedtodownloadh5p'] = 'Failed to download the requested H5P.';
 $string['postmessagerequired'] = 'A post message is required to access the given endpoint';
 
-// Licensing
+// Licensing.
 $string['copyrightinfo'] = 'Copyright information';
 $string['years'] = 'Year(s)';
 $string['undisclosed'] = 'Undisclosed';

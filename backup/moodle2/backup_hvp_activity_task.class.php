@@ -71,12 +71,12 @@ class backup_hvp_activity_task extends backup_activity_task {
         $base = preg_quote($CFG->wwwroot, "/");
 
         // Link to the list of glossaries.
-        $search="/(".$base."\/mod\/hvp\/index.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@HVPINDEX*$2@$', $content);
+        $search = "/(".$base."\/mod\/hvp\/index.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@HVPINDEX*$2@$', $content);
 
         // Link to hvp view by module id.
-        $search="/(".$base."\/mod\/hvp\/view.php\?id\=)([0-9]+)/";
-        $content= preg_replace($search, '$@HVPVIEWBYID*$2@$', $content);
+        $search = "/(".$base."\/mod\/hvp\/view.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@HVPVIEWBYID*$2@$', $content);
 
         return $content;
     }

@@ -1,12 +1,12 @@
 body .h5p-result {
-  height: auto;
-  border: solid 1px #C9C9C9;
   background: #fff;
-  font-size: 15px;
+  border: solid 1px #C9C9C9;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.12);
   color: #5C5C5C;
-  box-shadow: 0 0 20px 0 rgba(0,0,0,0.12);
-  padding: 30px;
+  font-size: 15px;
+  height: auto;
   margin: 1em 0;
+  padding: 30px;
 }
 
 body .h5p-result .h5p-result {
@@ -15,9 +15,9 @@ body .h5p-result .h5p-result {
 
 body .h5p-compound-container {
   border: none;
+  box-shadow: none;
   margin: 0;
   padding: 0;
-  box-shadow: none;
 }
 
 body .h5p-report-container {

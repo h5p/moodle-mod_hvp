@@ -75,7 +75,7 @@ $PAGE->set_heading($course->fullname);
 // List all results for specific content.
 $dataviewid = 'h5p-results';
 
-// Add required assets for data views
+// Add required assets for data views.
 $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/jquery.js'), true);
 $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/h5p-utils.js'), true);
 $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/h5p-data-view.js'), true);

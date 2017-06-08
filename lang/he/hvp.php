@@ -143,7 +143,7 @@ $string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
 $string['reportnotsupported'] = 'Not supported';
 
-// Editor
+// Editor.
 $string['javascriptloading'] = 'מחכים ל JavaScript...';
 $string['action'] = 'פעולה';
 $string['upload'] = 'העלאה';
@@ -159,7 +159,7 @@ $string['missingcontentuserdata'] = 'התרחשה תקלה: לא זמינים נ
 $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
-// Capabilities
+// Capabilities.
 $string['hvp:addinstance'] = 'הוספת פעילות H5P חדשה';
 $string['hvp:restrictlibraries'] = 'הגבלת גישה לספריית H5P';
 $string['hvp:updatelibraries'] = 'עדכון גרסה של ספריית H5P';
@@ -172,14 +172,14 @@ $string['hvp:getcachedassets'] = 'אחזור משאבי מטמון של רכיב
 $string['hvp:getcontent'] = 'צפיה בתוכן פעילות H5P מתוך הקורס';
 $string['hvp:getexport'] = 'יצוא תוכן פעילות H5P מתוך הקורס';
 
-// Capabilities error messages
+// Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
 $string['nopermissiontorestrict'] = 'You do not have permission to restrict libraries.';
 $string['nopermissiontosavecontentuserdata'] = 'You do not have permission to save content user data.';
 $string['nopermissiontosaveresult'] = 'You do not have permission to save result for this content.';
 $string['nopermissiontoviewresult'] = 'You do not have permission to view results for this content.';
 
-// Editor translations
+// Editor translations.
 $string['noziparchive'] = 'Your PHP version does not support ZipArchive.';
 $string['noextension'] = 'The file you uploaded is not a valid HTML5 Package (It does not have the .h5p file extension)';
 $string['nounzip'] = 'The file you uploaded is not a valid HTML5 Package (We are unable to unzip it)';
@@ -225,13 +225,13 @@ $string['invalidvideoformat'] = 'Invalid video file format. Use mp4 or webm.';
 $string['couldnotsave'] = 'Could not save file.';
 $string['couldnotcopy'] = 'Could not copy file.';
 
-// Welcome messages
+// Welcome messages.
 $string['welcomeheader'] = 'ברוכים הבאים לעולם של H5P!';
 $string['welcomegettingstarted'] = 'כדי להתחיל בהכרת רכיב H5P במערכת Moodle ניתן לבחור ב<a {$a->moodle_tutorial}>מדריך</a> וגם <a {$a->example_content}>תוכן לדוגמה</a> באתר H5P.org לקבלת השראה.';
 $string['welcomecommunity'] = 'אנו מקווים שתהנו פעילות ברכיב H5P ושתמצאו עניין וזמן להצטרף לקהילת המשתמשים ויצרני התוכן העולמית שלנו בעזרת הקישורים הבאים  <a {$a->forums}>פורומים, קבוצות דיון</a> וחדרי רב־שיח <a {$a->gitter}>H5P at Gitter</a>';
 $string['welcomecontactus'] = 'נשמח לקבל כל משוב <a {$a}>יצירת קשר</a>. אנו מתייחסים למשוב באופן מאוד רציני ומחוייבים ליצירת חווית שימוש איכותית ומשופרת ברכיב H5P !';
 
-// Licensing
+// Licensing.
 $string['copyrightinfo'] = 'Copyright information';
 $string['years'] = 'Year(s)';
 $string['undisclosed'] = 'Undisclosed';

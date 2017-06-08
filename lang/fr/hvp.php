@@ -146,7 +146,7 @@ $string['viewreportlabel'] = 'Report';
 $string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
 $string['reportnotsupported'] = 'Not supported';
-// Editor
+// Editor.
 $string['javascriptloading'] = 'Chargement de JavaScript...';
 $string['action'] = 'Action';
 $string['upload'] = 'Uploader';
@@ -162,7 +162,7 @@ $string['missingcontentuserdata'] = 'Erreur : impossible de trouver les données
 $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
-// Capabilities
+// Capabilities.
 $string['hvp:addinstance'] = 'Ajouter une nouvelle activité H5P';
 $string['hvp:restrictlibraries'] = 'Restreindre une bibliothèque H5P';
 $string['hvp:updatelibraries'] = 'Mettre à jour la version d\'une bibliothèque H5P';
@@ -175,14 +175,14 @@ $string['hvp:getcachedassets'] = 'Récupérer les assets mis en cache';
 $string['hvp:getcontent'] = 'Visualiser le contenu d\'un fichier H5P dans un cours';
 $string['hvp:getexport'] = 'Récupérer un fichier H5P dans un cours';
 
-// Capabilities error messages
+// Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Vous n\'avez pas les droits pour mettre à jour les bibliothèques.';
 $string['nopermissiontorestrict'] = 'Vous n\'avez pas les droits pour restreindre les biliothèques.';
 $string['nopermissiontosavecontentuserdata'] = 'Vous n\'avez pas les droits pour sauvegarder les données utilisateur.';
 $string['nopermissiontosaveresult'] = 'Vous n\'avez pas les droits pour sauvegarder les résultats pour ce contenu.';
 $string['nopermissiontoviewresult'] = 'Vous n\'avez pas les droits pour visualiser les résultats de ce contenu.';
 
-// Editor translations
+// Editor translations.
 $string['noziparchive'] = 'Votre version de PHP ne supporte pas ZipArchive.';
 $string['noextension'] = 'Le fichier que vous avez uploadé n\'est pas un package HTML5 valide (il n\'a pas l\'extension .h5p)';
 $string['nounzip'] = 'Le fichier que vous avez uploadé n\'est pas un package HTML5 valide (impossible de le décompresser)';
@@ -228,13 +228,13 @@ $string['invalidvideoformat'] = 'Format de fichier vidéo non valide. Utilisez m
 $string['couldnotsave'] = 'Impossible de sauvegarder le fichier.';
 $string['couldnotcopy'] = 'Impossible de copier le fichier.';
 
-// Welcome messages
+// Welcome messages.
 $string['welcomeheader'] = 'Bienvenue dans le monde H5P!';
 $string['welcomegettingstarted'] = 'Pour démarrer avec H5P et Moodle, consultez nos tutoriels <a {$a->moodle_tutorial}>tutorial</a> et testez <a {$a->example_content}>nos exemples</a> sur le site H5P.org pour vous en inspirer.';
 $string['welcomecommunity'] = 'Nous espérons que vous allez apprécier H5P et rejoindre notre communauté en constante augmentation au travers de nos <a {$a->forums}>forums</a> et notre chat <a {$a->gitter}>H5P sur Gitter</a>';
 $string['welcomecontactus'] = 'Si vous avez des suggestions, n\'hésitez pas à <a {$a}>nous contacter</a>. Nous prenons toutes les suggestions très sérieuse en considération pour rendre H5P meilleur chaque jour !';
 
-// Licensing
+// Licensing.
 $string['copyrightinfo'] = 'Information copyright';
 $string['years'] = 'Année(s)';
 $string['undisclosed'] = 'Masqué';
