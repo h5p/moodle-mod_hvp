@@ -27,7 +27,7 @@
      * @returns {Object} Content instance
      */
     function getH5PInstance(contentId) {
-        var iframes, instance = null; // returning null means no instance is found.
+        var iframes, instance = null; // Returning null means no instance is found.
 
         // No content id given, search for instance.
         if (!contentId) {
@@ -111,8 +111,7 @@
             }
 
             var statement = event.data.statement;
-            var validVerb = statement.verb && statement.verb.display
-                && statement.verb.display['en-US'];
+            var validVerb = statement.verb && statement.verb.display && statement.verb.display['en-US'];
             if (!validVerb) {
                 return;
             }
