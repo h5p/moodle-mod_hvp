@@ -211,7 +211,7 @@ class file_storage implements \H5PFileStorage {
      * @return boolean
      */
     public function hasExport($filename) {
-      return !! $this->getExportFile($filename);
+        return !!$this->getExportFile($filename);
     }
 
     /**
@@ -331,25 +331,22 @@ class file_storage implements \H5PFileStorage {
     }
 
     /**
-     * Read file content of given file and then return it.
-     *
-     * @param string $file_path
-     * @return string
+     * @inheritdoc
      */
     public function getContent($file_path) {
-      // Grab context and file storage
-      $context = \context_system::instance();
-      $fs = get_file_storage();
+        // Grab context and file storage.
+        $context = \context_system::instance();
+        $fs      = get_file_storage();
 
-      // Find location of file
-      $location = array();
-      preg_match('/^\/(libraries|development|cachedassets)(.*\/)([^\/]+)$/', $file_path, $location);
+        // Find location of file.
+        $location = [];
+        preg_match('/^\/(libraries|development|cachedassets)(.*\/)([^\/]+)$/', $file_path, $location);
 
-      // Locate file
-      $file = $fs->get_file($context->id, 'mod_hvp', $location[1], 0, $location[2], $location[3]);
+        // Locate file.
+        $file = $fs->get_file($context->id, 'mod_hvp', $location[1], 0, $location[2], $location[3]);
 
-      // Return content
-      return $file->get_content();
+        // Return content.
+        return $file->get_content();
     }
 
     /**
@@ -363,18 +360,17 @@ class file_storage implements \H5PFileStorage {
      */
     public function saveFile($file, $contentid, $contextid = null) {
         if ($contentid !== 0) {
-            // Grab cm context
+            // Grab cm context.
             $cm = \get_coursemodule_from_instance('hvp', $contentid);
             $context = \context_module::instance($cm->id);
             $contextid = $context->id;
-        }
-        else if ($contextid === null) {
-            // Check for context id in params
+        } else if ($contextid === null) {
+            // Check for context id in params.
             $contextid = optional_param('contextId', null, PARAM_INT);
         }
 
         // Files not yet related to any activities are stored in a course context
-        // (These are temporary files and should not be part of backups.)
+        // These are temporary files and should not be part of backups.
 
         $record = array(
             'contextid' => $contextid,
@@ -387,13 +383,12 @@ class file_storage implements \H5PFileStorage {
         $fs = get_file_storage();
         $filedata = $file->getData();
         if ($filedata) {
-            $stored_file = $fs->create_file_from_string($record, $filedata);
-        }
-        else {
-            $stored_file = $fs->create_file_from_pathname($record, $_FILES['file']['tmp_name']);
+            $storedfile = $fs->create_file_from_string($record, $filedata);
+        } else {
+            $storedfile = $fs->create_file_from_pathname($record, $_FILES['file']['tmp_name']);
         }
 
-        return $stored_file->get_id();
+        return $storedfile->get_id();
     }
 
     /**
@@ -405,35 +400,35 @@ class file_storage implements \H5PFileStorage {
      * @param stdClass $tocontent Target Content
      */
     public function cloneContentFile($file, $fromid, $tocontent) {
-      // Determine source file area and item id
-      $sourcefilearea = ($fromid === 'editor' ? $fromid : 'content');
-      $sourceitemid = ($fromid === 'editor' ? 0 : $fromid);
+        // Determine source file area and item id.
+        $sourcefilearea = ($fromid === 'editor' ? $fromid : 'content');
+        $sourceitemid   = ($fromid === 'editor' ? 0 : $fromid);
 
-      // Check to see if source exist
-      $sourcefile = $this->getFile($sourcefilearea, $sourceitemid, $file);
-      if ($sourcefile === false) {
-          return; // Nothing to copy from
-      }
+        // Check to see if source exist.
+        $sourcefile = $this->getFile($sourcefilearea, $sourceitemid, $file);
+        if ($sourcefile === false) {
+            return; // Nothing to copy from.
+        }
 
-      // Check to make sure source doesn't exist already
-      if ($this->getFile('content', $tocontent, $file) !== false) {
-          return; // File exists, no need to copy
-      }
+        // Check to make sure source doesn't exist already.
+        if ($this->getFile('content', $tocontent, $file) !== false) {
+            return; // File exists, no need to copy.
+        }
 
-      // Grab context for CM
-      $context = \context_module::instance($tocontent->coursemodule);
+        // Grab context for CM.
+        $context = \context_module::instance($tocontent->coursemodule);
 
-      // Create new file record
-      $record = array(
-          'contextid' => $context->id,
-          'component' => 'mod_hvp',
-          'filearea' => 'content',
-          'itemid' => $tocontent->id,
-          'filepath' => $this->getFilepath($file),
-          'filename' => $this->getFilename($file)
-      );
-      $fs = get_file_storage();
-      $fs->create_file_from_storedfile($record, $sourcefile);
+        // Create new file record.
+        $record = [
+            'contextid' => $context->id,
+            'component' => 'mod_hvp',
+            'filearea'  => 'content',
+            'itemid'    => $tocontent->id,
+            'filepath'  => $this->getFilepath($file),
+            'filename'  => $this->getFilename($file),
+        ];
+        $fs     = get_file_storage();
+        $fs->create_file_from_storedfile($record, $sourcefile);
     }
 
     /**
@@ -442,7 +437,7 @@ class file_storage implements \H5PFileStorage {
      *
      * @param string $file path + name
      * @param stdClass $content
-     * @return string|int File ID or NULL if not found
+     * @return string|int File ID or null if not found
      */
     public function getContentFile($file, $content) {
         $file = $this->getFile('content', $content, $file);
@@ -579,21 +574,19 @@ class file_storage implements \H5PFileStorage {
         global $COURSE;
 
         if ($filearea === 'editor') {
-            // Use Course context
+            // Use Course context.
             $context = \context_course::instance($COURSE->id);
-        }
-        elseif (is_object($itemid)) {
-            // Grab CM context from item
+        } else if (is_object($itemid)) {
+            // Grab CM context from item.
             $context = \context_module::instance($itemid->coursemodule);
             $itemid = $itemid->id;
-        }
-        else {
-            // Use item ID to find CM context
+        } else {
+            // Use item ID to find CM context.
             $cm = \get_coursemodule_from_instance('hvp', $itemid);
             $context = \context_module::instance($cm->id);
         }
 
-        // Load file
+        // Load file.
         $fs = get_file_storage();
         return $fs->get_file($context->id, 'mod_hvp', $filearea, $itemid, $this->getFilepath($file), $this->getFilename($file));
     }
@@ -637,22 +630,22 @@ class file_storage implements \H5PFileStorage {
      * Check if server setup has write permission to
      * the required folders
      *
-     * @return bool True if server has the proper write access
+     * @return bool true if server has the proper write access
      */
     public function hasWriteAccess() {
         global $CFG;
 
         if (!is_dir($CFG->dataroot)) {
             trigger_error('Path is not a directory ' . $CFG->dataroot, E_USER_WARNING);
-            return FALSE;
+            return false;
         }
 
         if (!is_writable($CFG->dataroot)) {
             trigger_error('Unable to write to ' . $CFG->dataroot . ' – check directory permissions –', E_USER_WARNING);
-            return FALSE;
+            return false;
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -664,48 +657,47 @@ class file_storage implements \H5PFileStorage {
      *
      * @return object|null Object containing h5p json and content json data
      */
-    public function moveContentDirectory($source, $contentId = NULL) {
-        if ($source === NULL) {
-            return NULL;
+    public function moveContentDirectory($source, $contentId = null) {
+        if ($source === null) {
+            return null;
         }
 
-        // Default to 0 (editor)
+        // Default to 0 (editor).
         if (!isset($contentId)) {
             $contentId = 0;
         }
 
-        // Find content context
+        // Find content context.
         if ($contentId > 0) {
             // Grab cm context
             $cm = \get_coursemodule_from_instance('hvp', $contentId);
             $context = \context_module::instance($cm->id);
-            $contextId = $context->id;
+            $contextid = $context->id;
         }
 
-        // Get context from parameters
-        if (!isset($contextId)) {
-            $contextId = required_param('contextId', PARAM_INT);
+        // Get context from parameters.
+        if (!isset($contextid)) {
+            $contextid = required_param('contextId', PARAM_INT);
         }
 
-        // Get h5p and content json
+        // Get h5p and content json.
         $contentSource = $source . DIRECTORY_SEPARATOR . 'content';
-        $h5pJson = file_get_contents($source . DIRECTORY_SEPARATOR . 'h5p.json');
-        $contentJson = file_get_contents($contentSource . DIRECTORY_SEPARATOR . 'content.json');
+        $h5pjson = file_get_contents($source . DIRECTORY_SEPARATOR . 'h5p.json');
+        $contentjson = file_get_contents($contentSource . DIRECTORY_SEPARATOR . 'content.json');
 
-        // Move all temporary content files to editor
+        // Move all temporary content files to editor.
         $contentFiles = array_diff(scandir($contentSource), array('.','..', 'content.json'));
         foreach ($contentFiles as $file) {
             if (is_dir("{$contentSource}/{$file}")) {
-                self::moveFileTree("{$contentSource}/{$file}", $contextId, $contentId);
-            }
-            else {
-                self::moveFile("{$contentSource}/{$file}", $contextId, $contentId);
+                self::moveFileTree("{$contentSource}/{$file}", $contextid, $contentId);
+            } else {
+                self::moveFile("{$contentSource}/{$file}", $contextid, $contentId);
             }
         }
 
         return (object) array(
-            'h5pJson' => $h5pJson,
-            'contentJson' => $contentJson
+            'h5pJson' => $h5pjson,
+            'contentJson' => $contentjson
         );
     }
 
@@ -725,7 +717,7 @@ class file_storage implements \H5PFileStorage {
         $folder_name = basename($file_path);
 
         if ($contentId > 0) {
-            // Create file record for content
+            // Create file record for content.
             $record = array(
                 'contextid' => $contextId,
                 'component' => 'mod_hvp',
@@ -734,9 +726,8 @@ class file_storage implements \H5PFileStorage {
                 'filepath' => '/' . $folder_name . '/',
                 'filename' => $file_name
             );
-        }
-        else {
-            // Create file record for editor
+        } else {
+            // Create file record for editor.
             $record = array(
                 'contextid' => $contextId,
                 'component' => 'mod_hvp',
@@ -749,14 +740,14 @@ class file_storage implements \H5PFileStorage {
 
         $source_data = file_get_contents($source_file);
 
-        // Check if file already exists
+        // Check if file already exists.
         $fileExists = $fs->file_exists($record['contextid'], 'mod_hvp',
             $record['filearea'], $record['itemid'], $record['filepath'],
             $record['filename']
         );
 
         if ($fileExists) {
-            // Delete it to make sure that it is replaced with correct content
+            // Delete it to make sure that it is replaced with correct content.
             $file = $fs->get_file($record['contextid'], 'mod_hvp',
                 $record['filearea'], $record['itemid'], $record['filepath'],
                 $record['filename']
@@ -781,7 +772,7 @@ class file_storage implements \H5PFileStorage {
      */
     private static function moveFileTree($source_file_tree, $contextId, $contentId) {
         $dir = opendir($source_file_tree);
-        if ($dir === FALSE) {
+        if ($dir === false) {
             trigger_error('Unable to open directory ' . $source_file_tree, E_USER_WARNING);
             throw new \Exception('unabletocopy');
         }
@@ -790,8 +781,7 @@ class file_storage implements \H5PFileStorage {
             if (($file != '.') && ($file != '..') && $file != '.git' && $file != '.gitignore') {
                 if (is_dir("{$source_file_tree}/{$file}")) {
                     self::moveFileTree("{$source_file_tree}/{$file}", $contextId, $contentId);
-                }
-                else {
+                } else {
                     self::moveFile("{$source_file_tree}/{$file}", $contextId, $contentId);
                 }
             }
