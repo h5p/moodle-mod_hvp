@@ -21,11 +21,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-global $DB, $PAGE, $USER, $COURSE;
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once("locallib.php");
+
+global $DB, $PAGE, $USER, $COURSE;
 
 $id = required_param('id', PARAM_INT);
 $userid = optional_param('userid', (int)$USER->id, PARAM_INT);

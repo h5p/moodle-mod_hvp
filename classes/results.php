@@ -55,7 +55,7 @@ class results {
      */
     protected function filter_input() {
         // Type specifc.
-        $this->contentid = optional_param('contentid', 0, PARAM_INT);
+        $this->contentid = optional_param('content_id', 0, PARAM_INT);
 
         // Used to handle pagination.
         $this->offset = optional_param('offset', 0, PARAM_INT);
