@@ -50,7 +50,8 @@ function hvp_get_core_settings() {
         'postUserStatistics' => true,
         'ajax' => array(
             'setFinished' => $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished',
-            'contentUserData' => $ajaxpath . \H5PCore::createToken('contentuserdata') . '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId',
+            'contentUserData' => $ajaxpath . \H5PCore::createToken('contentuserdata') .
+                                 '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
         ),
         'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : false,
         'siteUrl' => $CFG->wwwroot,
@@ -167,6 +168,7 @@ function hvp_add_editor_assets($id = null) {
       'libraryUrl' => $url . 'editor/',
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
       'assets' => $assets,
+      // @codingStandardsIgnoreLine
       'apiVersion' => H5PCore::$coreApi
     );
 
@@ -178,7 +180,8 @@ function hvp_add_editor_assets($id = null) {
         $context = \context_module::instance($cm->id);
 
         // Override content URL.
-        $settings['contents']['cid-' . $id]['contentUrl'] = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/{$id}";
+        $contenturl = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/{$id}";
+        $settings['contents']['cid-' . $id]['contentUrl'] = $contenturl;
     }
 
     $PAGE->requires->data_for_js('H5PIntegration', $settings, true);
@@ -193,6 +196,7 @@ function hvp_add_editor_assets($id = null) {
  * @throws \coding_exception
  */
 function hvp_admin_add_generic_css_and_js($page, $liburl, $settings = null) {
+    // @codingStandardsIgnoreLine
     foreach (\H5PCore::$adminScripts as $script) {
         $page->requires->js(new moodle_url($liburl . $script . hvp_get_cache_buster()), true);
     }

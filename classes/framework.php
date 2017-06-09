@@ -120,6 +120,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getPlatformInfo
      */
+    // @codingStandardsIgnoreLine
     public function getPlatformInfo() {
         global $CFG;
 

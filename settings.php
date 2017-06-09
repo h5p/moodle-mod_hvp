@@ -74,7 +74,8 @@ if ($ADMIN->fulltree) {
     // Display options for H5P frame.
     $settings->add(new admin_setting_heading('mod_hvp/display_options', get_string('displayoptions', 'hvp'), ''));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/frame', get_string('enableframe', 'hvp'), '', 1));
-    $settings->add(new admin_setting_configselect('mod_hvp/export', get_string('enabledownload', 'hvp'), '', H5PDisplayOptionBehaviour::ALWAYS_SHOW, $choices));
+    $settings->add(new admin_setting_configselect('mod_hvp/export', get_string('enabledownload', 'hvp'), '',
+                                                  H5PDisplayOptionBehaviour::ALWAYS_SHOW, $choices));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/copyright', get_string('enablecopyright', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/icon', get_string('enableabout', 'hvp'), '', 1));
 
