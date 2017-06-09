@@ -232,6 +232,7 @@ class framework implements \H5PFrameworkInterface {
 
         if (empty($translationsmap)) {
             // Create mapping.
+            // @codingStandardsIgnoreStart
             $translationsmap = [
                 'Your PHP version does not support ZipArchive.' => 'noziparchive',
                 'The file you uploaded is not a valid HTML5 Package (It does not have the .h5p file extension)' => 'noextension',
@@ -368,6 +369,7 @@ class framework implements \H5PFrameworkInterface {
                 'CC0 1.0 Universal' => 'licenseCC010U',
                 'License Version' => 'licenseversion',
             ];
+            // @codingStandardsIgnoreEnd
         }
 
         return get_string($translationsmap[$message], 'hvp', $replacements);
