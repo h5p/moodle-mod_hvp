@@ -65,10 +65,21 @@ $PAGE->set_title($hvp->title);
 $PAGE->set_heading($COURSE->fullname);
 $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/xapi-custom-report.css'));
 
-$xapiresults = $DB->get_records('hvp_xapi_results', array(
-    'content_id' => $id,
-    'user_id'    => $userid
-));
+//$xapiresults = $DB->get_records('hvp_xapi_results', array(
+//    'content_id' => $id,
+//    'user_id'    => $userid
+//));
+
+
+
+// We have to get grades from gradebook as well
+$xapiresults = $DB->get_records_sql("
+    SELECT x.*, i.grademax
+    FROM {hvp_xapi_results} x
+    JOIN {grade_items} i ON i.iteminstance = x.content_id
+    WHERE x.user_id = ?
+    AND x.content_id = ?", array($userid, $id)
+);
 
 if (!$xapiresults) {
     print_error('invalidxapiresult', 'hvp');
@@ -77,6 +88,9 @@ if (!$xapiresults) {
 // Assemble our question tree.
 $basequestion = null;
 foreach ($xapiresults as $question) {
+    if ($question->grademax && $question->max_score) {
+        $question->score_scale = $question->grademax / $question->max_score;
+    }
     if ($question->parent_id === null) {
         // This is the root of our tree.
         $basequestion = $question;

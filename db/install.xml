@@ -40,6 +40,8 @@
         <FIELD NAME="correct_responses_pattern" TYPE="text" NOTNULL="true"/>
         <FIELD NAME="response" TYPE="text" NOTNULL="true"/>
         <FIELD NAME="additionals" TYPE="text" NOTNULL="true"/>
+        <FIELD NAME="raw_score" TYPE="int" LENGTH="6" NOTNULL="false"/>
+        <FIELD NAME="max_score" TYPE="int" LENGTH="6" NOTNULL="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

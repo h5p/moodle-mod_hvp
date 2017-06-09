@@ -285,6 +285,29 @@ function xmldb_hvp_upgrade($oldversion) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+
+        upgrade_mod_savepoint(true, 2017050900, 'hvp');
+    }
+
+    // Add score to report rendering.
+    if ($oldversion < 2017060900) {
+        $table = new xmldb_table('hvp_xapi_results');
+
+        if ($dbman->table_exists($table)) {
+            // Raw score field.
+            $scorefield = new xmldb_field('raw_score', XMLDB_TYPE_INTEGER, '6');
+            if (!$dbman->field_exists($table, $scorefield)) {
+                $dbman->add_field($table, $scorefield);
+            }
+
+            // Max score field.
+            $maxscorefield = new xmldb_field('max_score', XMLDB_TYPE_INTEGER, '6');
+            if (!$dbman->field_exists($table, $maxscorefield)) {
+                $dbman->add_field($table, $maxscorefield);
+            }
+        }
+
+        upgrade_mod_savepoint(true, 2017060900, 'hvp');
     }
 
     return true;
