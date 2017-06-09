@@ -144,7 +144,9 @@ function hvp_save_content($hvp) {
         // Make params and library available for core to save.
         $hvp->params = $hvp->h5pparams;
         $hvp->library = H5PCore::libraryFromString($hvp->h5plibrary);
-        $hvp->library['libraryId'] = $core->h5pF->getLibraryId($hvp->library['machineName'], $hvp->library['majorVersion'], $hvp->library['minorVersion']);
+        $hvp->library['libraryId'] = $core->h5pF->getLibraryId($hvp->library['machineName'],
+                                                               $hvp->library['majorVersion'],
+                                                               $hvp->library['minorVersion']);
 
         $hvp->id = $core->saveContent((array)$hvp);
         // We need to process the parameters to move any images or files and
@@ -154,7 +156,9 @@ function hvp_save_content($hvp) {
         $params = json_decode($hvp->params);
 
         // Move any uploaded images or files. Determine content dependencies.
-        $editor->processParameters($hvp, $hvp->library, $params, isset($oldlib) ? $oldlib : null, isset($oldparams) ? $oldparams : null);
+        $editor->processParameters($hvp, $hvp->library, $params,
+                                   isset($oldlib) ? $oldlib : null,
+                                   isset($oldparams) ? $oldparams : null);
     }
 
     return $hvp->id;

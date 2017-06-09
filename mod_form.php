@@ -64,10 +64,12 @@ class mod_hvp_mod_form extends moodleform_mod {
         // Editor placeholder.
         if ($CFG->theme == 'boost' || in_array('boost', $PAGE->theme->parents)) {
             $h5peditor   = [];
-            $h5peditor[] = $mform->createElement('html', '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
+            $h5peditor[] = $mform->createElement('html',
+                                                 '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
             $mform->addGroup($h5peditor, 'h5peditorgroup', get_string('editor', 'hvp'));
         } else {
-            $mform->addElement('static', 'h5peditor', get_string('editor', 'hvp'), '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
+            $mform->addElement('static', 'h5peditor', get_string('editor', 'hvp'),
+                               '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
         }
 
         // Hidden fields.
@@ -157,7 +159,8 @@ class mod_hvp_mod_form extends moodleform_mod {
         }
 
         // Determine default action.
-        if (!get_config('mod_hvp', 'hub_is_enabled') && $content === null && $DB->get_field_sql("SELECT id FROM {hvp_libraries} WHERE runnable = 1", null, IGNORE_MULTIPLE) === false) {
+        if (!get_config('mod_hvp', 'hub_is_enabled') && $content === null &&
+            $DB->get_field_sql("SELECT id FROM {hvp_libraries} WHERE runnable = 1", null, IGNORE_MULTIPLE) === false) {
             $defaultvalues['h5paction'] = 'upload';
         }
 
@@ -233,7 +236,9 @@ class mod_hvp_mod_form extends moodleform_mod {
                 $errors['h5peditor'] = get_string('invalidlibrary', 'hvp');
             } else {
                 // Check that library exists.
-                $library['libraryId'] = $core->h5pF->getLibraryId($library['machineName'], $library['majorVersion'], $library['minorVersion']);
+                $library['libraryId'] = $core->h5pF->getLibraryId($library['machineName'],
+                                                                  $library['majorVersion'],
+                                                                  $library['minorVersion']);
                 if (!$library['libraryId']) {
                     $errors['h5peditor'] = get_string('nosuchlibrary', 'hvp');
                 } else {

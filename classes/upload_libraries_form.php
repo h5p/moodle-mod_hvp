@@ -68,13 +68,13 @@ class upload_libraries_form extends \moodleform {
     /**
      * Preprocess incoming data
      *
-     * @param array $default_values default values for form
+     * @param array $defaultvalues default values for form
      */
-    public function data_preprocessing(&$default_values) {
+    public function data_preprocessing(&$defaultvalues) {
         // Aaah.. we meet again h5pfile!.
         $draftitemid = file_get_submitted_draft_itemid('h5pfile');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_hvp', 'package', 0);
-        $default_values['h5pfile'] = $draftitemid;
+        $defaultvalues['h5pfile'] = $draftitemid;
     }
 
     /**
