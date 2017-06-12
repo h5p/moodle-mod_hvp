@@ -25,14 +25,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Hvp module upgrade function.
+ * Adds data for tracking when content was created and last modified.
  *
- * @param string $oldversion The version we are upgrading from
- * @return bool Success
+ * @param $oldversion
  */
-function xmldb_hvp_upgrade($oldversion) {
+function upgrade_2016011300($oldversion) {
     global $DB;
-
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2016011300) {
@@ -58,6 +56,16 @@ function xmldb_hvp_upgrade($oldversion) {
         // Hvp savepoint reached.
         upgrade_mod_savepoint(true, 2016011300, 'hvp');
     }
+}
+
+/**
+ * Adds table for keeping track of, and cleaning up temporary files
+ *
+ * @param $oldversion
+ */
+function upgrade_2016042500($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
 
     if ($oldversion < 2016042500) {
         // Define table hvp_tmpfiles to be created.
@@ -77,6 +85,16 @@ function xmldb_hvp_upgrade($oldversion) {
         // Hvp savepoint reached.
         upgrade_mod_savepoint(true, 2016042500, 'hvp');
     }
+}
+
+/**
+ * Adds events table
+ *
+ * @param $oldversion
+ */
+function upgrade_2016050600($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
 
     if ($oldversion < 2016050600) {
 
@@ -126,6 +144,16 @@ function xmldb_hvp_upgrade($oldversion) {
         // Hvp savepoint reached.
         upgrade_mod_savepoint(true, 2016050600, 'hvp');
     }
+}
+
+/**
+ * Adds intro and introformat to hvp table
+ *
+ * @param $oldversion
+ */
+function upgrade_2016051000($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
 
     if ($oldversion < 2016051000) {
 
@@ -150,6 +178,15 @@ function xmldb_hvp_upgrade($oldversion) {
         // Hvp savepoint reached.
         upgrade_mod_savepoint(true, 2016051000, 'hvp');
     }
+}
+
+/**
+ * Changes context of activity files to enable backup an restore.
+ *
+ * @param $oldversion
+ */
+function upgrade_2016110100($oldversion) {
+    global $DB;
 
     if ($oldversion < 2016110100) {
 
@@ -159,7 +196,7 @@ function xmldb_hvp_upgrade($oldversion) {
 
         // Find activity ID and correct context ID.
         $hvpsresult = $DB->get_records_sql(
-                "SELECT f.id AS fileid, f.itemid, c.id, f.filepath, f.filename, f.pathnamehash
+            "SELECT f.id AS fileid, f.itemid, c.id, f.filepath, f.filename, f.pathnamehash
                    FROM {files} f
                    JOIN {course_modules} cm ON f.itemid = cm.instance
                    JOIN {modules} md ON md.id = cm.module
@@ -183,15 +220,32 @@ function xmldb_hvp_upgrade($oldversion) {
         // Hvp savepoint reached.
         upgrade_mod_savepoint(true, 2016110100, 'hvp');
     }
+}
 
+/**
+ * Notifies about breaking changes to H5P content type styling
+ *
+ * @param $oldversion
+ */
+function upgrade_2016122800($oldversion) {
     if ($oldversion < 2016122800) {
         \mod_hvp\framework::messages('info', '<span style="font-weight: bold;">Upgrade your H5P content types!</span> Old content types will still work, but the authoring tool will look and feel much better if you <a href="https://h5p.org/update-all-content-types">upgrade the content types</a>.');
         \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 
         upgrade_mod_savepoint(true, 2016122800, 'hvp');
     }
+}
 
-     // Add content type cache database.
+/**
+ * Adds content type cache to enable the content type hub
+ *
+ * @param $oldversion
+ */
+function upgrade_2017040500($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    // Add content type cache database.
     if ($oldversion < 2017040500) {
         // Define table hvp_libraries_hub_cache to be created.
         $table = new xmldb_table('hvp_libraries_hub_cache');
@@ -259,6 +313,16 @@ function xmldb_hvp_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, 2017040500, 'hvp');
     }
+}
+
+/**
+ * Adds xAPI results table to enable reporting
+ *
+ * @param $oldversion
+ */
+function upgrade_2017050900($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
 
     // Add report rendering.
     if ($oldversion < 2017050900) {
@@ -288,6 +352,16 @@ function xmldb_hvp_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, 2017050900, 'hvp');
     }
+}
+
+/**
+ * Adds raw score and max score to xapi results table
+ *
+ * @param $oldversion
+ */
+function upgrade_2017060900($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
 
     // Add score to report rendering.
     if ($oldversion < 2017060900) {
@@ -309,6 +383,24 @@ function xmldb_hvp_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, 2017060900, 'hvp');
     }
+}
+
+/**
+ * Hvp module upgrade function.
+ *
+ * @param string $oldversion The version we are upgrading from
+ * @return bool Success
+ */
+function xmldb_hvp_upgrade($oldversion) {
+    upgrade_2016011300($oldversion);
+    upgrade_2016042500($oldversion);
+    upgrade_2016050600($oldversion);
+    upgrade_2016051000($oldversion);
+    upgrade_2016110100($oldversion);
+    upgrade_2016122800($oldversion);
+    upgrade_2017040500($oldversion);
+    upgrade_2017050900($oldversion);
+    upgrade_2017060900($oldversion);
 
     return true;
 }
