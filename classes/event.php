@@ -62,6 +62,7 @@ class event extends \H5PEventBase {
     /**
      * @inheritdoc
      */
+    // @codingStandardsIgnoreLine
     protected function saveStats() {
         global $DB;
         $type = $this->type . ' ' . $this->sub_type;

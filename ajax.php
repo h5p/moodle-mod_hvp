@@ -26,6 +26,8 @@ require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once("locallib.php");
 
+require_login();
+
 $action = required_param('action', PARAM_ALPHA);
 switch($action) {
 
