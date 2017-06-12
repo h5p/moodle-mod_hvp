@@ -26,6 +26,7 @@ namespace mod_hvp;
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
 require_once(__DIR__ . '/../autoloader.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/adminlib.php');
@@ -134,6 +135,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * @inheritdoc
      */
+    // @codingStandardsIgnoreLine
     public function fetchExternalData($url, $data = null, $blocking = true, $stream = null) {
         global $CFG;
 
@@ -160,13 +162,14 @@ class framework implements \H5PFrameworkInterface {
      *
      * Set the tutorial URL for a library. All versions of the library is set
      *
-     * @param string $library_name
+     * @param string $libraryname
      * @param string $url
      */
-    public function setLibraryTutorialUrl($library_name, $url) {
+    // @codingStandardsIgnoreLine
+    public function setLibraryTutorialUrl($libraryname, $url) {
         global $DB;
 
-        $DB->execute("UPDATE {hvp_libraries} SET tutorial_url = ? WHERE machine_name = ?", array($url, $library_name));
+        $DB->execute("UPDATE {hvp_libraries} SET tutorial_url = ? WHERE machine_name = ?", array($url, $libraryname));
     }
 
     /**
@@ -174,6 +177,7 @@ class framework implements \H5PFrameworkInterface {
      *
      * @param string $message translated error message
      */
+    // @codingStandardsIgnoreLine
     public function setErrorMessage($message) {
         if ($message !== null) {
             self::messages('error', $message);
@@ -183,6 +187,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements setInfoMessage
      */
+    // @codingStandardsIgnoreLine
     public function setInfoMessage($message) {
         if ($message !== null) {
             self::messages('info', $message);
@@ -193,13 +198,13 @@ class framework implements \H5PFrameworkInterface {
      * Store messages until they can be printed to the current user
      *
      * @param string $type Type of messages, e.g. 'info' or 'error'
-     * @param string $newMessage Optional
+     * @param string $newmessage Optional
      * @return array Array of stored messages
      */
-    public static function messages($type, $newMessage = null) {
+    public static function messages($type, $newmessage = null) {
         static $m = 'mod_hvp_messages';
 
-        if ($newMessage === null) {
+        if ($newmessage === null) {
             // Return and reset messages.
             $messages = isset($_SESSION[$m][$type]) ? $_SESSION[$m][$type] : array();
             unset($_SESSION[$m][$type]);
@@ -209,7 +214,7 @@ class framework implements \H5PFrameworkInterface {
             return $messages;
         }
 
-        $_SESSION[$m][$type][] = $newMessage;
+        $_SESSION[$m][$type][] = $newmessage;
     }
 
     /**
@@ -218,6 +223,7 @@ class framework implements \H5PFrameworkInterface {
      * @param string $type One of error|info
      * @param array $messages
      */
+    // @codingStandardsIgnoreLine
     public static function printMessages($type, $messages) {
         global $OUTPUT;
         foreach ($messages as $message) {
@@ -379,6 +385,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getH5PPath
      */
+    // @codingStandardsIgnoreLine
     public function getH5pPath() {
         global $CFG;
 
@@ -388,21 +395,23 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getLibraryFileUrl
      */
-    public function getLibraryFileUrl($libraryFolderName, $fileName) {
+    // @codingStandardsIgnoreLine
+    public function getLibraryFileUrl($libraryfoldername, $fileName) {
         global $CFG;
         $context  = \context_system::instance();
         $basepath = $CFG->httpswwwroot . '/';
-        return "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryFolderName}/{$fileName}";
+        return "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/{$fileName}";
     }
 
     /**
      * Implements getUploadedH5PFolderPath
      */
-    public function getUploadedH5pFolderPath($setPath = null) {
+    // @codingStandardsIgnoreLine
+    public function getUploadedH5pFolderPath($setpath = null) {
         static $path;
 
-        if ($setPath !== null) {
-            $path = $setPath;
+        if ($setpath !== null) {
+            $path = $setpath;
         }
 
         if (!isset($path)) {
@@ -415,11 +424,12 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getUploadedH5PPath
      */
-    public function getUploadedH5pPath($setPath = null) {
+    // @codingStandardsIgnoreLine
+    public function getUploadedH5pPath($setpath = null) {
         static $path;
 
-        if ($setPath !== null) {
-            $path = $setPath;
+        if ($setpath !== null) {
+            $path = $setpath;
         }
 
         return $path;
@@ -428,6 +438,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements loadLibraries
      */
+    // @codingStandardsIgnoreLine
     public function loadLibraries() {
         global $DB;
 
@@ -448,6 +459,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * @inheritdoc
      */
+    // @codingStandardsIgnoreLine
     public function setUnsupportedLibraries($libraries) {
         // Not supported.
     }
@@ -455,6 +467,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getUnsupportedLibraries.
      */
+    // @codingStandardsIgnoreLine
     public function getUnsupportedLibraries() {
         // Not supported.
     }
@@ -462,6 +475,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getAdminUrl.
      */
+    // @codingStandardsIgnoreLine
     public function getAdminUrl() {
         // Not supported.
     }
@@ -469,21 +483,22 @@ class framework implements \H5PFrameworkInterface {
     /**
      * @inheritdoc
      */
-    public function getLibraryId($machineName, $majorVersion = null, $minorVersion = null) {
+    // @codingStandardsIgnoreLine
+    public function getLibraryId($machinename, $majorversion = null, $minorversion = null) {
         global $DB;
 
         // Look for specific library.
         $sqlwhere = 'WHERE machine_name = ?';
-        $sqlargs = array($machineName);
+        $sqlargs = array($machinename);
 
-        if ($majorVersion !== null) {
+        if ($majorversion !== null) {
             // Look for major version.
             $sqlwhere .= ' AND major_version = ?';
-            $sqlargs[] = $majorVersion;
-            if ($minorVersion !== null) {
+            $sqlargs[] = $majorversion;
+            if ($minorversion !== null) {
                 // Look for minor version.
                 $sqlwhere .= ' AND minor_version = ?';
-                $sqlargs[] = $minorVersion;
+                $sqlargs[] = $minorversion;
             }
         }
 
@@ -507,6 +522,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements isPatchedLibrary
      */
+    // @codingStandardsIgnoreLine
     public function isPatchedLibrary($library) {
         global $DB, $CFG;
 
@@ -535,6 +551,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements isInDevMode
      */
+    // @codingStandardsIgnoreLine
     public function isInDevMode() {
         return false; // Not supported (Files in moodle not editable).
     }
@@ -542,6 +559,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements mayUpdateLibraries
      */
+    // @codingStandardsIgnoreLine
     public function mayUpdateLibraries($allow = false) {
         static $override;
 
@@ -570,14 +588,15 @@ class framework implements \H5PFrameworkInterface {
      * dependencies to other libraries
      *
      * @param int $id
-     * @param boolean $skipContent Optional. Set as true to get number of content instances for library.
+     * @param boolean $skipcontent Optional. Set as true to get number of content instances for library.
      * @return array The array contains two elements, keyed by 'content' and 'libraries'.
      *               Each element contains a number
      */
-    public function getLibraryUsage($id, $skipContent = false) {
+    // @codingStandardsIgnoreLine
+    public function getLibraryUsage($id, $skipcontent = false) {
         global $DB;
 
-        if ($skipContent) {
+        if ($skipcontent) {
             $content = -1;
         } else {
             $content = intval($DB->get_field_sql(
@@ -604,6 +623,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getLibraryContentCount
      */
+    // @codingStandardsIgnoreLine
     public function getLibraryContentCount() {
         global $DB;
         $contentcount = array();
@@ -634,34 +654,35 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements saveLibraryData
      */
-    public function saveLibraryData(&$libraryData, $new = true) {
+    // @codingStandardsIgnoreLine
+    public function saveLibraryData(&$librarydata, $new = true) {
         global $DB;
 
         // Some special properties needs some checking and converting before they can be saved.
-        $preloadedjs = $this->pathsToCsv($libraryData, 'preloadedJs');
-        $preloadedcss = $this->pathsToCsv($libraryData, 'preloadedCss');
+        $preloadedjs = $this->pathsToCsv($librarydata, 'preloadedJs');
+        $preloadedcss = $this->pathsToCsv($librarydata, 'preloadedCss');
         $droplibrarycss = '';
 
-        if (isset($libraryData['dropLibraryCss'])) {
+        if (isset($librarydata['dropLibraryCss'])) {
             $libs = array();
-            foreach ($libraryData['dropLibraryCss'] as $lib) {
+            foreach ($librarydata['dropLibraryCss'] as $lib) {
                 $libs[] = $lib['machineName'];
             }
             $droplibrarycss = implode(', ', $libs);
         }
 
         $embedtypes = '';
-        if (isset($libraryData['embedTypes'])) {
-            $embedtypes = implode(', ', $libraryData['embedTypes']);
+        if (isset($librarydata['embedTypes'])) {
+            $embedtypes = implode(', ', $librarydata['embedTypes']);
         }
-        if (!isset($libraryData['semantics'])) {
-            $libraryData['semantics'] = '';
+        if (!isset($librarydata['semantics'])) {
+            $librarydata['semantics'] = '';
         }
-        if (!isset($libraryData['fullscreen'])) {
-            $libraryData['fullscreen'] = 0;
+        if (!isset($librarydata['fullscreen'])) {
+            $librarydata['fullscreen'] = 0;
         }
-        if (!isset($libraryData['hasIcon'])) {
-            $libraryData['hasIcon'] = 0;
+        if (!isset($librarydata['hasIcon'])) {
+            $librarydata['hasIcon'] = 0;
         }
         // TODO: Can we move the above code to H5PCore? It's the same for multiple
         // implementations. Perhaps core can update the data objects before calling
@@ -670,34 +691,34 @@ class framework implements \H5PFrameworkInterface {
         // library, content, etc.
 
         $library = (object) array(
-            'title' => $libraryData['title'],
-            'machine_name' => $libraryData['machineName'],
-            'major_version' => $libraryData['majorVersion'],
-            'minor_version' => $libraryData['minorVersion'],
-            'patch_version' => $libraryData['patchVersion'],
-            'runnable' => $libraryData['runnable'],
-            'fullscreen' => $libraryData['fullscreen'],
+            'title' => $librarydata['title'],
+            'machine_name' => $librarydata['machineName'],
+            'major_version' => $librarydata['majorVersion'],
+            'minor_version' => $librarydata['minorVersion'],
+            'patch_version' => $librarydata['patchVersion'],
+            'runnable' => $librarydata['runnable'],
+            'fullscreen' => $librarydata['fullscreen'],
             'embed_types' => $embedtypes,
             'preloaded_js' => $preloadedjs,
             'preloaded_css' => $preloadedcss,
             'drop_library_css' => $droplibrarycss,
-            'semantics' => $libraryData['semantics'],
-            'has_icon' => $libraryData['hasIcon'],
+            'semantics' => $librarydata['semantics'],
+            'has_icon' => $librarydata['hasIcon'],
         );
 
         if ($new) {
             // Create new library and keep track of id.
             $library->id = $DB->insert_record('hvp_libraries', $library);
-            $libraryData['libraryId'] = $library->id;
+            $librarydata['libraryId'] = $library->id;
         } else {
             // Update library data.
-            $library->id = $libraryData['libraryId'];
+            $library->id = $librarydata['libraryId'];
 
             // Save library data.
             $DB->update_record('hvp_libraries', (object) $library);
 
             // Remove old dependencies.
-            $this->deleteLibraryDependencies($libraryData['libraryId']);
+            $this->deleteLibraryDependencies($librarydata['libraryId']);
         }
 
         // Log library successfully installed/upgraded.
@@ -708,11 +729,11 @@ class framework implements \H5PFrameworkInterface {
         );
 
         // Update library translations.
-        $DB->delete_records('hvp_libraries_languages', array('library_id' => $libraryData['libraryId']));
-        if (isset($libraryData['language'])) {
-            foreach ($libraryData['language'] as $languagecode => $languagejson) {
+        $DB->delete_records('hvp_libraries_languages', array('library_id' => $librarydata['libraryId']));
+        if (isset($librarydata['language'])) {
+            foreach ($librarydata['language'] as $languagecode => $languagejson) {
                 $DB->insert_record('hvp_libraries_languages', array(
-                    'library_id' => $libraryData['libraryId'],
+                    'library_id' => $librarydata['libraryId'],
                     'language_code' => $languagecode,
                     'language_json' => $languagejson,
                 ));
@@ -723,17 +744,18 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Convert list of file paths to csv
      *
-     * @param array $libraryData
+     * @param array $librarydata
      *  Library data as found in library.json files
      * @param string $key
-     *  Key that should be found in $libraryData
+     *  Key that should be found in $librarydata
      * @return string
      *  file paths separated by ', '
      */
-    private function pathsToCsv($libraryData, $key) {
-        if (isset($libraryData[$key])) {
+    // @codingStandardsIgnoreLine
+    private function pathsToCsv($librarydata, $key) {
+        if (isset($librarydata[$key])) {
             $paths = array();
-            foreach ($libraryData[$key] as $file) {
+            foreach ($librarydata[$key] as $file) {
                 $paths[] = $file['path'];
             }
             return implode(', ', $paths);
@@ -744,6 +766,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements lockDependencyStorage
      */
+    // @codingStandardsIgnoreLine
     public function lockDependencyStorage() {
         // Library development mode not supported.
     }
@@ -751,6 +774,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements unlockDependencyStorage
      */
+    // @codingStandardsIgnoreLine
     public function unlockDependencyStorage() {
         // Library development mode not supported.
     }
@@ -758,6 +782,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements deleteLibrary
      */
+    // @codingStandardsIgnoreLine
     public function deleteLibrary($library) {
         global $DB;
 
@@ -774,13 +799,16 @@ class framework implements \H5PFrameworkInterface {
 
     /**
      * Implements saveLibraryDependencies
+     *
+     * @inheritdoc
      */
-    public function saveLibraryDependencies($libraryId, $dependencies, $dependency_type) {
+    // @codingStandardsIgnoreLine
+    public function saveLibraryDependencies($libraryid, $dependencies, $dependencytype) {
         global $DB;
 
         foreach ($dependencies as $dependency) {
             // Find dependency library.
-            $dependencyLibrary = $DB->get_record('hvp_libraries', array(
+            $dependencylibrary = $DB->get_record('hvp_libraries', array(
                 'machine_name' => $dependency['machineName'],
                 'major_version' => $dependency['majorVersion'],
                 'minor_version' => $dependency['minorVersion']
@@ -788,9 +816,9 @@ class framework implements \H5PFrameworkInterface {
 
             // Create relation.
             $DB->insert_record('hvp_libraries_libraries', array(
-                'library_id' => $libraryId,
-                'required_library_id' => $dependencyLibrary->id,
-                'dependency_type' => $dependency_type
+                'library_id' => $libraryid,
+                'required_library_id' => $dependencylibrary->id,
+                'dependency_type' => $dependencytype
             ));
         }
     }
@@ -798,7 +826,8 @@ class framework implements \H5PFrameworkInterface {
     /**
      * @inheritdoc
      */
-    public function updateContent($content, $contentMainId = null) {
+    // @codingStandardsIgnoreLine
+    public function updateContent($content, $contentmainid = null) {
         global $DB;
 
         if (!isset($content['disable'])) {
@@ -847,14 +876,16 @@ class framework implements \H5PFrameworkInterface {
     /**
      * @inheritdoc
      */
-    public function insertContent($content, $contentMainId = null) {
+    // @codingStandardsIgnoreLine
+    public function insertContent($content, $contentmainid = null) {
         return $this->updateContent($content);
     }
 
     /**
      * @inheritdoc
      */
-    public function resetContentUserData($contentId) {
+    // @codingStandardsIgnoreLine
+    public function resetContentUserData($contentid) {
         global $DB;
 
         // Reset user data for this content.
@@ -862,27 +893,29 @@ class framework implements \H5PFrameworkInterface {
                          SET data = 'RESET'
                        WHERE hvp_id = ?
                          AND delete_on_content_change = 1",
-                     array($contentId));
+                     array($contentid));
     }
 
     /**
      * @inheritdoc
      */
-    public function getWhitelist($isLibrary, $defaultContentWhitelist, $defaultLibraryWhitelist) {
-        return $defaultContentWhitelist . ($isLibrary ? ' ' . $defaultLibraryWhitelist : '');
+    // @codingStandardsIgnoreLine
+    public function getWhitelist($islibrary, $defaultcontentwhitelist, $defaultlibrarywhitelist) {
+        return $defaultcontentwhitelist . ($islibrary ? ' ' . $defaultlibrarywhitelist : '');
     }
 
     /**
      * @inheritdoc
      */
-    public function copyLibraryUsage($contentId, $copyFromId, $contentMainId = null) {
+    // @codingStandardsIgnoreLine
+    public function copyLibraryUsage($contentid, $copyfromid, $contentmainid = null) {
         global $DB;
 
         $libraryusage = $DB->get_record('hvp_contents_libraries', array(
-            'id' => $copyFromId
+            'id' => $copyfromid
         ));
 
-        $libraryusage->id = $contentId;
+        $libraryusage->id = $contentid;
         $DB->insert_record_raw('hvp_contents_libraries', (array)$libraryusage, false, false, true);
 
         // TODO: This must be verified at a later time.
@@ -892,7 +925,8 @@ class framework implements \H5PFrameworkInterface {
     /**
      * @inheritdoc
      */
-    public function loadLibrarySemantics($name, $majorVersion, $minorVersion) {
+    // @codingStandardsIgnoreLine
+    public function loadLibrarySemantics($name, $majorversion, $minorversion) {
         global $DB;
 
         $semantics = $DB->get_field_sql(
@@ -901,7 +935,7 @@ class framework implements \H5PFrameworkInterface {
             WHERE machine_name = ?
             AND major_version = ?
             AND minor_version = ?",
-            array($name, $majorVersion, $minorVersion));
+            array($name, $majorversion, $minorversion));
 
         return ($semantics === false ? null : $semantics);
     }
@@ -909,18 +943,20 @@ class framework implements \H5PFrameworkInterface {
     /**
      * @inheritdoc
      */
-    public function alterLibrarySemantics(&$semantics, $name, $majorVersion, $minorVersion) {
+    // @codingStandardsIgnoreLine
+    public function alterLibrarySemantics(&$semantics, $name, $majorversion, $minorversion) {
         global $PAGE;
 
         $PAGE->set_context(null);
 
         $renderer = $PAGE->get_renderer('mod_hvp');
-        $renderer->hvp_alter_semantics($semantics, $name, $majorVersion, $minorVersion);
+        $renderer->hvp_alter_semantics($semantics, $name, $majorversion, $minorversion);
     }
 
     /**
      * Implements loadContent
      */
+    // @codingStandardsIgnoreLine
     public function loadContent($id) {
         global $DB;
 
@@ -975,6 +1011,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements loadContentDependencies
      */
+    // @codingStandardsIgnoreLine
     public function loadContentDependencies($id, $type = null) {
         global $DB;
 
@@ -1013,6 +1050,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * @inheritdoc
      */
+    // @codingStandardsIgnoreLine
     public function getOption($name, $default = false) {
         $value = get_config('mod_hvp', $name);
         if ($value === false) {
@@ -1024,6 +1062,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements setOption().
      */
+    // @codingStandardsIgnoreLine
     public function setOption($name, $value) {
         set_config($name, $value, 'mod_hvp');
     }
@@ -1031,6 +1070,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements updateContentFields().
      */
+    // @codingStandardsIgnoreLine
     public function updateContentFields($id, $fields) {
         global $DB;
 
@@ -1047,55 +1087,59 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements deleteLibraryDependencies
      */
-    public function deleteLibraryDependencies($libraryId) {
+    // @codingStandardsIgnoreLine
+    public function deleteLibraryDependencies($libraryid) {
         global $DB;
 
-        $DB->delete_records('hvp_libraries_libraries', array('library_id' => $libraryId));
+        $DB->delete_records('hvp_libraries_libraries', array('library_id' => $libraryid));
     }
 
     /**
      * Implements deleteContentData
      */
-    public function deleteContentData($contentId) {
+    // @codingStandardsIgnoreLine
+    public function deleteContentData($contentid) {
         global $DB;
 
         // Remove content.
-        $DB->delete_records('hvp', array('id' => $contentId));
+        $DB->delete_records('hvp', array('id' => $contentid));
 
         // Remove content library dependencies.
-        $this->deleteLibraryUsage($contentId);
+        $this->deleteLibraryUsage($contentid);
 
         // Remove user data for content.
-        $DB->delete_records('hvp_content_user_data', array('hvp_id' => $contentId));
+        $DB->delete_records('hvp_content_user_data', array('hvp_id' => $contentid));
     }
 
     /**
      * Implements deleteLibraryUsage
      */
-    public function deleteLibraryUsage($contentId) {
+    // @codingStandardsIgnoreLine
+    public function deleteLibraryUsage($contentid) {
         global $DB;
 
-        $DB->delete_records('hvp_contents_libraries', array('hvp_id' => $contentId));
+        $DB->delete_records('hvp_contents_libraries', array('hvp_id' => $contentid));
     }
 
     /**
      * @inheritdoc
      */
-    public function saveLibraryUsage($contentId, $librariesInUse) {
+    // @codingStandardsIgnoreLine
+    public function saveLibraryUsage($contentid, $librariesinuse) {
         global $DB;
 
         $droplibrarycsslist = array();
-        foreach ($librariesInUse as $dependency) {
+        foreach ($librariesinuse as $dependency) {
             if (!empty($dependency['library']['dropLibraryCss'])) {
                 $droplibrarycsslist = array_merge($droplibrarycsslist, explode(', ', $dependency['library']['dropLibraryCss']));
             }
         }
         // TODO: Consider moving the above code to core. Same for all impl.
 
-        foreach ($librariesInUse as $dependency) {
+        foreach ($librariesinuse as $dependency) {
             $dropcss = in_array($dependency['library']['machineName'], $droplibrarycsslist) ? 1 : 0;
             $DB->insert_record('hvp_contents_libraries', array(
-                'hvp_id' => $contentId,
+                'hvp_id' => $contentid,
                 'library_id' => $dependency['library']['libraryId'],
                 'dependency_type' => $dependency['type'],
                 'drop_css' => $dropcss,
@@ -1107,16 +1151,17 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements loadLibrary
      */
-    public function loadLibrary($machineName, $majorVersion, $minorVersion) {
+    // @codingStandardsIgnoreLine
+    public function loadLibrary($machinename, $majorversion, $minorversion) {
         global $DB;
 
         $library = $DB->get_record('hvp_libraries', array(
-            'machine_name' => $machineName,
-            'major_version' => $majorVersion,
-            'minor_version' => $minorVersion
+            'machine_name' => $machinename,
+            'major_version' => $majorversion,
+            'minor_version' => $minorversion
         ));
 
-        $libraryData = array(
+        $librarydata = array(
             'libraryId' => $library->id,
             'machineName' => $library->machine_name,
             'title' => $library->title,
@@ -1140,28 +1185,30 @@ class framework implements \H5PFrameworkInterface {
                    JOIN {hvp_libraries} hl ON hll.required_library_id = hl.id
                   WHERE hll.library_id = ?', array($library->id));
         foreach ($dependencies as $dependency) {
-            $libraryData[$dependency->dependency_type . 'Dependencies'][] = array(
+            $librarydata[$dependency->dependency_type . 'Dependencies'][] = array(
                 'machineName' => $dependency->machine_name,
                 'majorVersion' => $dependency->major_version,
                 'minorVersion' => $dependency->minor_version
             );
         }
 
-        return $libraryData;
+        return $librarydata;
     }
 
     /**
      * Implements clearFilteredParameters().
      */
-    public function clearFilteredParameters($library_id) {
+    // @codingStandardsIgnoreLine
+    public function clearFilteredParameters($libraryid) {
         global $DB;
 
-        $DB->execute("UPDATE {hvp} SET filtered = null WHERE main_library_id = ?", array($library_id));
+        $DB->execute("UPDATE {hvp} SET filtered = null WHERE main_library_id = ?", array($libraryid));
     }
 
     /**
      * Implements getNumNotFiltered().
      */
+    // @codingStandardsIgnoreLine
     public function getNumNotFiltered() {
         global $DB;
 
@@ -1174,17 +1221,19 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getNumContent().
      */
-    public function getNumContent($library_id) {
+    // @codingStandardsIgnoreLine
+    public function getNumContent($libraryid) {
         global $DB;
 
         return (int) $DB->get_field_sql(
                 "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?",
-                array($library_id));
+                array($libraryid));
     }
 
     /**
      * Implements isContentSlugAvailable
      */
+    // @codingStandardsIgnoreLine
     public function isContentSlugAvailable($slug) {
         global $DB;
 
@@ -1194,22 +1243,24 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements saveCachedAssets
      */
+    // @codingStandardsIgnoreLine
     public function saveCachedAssets($key, $libraries) {
         global $DB;
 
         foreach ($libraries as $library) {
-            $cachedAsset = (object) array(
+            $cachedasset = (object) array(
                 'library_id' => $library['id'],
                 'hash' => $key
             );
-            $DB->insert_record('hvp_libraries_cachedassets', $cachedAsset);
+            $DB->insert_record('hvp_libraries_cachedassets', $cachedasset);
         }
     }
 
     /**
      * Implements deleteCachedAssets
      */
-    public function deleteCachedAssets($library_id) {
+    // @codingStandardsIgnoreLine
+    public function deleteCachedAssets($libraryid) {
         global $DB;
 
         // Get all the keys so we can remove the files.
@@ -1217,7 +1268,7 @@ class framework implements \H5PFrameworkInterface {
                 'SELECT hash
                    FROM {hvp_libraries_cachedassets}
                   WHERE library_id = ?',
-                array($library_id));
+                array($libraryid));
 
         // Remove all invalid keys.
         $hashes = array();
@@ -1232,6 +1283,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getLibraryStats
      */
+    // @codingStandardsIgnoreLine
     public function getLibraryStats($type) {
         global $DB;
         $count = array();
@@ -1257,6 +1309,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getNumAuthors
      */
+    // @codingStandardsIgnoreLine
     public function getNumAuthors() {
         global $DB;
 
@@ -1270,21 +1323,23 @@ class framework implements \H5PFrameworkInterface {
     /**
      * @inheritdoc
      */
+    // @codingStandardsIgnoreLine
     public function afterExportCreated($content, $filename) {
     }
 
     /**
      * Implements hasPermission
      * @method hasPermission
-     * @param  [H5PPermission]        $permission
-     * @param  [int]        $contentId
+     * @param  \H5PPermission $permission
+     * @param  int $contentid
      * @return boolean
      */
-    public function hasPermission($permission, $content_id = null) {
+    // @codingStandardsIgnoreLine
+    public function hasPermission($permission, $contentid = null) {
         switch ($permission) {
             case \H5PPermission::DOWNLOAD_H5P:
                 global $DB;
-                $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $content_id)));
+                $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $contentid)));
                 return has_capability('mod/hvp:getexport', $context);
             case \H5PPermission::CREATE_RESTRICTED:
                 $context = \context_system::instance();
@@ -1303,15 +1358,16 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Replaces existing content type cache with the one passed in
      *
-     * @param object $contentTypeCache Json with an array called 'libraries'
+     * @param object $contenttypecache Json with an array called 'libraries'
      *  containing the new content type cache that should replace the old one.
      */
-    public function replaceContentTypeCache($contentTypeCache) {
+    // @codingStandardsIgnoreLine
+    public function replaceContentTypeCache($contenttypecache) {
         global $DB;
 
         // Replace existing cache.
         $DB->delete_records('hvp_libraries_hub_cache');
-        foreach ($contentTypeCache->contentTypes as $ct) {
+        foreach ($contenttypecache->contentTypes as $ct) {
             $DB->insert_record('hvp_libraries_hub_cache', (object) array(
                 'machine_name'      => $ct->id,
                 'major_version'     => $ct->version->major,

@@ -56,16 +56,16 @@ class xapi_result {
             return;
         }
 
-        if (!self::validate_xAPI_data($xapijson)) {
+        if (!self::validate_xapi_data($xapijson)) {
             \H5PCore::ajaxError('Invalid xAPI data.');
             return;
         }
 
         // Delete any old results.
-        self::remove_xAPI_data($contentid);
+        self::remove_xapi_data($contentid);
 
         // Store results.
-        self::store_xAPI_data($contentid, $xapijson);
+        self::store_xapi_data($contentid, $xapijson);
 
         // Successfully inserted xAPI result.
         \H5PCore::ajaxSuccess();
@@ -85,41 +85,41 @@ class xapi_result {
     /**
      * Validate xAPI data
      *
-     * @param object $xAPIData xAPI data
+     * @param object $xapidata xAPI data
      *
      * @return bool True if valid data
      */
-    private static function validate_xAPI_data($xAPIData) {
-        $xAPIData = new \H5PReportXAPIData($xAPIData);
-        return $xAPIData->validateData();
+    private static function validate_xapi_data($xapidata) {
+        $xapidata = new \H5PReportXAPIData($xapidata);
+        return $xapidata->validateData();
     }
 
     /**
      * Store xAPI result(s)
      *
-     * @param int $contentId Content id
-     * @param object $xAPIData xAPI data
-     * @param int $parentId Parent id
+     * @param int $contentid Content id
+     * @param object $xapidata xAPI data
+     * @param int $parentid Parent id
      */
-    private static function store_xAPI_data($contentId, $xAPIData, $parentId = null) {
+    private static function store_xapi_data($contentid, $xapidata, $parentid = null) {
         global $DB, $USER;
 
-        $xAPIData = new \H5PReportXAPIData($xAPIData, $parentId);
+        $xapidata = new \H5PReportXAPIData($xapidata, $parentid);
         $insertedid = $DB->insert_record('hvp_xapi_results', (object) array(
-            'content_id' => $contentId,
+            'content_id' => $contentid,
             'user_id' => $USER->id,
-            'parent_id' => $xAPIData->getParentID(),
-            'interaction_type' => $xAPIData->getInteractionType(),
-            'description' => $xAPIData->getDescription(),
-            'correct_responses_pattern' => $xAPIData->getCorrectResponsesPattern(),
-            'response' => $xAPIData->getResponse(),
-            'additionals' => $xAPIData->getAdditionals()
+            'parent_id' => $xapidata->getParentID(),
+            'interaction_type' => $xapidata->getInteractionType(),
+            'description' => $xapidata->getDescription(),
+            'correct_responses_pattern' => $xapidata->getCorrectResponsesPattern(),
+            'response' => $xapidata->getResponse(),
+            'additionals' => $xapidata->getAdditionals()
         ));
 
         // Save sub content statements data.
-        if ($xAPIData->isCompound()) {
-            foreach ($xAPIData->getChildren($contentId) as $child) {
-                self::store_xAPI_data($contentId, $child, $insertedid);
+        if ($xapidata->isCompound()) {
+            foreach ($xapidata->getChildren($contentid) as $child) {
+                self::store_xapi_data($contentid, $child, $insertedid);
             }
         }
     }
@@ -127,13 +127,13 @@ class xapi_result {
     /**
      * Remove xAPI result(s)
      *
-     * @param int $contentId Content id
+     * @param int $contentid Content id
      */
-    private static function remove_xAPI_data($contentId) {
+    private static function remove_xapi_data($contentid) {
         global $DB, $USER;
 
         $DB->delete_records('hvp_xapi_results', array(
-            'content_id' => $contentId,
+            'content_id' => $contentid,
             'user_id' => $USER->id
         ));
     }

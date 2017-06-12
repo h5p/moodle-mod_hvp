@@ -65,14 +65,7 @@ $PAGE->set_title($hvp->title);
 $PAGE->set_heading($COURSE->fullname);
 $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/xapi-custom-report.css'));
 
-//$xapiresults = $DB->get_records('hvp_xapi_results', array(
-//    'content_id' => $id,
-//    'user_id'    => $userid
-//));
-
-
-
-// We have to get grades from gradebook as well
+// We have to get grades from gradebook as well.
 $xapiresults = $DB->get_records_sql("
     SELECT x.*, i.grademax
     FROM {hvp_xapi_results} x

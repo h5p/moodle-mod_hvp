@@ -52,14 +52,29 @@ class upload_libraries_form extends \moodleform {
                    array('maxbytes' => $CFG->maxbytes, 'accepted_types' => '*.h5p'));
 
         // Add options.
-        $mform->addElement('checkbox', 'onlyupdate', get_string('options', 'hvp'), get_string('onlyupdate', 'hvp'), array('group' => 1));
+        $mform->addElement('checkbox',
+            'onlyupdate',
+            get_string('options', 'hvp'),
+            get_string('onlyupdate', 'hvp'),
+            array('group' => 1)
+        );
         $mform->setType('onlyupdate', PARAM_BOOL);
         $mform->setDefault('onlyupdate', false);
 
-        $mform->addElement('checkbox', 'disablefileextensioncheck', '', get_string('disablefileextensioncheck', 'hvp'), array('group' => 1));
+        $mform->addElement('checkbox',
+            'disablefileextensioncheck',
+            '',
+            get_string('disablefileextensioncheck', 'hvp'),
+            array('group' => 1)
+        );
         $mform->setType('disablefileextensioncheck', PARAM_BOOL);
         $mform->setDefault('disablefileextensioncheck', false);
-        $mform->addElement('static', '', '', $OUTPUT->notification(get_string('disablefileextensioncheckwarning', 'hvp'), 'notifymessage'));
+
+        $notification = $OUTPUT->notification(
+            get_string('disablefileextensioncheckwarning', 'hvp'),
+            'notifymessage'
+        );
+        $mform->addElement('static', '', '', $notification);
 
         // Upload button.
         $this->add_action_buttons(false, get_string('upload', 'hvp'));

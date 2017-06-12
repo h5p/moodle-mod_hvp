@@ -208,12 +208,23 @@ function upgrade_2016110100($oldversion) {
 
         foreach ($hvpsresult as $hvp) {
             // Need to re-hash pathname after changing context.
-            $pathnamehash = file_storage::get_pathname_hash($hvp->id, $component, $filearea, $hvp->itemid, $hvp->filepath, $hvp->filename);
+            $pathnamehash = file_storage::get_pathname_hash($hvp->id,
+                $component,
+                $filearea,
+                $hvp->itemid,
+                $hvp->filepath,
+                $hvp->filename
+            );
 
             // Double check that hash doesn't exist (avoid duplicate entries).
             if (!$DB->get_field_sql("SELECT contextid FROM {files} WHERE pathnamehash = '{$pathnamehash}'")) {
                 // Update context ID and pathname hash for files.
-                $DB->execute("UPDATE {files} SET contextid = {$hvp->id}, pathnamehash = '{$pathnamehash}' WHERE pathnamehash = '{$hvp->pathnamehash}'");
+                $DB->execute("
+                  UPDATE {files}
+                  SET contextid = {$hvp->id},
+                      pathnamehash = '{$pathnamehash}'
+                  WHERE pathnamehash = '{$hvp->pathnamehash}'"
+                );
             }
         }
 
@@ -229,6 +240,7 @@ function upgrade_2016110100($oldversion) {
  */
 function upgrade_2016122800($oldversion) {
     if ($oldversion < 2016122800) {
+        // @codingStandardsIgnoreLine
         \mod_hvp\framework::messages('info', '<span style="font-weight: bold;">Upgrade your H5P content types!</span> Old content types will still work, but the authoring tool will look and feel much better if you <a href="https://h5p.org/update-all-content-types">upgrade the content types</a>.');
         \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 
@@ -303,6 +315,7 @@ function upgrade_2017040500($oldversion) {
 
         // Display hub communication info.
         if (!get_config('mod_hvp', 'external_communication')) {
+            // @codingStandardsIgnoreLine
             \mod_hvp\framework::messages('info', 'H5P now fetches content types directly from the H5P Hub. In order to do this, the H5P plugin will communicate with H5P.org once per day to fetch information about new and updated content types. It will send in anonymous data to the hub about H5P usage. You may disable the data contribution and/or the H5P Hub in the H5P settings.');
             \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
         }

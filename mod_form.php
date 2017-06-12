@@ -113,7 +113,7 @@ class mod_hvp_mod_form extends moodleform_mod {
      *
      * @param $defaultvalues
      */
-    private function setDisplayOptions(&$defaultvalues) {
+    private function set_display_options(&$defaultvalues) {
         // Individual display options are not stored, must be extracted from disable.
         if (isset($defaultvalues['disable'])) {
             $h5pcore = \mod_hvp\framework::instance('core');
@@ -136,7 +136,7 @@ class mod_hvp_mod_form extends moodleform_mod {
      * @param $content
      * @param $defaultvalues
      */
-    private function setMaxGrade($content, &$defaultvalues) {
+    private function set_max_grade($content, &$defaultvalues) {
         // Set default maxgrade.
         if (isset($content) && isset($content['id'])
             && isset($defaultvalues) && isset($defaultvalues['course'])) {
@@ -168,13 +168,13 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
         }
 
-        $this->setMaxGrade($content, $defaultvalues);
+        $this->set_max_grade($content, $defaultvalues);
 
         // Aaah.. we meet again h5pfile!
         $draftitemid = file_get_submitted_draft_itemid('h5pfile');
         file_prepare_draft_area($draftitemid, $this->context->id, 'mod_hvp', 'package', 0);
         $defaultvalues['h5pfile'] = $draftitemid;
-        $this->setDisplayOptions($defaultvalues);
+        $this->set_display_options($defaultvalues);
 
         // Determine default action.
         if (!get_config('mod_hvp', 'hub_is_enabled') && $content === null &&
@@ -197,7 +197,7 @@ class mod_hvp_mod_form extends moodleform_mod {
      * @param $data
      * @param $errors
      */
-    private function validateUpload($data, &$errors) {
+    private function validate_upload($data, &$errors) {
         global $CFG;
 
         if (empty($data['h5pfile'])) {
@@ -235,7 +235,7 @@ class mod_hvp_mod_form extends moodleform_mod {
      *
      * @param $data
      */
-    private function validateCreated(&$data, &$errors) {
+    private function validate_created(&$data, &$errors) {
         // Validate library and params used in editor.
         $core = \mod_hvp\framework::instance();
 
@@ -287,10 +287,10 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         if ($data['h5paction'] === 'upload') {
             // Validate uploaded H5P file.
-            $this->validateUpload($data, $errors);
+            $this->validate_upload($data, $errors);
 
         } else {
-            $this->validateCreated($data, $errors);
+            $this->validate_created($data, $errors);
 
         }
         return $errors;
