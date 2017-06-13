@@ -113,7 +113,9 @@ class xapi_result {
             'description' => $xapidata->getDescription(),
             'correct_responses_pattern' => $xapidata->getCorrectResponsesPattern(),
             'response' => $xapidata->getResponse(),
-            'additionals' => $xapidata->getAdditionals()
+            'additionals' => $xapidata->getAdditionals(),
+            'raw_score' => $xapidata->getScoreRaw(),
+            'max_score' => $xapidata->getScoreMax(),
         ));
 
         // Save sub content statements data.

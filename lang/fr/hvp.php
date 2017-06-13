@@ -146,6 +146,10 @@ $string['viewreportlabel'] = 'Report';
 $string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
 $string['reportnotsupported'] = 'Not supported';
+$string['reportingscorelabel'] = 'Score:';
+$string['reportingscaledscorelabel'] = 'Gradebook score:';
+$string['reportingscoredelimiter'] = 'out of';
+
 // Editor.
 $string['javascriptloading'] = 'Chargement de JavaScript...';
 $string['action'] = 'Action';

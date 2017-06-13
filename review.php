@@ -81,9 +81,6 @@ if (!$xapiresults) {
 // Assemble our question tree.
 $basequestion = null;
 foreach ($xapiresults as $question) {
-    if ($question->grademax && $question->max_score) {
-        $question->score_scale = $question->grademax / $question->max_score;
-    }
     if ($question->parent_id === null) {
         // This is the root of our tree.
         $basequestion = $question;
@@ -91,6 +88,16 @@ foreach ($xapiresults as $question) {
         // Add to parent.
         $xapiresults[$question->parent_id]->children[] = $question;
     }
+
+    // Set scaled score
+    if ($question->grademax && $question->max_score) {
+        $question->score_scale = $question->grademax / $question->max_score;
+    }
+
+    // Set score labels
+    $question->score_label = get_string('reportingscorelabel', 'hvp');
+    $question->scaled_score_label = get_string('reportingscaledscorelabel', 'hvp');
+    $question->score_delimiter = get_string('reportingscoredelimiter', 'hvp');
 }
 
 // Initialize reporter.
