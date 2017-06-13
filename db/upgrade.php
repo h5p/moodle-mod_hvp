@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Adds data for tracking when content was created and last modified.
  */
-function upgrade_2016011300() {
+function hvp_upgrade_2016011300() {
     global $DB;
     $dbman = $DB->get_manager();
 
@@ -53,7 +53,7 @@ function upgrade_2016011300() {
 /**
  * Adds table for keeping track of, and cleaning up temporary files
  */
-function upgrade_2016042500() {
+function hvp_upgrade_2016042500() {
     global $DB;
     $dbman = $DB->get_manager();
 
@@ -75,7 +75,7 @@ function upgrade_2016042500() {
 /**
  * Adds events table
  */
-function upgrade_2016050600() {
+function hvp_upgrade_2016050600() {
     global $DB;
     $dbman = $DB->get_manager();
 
@@ -130,7 +130,7 @@ function upgrade_2016050600() {
 /**
  * Adds intro and introformat to hvp table
  */
-function upgrade_2016051000() {
+function hvp_upgrade_2016051000() {
     global $DB;
     $dbman = $DB->get_manager();
 
@@ -156,7 +156,7 @@ function upgrade_2016051000() {
 /**
  * Changes context of activity files to enable backup an restore.
  */
-function upgrade_2016110100() {
+function hvp_upgrade_2016110100() {
     global $DB;
 
     // Change context of activity files from COURSE to MODULE.
@@ -201,7 +201,7 @@ function upgrade_2016110100() {
 /**
  * Notifies about breaking changes to H5P content type styling
  */
-function upgrade_2016122800() {
+function hvp_upgrade_2016122800() {
     // @codingStandardsIgnoreLine
     \mod_hvp\framework::messages('info', '<span style="font-weight: bold;">Upgrade your H5P content types!</span> Old content types will still work, but the authoring tool will look and feel much better if you <a href="https://h5p.org/update-all-content-types">upgrade the content types</a>.');
     \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
@@ -210,7 +210,7 @@ function upgrade_2016122800() {
 /**
  * Adds content type cache to enable the content type hub
  */
-function upgrade_2017040500() {
+function hvp_upgrade_2017040500() {
     global $DB;
     $dbman = $DB->get_manager();
 
@@ -283,7 +283,7 @@ function upgrade_2017040500() {
 /**
  * Adds xAPI results table to enable reporting
  */
-function upgrade_2017050900() {
+function hvp_upgrade_2017050900() {
     global $DB;
     $dbman = $DB->get_manager();
 
@@ -318,7 +318,7 @@ function upgrade_2017050900() {
 /**
  * Adds raw score and max score to xapi results table
  */
-function upgrade_2017060900() {
+function hvp_upgrade_2017060900() {
     global $DB;
     $dbman = $DB->get_manager();
 
@@ -362,7 +362,7 @@ function xmldb_hvp_upgrade($oldversion) {
 
     foreach ($upgrades as $version) {
         if ($oldversion < $version) {
-            call_user_func("upgrade_{$version}");
+            call_user_func("hvp_upgrade_{$version}");
             upgrade_mod_savepoint(true, $version, 'hvp');
         }
     }
