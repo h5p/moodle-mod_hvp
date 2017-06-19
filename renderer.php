@@ -18,7 +18,7 @@
  * Defines the renderer for the hvp (H5P) module.
  *
  * @package     mod_hvp
- * @copyright   2016 onward Eiz Edddin Al Katrib <eiz@barasoft.co.uk>
+ * @copyright   2016 Joubel AS <contact@joubel.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * The renderer for the hvp module.
  *
- * @copyright   2016 onward Eiz Edddin Al Katrib <eiz@barasoft.co.uk>
+ * @copyright   2016 Joubel AS <contact@joubel.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @SuppressWarnings(PHPMD)

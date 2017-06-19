@@ -78,6 +78,10 @@ if (!$xapiresults) {
     print_error('invalidxapiresult', 'hvp');
 }
 
+$totalRawScore = 0;
+$totalMaxScore = 0;
+$totalScaledScore = 0;
+
 // Assemble our question tree.
 $basequestion = null;
 foreach ($xapiresults as $question) {
@@ -89,9 +93,12 @@ foreach ($xapiresults as $question) {
         $xapiresults[$question->parent_id]->children[] = $question;
     }
 
-    // Set scaled score
-    if ($question->grademax && $question->max_score) {
+    // Set scores
+    if (isset($question->raw_score) && isset($question->grademax) && isset($question->max_score)) {
         $question->score_scale = $question->grademax / $question->max_score;
+        $totalRawScore += $question->raw_score;
+        $totalMaxScore += $question->max_score;
+        $totalScaledScore += $question->score_scale * $question->raw_score;
     }
 
     // Set score labels
@@ -108,9 +115,7 @@ foreach ($styles as $style) {
     $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $style));
 }
 
-// Print page HTML.
-echo $OUTPUT->header();
-echo '<div class="clearer"></div>';
+$renderer = $PAGE->get_renderer('mod_hvp');
 
 // Print title and report.
 $title = $hvp->title;
@@ -122,9 +127,17 @@ if ($userid !== (int) $USER->id) {
         $title .= ": {$userresult->username}";
     }
 }
-echo "<div class='h5p-report-container'>
-        <h2>{$title}</h2>
-        <div class='h5p-report-view'>{$reporthtml}</div>
-      </div>";
 
+// Create title
+$reviewContext = [
+  'title' => $title,
+  'report' => $reporthtml,
+  'rawScore' => $totalRawScore,
+  'maxScore' => $totalMaxScore,
+  'scaledScore' => $totalScaledScore
+];
+
+// Print page HTML.
+echo $OUTPUT->header();
+echo $renderer->render_from_template('hvp/review', $reviewContext);
 echo $OUTPUT->footer();

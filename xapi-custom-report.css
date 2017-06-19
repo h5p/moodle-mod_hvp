@@ -23,3 +23,28 @@ body .h5p-compound-container {
 body .h5p-report-container {
   margin: 10px;
 }
+
+body .h5p-reporting-main-score-wrapper,
+body .h5p-reporting-main-scaled-container,
+body .h5p-reporting-main-score-container {
+  display: inline-block;
+}
+
+body .h5p-reporting-main-score-wrapper {
+  font-size: 0.95em;
+  float: right;
+
+  background-color: #f3f3f3;
+  border-bottom: solid 1px #dfdfdf;
+  padding: 0.4em 1em;
+}
+
+
+body .h5p-reporting-score-wrapper {
+  font-weight: bold;
+}
+
+body .h5p-reporting-scaled-label,
+body .h5p-reporting-score-label {
+  font-weight: normal;
+}
