@@ -20,33 +20,35 @@ body .h5p-compound-container {
   padding: 0;
 }
 
-body .h5p-reporting-title {
+body .h5p-reporting-main-title {
   display: inline-block;
+  font-size: 1.3em;
+  font-weight: 600;
 }
 
-body .h5p-report-container {
+body .h5p-reporting-main-container {
   margin: 10px;
 }
 
-body .h5p-reporting-main-score-wrapper {
-  display: inline-block;
-}
-
-body .h5p-reporting-main-score-wrapper {
-  font-size: 0.95em;
-  float: right;
+body .h5p-reporting-main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 
   background-color: #f3f3f3;
   border-bottom: solid 1px #dfdfdf;
-  padding: 0.4em 1em;
+  padding: 0.7em 2em;
 }
 
-
-body .h5p-reporting-score-wrapper {
+body .h5p-reporting-main-score-wrapper {
+  display: inline-block;
+  font-size: 0.95em;
   font-weight: bold;
+  text-align: right;
 }
 
 body .h5p-reporting-scaled-label,
-body .h5p-reporting-score-label {
+body .h5p-reporting-main-score-label {
   font-weight: normal;
 }

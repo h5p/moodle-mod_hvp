@@ -25,13 +25,13 @@ require_once(dirname(__FILE__) . '/../../config.php');
 require_once("locallib.php");
 global $USER, $PAGE, $DB, $CFG, $OUTPUT, $COURSE;
 
-$id       = required_param('id', PARAM_INT);
-$userid   = optional_param('user', (int)$USER->id, PARAM_INT);
+$id     = required_param('id', PARAM_INT);
+$userid = optional_param('user', (int) $USER->id, PARAM_INT);
 
 if (!$cm = get_coursemodule_from_instance('hvp', $id)) {
     print_error('invalidcoursemodule');
 }
-if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
+if (!$course = $DB->get_record('course', ['id' => $cm->course])) {
     print_error('coursemisconf');
 }
 require_login($course, false, $cm);
@@ -50,16 +50,16 @@ $hvp = $DB->get_record_sql(
            FROM {hvp} h
            JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
           WHERE h.id = ?",
-    array($id));
+    [$id]);
 
 if ($hvp === false) {
     print_error('invalidhvp');
 }
 
 // Set page properties.
-$pageurl = new moodle_url('/mod/hvp/review.php', array(
-    'id' => $hvp->id
-));
+$pageurl = new moodle_url('/mod/hvp/review.php', [
+    'id' => $hvp->id,
+]);
 $PAGE->set_url($pageurl);
 $PAGE->set_title($hvp->title);
 $PAGE->set_heading($COURSE->fullname);
@@ -73,45 +73,63 @@ $xapiresults = $DB->get_records_sql("
     WHERE x.user_id = ?
     AND x.content_id = ?
     AND i.itemtype = 'mod'
-    AND i.itemmodule = 'hvp'", array($userid, $id)
+    AND i.itemmodule = 'hvp'", [$userid, $id]
 );
 
 if (!$xapiresults) {
     print_error('invalidxapiresult', 'hvp');
 }
 
-$totalRawScore = 0;
-$totalMaxScore = 0;
-$totalScaledScore = 0;
+$totalRawScore       = 0;
+$totalMaxScore       = 0;
+$totalScaledScore    = 0;
+$scaledScorePerScore = 0;
 
 // Assemble our question tree.
 $basequestion = null;
+
+// Find base question
 foreach ($xapiresults as $question) {
     if ($question->parent_id === null) {
         // This is the root of our tree.
         $basequestion = $question;
-    } else if (isset($xapiresults[$question->parent_id])) {
+
+        if (isset($question->raw_score) && isset($question->grademax) && isset($question->max_score)) {
+            $scaledScorePerScore   = $question->grademax / $question->max_score;
+            $question->score_scale = round($scaledScorePerScore, 2);
+            $totalRawScore         = $question->raw_score;
+            $totalMaxScore         = $question->max_score;
+            $totalScaledScore      = round($question->score_scale * $question->raw_score, 2);
+        }
+        break;
+    }
+}
+
+foreach ($xapiresults as $question) {
+    if ($question->parent_id === null) {
+        // Already processed
+        continue;
+    }
+    else if (isset($xapiresults[$question->parent_id])) {
         // Add to parent.
         $xapiresults[$question->parent_id]->children[] = $question;
     }
 
     // Set scores
     if (isset($question->raw_score) && isset($question->grademax) && isset($question->max_score)) {
-        $question->score_scale = $question->grademax / $question->max_score;
-        $totalRawScore += $question->raw_score;
-        $totalMaxScore += $question->max_score;
-        $totalScaledScore += $question->score_scale * $question->raw_score;
+        $question->score_scale = round($question->raw_score * $scaledScorePerScore, 2);
     }
 
     // Set score labels
-    $question->score_label = get_string('reportingscorelabel', 'hvp');
-    $question->scaled_score_label = get_string('reportingscaledscorelabel', 'hvp');
-    $question->score_delimiter = get_string('reportingscoredelimiter', 'hvp');
+    $question->score_label            = get_string('reportingscorelabel', 'hvp');
+    $question->scaled_score_label     = get_string('reportingscaledscorelabel', 'hvp');
+    $question->score_delimiter        = get_string('reportingscoredelimiter', 'hvp');
+    $question->scaled_score_delimiter = get_string('reportingscaledscoredelimiter', 'hvp');
 }
 
 // Initialize reporter.
 $reporter   = H5PReport::getInstance();
-$reporthtml = $reporter->generateReport($basequestion);
+$reporthtml = $reporter->generateReport($basequestion, null, count($xapiresults) <= 1);
 $styles     = $reporter->getStylesUsed();
 foreach ($styles as $style) {
     $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $style));
@@ -132,11 +150,11 @@ if ($userid !== (int) $USER->id) {
 
 // Create title
 $reviewContext = [
-  'title' => $title,
-  'report' => $reporthtml,
-  'rawScore' => $totalRawScore,
-  'maxScore' => $totalMaxScore,
-  'scaledScore' => $totalScaledScore
+    'title'       => $title,
+    'report'      => $reporthtml,
+    'rawScore'    => $totalRawScore,
+    'maxScore'    => $totalMaxScore,
+    'scaledScore' => $totalScaledScore,
 ];
 
 // Print page HTML.

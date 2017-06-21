@@ -159,6 +159,7 @@ $string['reportnotsupported'] = 'Not supported';
 $string['reportingscorelabel'] = 'Score:';
 $string['reportingscaledscorelabel'] = 'Gradebook score:';
 $string['reportingscoredelimiter'] = 'out of';
+$string['reportingscaledscoredelimiter'] = ',';
 
 // Editor.
 $string['javascriptloading'] = 'Venter på JavaScript...';
