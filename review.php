@@ -71,7 +71,9 @@ $xapiresults = $DB->get_records_sql("
     FROM {hvp_xapi_results} x
     JOIN {grade_items} i ON i.iteminstance = x.content_id
     WHERE x.user_id = ?
-    AND x.content_id = ?", array($userid, $id)
+    AND x.content_id = ?
+    AND i.itemtype = 'mod'
+    AND i.itemmodule = 'hvp'", array($userid, $id)
 );
 
 if (!$xapiresults) {

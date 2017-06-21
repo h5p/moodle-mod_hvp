@@ -20,13 +20,15 @@ body .h5p-compound-container {
   padding: 0;
 }
 
+body .h5p-reporting-title {
+  display: inline-block;
+}
+
 body .h5p-report-container {
   margin: 10px;
 }
 
-body .h5p-reporting-main-score-wrapper,
-body .h5p-reporting-main-scaled-container,
-body .h5p-reporting-main-score-container {
+body .h5p-reporting-main-score-wrapper {
   display: inline-block;
 }
 
