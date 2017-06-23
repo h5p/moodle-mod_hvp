@@ -99,7 +99,12 @@ foreach ($xapiresults as $question) {
             $question->score_scale = round($scaledScorePerScore, 2);
             $totalRawScore         = $question->raw_score;
             $totalMaxScore         = $question->max_score;
-            $totalScaledScore      = round($question->score_scale * $question->raw_score, 2);
+            if ($question->raw_score === $question->max_score) {
+                $totalScaledScore = round($question->grademax, 2);
+            }
+            else {
+                $totalScaledScore = round($question->score_scale * $question->raw_score, 2);
+            }
         }
         break;
     }
