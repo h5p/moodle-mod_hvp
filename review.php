@@ -80,30 +80,29 @@ if (!$xapiresults) {
     print_error('invalidxapiresult', 'hvp');
 }
 
-$totalRawScore       = 0;
-$totalMaxScore       = 0;
-$totalScaledScore    = 0;
-$scaledScorePerScore = 0;
+$totalrawscore       = 0;
+$totalmaxscore       = 0;
+$totalscaledscore    = 0;
+$scaledscoreperscore = 0;
 
 // Assemble our question tree.
 $basequestion = null;
 
-// Find base question
+// Find base question.
 foreach ($xapiresults as $question) {
     if ($question->parent_id === null) {
         // This is the root of our tree.
         $basequestion = $question;
 
         if (isset($question->raw_score) && isset($question->grademax) && isset($question->max_score)) {
-            $scaledScorePerScore   = $question->grademax / $question->max_score;
-            $question->score_scale = round($scaledScorePerScore, 2);
-            $totalRawScore         = $question->raw_score;
-            $totalMaxScore         = $question->max_score;
+            $scaledscoreperscore   = $question->grademax / $question->max_score;
+            $question->score_scale = round($scaledscoreperscore, 2);
+            $totalrawscore         = $question->raw_score;
+            $totalmaxscore         = $question->max_score;
             if ($question->raw_score === $question->max_score) {
-                $totalScaledScore = round($question->grademax, 2);
-            }
-            else {
-                $totalScaledScore = round($question->score_scale * $question->raw_score, 2);
+                $totalscaledscore = round($question->grademax, 2);
+            } else {
+                $totalscaledscore = round($question->score_scale * $question->raw_score, 2);
             }
         }
         break;
@@ -112,20 +111,19 @@ foreach ($xapiresults as $question) {
 
 foreach ($xapiresults as $question) {
     if ($question->parent_id === null) {
-        // Already processed
+        // Already processed.
         continue;
-    }
-    else if (isset($xapiresults[$question->parent_id])) {
+    } else if (isset($xapiresults[$question->parent_id])) {
         // Add to parent.
         $xapiresults[$question->parent_id]->children[] = $question;
     }
 
-    // Set scores
+    // Set scores.
     if (isset($question->raw_score) && isset($question->grademax) && isset($question->max_score)) {
-        $question->score_scale = round($question->raw_score * $scaledScorePerScore, 2);
+        $question->score_scale = round($question->raw_score * $scaledscoreperscore, 2);
     }
 
-    // Set score labels
+    // Set score labels.
     $question->score_label            = get_string('reportingscorelabel', 'hvp');
     $question->scaled_score_label     = get_string('reportingscaledscorelabel', 'hvp');
     $question->score_delimiter        = get_string('reportingscoredelimiter', 'hvp');
@@ -153,16 +151,16 @@ if ($userid !== (int) $USER->id) {
     }
 }
 
-// Create title
-$reviewContext = [
+// Create title.
+$reviewcontext = [
     'title'       => $title,
     'report'      => $reporthtml,
-    'rawScore'    => $totalRawScore,
-    'maxScore'    => $totalMaxScore,
-    'scaledScore' => $totalScaledScore,
+    'rawScore'    => $totalrawscore,
+    'maxScore'    => $totalmaxscore,
+    'scaledScore' => $totalscaledscore,
 ];
 
 // Print page HTML.
 echo $OUTPUT->header();
-echo $renderer->render_from_template('hvp/review', $reviewContext);
+echo $renderer->render_from_template('hvp/review', $reviewcontext);
 echo $OUTPUT->footer();
