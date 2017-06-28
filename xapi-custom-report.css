@@ -52,3 +52,24 @@ body .h5p-reporting-scaled-label,
 body .h5p-reporting-main-score-label {
   font-weight: normal;
 }
+
+/* Properly formats content after it has been cleaned */
+body .h5p-reporting-main-score-container,
+body .h5p-reporting-main-scaled-container {
+  display: block;
+}
+
+body .h5p-reporting-main-score-label,
+body .h5p-reporting-main-score-raw,
+body .h5p-reporting-main-score-delimiter,
+body .h5p-reporting-main-score-max,
+body .h5p-reporting-score-label,
+body .h5p-reporting-score-raw,
+body .h5p-reporting-score-delimiter,
+body .h5p-reporting-score-max,
+body .h5p-reporting-scaled-label,
+body .h5p-reporting-scaled-score,
+body .h5p-reporting-scaled-score-max {
+  display: inline-block;
+  margin-left: 0.35em;
+}
