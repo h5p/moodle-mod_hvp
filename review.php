@@ -153,11 +153,12 @@ if ($userid !== (int) $USER->id) {
 
 // Create title.
 $reviewcontext = [
-    'title'       => $title,
-    'report'      => $reporthtml,
-    'rawScore'    => $totalrawscore,
-    'maxScore'    => $totalmaxscore,
-    'scaledScore' => $totalscaledscore,
+    'title'          => $title,
+    'report'         => $reporthtml,
+    'rawScore'       => $totalrawscore,
+    'maxScore'       => $totalmaxscore,
+    'scaledScore'    => $totalscaledscore,
+    'maxScaledScore' => round($basequestion->grademax, 2),
 ];
 
 // Print page HTML.

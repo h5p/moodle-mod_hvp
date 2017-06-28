@@ -2,9 +2,6 @@ language: php
 
 sudo: false
 
-notifications:
-  email: false
-
 cache:
   directories:
     - $HOME/.composer/cache
