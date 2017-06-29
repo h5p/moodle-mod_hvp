@@ -13,11 +13,9 @@
         <span class="h5p-reporting-main-score-label">
           {{# str }} reportingscorelabel, mod_hvp {{/ str }}
         </span>
-        <span class="h5p-reporting-main-score-raw">{{rawScore}}</span>
-        <span class="h5p-reporting-main-score-delimiter">
-          {{# str }} reportingscoredelimiter, mod_hvp {{/ str }}
+        <span class="h5p-reporting-main-score">
+          {{rawScore}} {{# str }} reportingscoredelimiter, mod_hvp {{/ str }} {{maxScore}}
         </span>
-        <span class="h5p-reporting-main-score-max">{{maxScore}}</span>
       </div>
 
       <!--Scaled score-->
@@ -25,11 +23,9 @@
         <span class="h5p-reporting-scaled-label">
           {{# str }} reportingscaledscorelabel, mod_hvp {{/ str }}
         </span>
-        <span class="h5p-reporting-scaled-score">{{scaledScore}}</span>
-        <span class="h5p-reporting-main-score-delimiter">
-          {{# str }} reportingscoredelimiter, mod_hvp {{/ str }}
+        <span class="h5p-reporting-scaled-score">
+          {{scaledScore}} {{# str }} reportingscoredelimiter, mod_hvp {{/ str }} {{maxScaledScore}}
         </span>
-        <span class="h5p-reporting-scaled-score-max">{{maxScaledScore}}</span>
       </div>
     </div>
   </div>

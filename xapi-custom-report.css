@@ -9,10 +9,6 @@ body .h5p-result {
   padding: 30px;
 }
 
-body .h5p-result .h5p-result {
-  margin: 1em 0;
-}
-
 body .h5p-compound-container {
   border: none;
   box-shadow: none;
@@ -60,16 +56,14 @@ body .h5p-reporting-main-scaled-container {
 }
 
 body .h5p-reporting-main-score-label,
-body .h5p-reporting-main-score-raw,
-body .h5p-reporting-main-score-delimiter,
-body .h5p-reporting-main-score-max,
+body .h5p-reporting-main-score,
 body .h5p-reporting-score-label,
-body .h5p-reporting-score-raw,
-body .h5p-reporting-score-delimiter,
-body .h5p-reporting-score-max,
+body .h5p-reporting-score,
 body .h5p-reporting-scaled-label,
-body .h5p-reporting-scaled-score,
-body .h5p-reporting-scaled-score-max {
+body .h5p-reporting-scaled-score {
   display: inline-block;
-  margin-left: 0.35em;
+}
+
+body .h5p-reporting-main-score {
+  margin-left: 0.4em;
 }
