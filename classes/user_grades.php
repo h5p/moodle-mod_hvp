@@ -63,13 +63,13 @@ class user_grades {
         );
 
         // Get course module id from db, required for grade item.
-        $cmidsql = "SELECT cm.id, h.name
+        $cmidsql = "SELECT cm.id, h.name, cm.idnumber
             FROM {course_modules} cm, {hvp} h, {modules} m
             WHERE cm.instance = h.id AND h.id = ? AND m.name = 'hvp' AND m.id = cm.module";
         $result = $DB->get_record_sql($cmidsql, array($contentid));
 
         // Set grade using Gradebook API.
-        $hvp->cmidnumber = $result->id;
+        $hvp->cmidnumber = $result->idnumber;
         $hvp->name = $result->name;
         $hvp->rawgrade = $score;
         $hvp->rawgrademax = $maxscore;
