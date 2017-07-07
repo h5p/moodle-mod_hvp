@@ -163,5 +163,5 @@ $reviewcontext = [
 
 // Print page HTML.
 echo $OUTPUT->header();
-echo clean_text($renderer->render_from_template('hvp/review', $reviewcontext));
+echo $renderer->render_from_template('hvp/review', $reviewcontext);
 echo $OUTPUT->footer();
