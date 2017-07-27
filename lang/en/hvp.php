@@ -217,6 +217,9 @@ $string['nopermissiontorestrict'] = 'You do not have permission to restrict libr
 $string['nopermissiontosavecontentuserdata'] = 'You do not have permission to save content user data.';
 $string['nopermissiontosaveresult'] = 'You do not have permission to save result for this content.';
 $string['nopermissiontoviewresult'] = 'You do not have permission to view results for this content.';
+$string['nopermissiontouploadfiles'] = 'You do not have permission to upload files here.';
+$string['nopermissiontouploadcontent'] = 'You do not have permission to upload content here.';
+$string['nopermissiontoviewcontenttypes'] = 'You do not have permission to view the content types.';
 
 // Editor translations.
 $string['noziparchive'] = 'Your PHP version does not support ZipArchive.';

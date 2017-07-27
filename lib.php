@@ -282,6 +282,11 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
+            // Check permission.
+            if (!has_capability('mod/hvp:getcontent', $context)) {
+                return false;
+            }
+
             // Get core.
             $h5pinterface = \mod_hvp\framework::instance('interface');
             $h5pcore = \mod_hvp\framework::instance('core');

@@ -192,6 +192,10 @@ switch($action) {
      *  int minorVersion
      */
     case 'libraries':
+        if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontoviewcontenttypes')) {
+          break;
+        }
+
         // Get parameters.
         $name = optional_param('machineName', '', PARAM_TEXT);
         $major = optional_param('majorVersion', 0, PARAM_INT);
@@ -217,6 +221,10 @@ switch($action) {
      * Load content type cache list to display available libraries in hub
      */
     case 'contenttypecache':
+        if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontoviewcontenttypes')) {
+          break;
+        }
+
         $editor = \mod_hvp\framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::CONTENT_TYPE_CACHE);
         break;
@@ -231,6 +239,10 @@ switch($action) {
     case 'files':
         $token = required_param('token', PARAM_RAW);
         $contentid = required_param('contentId', PARAM_INT);
+        if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontouploadfiles')) {
+          break;
+        }
+
         $editor = \mod_hvp\framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::FILES, $token, $contentid);
         break;
@@ -257,6 +269,10 @@ switch($action) {
      */
     case 'libraryupload':
         $token = required_param('token', PARAM_RAW);
+        if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontouploadcontent')) {
+          break;
+        }
+
         $editor = \mod_hvp\framework::instance('editor');
         $uploadpath = $_FILES['h5p']['tmp_name'];
         $contentid = optional_param('contentId', 0, PARAM_INT);

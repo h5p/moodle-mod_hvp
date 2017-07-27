@@ -38,6 +38,7 @@ class xapi_result {
      * Handle xapi results endpoint
      */
     public static function handle_ajax() {
+        global $DB;
 
         // Validate token.
         if (!self::validate_token()) {
@@ -49,6 +50,13 @@ class xapi_result {
 
         $contentid = required_param('contentId', PARAM_INT);
         $xapiresult = required_param('xAPIResult', PARAM_RAW);
+
+        // Validate
+        $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $contentid)));
+        if (!has_capability('mod/hvp:saveresults', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontosaveresult', 'hvp'));
+            return;
+        }
 
         $xapijson = json_decode($xapiresult);
         if (!$xapijson) {
