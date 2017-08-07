@@ -105,16 +105,16 @@ class framework implements \H5PFrameworkInterface {
      * @return boolean
      */
     public static function has_access($cap, $error) {
-      $contextid = required_param('contextId', PARAM_RAW);
-      $context = \context::instance_by_id($contextid);
+        $contextid = required_param('contextId', PARAM_RAW);
+        $context   = \context::instance_by_id($contextid);
 
-      if (!has_capability("mod/hvp:$cap", $context)) {
-          \H5PCore::ajaxError(get_string($error, 'hvp'));
-          http_response_code(403);
-          return false;
-      }
+        if (!has_capability("mod/hvp:$cap", $context)) {
+            \H5PCore::ajaxError(get_string($error, 'hvp'));
+            http_response_code(403);
+            return false;
+        }
 
-      return true;
+        return true;
     }
 
     /**

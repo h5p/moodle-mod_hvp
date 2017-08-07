@@ -193,7 +193,7 @@ switch($action) {
      */
     case 'libraries':
         if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontoviewcontenttypes')) {
-          break;
+            break;
         }
 
         // Get parameters.
@@ -222,7 +222,7 @@ switch($action) {
      */
     case 'contenttypecache':
         if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontoviewcontenttypes')) {
-          break;
+            break;
         }
 
         $editor = \mod_hvp\framework::instance('editor');
@@ -240,7 +240,7 @@ switch($action) {
         $token = required_param('token', PARAM_RAW);
         $contentid = required_param('contentId', PARAM_INT);
         if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontouploadfiles')) {
-          break;
+            break;
         }
 
         $editor = \mod_hvp\framework::instance('editor');
@@ -270,7 +270,7 @@ switch($action) {
     case 'libraryupload':
         $token = required_param('token', PARAM_RAW);
         if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontouploadcontent')) {
-          break;
+            break;
         }
 
         $editor = \mod_hvp\framework::instance('editor');
