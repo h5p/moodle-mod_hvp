@@ -349,6 +349,7 @@ class framework implements \H5PFrameworkInterface {
                 'Invalid security token.' => 'invalidtoken',
                 'No content type was specified.' => 'nocontenttype',
                 'The chosen content type is invalid.' => 'invalidcontenttype',
+                'You do not have permission to install content types. Contact the administrator of your site.' => 'installdenied',
                 'You do not have permission to install content types.' => 'installdenied',
                 'Validating h5p package failed.' => 'validatingh5pfailed',
                 'Failed to download the requested H5P.' => 'failedtodownloadh5p',

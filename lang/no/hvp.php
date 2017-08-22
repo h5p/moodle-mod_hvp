@@ -105,6 +105,12 @@ $string['upload'] = 'Last opp';
 $string['installedlibraries'] = 'Installerte bibliotek';
 $string['invalidtoken'] = 'Ufyldig sikkerhetsnøkkel.';
 $string['missingparameters'] = 'Mangler parametre';
+$string['nocontenttype'] = 'Ingen bibliotek var angitt.';
+$string['invalidcontenttype'] = 'Det valgte biblioteket er ikke gyldig.';
+$string['installdenied'] = 'Du har ikke nok rettigheter til å installere biblioteket. Kontakt nettside-administrator.';
+$string['downloadfailed'] = 'Nedlastingen av det angitte biblioteket klarte ikke å fullføre.';
+$string['validationfailed'] = 'Valgt H5P er ikke gyldig.';
+$string['validatingh5pfailed'] = 'Validering av H5P pakken har feilet.';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Tittel';

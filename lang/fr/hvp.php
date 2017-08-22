@@ -95,6 +95,12 @@ $string['upload'] = 'Uploader';
 $string['installedlibraries'] = 'Bibliothèques installées';
 $string['invalidtoken'] = 'Token de sécurité invalide.';
 $string['missingparameters'] = 'Paramètres manquants';
+$string['nocontenttype'] = 'No content type was specified.';
+$string['invalidcontenttype'] = 'The chosen content type is invalid.';
+$string['installdenied'] = 'You do not have permission to install content types. Contact the administrator of your site.';
+$string['downloadfailed'] = 'Downloading the requested library failed.';
+$string['validationfailed'] = 'The requested H5P was not valid';
+$string['validatingh5pfailed'] = 'Validating h5p package failed.';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Titre';
