@@ -59,9 +59,12 @@ if ($ADMIN->fulltree) {
 
     // Send usage statistics.
     $settings->add(
-            new admin_setting_configcheckbox('mod_hvp/send_usage_statistics',
-                    get_string('sendusagestatistics', 'hvp'),
-                    get_string('sendusagestatistics_help', 'hvp'), 1));
+        new admin_setting_configcheckbox('mod_hvp/send_usage_statistics',
+            get_string('sendusagestatistics', 'hvp'),
+            get_string('sendusagestatistics_help', 'hvp',
+                'href="https://h5p.org/tracking-the-usage-of-h5p" target="_blank"'),
+            1)
+    );
 
     $choices = array(
         H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptionnevershow', 'hvp'),
