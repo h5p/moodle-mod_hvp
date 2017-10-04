@@ -88,8 +88,10 @@ function hvp_add_instance($hvp) {
     // Set and create grade item.
     hvp_grade_item_update($hvp);
 
-    $completiontimeexpected = !empty($hvp->completionexpected) ? $hvp->completionexpected : null;
-    \core_completion\api::update_completion_date_event($hvp->coursemodule, 'hvp', $hvp->id, $completiontimeexpected);
+    if (class_exists('\core_completion\api')) {
+        $completiontimeexpected = !empty($hvp->completionexpected) ? $hvp->completionexpected : null;
+        \core_completion\api::update_completion_date_event($hvp->coursemodule, 'hvp', $hvp->id, $completiontimeexpected);
+    }
 
     return $hvp->id;
 }
@@ -112,8 +114,10 @@ function hvp_update_instance($hvp) {
     hvp_save_content($hvp);
     hvp_grade_item_update($hvp);
 
-    $completiontimeexpected = !empty($hvp->completionexpected) ? $hvp->completionexpected : null;
-    \core_completion\api::update_completion_date_event($hvp->coursemodule, 'hvp', $hvp->id, $completiontimeexpected);
+    if (class_exists('\core_completion\api')) {
+        $completiontimeexpected = !empty($hvp->completionexpected) ? $hvp->completionexpected : null;
+        \core_completion\api::update_completion_date_event($hvp->coursemodule, 'hvp', $hvp->id, $completiontimeexpected);
+    }
 
     return true;
 }
