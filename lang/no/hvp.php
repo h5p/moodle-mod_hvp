@@ -73,6 +73,7 @@ $string['removeoldlogentries'] = 'Fjern gamle H5P-loggmeldinger';
 $string['displayoptionnevershow'] = 'Vis aldri';
 $string['displayoptionalwaysshow'] = 'Vis alltid';
 $string['displayoptionpermissions'] = 'Vis kun for brukere som har tilgang til å eksportere H5Per';
+$string['displayoptionpermissionsembed'] = 'Show only if user has permissions to embed H5P';
 $string['displayoptionauthoron'] = 'Settes av forfatter, standard på';
 $string['displayoptionauthoroff'] = 'Settes av forfatter, standard av';
 $string['displayoptions'] = 'Visningsinnstillinger';
@@ -197,6 +198,8 @@ $string['hvp:viewallresults'] = 'Vis resultater for alle brukeres H5P-innhold';
 $string['hvp:getcachedassets'] = 'Tilgang til bufret H5P-innholdsressurser';
 $string['hvp:getcontent'] = 'Tilgang til innholdet til H5P-fil i kurs';
 $string['hvp:getexport'] = 'Tilgang til eksportfil fra H5P i kurs';
+$string['hvp:getembedcode'] = 'Get embed code from H5P in course';
+$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Du har ikke tillatelse til å oppgradere bibliotek.';

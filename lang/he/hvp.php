@@ -61,6 +61,7 @@ $string['removeoldlogentries'] = 'Remove old H5P log entries';
 $string['displayoptionnevershow'] = 'Never show';
 $string['displayoptionalwaysshow'] = 'Always show';
 $string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
+$string['displayoptionpermissionsembed'] = 'Show only if user has permissions to embed H5P';
 $string['displayoptionauthoron'] = 'Controlled by author, default is on';
 $string['displayoptionauthoroff'] = 'Controlled by author, default is off';
 $string['displayoptions'] = 'Display Options';
@@ -183,6 +184,8 @@ $string['hvp:viewallresults'] = 'View result for all users in course';
 $string['hvp:getcachedassets'] = 'אחזור משאבי מטמון של רכיב H5P';
 $string['hvp:getcontent'] = 'צפיה בתוכן פעילות H5P מתוך הקורס';
 $string['hvp:getexport'] = 'יצוא תוכן פעילות H5P מתוך הקורס';
+$string['hvp:getembedcode'] = 'Get embed code from H5P in course';
+$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';

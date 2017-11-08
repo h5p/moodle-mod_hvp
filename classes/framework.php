@@ -1372,7 +1372,10 @@ class framework implements \H5PFrameworkInterface {
             case \H5PPermission::INSTALL_RECOMMENDED:
                 $context = \context_system::instance();
                 return has_capability('mod/hvp:installrecommendedh5plibraries', $context);
-
+            case \H5PPermission::EMBED_H5P:
+                global $DB;
+                $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $contentid)));
+                return has_capability('mod/hvp:getembedcode', $context);
         }
         return false;
     }

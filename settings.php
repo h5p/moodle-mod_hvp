@@ -74,11 +74,21 @@ if ($ADMIN->fulltree) {
         H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_OFF => get_string('displayoptionauthoroff', 'hvp')
     );
 
+    $embedchoices = array(
+        H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptionnevershow', 'hvp'),
+        H5PDisplayOptionBehaviour::ALWAYS_SHOW => get_string('displayoptionalwaysshow', 'hvp'),
+        H5PDisplayOptionBehaviour::CONTROLLED_BY_PERMISSIONS => get_string('displayoptionpermissionsembed', 'hvp'),
+        H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_ON => get_string('displayoptionauthoron', 'hvp'),
+        H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_OFF => get_string('displayoptionauthoroff', 'hvp')
+    );
+
     // Display options for H5P frame.
     $settings->add(new admin_setting_heading('mod_hvp/display_options', get_string('displayoptions', 'hvp'), ''));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/frame', get_string('enableframe', 'hvp'), '', 1));
     $settings->add(new admin_setting_configselect('mod_hvp/export', get_string('enabledownload', 'hvp'), '',
                                                   H5PDisplayOptionBehaviour::ALWAYS_SHOW, $choices));
+    $settings->add(new admin_setting_configselect('mod_hvp/embed', get_string('enableembed', 'hvp'), '',
+                                                  H5PDisplayOptionBehaviour::ALWAYS_SHOW, $embedchoices));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/copyright', get_string('enablecopyright', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/icon', get_string('enableabout', 'hvp'), '', 1));
 

@@ -149,6 +149,16 @@ $capabilities = array(
         )
     ),
 
+    'mod/hvp:getembedcode' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW
+        )
+    ),
+
     'mod/hvp:installrecommendedh5plibraries' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,

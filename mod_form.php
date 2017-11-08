@@ -95,6 +95,13 @@ class mod_hvp_mod_form extends moodleform_mod {
                 $mform->disabledIf(\H5PCore::DISPLAY_OPTION_DOWNLOAD, 'frame');
             }
 
+            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_EMBED])) {
+                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_EMBED, get_string('enableembed', 'hvp'));
+                $mform->setType(\H5PCore::DISPLAY_OPTION_EMBED, PARAM_BOOL);
+                $mform->setDefault(\H5PCore::DISPLAY_OPTION_EMBED, $displayoptions[\H5PCore::DISPLAY_OPTION_EMBED]);
+                $mform->disabledIf(\H5PCore::DISPLAY_OPTION_EMBED, 'frame');
+            }
+
             if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
                 $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_COPYRIGHT, get_string('enablecopyright', 'hvp'));
                 $mform->setType(\H5PCore::DISPLAY_OPTION_COPYRIGHT, PARAM_BOOL);
@@ -123,6 +130,9 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
             if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
                 $defaultvalues[\H5PCore::DISPLAY_OPTION_DOWNLOAD] = $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD];
+            }
+            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_EMBED])) {
+                $defaultvalues[\H5PCore::DISPLAY_OPTION_EMBED] = $displayoptions[\H5PCore::DISPLAY_OPTION_EMBED];
             }
             if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
                 $defaultvalues[\H5PCore::DISPLAY_OPTION_COPYRIGHT] = $displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT];
