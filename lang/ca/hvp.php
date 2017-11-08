@@ -266,7 +266,7 @@ $string['couldnotcopy'] = 'El fitxer no s\'ha pogut copiar.';
 // Welcome messages.
 $string['welcomeheader'] = 'Benvingut al món de l\'H5P!';
 $string['welcomegettingstarted'] = 'Per iniciar-vos en l\'ús de l\'H5P al Moodle feu un cop d\'ull al nostre <a {$a->moodle_tutorial}>tutorial</a> i proveu els <a {$a->example_content}>exemples de continguts interactius</a> a H5P.org, que us serviran per inspirar-vos.';
-$string['welcomecommunity'] = 'Esperem que gaudiu amb l\'H5P i us convidem a participar activament en la nostra comunitat mitjançant els <a {$a->forums}>fòrums</a> i la <a {$a->gitter}>sala de conversa H5P a Gitter</a>.';
+$string['welcomecommunity'] = 'Esperem que gaudiu amb l\'H5P i us convidem a participar activament en la nostra comunitat mitjançant els <a {$a->forums}>fòrums</a>.';
 $string['welcomecontactus'] = 'Si ens voleu fer algun comentari no dubteu a <a {$a}>contactar amb nosaltres</a>. Ens prenem molt seriosament la retroacció amb els usuaris, que ens ajuda a fer que l\'H5P sigui cada dia millor!';
 $string['missingmbstring'] = 'No s\'ha carregat l\'extensió "mbstring" del PHP. L\'H5P necessita aquesta extensió per poder funcionar correctament.';
 $string['wrongversion'] = 'La versió de la biblioteca H5P {$a->%machineName} utilitzada en aquest contingut interactiu no és vàlida. L\'objecte conté {$a->%contentLibrary}, i hauria de ser {$a->%semanticsLibrary}.';

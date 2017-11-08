@@ -253,7 +253,7 @@ $string['couldnotcopy'] = 'Klarte ikke å kopiere fila.';
 // Welcome messages.
 $string['welcomeheader'] = 'Welcome to the world of H5P!';
 $string['welcomegettingstarted'] = 'To get started with H5P and Moodle take a look at our <a {$a->moodle_tutorial}>tutorial</a> and check out the <a {$a->example_content}>example content</a> at H5P.org for inspiration.';
-$string['welcomecommunity'] = 'We hope you will enjoy H5P and get engaged in our growing community through our <a {$a->forums}>forums</a> and chat room <a {$a->gitter}>H5P at Gitter</a>';
+$string['welcomecommunity'] = 'We hope you will enjoy H5P and get engaged in our growing community through our <a {$a->forums}>forums</a>.';
 $string['welcomecontactus'] = 'If you have any feedback, don\'t hesitate to <a {$a}>contact us</a>. We take feedback very seriously and are dedicated to making H5P better every day!';
 $string['missingmbstring'] = 'PHP-utvidelsen mbstring mangler. H5P trenger denne for å kunne virke';
 $string['wrongversion'] = 'En ugyldig versjon av H5P-biblioteket {$a->%machineName} er brukt i innholdet. Innholdet bruker {$a->%contentLibrary}, mens det skal bruke {$a->%semanticsLibrary}.';
