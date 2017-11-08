@@ -95,7 +95,7 @@ foreach ($xapiresults as $question) {
         $basequestion = $question;
 
         if (isset($question->raw_score) && isset($question->grademax) && isset($question->max_score)) {
-            $scaledscoreperscore   = $question->max_score ? $question->grademax / $question->max_score : 0;
+            $scaledscoreperscore   = $question->max_score ? ($question->grademax / $question->max_score) : 0;
             $question->score_scale = round($scaledscoreperscore, 2);
             $totalrawscore         = $question->raw_score;
             $totalmaxscore         = $question->max_score;
