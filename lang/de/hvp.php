@@ -61,6 +61,7 @@ $string['removeoldlogentries'] = 'Entfernen alter H5P-Logdateien';
 $string['displayoptionnevershow'] = 'Nie zeigen';
 $string['displayoptionalwaysshow'] = 'Immer zeigen';
 $string['displayoptionpermissions'] = 'Nur zeigen, wenn der Nutzer H5P exportieren darf';
+$string['displayoptionpermissionsembed'] = 'Show only if user has permissions to embed H5P';
 $string['displayoptionauthoron'] = 'Vom Autor gesteuert, Standard ist an';
 $string['displayoptionauthoroff'] = 'Vom Autor gesteuert, Standard ist aus';
 $string['displayoptions'] = 'Optionen anzeigen';
@@ -183,6 +184,8 @@ $string['hvp:viewallresults'] = 'View result for all users in course';
 $string['hvp:getcachedassets'] = 'Zwischengespeicherte H5P-Inhaltswerte erhalten';
 $string['hvp:getcontent'] = 'H5P-Dateiinhalt im Kurs verwenden/ansehen';
 $string['hvp:getexport'] = 'Exportierte H5P Datei im Kurs verwenden';
+$string['hvp:getembedcode'] = 'Get embed code from H5P in course';
+$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Die nötigen Rechte, um die Bibliothek zu aktualisieren, sind nicht vorhanden.';

@@ -175,6 +175,7 @@ function hvp_get_disabled_content_features($hvp) {
     $disablesettings = [
         \H5PCore::DISPLAY_OPTION_FRAME     => isset($hvp->frame) ? $hvp->frame : 0,
         \H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($hvp->export) ? $hvp->export : 0,
+        \H5PCore::DISPLAY_OPTION_EMBED     => isset($hvp->embed) ? $hvp->embed : 0,
         \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($hvp->copyright) ? $hvp->copyright : 0,
     ];
     $core            = \mod_hvp\framework::instance();

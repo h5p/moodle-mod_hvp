@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * View H5P Content
+ * Embed H5P Content
  *
  * @package    mod_hvp
  * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once("../../config.php");
 require_once("locallib.php");
 
@@ -44,9 +45,14 @@ $content = $view->getcontent();
 $view->validatecontent();
 
 // Configure page.
-$PAGE->set_url(new \moodle_url('/mod/hvp/view.php', array('id' => $id)));
+$PAGE->set_url(new \moodle_url('/mod/hvp/embed.php', array('id' => $id)));
 $PAGE->set_title(format_string($content['title']));
 $PAGE->set_heading($course->fullname);
+
+// Embed specific page setup.
+$PAGE->add_body_class('h5p-embed');
+$PAGE->set_pagelayout('embedded');
+$PAGE->requires->css(new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/embed.css"));
 
 // Add H5P assets to page.
 $view->addassetstopage();
@@ -54,18 +60,7 @@ $view->logviewed();
 
 // Print page HTML.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(format_string($content['title']));
 echo '<div class="clearer"></div>';
-
-// Output introduction.
-if (trim(strip_tags($content['intro']))) {
-    echo $OUTPUT->box_start('mod_introbox', 'hvpintro');
-    echo format_module_intro('hvp', (object) array(
-        'intro'       => $content['intro'],
-        'introformat' => $content['introformat'],
-    ), $cm->id);
-    echo $OUTPUT->box_end();
-}
 
 // Print any messages.
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
