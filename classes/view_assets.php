@@ -163,8 +163,8 @@ class view_assets {
 
         $embedurl = new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/embed.php?id={$this->cm->id}");
 
-        return "<iframe src='{$embedurl->out()}' width=':w' height=':h' frameborder='0' " .
-               "allowfullscreen='allowfullscreen'></iframe>";
+        return "<iframe src=\"{$embedurl->out()}\" width=\":w\" height=\":h\" frameborder=\"0\" " .
+               "allowfullscreen=\"allowfullscreen\"></iframe>";
     }
 
     /**
@@ -183,7 +183,7 @@ class view_assets {
 
         $resizeurl = new \moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/h5p-resizer.js');
 
-        return "<script src='{$resizeurl->out()}' charset='UTF-8'></script>";
+        return "<script src=\"{$resizeurl->out()}\" charset=\"UTF-8\"></script>";
     }
 
     /**
@@ -319,12 +319,21 @@ class view_assets {
      * Outputs h5p view
      */
     public function outputview() {
-        global $PAGE;
-
-        echo $PAGE->get_renderer('mod_hvp')->render_from_template('hvp/view', [
-            'isDiv'     => $this->embedtype === 'div',
-            'contentId' => $this->content['id']
-        ]);
+        if ($this->embedtype === 'div') {
+        	echo "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
+        }
+        else {
+        	echo "<div class=\"h5p-iframe-wrapper\">" .
+					"<iframe id=\"h5p-iframe-{$this->content['id']}\"" .
+						" class=\"h5p-iframe\"" .
+		                " data-content-id=\"{$this->content['id']}\"" .
+		                " style=\"height:1px\"" .
+		                " src=\"about:blank\"" .
+		                " frameBorder=\"0\"" .
+		                " scrolling=\"no\">" .
+			        "</iframe>" .
+                "</div>";
+        }
     }
 
     /**
