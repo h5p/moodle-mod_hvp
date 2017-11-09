@@ -1353,16 +1353,15 @@ class framework implements \H5PFrameworkInterface {
      * Implements hasPermission
      * @method hasPermission
      * @param  \H5PPermission $permission
-     * @param  int $contentid
+     * @param  int $cmid context module id
      * @return boolean
      */
     // @codingStandardsIgnoreLine
-    public function hasPermission($permission, $contentid = null) {
+    public function hasPermission($permission, $cmid = null) {
         switch ($permission) {
             case \H5PPermission::DOWNLOAD_H5P:
-                global $DB;
-                $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $contentid)));
-                return has_capability('mod/hvp:getexport', $context);
+                $cmcontext = \context_module::instance($cmid);
+                return has_capability('mod/hvp:getexport', $cmcontext);
             case \H5PPermission::CREATE_RESTRICTED:
                 $context = \context_system::instance();
                 return has_capability('mod/hvp:userestrictedlibraries', $context);
@@ -1373,9 +1372,8 @@ class framework implements \H5PFrameworkInterface {
                 $context = \context_system::instance();
                 return has_capability('mod/hvp:installrecommendedh5plibraries', $context);
             case \H5PPermission::EMBED_H5P:
-                global $DB;
-                $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $contentid)));
-                return has_capability('mod/hvp:getembedcode', $context);
+                $cmcontext = \context_module::instance($cmid);
+                return has_capability('mod/hvp:getembedcode', $cmcontext);
         }
         return false;
     }

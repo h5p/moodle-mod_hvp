@@ -279,7 +279,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             break;
 
         case 'exports':
-            if ($context->contextlevel != CONTEXT_COURSE) {
+            if ($context->contextlevel != CONTEXT_MODULE) {
                 return false; // Invalid context.
             }
 
@@ -300,7 +300,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
 
             $contentid = $matches[1];
             $content = $h5pinterface->loadContent($contentid);
-            $displayoptions = $h5pcore->getDisplayOptionsForView($content['disable'], $contentid);
+            $displayoptions = $h5pcore->getDisplayOptionsForView($content['disable'], $context->instanceid);
 
             // Check permissions.
             if (!$displayoptions['export']) {
@@ -308,6 +308,10 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             }
 
             $itemid = 0;
+
+            // Change context to course for retrieving file
+            $cm = get_coursemodule_from_id('hvp', $context->instanceid);
+            $context = context_course::instance($cm->course);
             break;
 
         case 'editor':

@@ -55,7 +55,7 @@ class view_assets {
         $this->cssrequires = [];
 
         $context        = \context_module::instance($this->cm->id);
-        $displayoptions = $this->core->getDisplayOptionsForView($this->content['disable'], $this->content['id']);
+        $displayoptions = $this->core->getDisplayOptionsForView($this->content['disable'], $context->instanceid);
 
         // Add JavaScript settings for this content.
         $cid                                  = 'cid-' . $this->content['id'];
@@ -134,11 +134,17 @@ class view_assets {
             return '';
         }
 
-        $coursecontext = \context_course::instance($this->course->id);
-        $hvppath       = "{$CFG->httpswwwroot}/pluginfile.php/{$coursecontext->id}/mod_hvp";
-        $slug          = $this->content['slug'] ? $this->content['slug'] . '-' : '';
+	    $modulecontext = \context_module::instance($this->cm->id);
+	    $slug          = $this->content['slug'] ? $this->content['slug'] . '-' : '';
+	    $url           = \moodle_url::make_pluginfile_url($modulecontext->id,
+		    'mod_hvp',
+		    'exports',
+		    '',
+		    '',
+		    "{$slug}{$this->content['id']}.h5p"
+	    );
 
-        return "{$hvppath}/exports/{$slug}{$this->content['id']}.h5p";
+	    return $url->out();
     }
 
     /**

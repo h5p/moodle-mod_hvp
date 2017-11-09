@@ -39,7 +39,7 @@ if (!$course) {
 require_course_login($course, false, $cm);
 
 // Set up view assets.
-$view    = new \mod_hvp\view_assets($cm, $course, 'div');
+$view    = new \mod_hvp\view_assets($cm, $course);
 $content = $view->getcontent();
 $view->validatecontent();
 
