@@ -267,6 +267,7 @@ $string['invalidaudioformat'] = 'Invalid audio file format. Use mp3 or wav.';
 $string['invalidvideoformat'] = 'Invalid video file format. Use mp4 or webm.';
 $string['couldnotsave'] = 'Could not save file.';
 $string['couldnotcopy'] = 'Could not copy file.';
+$string['librarynotselected'] = 'You must select a content type.';
 
 // Welcome messages.
 $string['welcomeheader'] = 'Welcome to the world of H5P!';
@@ -275,7 +276,7 @@ $string['welcomecommunity'] = 'We hope you will enjoy H5P and get engaged in our
 $string['welcomecontactus'] = 'If you have any feedback, don\'t hesitate to <a {$a}>contact us</a>. We take feedback very seriously and are dedicated to making H5P better every day!';
 $string['missingmbstring'] = 'The mbstring PHP extension is not loaded. H5P need this to function properly';
 $string['wrongversion'] = 'The version of the H5P library {$a->%machineName} used in this content is not valid. Content contains {$a->%contentLibrary}, but it should be {$a->%semanticsLibrary}.';
-$string['invalidlibrary'] = 'You must select a content type.';
+$string['invalidlibrarynamed'] = 'The H5P library {$a->%library} used in the content is not valid';
 
 // Setup errors.
 $string['oldphpversion'] = 'Your PHP version is outdated. H5P requires version 5.2 to function properly. Version 5.6 or later is recommended.';

@@ -66,7 +66,7 @@ class mod_hvp_mod_form extends moodleform_mod {
             $h5peditor   = [];
             $h5peditor[] = $mform->createElement('html',
                                                  '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
-            $mform->addGroup($h5peditor, 'h5peditorgroup', get_string('editor', 'hvp'));
+            $mform->addGroup($h5peditor, 'h5peditor', get_string('editor', 'hvp'));
         } else {
             $mform->addElement('static', 'h5peditor', get_string('editor', 'hvp'),
                                '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
@@ -253,7 +253,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         $library = H5PCore::libraryFromString($data['h5plibrary']);
 
         if (!$library) {
-            $errors['h5peditor'] = get_string('invalidlibrary', 'hvp');
+            $errors['h5peditor'] = get_string('librarynotselected', 'hvp');
         } else {
             // Check that library exists.
             $library['libraryId'] = $core->h5pF->getLibraryId($library['machineName'],
