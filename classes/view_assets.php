@@ -119,17 +119,17 @@ class view_assets {
             return '';
         }
 
-	    $modulecontext = \context_module::instance($this->cm->id);
-	    $slug          = $this->content['slug'] ? $this->content['slug'] . '-' : '';
-	    $url           = \moodle_url::make_pluginfile_url($modulecontext->id,
-		    'mod_hvp',
-		    'exports',
-		    '',
-		    '',
-		    "{$slug}{$this->content['id']}.h5p"
-	    );
+        $modulecontext = \context_module::instance($this->cm->id);
+        $slug          = $this->content['slug'] ? $this->content['slug'] . '-' : '';
+        $url           = \moodle_url::make_pluginfile_url($modulecontext->id,
+            'mod_hvp',
+            'exports',
+            '',
+            '',
+            "{$slug}{$this->content['id']}.h5p"
+        );
 
-	    return $url->out();
+        return $url->out();
     }
 
     /**
@@ -305,19 +305,18 @@ class view_assets {
      */
     public function outputview() {
         if ($this->embedtype === 'div') {
-        	echo "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
-        }
-        else {
-        	echo "<div class=\"h5p-iframe-wrapper\">" .
-					"<iframe id=\"h5p-iframe-{$this->content['id']}\"" .
-						" class=\"h5p-iframe\"" .
-		                " data-content-id=\"{$this->content['id']}\"" .
-		                " style=\"height:1px\"" .
-		                " src=\"about:blank\"" .
-		                " frameBorder=\"0\"" .
-		                " scrolling=\"no\">" .
-			        "</iframe>" .
-                "</div>";
+            echo "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
+        } else {
+            echo "<div class=\"h5p-iframe-wrapper\">" .
+                 "<iframe id=\"h5p-iframe-{$this->content['id']}\"" .
+                 " class=\"h5p-iframe\"" .
+                 " data-content-id=\"{$this->content['id']}\"" .
+                 " style=\"height:1px\"" .
+                 " src=\"about:blank\"" .
+                 " frameBorder=\"0\"" .
+                 " scrolling=\"no\">" .
+                 "</iframe>" .
+                 "</div>";
         }
     }
 

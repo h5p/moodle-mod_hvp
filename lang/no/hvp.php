@@ -253,6 +253,7 @@ $string['invalidaudioformat'] = 'Ugyldig lydfilformat. Bruk mp3 eller wav.';
 $string['invalidvideoformat'] = 'Ugyldig videofilformat. Bruk mp4 eller webm.';
 $string['couldnotsave'] = 'Klarte ikke å lagre fila.';
 $string['couldnotcopy'] = 'Klarte ikke å kopiere fila.';
+$string['librarynotselected'] = 'You must select a content type.';
 
 // Welcome messages.
 $string['welcomeheader'] = 'Welcome to the world of H5P!';
@@ -261,7 +262,7 @@ $string['welcomecommunity'] = 'We hope you will enjoy H5P and get engaged in our
 $string['welcomecontactus'] = 'If you have any feedback, don\'t hesitate to <a {$a}>contact us</a>. We take feedback very seriously and are dedicated to making H5P better every day!';
 $string['missingmbstring'] = 'PHP-utvidelsen mbstring mangler. H5P trenger denne for å kunne virke';
 $string['wrongversion'] = 'En ugyldig versjon av H5P-biblioteket {$a->%machineName} er brukt i innholdet. Innholdet bruker {$a->%contentLibrary}, mens det skal bruke {$a->%semanticsLibrary}.';
-$string['invalidlibrary'] = 'H5P-biblioteket {$a->%library} brukt i innholdet er ugyldig';
+$string['invalidlibrarynamed'] = 'H5P-biblioteket {$a->%library} brukt i innholdet er ugyldig';
 
 // Licensing.
 $string['copyrightinfo'] = 'Opphavsrettsinformasjon';

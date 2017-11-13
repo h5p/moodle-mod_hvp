@@ -310,7 +310,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
 
             $itemid = 0;
 
-            // Change context to course for retrieving file
+            // Change context to course for retrieving file.
             $cm = get_coursemodule_from_id('hvp', $context->instanceid);
             $context = context_course::instance($cm->course);
             break;

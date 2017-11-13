@@ -244,12 +244,14 @@ $string['invalidaudioformat'] = 'Format de fichier audio non valide. Utilisez mp
 $string['invalidvideoformat'] = 'Format de fichier vidéo non valide. Utilisez mp4 ou webm.';
 $string['couldnotsave'] = 'Impossible de sauvegarder le fichier.';
 $string['couldnotcopy'] = 'Impossible de copier le fichier.';
+$string['librarynotselected'] = 'You must select a content type.';
 
 // Welcome messages.
 $string['welcomeheader'] = 'Bienvenue dans le monde H5P!';
 $string['welcomegettingstarted'] = 'Pour démarrer avec H5P et Moodle, consultez nos tutoriels <a {$a->moodle_tutorial}>tutorial</a> et testez <a {$a->example_content}>nos exemples</a> sur le site H5P.org pour vous en inspirer.';
 $string['welcomecommunity'] = 'Nous espérons que vous allez apprécier H5P et rejoindre notre communauté en constante augmentation au travers de nos <a {$a->forums}>forums</a>.';
 $string['welcomecontactus'] = 'Si vous avez des suggestions, n\'hésitez pas à <a {$a}>nous contacter</a>. Nous prenons toutes les suggestions très sérieuse en considération pour rendre H5P meilleur chaque jour !';
+$string['invalidlibrarynamed'] = 'The H5P library {$a->%library} used in the content is not valid';
 
 // Licensing.
 $string['copyrightinfo'] = 'Information copyright';

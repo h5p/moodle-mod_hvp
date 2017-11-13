@@ -264,6 +264,7 @@ $string['invalidaudioformat'] = 'El format del fitxer d\'àudio no és vàlid. F
 $string['invalidvideoformat'] = 'El format del fitxer de vídeo no és vàlid. Feu servir mp4 o webm.';
 $string['couldnotsave'] = 'El fitxer no s\'ha pogut desar.';
 $string['couldnotcopy'] = 'El fitxer no s\'ha pogut copiar.';
+$string['librarynotselected'] = 'You must select a content type.';
 
 // Welcome messages.
 $string['welcomeheader'] = 'Benvingut al món de l\'H5P!';
@@ -272,7 +273,7 @@ $string['welcomecommunity'] = 'Esperem que gaudiu amb l\'H5P i us convidem a par
 $string['welcomecontactus'] = 'Si ens voleu fer algun comentari no dubteu a <a {$a}>contactar amb nosaltres</a>. Ens prenem molt seriosament la retroacció amb els usuaris, que ens ajuda a fer que l\'H5P sigui cada dia millor!';
 $string['missingmbstring'] = 'No s\'ha carregat l\'extensió "mbstring" del PHP. L\'H5P necessita aquesta extensió per poder funcionar correctament.';
 $string['wrongversion'] = 'La versió de la biblioteca H5P {$a->%machineName} utilitzada en aquest contingut interactiu no és vàlida. L\'objecte conté {$a->%contentLibrary}, i hauria de ser {$a->%semanticsLibrary}.';
-$string['invalidlibrary'] = 'La biblioteca H5P {$a->%library} utilitzada en aquest contingut interactiu no és vàlida.';
+$string['invalidlibrarynamed'] = 'La biblioteca H5P {$a->%library} utilitzada en aquest contingut interactiu no és vàlida.';
 
 // Setup errors.
 $string['oldphpversion'] = 'La vostra versió de PHP és antiga. L\'H5P necessita com a mínim la versió 5.2 per funcionar correctament. S\'aconsella una versió 5.6 or superior.';
