@@ -177,18 +177,19 @@ $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities.
+$string['hvp:view'] = 'See and interact with H5P activities';
 $string['hvp:addinstance'] = 'Yeni bir H5P Etkinliği ekle';
-$string['hvp:restrictlibraries'] = 'Bir H5P kitaplığını kısıtla';
-$string['hvp:updatelibraries'] = 'Bir H5P kitaplığı sürümünü yükle';
-$string['hvp:userestrictedlibraries'] = 'Kısıtlı H5P kitaplıkları kullan';
-$string['hvp:savecontentuserdata'] = 'H5P içerik kullanıcısı verisini kaydet';
+$string['hvp:manage'] = 'Edit existing H5P activites';
+$string['hvp:getexport'] = 'Kurs içindeki H5P içeriğinden dışa aktarma dosyası al';
+$string['hvp:getembedcode'] = 'View H5P embed code when \'controlled by permission\' option is set';
 $string['hvp:saveresults'] = 'H5P içeriği için sonucu kaydet';
+$string['hvp:savecontentuserdata'] = 'H5P içerik kullanıcısı verisini kaydet';
 $string['hvp:viewresults'] = 'H5P içeriği için sonucu gör';
 $string['hvp:viewallresults'] = 'View result for all users in course';
+$string['hvp:restrictlibraries'] = 'Bir H5P kitaplığını kısıtla';
+$string['hvp:userestrictedlibraries'] = 'Kısıtlı H5P kitaplıkları kullan';
+$string['hvp:updatelibraries'] = 'Bir H5P kitaplığı sürümünü yükle';
 $string['hvp:getcachedassets'] = 'Ön belleğe alınmış H5P içerik değerlerini al';
-$string['hvp:getcontent'] = 'Kurs içìndeki H5P dosyası içeriğini al/gör';
-$string['hvp:getexport'] = 'Kurs içindeki H5P içeriğinden dışa aktarma dosyası al';
-$string['hvp:getembedcode'] = 'Get embed code from H5P in course';
 $string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
 
 // Capabilities error messages.

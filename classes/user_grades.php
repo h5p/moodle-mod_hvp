@@ -41,19 +41,30 @@ class user_grades {
             return;
         }
 
+        $cm = get_coursemodule_from_id('hvp', required_param('contextId', PARAM_INT));
+        if (!$cm) {
+            \H5PCore::ajaxError('No such content');
+            http_response_code(404);
+            return;
+        }
+
         // Content parameters.
-        $contentid = required_param('contentId', PARAM_INT);
         $score = required_param('score', PARAM_INT);
         $maxscore = required_param('maxScore', PARAM_INT);
 
-        // Get hvp data from contentId.
-        $hvp = $DB->get_record('hvp', array('id' => $contentid));
-
-        // Check permissions.
-        $context = \context_course::instance($hvp->course);
+        // Check permission
+        $context = \context_module::instance($cm->id);
         if (!has_capability('mod/hvp:saveresults', $context)) {
             \H5PCore::ajaxError(get_string('nopermissiontosaveresult', 'hvp'));
             http_response_code(403);
+            return;
+        }
+
+        // Get hvp data from contentId
+        $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
+        if (!$hvp) {
+            \H5PCore::ajaxError('No such content');
+            http_response_code(404);
             return;
         }
 
@@ -62,15 +73,9 @@ class user_grades {
             'userid' => $USER->id
         );
 
-        // Get course module id from db, required for grade item.
-        $cmidsql = "SELECT cm.id, h.name, cm.idnumber
-            FROM {course_modules} cm, {hvp} h, {modules} m
-            WHERE cm.instance = h.id AND h.id = ? AND m.name = 'hvp' AND m.id = cm.module";
-        $result = $DB->get_record_sql($cmidsql, array($contentid));
-
         // Set grade using Gradebook API.
-        $hvp->cmidnumber = $result->idnumber;
-        $hvp->name = $result->name;
+        $hvp->cmidnumber = $cm->idnumber;
+        $hvp->name = $cm->name;
         $hvp->rawgrade = $score;
         $hvp->rawgrademax = $maxscore;
         hvp_grade_item_update($hvp, $grade);

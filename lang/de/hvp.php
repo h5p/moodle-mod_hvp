@@ -173,19 +173,20 @@ $string['maximumgrade'] = 'Beste Bewertung';
 $string['maximumgradeerror'] = 'Bitte gib einen positive ganze Zahl als maximale Punktzahl für diese Aktivität an.';
 
 // Capabilities.
+$string['hvp:view'] = 'See and interact with H5P activities';
 $string['hvp:addinstance'] = 'Neue H5P-Aktivität hinzufügen';
-$string['hvp:restrictlibraries'] = 'H5P-Bibliothek beschränken';
-$string['hvp:updatelibraries'] = 'Aktualisieren einer H5P-Bibliothek';
-$string['hvp:userestrictedlibraries'] = 'Verwendung eingeschränkter H5P-Bibliotheken';
-$string['hvp:savecontentuserdata'] = 'H5P-Nutzerinhalt speichern';
-$string['hvp:saveresults'] = 'Ergebnis des H5P-Inhalts speichern';
-$string['hvp:viewresults'] = 'Ergebnis des H5P-Inhalts ansehen';
-$string['hvp:viewallresults'] = 'View result for all users in course';
-$string['hvp:getcachedassets'] = 'Zwischengespeicherte H5P-Inhaltswerte erhalten';
-$string['hvp:getcontent'] = 'H5P-Dateiinhalt im Kurs verwenden/ansehen';
+$string['hvp:manage'] = 'Edit existing H5P activites';
 $string['hvp:getexport'] = 'Exportierte H5P Datei im Kurs verwenden';
 $string['hvp:getembedcode'] = 'Get embed code from H5P in course';
-$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
+$string['hvp:saveresults'] = 'Ergebnis des H5P-Inhalts speichern';
+$string['hvp:savecontentuserdata'] = 'H5P-Nutzerinhalt speichern';
+$string['hvp:viewresults'] = 'Ergebnis des H5P-Inhalts ansehen';
+$string['hvp:viewallresults'] = 'View result for all users in course';
+$string['hvp:restrictlibraries'] = 'H5P-Bibliothek beschränken';
+$string['hvp:userestrictedlibraries'] = 'Verwendung eingeschränkter H5P-Bibliotheken';
+$string['hvp:updatelibraries'] = 'Aktualisieren einer H5P-Bibliothek';
+$string['hvp:getcachedassets'] = 'Zwischengespeicherte H5P-Inhaltswerte erhalten';
+$string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Die nötigen Rechte, um die Bibliothek zu aktualisieren, sind nicht vorhanden.';

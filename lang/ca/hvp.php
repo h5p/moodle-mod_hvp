@@ -198,17 +198,19 @@ $string['maximumgrade'] = 'Puntuació màxima';
 $string['maximumgradeerror'] = 'Indiqueu en un nombre positiu enter el nombre màxim de punts disponibles en aquesta activitat';
 
 // Capabilities.
+$string['hvp:view'] = 'See and interact with H5P activities';
 $string['hvp:addinstance'] = 'Afegir activitats H5P noves';
-$string['hvp:restrictlibraries'] = 'Restringir una biblioteca H5P';
-$string['hvp:updatelibraries'] = 'Actualitzar la versió d\'una biblioteca H5P';
-$string['hvp:userestrictedlibraries'] = 'Fer ús de biblioteques H5P restringides';
-$string['hvp:savecontentuserdata'] = 'Desar continguts o dades d\'usuari H5P';
+$string['hvp:manage'] = 'Edit existing H5P activites';
+$string['hvp:getexport'] = 'Aconseguir el fitxer d\'exportació dels H5P del curs';
+$string['hvp:getembedcode'] = 'View H5P embed code when \'controlled by permission\' option is set';
 $string['hvp:saveresults'] = 'Desar resultats de continguts H5P';
+$string['hvp:savecontentuserdata'] = 'Desar continguts o dades d\'usuari H5P';
 $string['hvp:viewresults'] = 'Veure els resultats de les meves preguntes';
 $string['hvp:viewallresults'] = 'Veure els resultats d\'altres usuaris del curs';
+$string['hvp:restrictlibraries'] = 'Restringir una biblioteca H5P';
+$string['hvp:userestrictedlibraries'] = 'Fer ús de biblioteques H5P restringides';
+$string['hvp:updatelibraries'] = 'Actualitzar la versió d\'una biblioteca H5P';
 $string['hvp:getcachedassets'] = 'Aconseguir actius H5P desats a la memòria cau';
-$string['hvp:getcontent'] = 'Aconseguir/veure els continguts d\'un fitxer H5P del curs';
-$string['hvp:getexport'] = 'Aconseguir el fitxer d\'exportació dels H5P del curs';
 $string['hvp:installrecommendedh5plibraries'] = 'Instal·lar les biblioteques H5P recomanades';
 
 // Capabilities error messages.

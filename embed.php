@@ -20,7 +20,6 @@
  * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once("../../config.php");
 require_once("locallib.php");
 
@@ -38,6 +37,8 @@ if (!$course) {
     print_error('coursemisconf');
 }
 require_course_login($course, false, $cm);
+$context = context_module::instance($cm->id);
+require_capability('mod/hvp:view', $context);
 
 // Set up view assets.
 $view    = new \mod_hvp\view_assets($cm, $course, 'div');

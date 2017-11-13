@@ -38,8 +38,8 @@ if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
 require_course_login($course, false, $cm);
 
 // Check permission.
-$coursecontext = context_course::instance($COURSE->id);
-hvp_require_view_results_permission($userid, $coursecontext, $cm->id);
+$context = \context_module::instance($cm->id);
+hvp_require_view_results_permission($userid, $context, $cm->id);
 
 // Load H5P Content.
 $hvp = $DB->get_record_sql(

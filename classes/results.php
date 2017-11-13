@@ -83,9 +83,15 @@ class results {
     public function print_results() {
         global $DB, $USER;
 
+        $cm = get_coursemodule_from_instance('hvp', $this->contentid);
+        if (!$cm) {
+            \H5PCore::ajaxError('No such content');
+            http_response_code(404);
+            return;
+        }
+
         // Check permission.
-        $course = $DB->get_field('hvp', 'course', array('id' => $this->contentid));
-        $context = \context_course::instance($course);
+        $context = \context_module::instance($cm->id);
         $viewownresults = has_capability('mod/hvp:viewresults', $context);
         $viewallresults = has_capability('mod/hvp:viewallresults', $context);
         if (!$viewownresults && !$viewallresults) {
@@ -97,7 +103,7 @@ class results {
         // Only get own results if can't view all.
         $uid = $viewallresults ? null : (int)$USER->id;
         $results = $this->get_results($uid);
-        $rows = $this->get_human_readable_results($results, $course);
+        $rows = $this->get_human_readable_results($results, $cm->course);
 
         header('Cache-Control: no-cache');
         header('Content-type: application/json');

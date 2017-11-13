@@ -192,7 +192,7 @@ switch($action) {
      *  int minorVersion
      */
     case 'libraries':
-        if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontoviewcontenttypes')) {
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontoviewcontenttypes')) {
             break;
         }
 
@@ -221,7 +221,7 @@ switch($action) {
      * Load content type cache list to display available libraries in hub
      */
     case 'contenttypecache':
-        if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontoviewcontenttypes')) {
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontoviewcontenttypes')) {
             break;
         }
 
@@ -239,7 +239,7 @@ switch($action) {
     case 'files':
         $token = required_param('token', PARAM_RAW);
         $contentid = required_param('contentId', PARAM_INT);
-        if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontouploadfiles')) {
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadfiles')) {
             break;
         }
 
@@ -269,7 +269,7 @@ switch($action) {
      */
     case 'libraryupload':
         $token = required_param('token', PARAM_RAW);
-        if (!\mod_hvp\framework::has_access('addinstance', 'nopermissiontouploadcontent')) {
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadcontent')) {
             break;
         }
 

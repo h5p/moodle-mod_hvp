@@ -37,6 +37,8 @@ if (!$course) {
     print_error('coursemisconf');
 }
 require_course_login($course, false, $cm);
+$context = context_module::instance($cm->id);
+require_capability('mod/hvp:view', $context);
 
 // Set up view assets.
 $view    = new \mod_hvp\view_assets($cm, $course);

@@ -271,7 +271,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             }
 
             // Check permissions.
-            if (!has_capability('mod/hvp:getcontent', $context)) {
+            if (!has_capability('mod/hvp:view', $context)) {
                 return false;
             }
 
@@ -284,9 +284,10 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             }
 
             // Check permission.
-            if (!has_capability('mod/hvp:getcontent', $context)) {
+            if (!has_capability('mod/hvp:view', $context)) {
                 return false;
             }
+            // Note that the getexport permission is checked after loading the content
 
             // Get core.
             $h5pinterface = \mod_hvp\framework::instance('interface');
@@ -315,12 +316,10 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             break;
 
         case 'editor':
-            if ($context->contextlevel != CONTEXT_COURSE) {
-                return false; // Invalid context.
-            }
+            $cap = ($context->contextlevel === CONTEXT_COURSE ? 'addinstance' : 'manage');
 
             // Check permissions.
-            if (!has_capability('mod/hvp:addinstance', $context)) {
+            if (!has_capability("mod/hvp:$cap", $context)) {
                 return false;
             }
 

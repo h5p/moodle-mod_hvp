@@ -30,30 +30,45 @@ require_once('autoloader.php');
 /**
  * Get array with settings for hvp core
  *
+ * @param \context_course|\context_module [$context]
  * @return array Settings
  */
-function hvp_get_core_settings() {
-    global $USER, $CFG, $COURSE;
+function hvp_get_core_settings($context) {
+    global $USER, $CFG;
 
     $systemcontext = \context_system::instance();
-    $coursecontext = \context_course::instance($COURSE->id);
-
     $basepath = $CFG->httpswwwroot . '/';
-    $ajaxpath = "{$basepath}mod/hvp/ajax.php?contextId={$coursecontext->id}&token=";
+
+    // Check permissions and generate ajax paths
+    $ajaxPaths = array();
+    $saveFreq = false;
+    if ($context->contextlevel == CONTEXT_MODULE) {
+        $ajaxpath = "{$basepath}mod/hvp/ajax.php?contextId={$context->instanceid}&token=";
+
+        if (has_capability('mod/hvp:saveresults', $context)) {
+            $ajaxPaths['setFinished'] = $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished';
+            $ajaxPaths['xAPIResult'] = $ajaxpath . \H5PCore::createToken('xapiresult') . '&action=xapiresult';
+        }
+        if (has_capability('mod/hvp:savecontentuserdata', $context)) {
+            $ajaxPaths['contentUserData'] = $ajaxpath . \H5PCore::createToken('contentuserdata') .
+                '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId';
+
+            $saveFreq = get_config('mod_hvp', 'content_state_frequency');
+            if (empty($saveFreq)) {
+              $saveFreq = false;
+            }
+        }
+    }
 
     $core = \mod_hvp\framework::instance('core');
 
     $settings = array(
         'baseUrl' => $basepath,
-        'url' => "{$basepath}pluginfile.php/{$coursecontext->id}/mod_hvp",
+        'url' => "{$basepath}pluginfile.php/{$context->instanceid}/mod_hvp",
         'libraryUrl' => "{$basepath}pluginfile.php/{$systemcontext->id}/mod_hvp/libraries",
         'postUserStatistics' => true,
-        'ajax' => array(
-            'setFinished' => $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished',
-            'contentUserData' => $ajaxpath . \H5PCore::createToken('contentuserdata') .
-                                 '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId'
-        ),
-        'saveFreq' => get_config('mod_hvp', 'enable_save_content_state') ? get_config('mod_hvp', 'content_state_frequency') : false,
+        'ajax' => $ajaxPaths,
+        'saveFreq' => $saveFreq,
         'siteUrl' => $CFG->wwwroot,
         'l10n' => array('H5P' => $core->getLocalization()),
         'user' => array(
@@ -69,13 +84,14 @@ function hvp_get_core_settings() {
 /**
  * Get assets (scripts and styles) for hvp core.
  *
+ * @param \context_course|\context_module $context
  * @return array
  */
-function hvp_get_core_assets() {
+function hvp_get_core_assets($context) {
     global $CFG, $PAGE;
 
     // Get core settings.
-    $settings = \hvp_get_core_settings();
+    $settings = \hvp_get_core_settings($context);
     $settings['core'] = array(
         'styles' => array(),
         'scripts' => array()
@@ -111,7 +127,19 @@ function hvp_get_core_assets() {
  */
 function hvp_add_editor_assets($id = null) {
     global $PAGE, $CFG, $COURSE;
-    $settings = \hvp_get_core_assets();
+
+    // First we need to determine the context for permission handling
+    if ($id) {
+      // Use cm context when editing existing content
+      $cm = get_coursemodule_from_instance('hvp', $id);
+      $context = \context_module::instance($cm->id);
+    }
+    else {
+      // Use course context when there's no content, i.e. adding new content
+      $context = \context_course::instance($COURSE->id);
+    }
+
+    $settings = \hvp_get_core_assets($context);
 
     // Use jQuery and styles from core.
     $assets = array(
@@ -153,7 +181,6 @@ function hvp_add_editor_assets($id = null) {
     $PAGE->requires->js(new moodle_url('/mod/hvp/' . $languagescript . $cachebuster), true);
 
     // Add JavaScript settings.
-    $context = \context_course::instance($COURSE->id);
     $filespathbase = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/";
     $contentvalidator = \mod_hvp\framework::instance('contentvalidator');
     $editorajaxtoken = \H5PCore::createToken('editorajax');
@@ -218,7 +245,7 @@ function hvp_admin_add_generic_css_and_js($page, $liburl, $settings = null) {
     $page->requires->css(new moodle_url($liburl . 'styles/h5p-admin.css' . hvp_get_cache_buster()));
 
     // Add settings.
-    $page->requires->data_for_js('h5p', hvp_get_core_settings(), true);
+    $page->requires->data_for_js('h5p', hvp_get_core_settings(\context_system::instance()), true);
 }
 
 /**

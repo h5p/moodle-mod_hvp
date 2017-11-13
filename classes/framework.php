@@ -97,16 +97,15 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
-     * Check if the current user has access to the given cap.
-     * If not use the given error.
+     * Check if the current user has editor access, if not then return the
+     * given error message.
      *
-     * @param string $cap
      * @param string $error
      * @return boolean
      */
-    public static function has_access($cap, $error) {
-        $contextid = required_param('contextId', PARAM_RAW);
-        $context   = \context::instance_by_id($contextid);
+    public static function has_editor_access($error) {
+        $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
+        $cap = ($context->contextlevel === CONTEXT_COURSE ? 'addinstance' : 'manage');
 
         if (!has_capability("mod/hvp:$cap", $context)) {
             \H5PCore::ajaxError(get_string($error, 'hvp'));

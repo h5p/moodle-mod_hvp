@@ -187,19 +187,20 @@ $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities.
-$string['hvp:addinstance'] = 'Legg til en ny H5P-aktivitet';
-$string['hvp:restrictlibraries'] = 'Begrense et H5P-bibliotek';
-$string['hvp:updatelibraries'] = 'Oppdatere versjonen til et H5P-bibliotek';
-$string['hvp:userestrictedlibraries'] = 'Bruke begrenset H5P-bibliotek';
-$string['hvp:savecontentuserdata'] = 'Lagre H5P-brukerdata';
-$string['hvp:saveresults'] = 'Lagre resultater for H5P-innhold';
-$string['hvp:viewresults'] = 'Vis resultater for eget H5P-innhold';
-$string['hvp:viewallresults'] = 'Vis resultater for alle brukeres H5P-innhold';
-$string['hvp:getcachedassets'] = 'Tilgang til bufret H5P-innholdsressurser';
-$string['hvp:getcontent'] = 'Tilgang til innholdet til H5P-fil i kurs';
-$string['hvp:getexport'] = 'Tilgang til eksportfil fra H5P i kurs';
-$string['hvp:getembedcode'] = 'Get embed code from H5P in course';
-$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
+$string['hvp:view'] = 'Se og interager med H5P-aktiviteter';
+$string['hvp:addinstance'] = 'Lag nye H5P-aktiviteter';
+$string['hvp:manage'] = 'Rediger eksisterende H5P-aktiviteter';
+$string['hvp:getexport'] = 'Last ned .h5p-fil når \'kontrollert av rettigheter\' er aktivert';
+$string['hvp:getembedcode'] = 'Se heft ved-koden når \'kontrollert av rettigheter\' er aktivert';
+$string['hvp:saveresults'] = 'Lagre resultatene fra fullførte H5P-aktiviteter';
+$string['hvp:savecontentuserdata'] = 'Lagre brukerens fremgang for H5P-aktiviteter';
+$string['hvp:viewresults'] = 'Se egne resultater for fullførte H5P-aktiviteter';
+$string['hvp:viewallresults'] = 'Se alle resultater for fullførte H5P-aktiviteter';
+$string['hvp:restrictlibraries'] = 'Begrens tilgangen til spesifikke H5P-innholdstyper';
+$string['hvp:userestrictedlibraries'] = 'Bruk av begrensede H5P-innholdstyper';
+$string['hvp:updatelibraries'] = 'Installer nye H5P-innholdstyper eller oppdater eksisterende';
+$string['hvp:getcachedassets'] = 'Påkrevd for å se H5P-aktiviteter';
+$string['hvp:installrecommendedh5plibraries'] = 'Installer nye trygge H5P-innholdstyper anbefelt av H5P.org';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Du har ikke tillatelse til å oppgradere bibliotek.';

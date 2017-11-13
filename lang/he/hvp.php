@@ -173,19 +173,20 @@ $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities.
+$string['hvp:view'] = 'See and interact with H5P activities';
 $string['hvp:addinstance'] = 'הוספת פעילות H5P חדשה';
-$string['hvp:restrictlibraries'] = 'הגבלת גישה לספריית H5P';
-$string['hvp:updatelibraries'] = 'עדכון גרסה של ספריית H5P';
-$string['hvp:userestrictedlibraries'] = 'שימוש בספריות H5P שמורות';
-$string['hvp:savecontentuserdata'] = 'שמירת נתוני משתמש מתוך פעילות H5P';
+$string['hvp:manage'] = 'Edit existing H5P activites';
+$string['hvp:getexport'] = 'יצוא תוכן פעילות H5P מתוך הקורס';
+$string['hvp:getembedcode'] = 'View H5P embed code when \'controlled by permission\' option is set';
 $string['hvp:saveresults'] = 'שמירת תוצאות שימוש ברכיב H5P';
+$string['hvp:savecontentuserdata'] = 'שמירת נתוני משתמש מתוך פעילות H5P';
 $string['hvp:viewresults'] = 'צפיה בתוצאות שימוש ברכיב H5P';
 $string['hvp:viewallresults'] = 'View result for all users in course';
+$string['hvp:restrictlibraries'] = 'הגבלת גישה לספריית H5P';
+$string['hvp:userestrictedlibraries'] = 'שימוש בספריות H5P שמורות';
+$string['hvp:updatelibraries'] = 'עדכון גרסה של ספריית H5P';
 $string['hvp:getcachedassets'] = 'אחזור משאבי מטמון של רכיב H5P';
-$string['hvp:getcontent'] = 'צפיה בתוכן פעילות H5P מתוך הקורס';
-$string['hvp:getexport'] = 'יצוא תוכן פעילות H5P מתוך הקורס';
-$string['hvp:getembedcode'] = 'Get embed code from H5P in course';
-$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
+$string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';

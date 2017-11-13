@@ -177,19 +177,20 @@ $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities.
+$string['hvp:view'] = 'See and interact with H5P activities';
 $string['hvp:addinstance'] = 'Ajouter une nouvelle activité H5P';
-$string['hvp:restrictlibraries'] = 'Restreindre une bibliothèque H5P';
-$string['hvp:updatelibraries'] = 'Mettre à jour la version d\'une bibliothèque H5P';
-$string['hvp:userestrictedlibraries'] = 'Utiliser des bibliothèques H5P restreintes';
-$string['hvp:savecontentuserdata'] = 'Sauvegarder les données utilisateur H5P';
+$string['hvp:manage'] = 'Edit existing H5P activites';
+$string['hvp:getexport'] = 'Récupérer un fichier H5P dans un cours';
+$string['hvp:getembedcode'] = 'View H5P embed code when \'controlled by permission\' option is set';
 $string['hvp:saveresults'] = 'Sauvegarder les résultats';
+$string['hvp:savecontentuserdata'] = 'Sauvegarder les données utilisateur H5P';
 $string['hvp:viewresults'] = 'Visualiser les résultats';
 $string['hvp:viewallresults'] = 'View result for all users in course';
+$string['hvp:restrictlibraries'] = 'Restreindre une bibliothèque H5P';
+$string['hvp:userestrictedlibraries'] = 'Utiliser des bibliothèques H5P restreintes';
+$string['hvp:updatelibraries'] = 'Mettre à jour la version d\'une bibliothèque H5P';
 $string['hvp:getcachedassets'] = 'Récupérer les assets mis en cache';
-$string['hvp:getcontent'] = 'Visualiser le contenu d\'un fichier H5P dans un cours';
-$string['hvp:getexport'] = 'Récupérer un fichier H5P dans un cours';
-$string['hvp:getembedcode'] = 'Get embed code from H5P in course';
-$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
+$string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Vous n\'avez pas les droits pour mettre à jour les bibliothèques.';

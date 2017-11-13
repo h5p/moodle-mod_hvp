@@ -417,9 +417,17 @@ class file_storage implements \H5PFileStorage {
      */
     // @codingStandardsIgnoreLine
     public function cloneContentFile($file, $fromid, $tocontent) {
+
         // Determine source file area and item id.
-        $sourcefilearea = ($fromid === 'editor' ? $fromid : 'content');
-        $sourceitemid   = ($fromid === 'editor' ? 0 : $fromid);
+        if ($fromid === 'editor') {
+            $sourcefilearea = 'editor';
+            $sourceitemid   = empty($tocontent->instance) ?
+                              \context_course::instance($tocontent->course) :
+                              \context_module::instance($tocontent->coursemodule);
+        } else {
+            $sourcefilearea = 'content';
+            $sourceitemid   = $fromid;
+        };
 
         // Check to see if source exist.
         $sourcefile = $this->getFile($sourcefilearea, $sourceitemid, $file);
@@ -444,7 +452,7 @@ class file_storage implements \H5PFileStorage {
             'filepath'  => $this->getFilepath($file),
             'filename'  => $this->getFilename($file),
         ];
-        $fs     = get_file_storage();
+        $fs = get_file_storage();
         $fs->create_file_from_storedfile($record, $sourcefile);
     }
 
@@ -597,8 +605,9 @@ class file_storage implements \H5PFileStorage {
         global $COURSE;
 
         if ($filearea === 'editor') {
-            // Use Course context.
-            $context = \context_course::instance($COURSE->id);
+            // Itemid is actually cm or course context
+            $context = $itemid;
+            $itemid = 0;
         } else if (is_object($itemid)) {
             // Grab CM context from item.
             $context = \context_module::instance($itemid->coursemodule);

@@ -199,19 +199,20 @@ $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities.
-$string['hvp:addinstance'] = 'Add a new H5P Activity';
-$string['hvp:restrictlibraries'] = 'Restrict a H5P library';
-$string['hvp:updatelibraries'] = 'Update the version of an H5P library';
-$string['hvp:userestrictedlibraries'] = 'Use restricted H5P libraries';
-$string['hvp:savecontentuserdata'] = 'Save H5P content user data';
-$string['hvp:saveresults'] = 'Save result for H5P content';
-$string['hvp:viewresults'] = 'View result for own questions in course';
-$string['hvp:viewallresults'] = 'View result for all users in course';
-$string['hvp:getcachedassets'] = 'Get cached H5P content assets';
-$string['hvp:getcontent'] = 'Get/view content of H5P file in course';
-$string['hvp:getexport'] = 'Get export file from H5P in course';
-$string['hvp:getembedcode'] = 'Get embed code from H5P in course';
-$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
+$string['hvp:view'] = 'See and interact with H5P activities';
+$string['hvp:addinstance'] = 'Create new H5P activites';
+$string['hvp:manage'] = 'Edit existing H5P activites';
+$string['hvp:getexport'] = 'Download .h5p file when \'controlled by permission\' option is set';
+$string['hvp:getembedcode'] = 'View H5P embed code when \'controlled by permission\' option is set';
+$string['hvp:saveresults'] = 'Save the results from completed H5P activities';
+$string['hvp:savecontentuserdata'] = 'Save the users\'s progress for H5P activities';
+$string['hvp:viewresults'] = 'View own results for completed H5P activities';
+$string['hvp:viewallresults'] = 'View all results for completed H5P activites';
+$string['hvp:restrictlibraries'] = 'Restrict access to certain H5P content types';
+$string['hvp:userestrictedlibraries'] = 'Use restricted H5P content types';
+$string['hvp:updatelibraries'] = 'Install new H5P content types or update existing ones';
+$string['hvp:getcachedassets'] = 'Required for viewing H5P activities';
+$string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';

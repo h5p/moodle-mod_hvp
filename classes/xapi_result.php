@@ -48,11 +48,17 @@ class xapi_result {
             return;
         }
 
-        $contentid = required_param('contentId', PARAM_INT);
+        $cm = get_coursemodule_from_id('hvp', required_param('contextId', PARAM_INT));
+        if (!$cm) {
+            \H5PCore::ajaxError('No such content');
+            http_response_code(404);
+            return;
+        }
+
         $xapiresult = required_param('xAPIResult', PARAM_RAW);
 
         // Validate.
-        $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $contentid)));
+        $context = \context_module::instance($cm->id);
         if (!has_capability('mod/hvp:saveresults', $context)) {
             \H5PCore::ajaxError(get_string('nopermissiontosaveresult', 'hvp'));
             return;
@@ -70,10 +76,10 @@ class xapi_result {
         }
 
         // Delete any old results.
-        self::remove_xapi_data($contentid);
+        self::remove_xapi_data($cm->instance);
 
         // Store results.
-        self::store_xapi_data($contentid, $xapijson);
+        self::store_xapi_data($cm->instance, $xapijson);
 
         // Successfully inserted xAPI result.
         \H5PCore::ajaxSuccess();

@@ -50,7 +50,7 @@ class view_assets {
         $this->course      = $course;
         $this->core        = framework::instance();
         $this->content     = $this->core->loadContent($cm->instance);
-        $this->settings    = hvp_get_core_assets();
+        $this->settings    = hvp_get_core_assets(\context_module::instance($cm->id));
         $this->jsrequires  = [];
         $this->cssrequires = [];
 
@@ -74,7 +74,6 @@ class view_assets {
                 0 => content_user_data::load_pre_loaded_user_data($this->content['id'])
             )
         );
-        $this->settings['ajax']['xAPIResult'] = $this->getxapiresultsurl()->out(false);
 
         $this->embedtype = isset($forceembedtype) ? $forceembedtype : \H5PCore::determineEmbedType(
             $this->content['embedType'], $this->content['library']['embedTypes']
@@ -82,20 +81,6 @@ class view_assets {
 
         $this->files = $this->getdependencyfiles();
         $this->generateassets();
-    }
-
-    /**
-     * xAPI results ajax url for settings
-     *
-     * @return \moodle_url
-     */
-    private function getxapiresultsurl() {
-        return new \moodle_url('/mod/hvp/ajax.php',
-            array(
-                'token'  => \H5PCore::createToken('xapiresult'),
-                'action' => 'xapiresult'
-            )
-        );
     }
 
     /**
