@@ -359,6 +359,11 @@ class file_storage implements \H5PFileStorage {
 
         // Locate file.
         $file = $fs->get_file($context->id, 'mod_hvp', $location[1], 0, $location[2], $location[3]);
+        if (!$file) {
+            throw new \file_serving_exception(
+                'Could not retrieve the requested file, check your file permissions.'
+            );
+        }
 
         // Return content.
         return $file->get_content();
