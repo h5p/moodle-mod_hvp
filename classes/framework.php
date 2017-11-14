@@ -252,6 +252,13 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
+     * Implements getMessages
+     */
+    public function getMessages($type) {
+      return self::messages($type);
+    }
+
+    /**
      * Implements t
      */
     public function t($message, $replacements = array()) {
