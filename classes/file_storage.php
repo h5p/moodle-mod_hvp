@@ -607,8 +607,6 @@ class file_storage implements \H5PFileStorage {
      */
     // @codingStandardsIgnoreLine
     private function getFile($filearea, $itemid, $file) {
-        global $COURSE;
-
         if ($filearea === 'editor') {
             // Itemid is actually cm or course context
             $context = $itemid;

@@ -38,8 +38,6 @@ class xapi_result {
      * Handle xapi results endpoint
      */
     public static function handle_ajax() {
-        global $DB;
-
         // Validate token.
         if (!self::validate_token()) {
             $core = framework::instance();

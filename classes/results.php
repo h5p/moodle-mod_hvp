@@ -81,7 +81,7 @@ class results {
      * Print results data
      */
     public function print_results() {
-        global $DB, $USER;
+        global $USER;
 
         $cm = get_coursemodule_from_instance('hvp', $this->contentid);
         if (!$cm) {
