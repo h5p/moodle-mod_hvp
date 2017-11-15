@@ -53,9 +53,8 @@ function hvp_get_core_settings($context) {
             $ajaxPaths['contentUserData'] = $ajaxpath . \H5PCore::createToken('contentuserdata') .
                 '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId';
 
-            $saveFreq = get_config('mod_hvp', 'content_state_frequency');
-            if (empty($saveFreq)) {
-              $saveFreq = false;
+            if (get_config('mod_hvp', 'enable_save_content_state')) {
+                $saveFreq = get_config('mod_hvp', 'content_state_frequency');
             }
         }
     }
