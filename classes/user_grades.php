@@ -60,7 +60,7 @@ class user_grades {
             return;
         }
 
-        // Get hvp data from contentId
+        // Get hvp data from content
         $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
         if (!$hvp) {
             \H5PCore::ajaxError('No such content');
@@ -86,13 +86,13 @@ class user_grades {
                    FROM {hvp} c
                    JOIN {hvp_libraries} l ON l.id = c.main_library_id
                   WHERE c.id = ?",
-                array($contentid)
+                array($hvp->id)
         );
 
         // Log view.
         new \mod_hvp\event(
                 'results', 'set',
-                $contentid, $content->title,
+                $hvp->id, $content->title,
                 $content->name, $content->major_version . '.' . $content->minor_version
         );
 
