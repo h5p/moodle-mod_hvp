@@ -89,7 +89,7 @@ class user_grades {
                 array($hvp->id)
         );
 
-        // Log view.
+        // Log
         new \mod_hvp\event(
                 'results', 'set',
                 $hvp->id, $content->title,
