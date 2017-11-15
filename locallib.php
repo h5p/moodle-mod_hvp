@@ -40,21 +40,21 @@ function hvp_get_core_settings($context) {
     $basepath = $CFG->httpswwwroot . '/';
 
     // Check permissions and generate ajax paths
-    $ajaxPaths = array();
-    $saveFreq = false;
+    $ajaxpaths = array();
+    $savefreq = false;
     if ($context->contextlevel == CONTEXT_MODULE) {
         $ajaxpath = "{$basepath}mod/hvp/ajax.php?contextId={$context->instanceid}&token=";
 
         if (has_capability('mod/hvp:saveresults', $context)) {
-            $ajaxPaths['setFinished'] = $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished';
-            $ajaxPaths['xAPIResult'] = $ajaxpath . \H5PCore::createToken('xapiresult') . '&action=xapiresult';
+            $ajaxpaths['setFinished'] = $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished';
+            $ajaxpaths['xAPIResult'] = $ajaxpath . \H5PCore::createToken('xapiresult') . '&action=xapiresult';
         }
         if (has_capability('mod/hvp:savecontentuserdata', $context)) {
-            $ajaxPaths['contentUserData'] = $ajaxpath . \H5PCore::createToken('contentuserdata') .
+            $ajaxpaths['contentUserData'] = $ajaxpath . \H5PCore::createToken('contentuserdata') .
                 '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId';
 
             if (get_config('mod_hvp', 'enable_save_content_state')) {
-                $saveFreq = get_config('mod_hvp', 'content_state_frequency');
+                $savefreq = get_config('mod_hvp', 'content_state_frequency');
             }
         }
     }
@@ -66,8 +66,8 @@ function hvp_get_core_settings($context) {
         'url' => "{$basepath}pluginfile.php/{$context->instanceid}/mod_hvp",
         'libraryUrl' => "{$basepath}pluginfile.php/{$systemcontext->id}/mod_hvp/libraries",
         'postUserStatistics' => true,
-        'ajax' => $ajaxPaths,
-        'saveFreq' => $saveFreq,
+        'ajax' => $ajaxpaths,
+        'saveFreq' => $savefreq,
         'siteUrl' => $CFG->wwwroot,
         'l10n' => array('H5P' => $core->getLocalization()),
         'user' => array(
@@ -129,13 +129,12 @@ function hvp_add_editor_assets($id = null) {
 
     // First we need to determine the context for permission handling
     if ($id) {
-      // Use cm context when editing existing content
-      $cm = get_coursemodule_from_instance('hvp', $id);
-      $context = \context_module::instance($cm->id);
-    }
-    else {
-      // Use course context when there's no content, i.e. adding new content
-      $context = \context_course::instance($COURSE->id);
+        // Use cm context when editing existing content
+        $cm = get_coursemodule_from_instance('hvp', $id);
+        $context = \context_module::instance($cm->id);
+    } else {
+        // Use course context when there's no content, i.e. adding new content
+        $context = \context_course::instance($COURSE->id);
     }
 
     $settings = \hvp_get_core_assets($context);
