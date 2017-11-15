@@ -132,6 +132,7 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
+          'manager' => CAP_ALLOW
         )
     ),
 
@@ -147,9 +148,7 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => array(
-            'manager' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW
+            'manager' => CAP_ALLOW
         )
     ),
 
@@ -168,7 +167,7 @@ $capabilities = array(
 
     'mod/hvp:installrecommendedh5plibraries' => array(
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
+        'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
           'manager' => CAP_ALLOW,
           'editingteacher' => CAP_ALLOW

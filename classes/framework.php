@@ -1362,19 +1362,26 @@ class framework implements \H5PFrameworkInterface {
                 $cmcontext = \context_module::instance($cmid);
                 return has_capability('mod/hvp:getexport', $cmcontext);
             case \H5PPermission::CREATE_RESTRICTED:
-                $context = \context_system::instance();
-                return has_capability('mod/hvp:userestrictedlibraries', $context);
+                return has_capability('mod/hvp:userestrictedlibraries', $this->getAJAXCourseContext());
             case \H5PPermission::UPDATE_LIBRARIES:
                 $context = \context_system::instance();
                 return has_capability('mod/hvp:updatelibraries', $context);
             case \H5PPermission::INSTALL_RECOMMENDED:
-                $context = \context_system::instance();
-                return has_capability('mod/hvp:installrecommendedh5plibraries', $context);
+                return has_capability('mod/hvp:installrecommendedh5plibraries', $this->getAJAXCourseContext());
             case \H5PPermission::EMBED_H5P:
                 $cmcontext = \context_module::instance($cmid);
                 return has_capability('mod/hvp:getembedcode', $cmcontext);
         }
         return false;
+    }
+
+    private function getAJAXCourseContext() {
+        $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
+        if ($context->contextlevel === CONTEXT_COURSE) {
+            return $context;
+        }
+
+        return $context->get_course_context();
     }
 
     /**
