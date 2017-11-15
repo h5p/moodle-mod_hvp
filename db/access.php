@@ -66,7 +66,8 @@ $capabilities = array(
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
+        ),
+        'clonepermissionsfrom' => 'mod/hvp:addinstance'
     ),
 
     'mod/hvp:getexport' => array(
