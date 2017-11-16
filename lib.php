@@ -411,7 +411,7 @@ function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
 
 /**
  * Hook function that is called when settings blocks are being built.
- * And adds a link to "Users grades" form the module settings menu.
+ * And adds a link to "Users grades" from the module settings menu.
  *
  * @param settings_navigation $settings The settings navigation object
  * @param navigation_node $navnode The node to add module settings to
