@@ -110,6 +110,11 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
         }
 
+        // Grade settings
+        $this->standard_grading_coursemodule_elements();
+        $mform->removeElement('grade');
+
+        // Standard course module settings
         $this->standard_coursemodule_elements();
 
         $this->add_action_buttons();
