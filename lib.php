@@ -408,3 +408,39 @@ function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
         hvp_grade_item_update($hvp);
     }
 }
+
+/**
+ * Hook function that is called when settings blocks are being built.
+ * And adds a link to "Users grades" form the module settings menu.
+ *
+ * @param settings_navigation $settings The settings navigation object
+ * @param navigation_node $navnode The node to add module settings to
+ * @throws coding_exception
+ */
+function hvp_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $navnode = null) {
+    global $PAGE;
+
+    if (has_capability('moodle/course:manageactivities', $PAGE->cm->context) &&
+        $PAGE->cm->context->contextlevel === CONTEXT_MODULE &&
+        $PAGE->course && $PAGE->course->id !== 1) {
+        // Only add this settings item on non-site course pages.
+
+        if ($settingnode = $settingsnav->find('modulesettings', \settings_navigation::TYPE_SETTING)) {
+            $strgrades = get_string('grades', 'grades');
+            $url = new \moodle_url('/mod/hvp/grade.php',
+                ['id' => $PAGE->cm->context->instanceid]);
+            $hvpgradesnode = \navigation_node::create(
+                $strgrades,
+                $url,
+                \navigation_node::NODETYPE_LEAF,
+                'hvp',
+                'hvp',
+                new \pix_icon('i/grades', $strgrades)
+            );
+            if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
+                $hvpgradesnode->make_active();
+            }
+            $settingnode->add_node($hvpgradesnode);
+        }
+    }
+}
