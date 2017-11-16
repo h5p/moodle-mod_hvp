@@ -45,11 +45,6 @@ class mod_hvp_mod_form extends moodleform_mod {
             $this->add_intro_editor(false, get_string('intro', 'hvp'));
         }
 
-        // Max grade.
-        $mform->addElement('text', 'maximumgrade', get_string('maximumgrade', 'hvp'));
-        $mform->setType('maximumgrade', PARAM_INT);
-        $mform->setDefault('maximumgrade', 10);
-
         // Action.
         $h5paction = array();
         $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('upload', 'hvp'), 'upload');
@@ -113,6 +108,11 @@ class mod_hvp_mod_form extends moodleform_mod {
         // Grade settings
         $this->standard_grading_coursemodule_elements();
         $mform->removeElement('grade');
+
+        // Max grade.
+        $mform->addElement('text', 'maximumgrade', get_string('maximumgrade', 'hvp'));
+        $mform->setType('maximumgrade', PARAM_INT);
+        $mform->setDefault('maximumgrade', 10);
 
         // Standard course module settings
         $this->standard_coursemodule_elements();
