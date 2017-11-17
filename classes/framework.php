@@ -173,8 +173,14 @@ class framework implements \H5PFrameworkInterface {
             $interface->getUploadedH5pPath($stream);
         }
 
-        $response = download_file_content($url, null, $data, false, 300, 20, false, $stream);
-        return ($response === false ? null : $response);
+        $response = download_file_content($url, null, $data, true, 300, 20, false, $stream);
+
+        if (empty($response->error)) {
+            return $response->results;
+        }
+        else {
+            $this->setErrorMessage($response->error, 'failed-fetching-external-data');
+        }
     }
 
     /**
