@@ -196,11 +196,12 @@ class framework implements \H5PFrameworkInterface {
      * Implements setErrorMessage
      *
      * @param string $message translated error message
+     * @param string $code
      */
     // @codingStandardsIgnoreLine
-    public function setErrorMessage($message) {
+    public function setErrorMessage($message, $code = null) {
         if ($message !== null) {
-            self::messages('error', $message);
+            self::messages('error', $message, $code);
         }
     }
 
@@ -219,9 +220,10 @@ class framework implements \H5PFrameworkInterface {
      *
      * @param string $type Type of messages, e.g. 'info' or 'error'
      * @param string $newmessage Optional
+     * @param string $code
      * @return array Array of stored messages
      */
-    public static function messages($type, $newmessage = null) {
+    public static function messages($type, $newmessage = null, $code = null) {
         static $m = 'mod_hvp_messages';
 
         if ($newmessage === null) {
@@ -234,7 +236,10 @@ class framework implements \H5PFrameworkInterface {
             return $messages;
         }
 
-        $_SESSION[$m][$type][] = $newmessage;
+        $_SESSION[$m][$type][] = (object)array(
+          'code' => $code,
+          'message' => $newmessage
+        );
     }
 
     /**
@@ -247,7 +252,7 @@ class framework implements \H5PFrameworkInterface {
     public static function printMessages($type, $messages) {
         global $OUTPUT;
         foreach ($messages as $message) {
-            print $OUTPUT->notification($message, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
+            print $OUTPUT->notification($message->message, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
         }
     }
 
