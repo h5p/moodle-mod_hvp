@@ -52,7 +52,7 @@ class user_grades {
         $score = required_param('score', PARAM_INT);
         $maxscore = required_param('maxScore', PARAM_INT);
 
-        // Check permission
+        // Check permission.
         $context = \context_module::instance($cm->id);
         if (!has_capability('mod/hvp:saveresults', $context)) {
             \H5PCore::ajaxError(get_string('nopermissiontosaveresult', 'hvp'));
@@ -60,7 +60,7 @@ class user_grades {
             return;
         }
 
-        // Get hvp data from content
+        // Get hvp data from content.
         $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
         if (!$hvp) {
             \H5PCore::ajaxError('No such content');
@@ -89,7 +89,7 @@ class user_grades {
                 array($hvp->id)
         );
 
-        // Log
+        // Log results set event.
         new \mod_hvp\event(
                 'results', 'set',
                 $hvp->id, $content->title,

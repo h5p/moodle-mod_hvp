@@ -39,7 +39,7 @@ function hvp_get_core_settings($context) {
     $systemcontext = \context_system::instance();
     $basepath = $CFG->httpswwwroot . '/';
 
-    // Check permissions and generate ajax paths
+    // Check permissions and generate ajax paths.
     $ajaxpaths = array();
     $savefreq = false;
     if ($context->contextlevel == CONTEXT_MODULE) {
@@ -127,13 +127,13 @@ function hvp_get_core_assets($context) {
 function hvp_add_editor_assets($id = null) {
     global $PAGE, $CFG, $COURSE;
 
-    // First we need to determine the context for permission handling
+    // First we need to determine the context for permission handling.
     if ($id) {
-        // Use cm context when editing existing content
+        // Use cm context when editing existing content.
         $cm = get_coursemodule_from_instance('hvp', $id);
         $context = \context_module::instance($cm->id);
     } else {
-        // Use course context when there's no content, i.e. adding new content
+        // Use course context when there's no content, i.e. adding new content.
         $context = \context_course::instance($COURSE->id);
     }
 

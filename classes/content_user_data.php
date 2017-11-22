@@ -84,7 +84,7 @@ class content_user_data {
             return;
         }
 
-        // Load course module for content to get context
+        // Load course module for content to get context.
         $cm = get_coursemodule_from_instance('hvp', $contentid);
         if (!$cm) {
             \H5PCore::ajaxError('No such content');

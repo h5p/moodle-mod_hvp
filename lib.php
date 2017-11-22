@@ -287,7 +287,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             if (!has_capability('mod/hvp:view', $context)) {
                 return false;
             }
-            // Note that the getexport permission is checked after loading the content
+            // Note that the getexport permission is checked after loading the content.
 
             // Get core.
             $h5pinterface = \mod_hvp\framework::instance('interface');

@@ -177,8 +177,7 @@ class framework implements \H5PFrameworkInterface {
 
         if (empty($response->error)) {
             return $response->results;
-        }
-        else {
+        } else {
             $this->setErrorMessage($response->error, 'failed-fetching-external-data');
         }
     }
@@ -265,8 +264,9 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements getMessages
      */
+    // @codingStandardsIgnoreLine
     public function getMessages($type) {
-      return self::messages($type);
+        return self::messages($type);
     }
 
     /**
@@ -1385,12 +1385,12 @@ class framework implements \H5PFrameworkInterface {
                 $cmcontext = \context_module::instance($cmid);
                 return has_capability('mod/hvp:getexport', $cmcontext);
             case \H5PPermission::CREATE_RESTRICTED:
-                return has_capability('mod/hvp:userestrictedlibraries', $this->getAJAXCourseContext());
+                return has_capability('mod/hvp:userestrictedlibraries', $this->getajaxcoursecontext());
             case \H5PPermission::UPDATE_LIBRARIES:
                 $context = \context_system::instance();
                 return has_capability('mod/hvp:updatelibraries', $context);
             case \H5PPermission::INSTALL_RECOMMENDED:
-                return has_capability('mod/hvp:installrecommendedh5plibraries', $this->getAJAXCourseContext());
+                return has_capability('mod/hvp:installrecommendedh5plibraries', $this->getajaxcoursecontext());
             case \H5PPermission::EMBED_H5P:
                 $cmcontext = \context_module::instance($cmid);
                 return has_capability('mod/hvp:getembedcode', $cmcontext);
@@ -1398,7 +1398,12 @@ class framework implements \H5PFrameworkInterface {
         return false;
     }
 
-    private function getAJAXCourseContext() {
+    /**
+     * Gets course context in AJAX
+     *
+     * @return bool|\context|\context_course
+     */
+    private function getajaxcoursecontext() {
         $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
         if ($context->contextlevel === CONTEXT_COURSE) {
             return $context;

@@ -105,7 +105,7 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
         }
 
-        // Grade settings
+        // Grade settings.
         $this->standard_grading_coursemodule_elements();
         $mform->removeElement('grade');
 
@@ -114,7 +114,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->setType('maximumgrade', PARAM_INT);
         $mform->setDefault('maximumgrade', 10);
 
-        // Standard course module settings
+        // Standard course module settings.
         $this->standard_coursemodule_elements();
 
         $this->add_action_buttons();

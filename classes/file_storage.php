@@ -426,7 +426,11 @@ class file_storage implements \H5PFileStorage {
         // Determine source file area and item id.
         if ($fromid === 'editor') {
             $sourcefilearea = 'editor';
-            $sourceitemid   = empty($tocontent->instance) ? \context_course::instance($tocontent->course) : \context_module::instance($tocontent->coursemodule);
+            if (empty($tocontent->instance)) {
+                $sourceitemid = \context_course::instance($tocontent->course);
+            } else {
+                $sourceitemid = \context_module::instance($tocontent->coursemodule);
+            }
         } else {
             $sourcefilearea = 'content';
             $sourceitemid   = $fromid;
@@ -606,7 +610,7 @@ class file_storage implements \H5PFileStorage {
     // @codingStandardsIgnoreLine
     private function getFile($filearea, $itemid, $file) {
         if ($filearea === 'editor') {
-            // Itemid is actually cm or course context
+            // Itemid is actually cm or course context.
             $context = $itemid;
             $itemid = 0;
         } else if (is_object($itemid)) {
