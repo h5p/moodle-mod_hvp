@@ -76,8 +76,6 @@ class content_user_data {
      * @param $invalidate
      */
     private static function store_data($contentid, $subcontentid, $dataid, $data, $preload, $invalidate) {
-        global $DB;
-
         // Validate token.
         if (!\H5PCore::validToken('contentuserdata', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));

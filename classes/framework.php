@@ -249,8 +249,7 @@ class framework implements \H5PFrameworkInterface {
                 'code' => $code,
                 'message' => $newmessage
             );
-        }
-        else {
+        } else {
             $_SESSION[$m][$type][] = $newmessage;
         }
     }
