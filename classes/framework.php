@@ -241,10 +241,18 @@ class framework implements \H5PFrameworkInterface {
             return $messages;
         }
 
-        $_SESSION[$m][$type][] = (object)array(
-          'code' => $code,
-          'message' => $newmessage
-        );
+        // We expect to get out an array of strings when getting info
+        // and an array of objects when getting errors for consistency across platforms.
+        // This implementation should be improved for consistency across the data type returned here.
+        if ($type === 'error') {
+            $_SESSION[$m][$type][] = (object)array(
+                'code' => $code,
+                'message' => $newmessage
+            );
+        }
+        else {
+            $_SESSION[$m][$type][] = $newmessage;
+        }
     }
 
     /**
@@ -257,7 +265,8 @@ class framework implements \H5PFrameworkInterface {
     public static function printMessages($type, $messages) {
         global $OUTPUT;
         foreach ($messages as $message) {
-            print $OUTPUT->notification($message->message, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
+            $out = $type === 'error' ? $message->message : $message;
+            print $OUTPUT->notification($out, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
         }
     }
 

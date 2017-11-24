@@ -237,14 +237,11 @@ class mod_hvp_mod_form extends moodleform_mod {
                 $h5pvalidator = \mod_hvp\framework::instance('validator');
                 if (! $h5pvalidator->isValidPackage()) {
                     // Errors while validating the package.
-                    $messagedata = array_merge(
-                        \mod_hvp\framework::messages('error'),
-                        \mod_hvp\framework::messages('info')
-                    );
-
-                    $messages = array_map(function ($message) {
+                    $errors = array_map(function ($message) {
                         return $message->message;
-                    }, $messagedata);
+                    }, \mod_hvp\framework::messages('error'));
+
+                    $messages = array_merge(\mod_hvp\framework::messages('info'), $errors);
                     $errors['h5pfile'] = implode('<br/>', $messages);
                 }
             }
