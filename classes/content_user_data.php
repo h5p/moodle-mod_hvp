@@ -217,7 +217,9 @@ class content_user_data {
     public static function load_pre_loaded_user_data($contentid) {
         global $DB, $USER;
 
-        $preloadeduserdata = array();
+        $preloadeduserdata = array(
+            'state' => '{}'
+        );
 
         $results = $DB->get_records('hvp_content_user_data', array(
             'user_id' => $USER->id,
