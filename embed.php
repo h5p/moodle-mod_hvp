@@ -36,7 +36,26 @@ $course = $DB->get_record('course', array('id' => $cm->course));
 if (!$course) {
     print_error('coursemisconf');
 }
-require_course_login($course, false, $cm);
+
+try {
+    require_course_login($course, true, $cm, true, true);
+}
+catch (Exception $e) {
+    $PAGE->set_pagelayout('embedded');
+    $embedfailedsvg = new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/library/images/h5p.svg");
+    echo '<body style="margin:0">' .
+         '<div style="background: #fafafa ' .
+         'url(' . $embedfailedsvg->out() . ') no-repeat center;' .
+         'background-size: 50% 50%;width: 100%;height: 100%;">' .
+         '</div>' .
+         '<div style="width:100%;position:absolute;top:75%;text-align:center;color:#434343;' .
+         'font-family: Consolas,monaco,monospace"' .
+         '>' .
+         get_string('embedloginfailed', 'hvp') .
+         '</div>' .
+         '</body>';
+    return;
+}
 $context = context_module::instance($cm->id);
 require_capability('mod/hvp:view', $context);
 

@@ -334,3 +334,6 @@ $string['licenseV1'] = 'Versió 1';
 $string['licenseCC010'] = 'CC0 1.0 Universal (CC0 1.0) Dedicació de Domini Públic';
 $string['licenseCC010U'] = 'CC0 1.0 Universal';
 $string['licenseversion'] = 'Versió de la llicència';
+
+// Embed
+$string['embedloginfailed'] = 'You do not have access to this content. Try logging in.';
