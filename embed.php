@@ -39,8 +39,7 @@ if (!$course) {
 
 try {
     require_course_login($course, true, $cm, true, true);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     $PAGE->set_pagelayout('embedded');
     $embedfailedsvg = new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/library/images/h5p.svg");
     echo '<body style="margin:0">' .
