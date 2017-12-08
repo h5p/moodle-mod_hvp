@@ -79,4 +79,14 @@ class mod_hvp_renderer extends plugin_renderer_base {
      */
     public function hvp_alter_filtered_parameters(&$parameters, $name, $majorversion, $minorversion) {
     }
+
+    /**
+     * Alter local library list returned to library selector
+     *
+     * @param array $libraries Local libraries found
+     * @param string $librarySelectorType The type of library selector, currently supports "hub" and "legacy"
+     * @param bool $isRootSelector True if the selector is at the top level, not used inside a content type
+     */
+    public function hvp_alter_library_list(&$libraries, $librarySelectorType = 'hub', $isRootSelector = true) {
+    }
 }

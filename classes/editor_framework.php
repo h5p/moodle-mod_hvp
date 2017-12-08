@@ -101,8 +101,9 @@ class editor_framework implements \H5peditorStorage {
      * @return array List of all libraries loaded
      */
     public function getLibraries($libraries = null) {
-        global $DB;
+        global $DB, $PAGE;
 
+        $isRootSelector = $libraries === null;
         $context_id = required_param('contextId', PARAM_RAW);
         $super_user = has_capability('mod/hvp:userestrictedlibraries',
             \context::instance_by_id($context_id));
@@ -194,6 +195,12 @@ class editor_framework implements \H5peditorStorage {
             // Add new library
             $libraries[] = $library;
         }
+
+        // Allow hooks to make changes to libraries.
+        $PAGE->set_context(null);
+        $renderer = $PAGE->get_renderer('hvp');
+        $renderer->hvp_alter_library_list($libraries, 'legacy', $isRootSelector);
+
         return $libraries;
     }
 

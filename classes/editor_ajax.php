@@ -31,7 +31,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      * @return array Latest version of all local libraries
      */
     public function getLatestLibraryVersions() {
-        global $DB;
+        global $DB, $PAGE;
 
         $max_major_version_sql = "
             SELECT hl.machine_name, MAX(hl.major_version) AS major_version
@@ -47,7 +47,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
             AND hl1.major_version = hl2.major_version
             GROUP BY hl2.machine_name, hl2.major_version";
 
-        return $DB->get_records_sql("
+        $latestLibraries = $DB->get_records_sql("
             SELECT hl4.id, hl4.machine_name, hl4.title, hl4.major_version,
                 hl4.minor_version, hl4.patch_version, hl4.has_icon, hl4.restricted
             FROM {hvp_libraries} hl4
@@ -56,6 +56,13 @@ class editor_ajax implements \H5PEditorAjaxInterface {
             AND hl4.major_version = hl3.major_version
             AND hl4.minor_version = hl3.minor_version"
         );
+
+        // Allow hooks to make changes to libraries.
+        $PAGE->set_context(null);
+        $renderer = $PAGE->get_renderer('mod_hvp');
+        $renderer->hvp_alter_library_list($latestLibraries);
+
+        return $latestLibraries;
     }
 
     /**
