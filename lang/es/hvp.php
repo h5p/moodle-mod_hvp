@@ -64,14 +64,14 @@ $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
 
 // Admin settings.
-$string['displayoptionnevershow'] = 'Never show';
-$string['displayoptionalwaysshow'] = 'Always show';
-$string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
-$string['displayoptionpermissionsembed'] = 'Show only if user has permissions to embed H5P';
-$string['displayoptionauthoron'] = 'Controlled by author, default is on';
-$string['displayoptionauthoroff'] = 'Controlled by author, default is off';
+$string['displayoptionnevershow'] = 'Nunca mostrar';
+$string['displayoptionalwaysshow'] = 'Siempre muestra';
+$string['displayoptionpermissions'] = 'Mostrar solo si el usuario tiene permisos para exportar H5P';
+$string['displayoptionpermissionsembed'] = 'Mostrar solo si el usuario tiene permisos para incrustar H5P';
+$string['displayoptionauthoron'] = 'Controlado por el autor, el valor predeterminado esta activado';
+$string['displayoptionauthoroff'] = 'Controlado por el autor, el valor predeterminado está desactivado';
 $string['displayoptions'] = 'Mostrar Opciones';
-$string['enableframe'] = 'Display action bar and frame';
+$string['enableframe'] = 'Mostrar barra de acción y marco';
 $string['enabledownload'] = 'Botón de Descarga';
 $string['enableembed'] = 'Embed button';
 $string['enablecopyright'] = 'Copyright button';
