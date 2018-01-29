@@ -74,7 +74,8 @@ function hvp_get_core_settings($context) {
             'name' => $USER->firstname . ' ' . $USER->lastname,
             'mail' => $USER->email
         ),
-        'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? true : false
+        'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? true : false,
+        'reportingIsEnabled' => true,
     );
 
     return $settings;
