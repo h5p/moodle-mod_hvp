@@ -80,10 +80,10 @@ if (!$xapiresults) {
     print_error('invalidxapiresult', 'hvp');
 }
 
-$totalrawscore       = 0;
-$totalmaxscore       = 0;
-$totalscaledscore    = 0;
-$scaledscoreperscore = 0;
+$totalrawscore       = null;
+$totalmaxscore       = null;
+$totalscaledscore    = null;
+$scaledscoreperscore = null;
 
 // Assemble our question tree.
 $basequestion = null;
