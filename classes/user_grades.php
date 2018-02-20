@@ -98,4 +98,105 @@ class user_grades {
 
         \H5PCore::ajaxSuccess();
     }
+
+    /**
+     *  Since the subcontent types do not have their own row in the table,
+     *  we use the hvp_results_table as a 'staging area' to set and get
+     *  dynamically graded scores.
+     */
+    public static function handle_dynamic_grading() {
+      global $DB, $USER;
+
+      if (!\H5PCore::validToken('result', required_param('token', PARAM_RAW))) {
+          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+          return;
+      }
+
+      $cm = get_coursemodule_from_id('hvp', required_param('contextId', PARAM_INT));
+      if (!$cm) {
+          \H5PCore::ajaxError('No such content');
+          http_response_code(404);
+          return;
+      }
+
+      // Content parameters.
+      $subcontentID = required_param('subcontent_id', PARAM_INT);
+      $score = required_param('score', PARAM_INT);
+
+      // Update the mdl_hvp_xapi_results table
+      $data = (object) [
+        'id' => $subcontentID,
+        'raw_score' => $score
+      ];
+      $DB->update_record('hvp_xapi_results', $data, $bulk=false);
+
+      // Get the all content types associated with the containing content type
+      $result = $DB->get_records('hvp_xapi_results', array(
+        'content_id' => $cm->instance,
+      ));
+
+      // Keep only the dynamically gradable content types
+      $gradables = array_filter($result, function ($var) {
+        return $var->additionals === '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}';
+      });
+
+      // Get the scores from the dynamically graded content types
+      $gradableScores = array_map(function ($var) {
+        return intval($var->raw_score);
+      }, $gradables);
+
+      $totalGradablesScore = array_sum($gradableScores);
+
+      // Get the original raw score from the main content type
+      $result = $DB->get_records('hvp_xapi_results', array(
+        'content_id' => $cm->instance,
+      ));
+
+      $mainContentType = array_filter($result, function ($var) {
+        return $var->interaction_type === 'compound'; // More robust selection
+      });
+
+      $mainContentTypeRawScore = array_map(function ($var) {
+        return intval($var->raw_score);
+      }, $mainContentType);
+
+      $mainContentTypeRawScore = array_sum($mainContentTypeRawScore);
+
+      // Set the real gradebook score
+      // Get hvp data from content.
+      $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
+      if (!$hvp) {
+          \H5PCore::ajaxError('No such content');
+          http_response_code(404);
+          return;
+      }
+
+      // Create grade object and set grades.
+      $grade = (object) array(
+          'userid' => $USER->id
+      );
+
+      $newScore = $mainContentTypeRawScore + $totalGradablesScore;
+
+      // Set grade using Gradebook API.
+      $hvp->cmidnumber = $cm->idnumber;
+      $hvp->name = $cm->name;
+      $hvp->rawgrade = $newScore;
+      $hvp->rawgrademax = 4;
+      hvp_grade_item_update($hvp, $grade);
+    }
+
+    public static function return_subcontent_grade() {
+      global $DB, $USER;
+      // Content parameters.
+      $subcontentID = required_param('subcontent_id', PARAM_INT);
+
+      // Get the all content types associated with the main content type
+      $result = $DB->get_records('hvp_xapi_results', array(
+        'id' => $subcontentID,
+      ));
+
+      $response = ['score' => intval($result[$subcontentID]->raw_score)];
+      \H5PCore::ajaxSuccess($response);
+    }
 }

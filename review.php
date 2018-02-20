@@ -134,9 +134,25 @@ foreach ($xapiresults as $question) {
 $reporter   = H5PReport::getInstance();
 $reporthtml = $reporter->generateReport($basequestion, null, count($xapiresults) <= 1);
 $styles     = $reporter->getStylesUsed();
+$scripts    = $reporter->getScriptsUsed();
 foreach ($styles as $style) {
     $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $style));
 }
+foreach ($scripts as $script) {
+    $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $script));
+}
+
+$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/jquery.js'), true);
+
+// Send the enpoints necessary for dynamic grading to the view 
+$basepath = $CFG->httpswwwroot;
+$setSubContentEndpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" . \H5PCore::createToken('result') . '&action=updatesubcontentscore';
+$getSubContentEndpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" . \H5PCore::createToken('result') . '&action=getsubcontentscore';
+$data_to_send = array(
+  'setSubContentEndpoint' => $setSubContentEndpoint,
+  'getSubContentEndpoint' => $getSubContentEndpoint,
+);
+$PAGE->requires->data_for_js('data_for_page', $data_to_send, true);
 
 $renderer = $PAGE->get_renderer('mod_hvp');
 
