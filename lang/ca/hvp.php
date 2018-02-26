@@ -180,6 +180,8 @@ $string['reportingscorelabel'] = 'Puntuació:';
 $string['reportingscaledscorelabel'] = 'Puntuació al llibre de qualificacions:';
 $string['reportingscoredelimiter'] = 'sobre';
 $string['reportingscaledscoredelimiter'] = ',';
+$string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
+$string['reportsubmitgradelabel'] = 'Submit grade';
 
 // Editor.
 $string['javascriptloading'] = 'S\'està esperant el JavaScript...';

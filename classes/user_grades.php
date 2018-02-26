@@ -122,6 +122,7 @@ class user_grades {
       // Content parameters.
       $subcontentID = required_param('subcontent_id', PARAM_INT);
       $score = required_param('score', PARAM_INT);
+      $maxscore = required_param('maxScore', PARAM_INT);
 
       // Update the mdl_hvp_xapi_results table
       $data = (object) [
@@ -182,8 +183,29 @@ class user_grades {
       $hvp->cmidnumber = $cm->idnumber;
       $hvp->name = $cm->name;
       $hvp->rawgrade = $newScore;
-      $hvp->rawgrademax = 4;
+      $hvp->rawgrademax = $maxscore;
       hvp_grade_item_update($hvp, $grade);
+      // \H5PCore::ajaxSuccess(0);
+      // Get the content id from the subcontent id
+      $result = $DB->get_records('hvp_xapi_results', array(
+        'id' => $subcontentID,
+      ));
+
+      // Get the all content types associated with the main content type
+      $result = $DB->get_records('hvp_xapi_results', array(
+        'content_id' => $result[$subcontentID]->content_id,
+      ));
+
+      $ungraded = array_filter($result, function ($var) {
+        return $var->raw_score == NULL && $var->additionals == '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}';
+      });
+
+      $response = [
+        'score' => $result[$subcontentID]->raw_score,
+        'maxScore' => intval($result[$subcontentID]->max_score),
+        'totalUngraded' => sizeof($ungraded),
+      ];
+      \H5PCore::ajaxSuccess($response);
     }
 
     public static function return_subcontent_grade() {
@@ -191,12 +213,25 @@ class user_grades {
       // Content parameters.
       $subcontentID = required_param('subcontent_id', PARAM_INT);
 
-      // Get the all content types associated with the main content type
+      // Get the content id from the subcontent id
       $result = $DB->get_records('hvp_xapi_results', array(
         'id' => $subcontentID,
       ));
 
-      $response = ['score' => intval($result[$subcontentID]->raw_score)];
+      // Get the all content types associated with the main content type
+      $result = $DB->get_records('hvp_xapi_results', array(
+        'content_id' => $result[$subcontentID]->content_id,
+      ));
+
+      $ungraded = array_filter($result, function ($var) {
+        return $var->raw_score == NULL && $var->additionals == '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}';
+      });
+
+      $response = [
+        'score' => $result[$subcontentID]->raw_score,
+        'maxScore' => intval($result[$subcontentID]->max_score),
+        'totalUngraded' => sizeof($ungraded),
+      ];
       \H5PCore::ajaxSuccess($response);
     }
 }

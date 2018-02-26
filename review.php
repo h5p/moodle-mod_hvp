@@ -119,7 +119,12 @@ foreach ($xapiresults as $question) {
     }
 
     // Set scores.
+    if (!isset($question->raw_score)) {
+      $question->raw_score = 0;
+    }
     if (isset($question->raw_score) && isset($question->grademax) && isset($question->max_score)) {
+        $question->scaled_score_per_score = $scaledscoreperscore;
+        $question->parent_max_score = $totalmaxscore;
         $question->score_scale = round($question->raw_score * $scaledscoreperscore, 2);
     }
 
@@ -128,6 +133,7 @@ foreach ($xapiresults as $question) {
     $question->scaled_score_label     = get_string('reportingscaledscorelabel', 'hvp');
     $question->score_delimiter        = get_string('reportingscoredelimiter', 'hvp');
     $question->scaled_score_delimiter = get_string('reportingscaledscoredelimiter', 'hvp');
+    // $question->questions_remaining_label = get_string('reportingquestionsremaininglabel', 'hvp'); // TODO
 }
 
 // Initialize reporter.
@@ -144,7 +150,7 @@ foreach ($scripts as $script) {
 
 $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/jquery.js'), true);
 
-// Send the enpoints necessary for dynamic grading to the view 
+// Send the enpoints necessary for dynamic grading to the view
 $basepath = $CFG->httpswwwroot;
 $setSubContentEndpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" . \H5PCore::createToken('result') . '&action=updatesubcontentscore';
 $getSubContentEndpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" . \H5PCore::createToken('result') . '&action=getsubcontentscore';
