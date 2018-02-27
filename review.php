@@ -133,7 +133,7 @@ foreach ($xapiresults as $question) {
     $question->scaled_score_label     = get_string('reportingscaledscorelabel', 'hvp');
     $question->score_delimiter        = get_string('reportingscoredelimiter', 'hvp');
     $question->scaled_score_delimiter = get_string('reportingscaledscoredelimiter', 'hvp');
-    // $question->questions_remaining_label = get_string('reportingquestionsremaininglabel', 'hvp'); // TODO
+    $question->questions_remaining_label = get_string('reportingquestionsremaininglabel', 'hvp');
 }
 
 // Initialize reporter.
