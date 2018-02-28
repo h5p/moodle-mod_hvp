@@ -120,7 +120,7 @@ foreach ($xapiresults as $question) {
 
     // Set scores.
     if (!isset($question->raw_score)) {
-      $question->raw_score = 0;
+        $question->raw_score = 0;
     }
     if (isset($question->raw_score) && isset($question->grademax) && isset($question->max_score)) {
         $question->scaled_score_per_score = $scaledscoreperscore;
@@ -150,15 +150,17 @@ foreach ($scripts as $script) {
 
 $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/jquery.js'), true);
 
-// Send the enpoints necessary for dynamic grading to the view
+// Send the enpoints necessary for dynamic grading to the view.
 $basepath = $CFG->httpswwwroot;
-$setSubContentEndpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" . \H5PCore::createToken('result') . '&action=updatesubcontentscore';
-$getSubContentEndpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" . \H5PCore::createToken('result') . '&action=getsubcontentscore';
-$data_to_send = array(
-  'setSubContentEndpoint' => $setSubContentEndpoint,
-  'getSubContentEndpoint' => $getSubContentEndpoint,
+$setsubcontentendpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" .
+    \H5PCore::createToken('result') . '&action=updatesubcontentscore';
+$getsubcontentendpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" .
+    \H5PCore::createToken('result') . '&action=getsubcontentscore';
+$datatosend = array(
+  'setSubContentEndpoint' => $setsubcontentendpoint,
+  'getSubContentEndpoint' => $getsubcontentendpoint,
 );
-$PAGE->requires->data_for_js('data_for_page', $data_to_send, true);
+$PAGE->requires->data_for_js('data_for_page', $datatosend, true);
 
 $renderer = $PAGE->get_renderer('mod_hvp');
 

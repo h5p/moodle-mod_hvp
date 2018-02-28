@@ -120,28 +120,29 @@ class user_grades {
         }
 
         // Content parameters.
-        $subcontentID = required_param('subcontent_id', PARAM_INT);
+        $subcontentid = required_param('subcontent_id', PARAM_INT);
         $score = required_param('score', PARAM_INT);
 
-        // Update the mdl_hvp_xapi_results table
+        // Update the answer's score.
         $data = (object) [
-            'id' => $subcontentID,
+            'id' => $subcontentid,
             'raw_score' => $score
         ];
-        $DB->update_record('hvp_xapi_results', $data, $bulk=false);
+        $DB->update_record('hvp_xapi_results', $data, $bulk = false);
 
-        // Load freshly updated record
-        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentID));
+        // Load freshly updated record.
+        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
 
-        // Get the sum of all the OEQ scores with the same parent
-        $totalGradablesScore = intval($DB->get_field_sql(
+        // Get the sum of all the OEQ scores with the same parent.
+        $totalgradablesscore = intval($DB->get_field_sql(
             "SELECT SUM(raw_score)
             FROM {hvp_xapi_results}
             WHERE parent_id = ?
-            AND additionals = ?", array($answer->parent_id, '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+            AND additionals = ?", array($answer->parent_id,
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
         ));
 
-        // Get the original raw score from the main content type
+        // Get the original raw score from the main content type.
         $baseanswer = $DB->get_record('hvp_xapi_results', array(
             'id' => $answer->parent_id
         ));
@@ -155,52 +156,54 @@ class user_grades {
         }
 
         // Set grade using Gradebook API.
-        $hvp->rawgrade = $baseanswer->raw_score + $totalGradablesScore;
+        $hvp->rawgrade = $baseanswer->raw_score + $totalgradablesscore;
         $hvp->rawgrademax = $baseanswer->max_score;
         hvp_grade_item_update($hvp, (object) array(
             'userid' => $answer->user_id
         ));
 
-        // Get the num of ungraded OEQ answers
-        $numUngraded = intval($DB->get_field_sql(
+        // Get the num of ungraded OEQ answers.
+        $numungraded = intval($DB->get_field_sql(
             "SELECT COUNT(*)
             FROM {hvp_xapi_results}
             WHERE parent_id = ?
             AND raw_score IS NULL
-            AND additionals = ?", array($answer->parent_id, '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+            AND additionals = ?", array($answer->parent_id,
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
         ));
 
         $response = [
             'score' => $answer->raw_score,
             'maxScore' => $answer->max_score,
-            'totalUngraded' => $numUngraded,
+            'totalUngraded' => $numungraded,
         ];
         \H5PCore::ajaxSuccess($response);
     }
 
     /**
-     *  
+     * Fetch score/maxScore for ungraded item + number of ungraded items.
      */
     public static function return_subcontent_grade() {
         global $DB;
 
         // Content parameters.
-        $subcontentID = required_param('subcontent_id', PARAM_INT);
-        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentID));
+        $subcontentid = required_param('subcontent_id', PARAM_INT);
+        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
 
         // Get the num of ungraded OEQ answers
-        $numUngraded = intval($DB->get_field_sql(
+        $numungraded = intval($DB->get_field_sql(
             "SELECT COUNT(*)
             FROM {hvp_xapi_results}
             WHERE parent_id = ?
             AND raw_score IS NULL
-            AND additionals = ?", array($answer->parent_id, '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+            AND additionals = ?", array($answer->parent_id,
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
         ));
 
         $response = [
             'score' => $answer->raw_score,
             'maxScore' => $answer->max_score,
-            'totalUngraded' => $numUngraded,
+            'totalUngraded' => $numungraded,
         ];
         \H5PCore::ajaxSuccess($response);
     }
