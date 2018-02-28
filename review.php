@@ -129,11 +129,12 @@ foreach ($xapiresults as $question) {
     }
 
     // Set score labels.
-    $question->score_label            = get_string('reportingscorelabel', 'hvp');
-    $question->scaled_score_label     = get_string('reportingscaledscorelabel', 'hvp');
-    $question->score_delimiter        = get_string('reportingscoredelimiter', 'hvp');
-    $question->scaled_score_delimiter = get_string('reportingscaledscoredelimiter', 'hvp');
-    $question->questions_remaining_label = get_string('reportingquestionsremaininglabel', 'hvp');
+    $question->score_label                  = get_string('reportingscorelabel', 'hvp');
+    $question->scaled_score_label           = get_string('reportingscaledscorelabel', 'hvp');
+    $question->score_delimiter              = get_string('reportingscoredelimiter', 'hvp');
+    $question->scaled_score_delimiter       = get_string('reportingscaledscoredelimiter', 'hvp');
+    $question->questions_remaining_label    = get_string('reportingquestionsremaininglabel', 'hvp');
+    $question->iv_open_ended_question_title = get_string('reportingivopenendedtitle', 'hvp');
 }
 
 // Initialize reporter.

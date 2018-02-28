@@ -182,6 +182,7 @@ $string['reportingscoredelimiter'] = 'sobre';
 $string['reportingscaledscoredelimiter'] = ',';
 $string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
 $string['reportsubmitgradelabel'] = 'Submit grade';
+$string['reportingivopenendedtitle'] = 'Open-ended Question';
 
 // Editor.
 $string['javascriptloading'] = 'S\'està esperant el JavaScript...';

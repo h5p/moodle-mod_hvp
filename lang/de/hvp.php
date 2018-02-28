@@ -157,6 +157,7 @@ $string['reportingscoredelimiter'] = 'out of';
 $string['reportingscaledscoredelimiter'] = ',';
 $string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
 $string['reportsubmitgradelabel'] = 'Submit grade';
+$string['reportingivopenendedtitle'] = 'Open-ended Question';
 
 
 // Editor.
