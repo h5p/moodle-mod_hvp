@@ -15,7 +15,10 @@
           {{# str }} reportingscorelabel, mod_hvp {{/ str }}
         </span>
         <span class="h5p-reporting-main-score">
-          {{rawScore}} {{# str }} reportingscoredelimiter, mod_hvp {{/ str }} {{maxScore}}
+          <span class="h5p-reporting-main-score-raw-score">
+            {{rawScore}}
+          </span>
+          {{# str }} reportingscoredelimiter, mod_hvp {{/ str }} {{maxScore}}
         </span>
       </div>
 
@@ -25,7 +28,10 @@
           {{# str }} reportingscaledscorelabel, mod_hvp {{/ str }}
         </span>
         <span class="h5p-reporting-scaled-score">
-          {{scaledScore}} {{# str }} reportingscoredelimiter, mod_hvp {{/ str }} {{maxScaledScore}}
+          <span class="h5p-reporting-main-score-scaled-score">
+            {{scaledScore}}
+          </span>
+          {{# str }} reportingscoredelimiter, mod_hvp {{/ str }} {{maxScaledScore}}
         </span>
       </div>
     </div>

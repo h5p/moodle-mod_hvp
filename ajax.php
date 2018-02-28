@@ -166,6 +166,31 @@ switch($action) {
         break;
 
     /*
+     * Saves a dynamically graded grade to the gradebook
+     *
+     * Type: HTTP POST
+     *
+     * Parameters:
+     *  - subcontent_id
+     *  - score
+     */
+    case 'updatesubcontentscore':
+        \mod_hvp\user_grades::handle_dynamic_grading();
+        break;
+
+    /*
+     * Returns a grade
+     *
+     * Type: HTTP GET
+     *
+     * Parameters:
+     *  - subcontent_id
+     */
+    case 'getsubcontentscore':
+        \mod_hvp\user_grades::return_subcontent_grade();
+        break;
+
+    /*
      * Provide data for results view
      *
      * Type: HTTP GET

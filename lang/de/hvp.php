@@ -155,6 +155,9 @@ $string['reportingscorelabel'] = 'Score:';
 $string['reportingscaledscorelabel'] = 'Gradebook score:';
 $string['reportingscoredelimiter'] = 'out of';
 $string['reportingscaledscoredelimiter'] = ',';
+$string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
+$string['reportsubmitgradelabel'] = 'Submit grade';
+
 
 // Editor.
 $string['javascriptloading'] = 'Warte auf JavaScript';
