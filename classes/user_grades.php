@@ -105,133 +105,103 @@ class user_grades {
      *  dynamically graded scores.
      */
     public static function handle_dynamic_grading() {
-      global $DB, $USER;
+        global $DB;
 
-      if (!\H5PCore::validToken('result', required_param('token', PARAM_RAW))) {
-          \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
-          return;
-      }
+        if (!\H5PCore::validToken('result', required_param('token', PARAM_RAW))) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            return;
+        }
 
-      $cm = get_coursemodule_from_id('hvp', required_param('contextId', PARAM_INT));
-      if (!$cm) {
-          \H5PCore::ajaxError('No such content');
-          http_response_code(404);
-          return;
-      }
+        $cm = get_coursemodule_from_id('hvp', required_param('contextId', PARAM_INT));
+        if (!$cm) {
+            \H5PCore::ajaxError('No such content');
+            http_response_code(404);
+            return;
+        }
 
-      // Content parameters.
-      $subcontentID = required_param('subcontent_id', PARAM_INT);
-      $score = required_param('score', PARAM_INT);
-      $maxscore = required_param('maxScore', PARAM_INT);
+        // Content parameters.
+        $subcontentID = required_param('subcontent_id', PARAM_INT);
+        $score = required_param('score', PARAM_INT);
 
-      // Update the mdl_hvp_xapi_results table
-      $data = (object) [
-        'id' => $subcontentID,
-        'raw_score' => $score
-      ];
-      $DB->update_record('hvp_xapi_results', $data, $bulk=false);
+        // Update the mdl_hvp_xapi_results table
+        $data = (object) [
+            'id' => $subcontentID,
+            'raw_score' => $score
+        ];
+        $DB->update_record('hvp_xapi_results', $data, $bulk=false);
 
-      // Get the all content types associated with the containing content type
-      $result = $DB->get_records('hvp_xapi_results', array(
-        'content_id' => $cm->instance,
-      ));
+        // Load freshly updated record
+        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentID));
 
-      // Keep only the dynamically gradable content types
-      $gradables = array_filter($result, function ($var) {
-        return $var->additionals === '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}';
-      });
+        // Get the sum of all the OEQ scores with the same parent
+        $totalGradablesScore = intval($DB->get_field_sql(
+            "SELECT SUM(raw_score)
+            FROM {hvp_xapi_results}
+            WHERE parent_id = ?
+            AND additionals = ?", array($answer->parent_id, '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+        ));
 
-      // Get the scores from the dynamically graded content types
-      $gradableScores = array_map(function ($var) {
-        return intval($var->raw_score);
-      }, $gradables);
+        // Get the original raw score from the main content type
+        $baseanswer = $DB->get_record('hvp_xapi_results', array(
+            'id' => $answer->parent_id
+        ));
 
-      $totalGradablesScore = array_sum($gradableScores);
+        // Get hvp data from content.
+        $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
+        if (!$hvp) {
+            \H5PCore::ajaxError('No such content');
+            http_response_code(404);
+            return;
+        }
 
-      // Get the original raw score from the main content type
-      $result = $DB->get_records('hvp_xapi_results', array(
-        'content_id' => $cm->instance,
-      ));
+        // Set grade using Gradebook API.
+        $hvp->rawgrade = $baseanswer->raw_score + $totalGradablesScore;
+        $hvp->rawgrademax = $baseanswer->max_score;
+        hvp_grade_item_update($hvp, (object) array(
+            'userid' => $answer->user_id
+        ));
 
-      $mainContentType = array_filter($result, function ($var) {
-        return $var->interaction_type === 'compound'; // More robust selection
-      });
+        // Get the num of ungraded OEQ answers
+        $numUngraded = intval($DB->get_field_sql(
+            "SELECT COUNT(*)
+            FROM {hvp_xapi_results}
+            WHERE parent_id = ?
+            AND raw_score IS NULL
+            AND additionals = ?", array($answer->parent_id, '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+        ));
 
-      $mainContentTypeRawScore = array_map(function ($var) {
-        return intval($var->raw_score);
-      }, $mainContentType);
-
-      $mainContentTypeRawScore = array_sum($mainContentTypeRawScore);
-
-      // Set the real gradebook score
-      // Get hvp data from content.
-      $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
-      if (!$hvp) {
-          \H5PCore::ajaxError('No such content');
-          http_response_code(404);
-          return;
-      }
-
-      // Create grade object and set grades.
-      $grade = (object) array(
-          'userid' => $USER->id
-      );
-
-      $newScore = $mainContentTypeRawScore + $totalGradablesScore;
-
-      // Set grade using Gradebook API.
-      $hvp->cmidnumber = $cm->idnumber;
-      $hvp->name = $cm->name;
-      $hvp->rawgrade = $newScore;
-      $hvp->rawgrademax = $maxscore;
-      hvp_grade_item_update($hvp, $grade);
-      // \H5PCore::ajaxSuccess(0);
-      // Get the content id from the subcontent id
-      $result = $DB->get_records('hvp_xapi_results', array(
-        'id' => $subcontentID,
-      ));
-
-      // Get the all content types associated with the main content type
-      $result = $DB->get_records('hvp_xapi_results', array(
-        'content_id' => $result[$subcontentID]->content_id,
-      ));
-
-      $ungraded = array_filter($result, function ($var) {
-        return $var->raw_score == NULL && $var->additionals == '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}';
-      });
-
-      $response = [
-        'score' => $result[$subcontentID]->raw_score,
-        'maxScore' => intval($result[$subcontentID]->max_score),
-        'totalUngraded' => sizeof($ungraded),
-      ];
-      \H5PCore::ajaxSuccess($response);
+        $response = [
+            'score' => $answer->raw_score,
+            'maxScore' => $answer->max_score,
+            'totalUngraded' => $numUngraded,
+        ];
+        \H5PCore::ajaxSuccess($response);
     }
 
+    /**
+     *  
+     */
     public static function return_subcontent_grade() {
-      global $DB, $USER;
-      // Content parameters.
-      $subcontentID = required_param('subcontent_id', PARAM_INT);
+        global $DB;
 
-      // Get the content id from the subcontent id
-      $result = $DB->get_records('hvp_xapi_results', array(
-        'id' => $subcontentID,
-      ));
+        // Content parameters.
+        $subcontentID = required_param('subcontent_id', PARAM_INT);
+        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentID));
 
-      // Get the all content types associated with the main content type
-      $result = $DB->get_records('hvp_xapi_results', array(
-        'content_id' => $result[$subcontentID]->content_id,
-      ));
+        // Get the num of ungraded OEQ answers
+        $numUngraded = intval($DB->get_field_sql(
+            "SELECT COUNT(*)
+            FROM {hvp_xapi_results}
+            WHERE parent_id = ?
+            AND raw_score IS NULL
+            AND additionals = ?", array($answer->parent_id, '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+        ));
 
-      $ungraded = array_filter($result, function ($var) {
-        return $var->raw_score == NULL && $var->additionals == '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}';
-      });
-
-      $response = [
-        'score' => $result[$subcontentID]->raw_score,
-        'maxScore' => intval($result[$subcontentID]->max_score),
-        'totalUngraded' => sizeof($ungraded),
-      ];
-      \H5PCore::ajaxSuccess($response);
+        $response = [
+            'score' => $answer->raw_score,
+            'maxScore' => $answer->max_score,
+            'totalUngraded' => $numUngraded,
+        ];
+        \H5PCore::ajaxSuccess($response);
     }
 }
