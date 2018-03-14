@@ -83,17 +83,16 @@ class content_user_data {
         }
 
         if ($contentid === 0) {
-          $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
-        }
-        else {
-          // Load course module for content to get context.
-          $cm = get_coursemodule_from_instance('hvp', $contentid);
-          if (!$cm) {
-              \H5PCore::ajaxError('No such content');
-              http_response_code(404);
-              return;
-          }
-          $context = \context_module::instance($cm->id);
+            $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
+        } else {
+            // Load course module for content to get context.
+            $cm = get_coursemodule_from_instance('hvp', $contentid);
+            if (!$cm) {
+                \H5PCore::ajaxError('No such content');
+                http_response_code(404);
+                return;
+            }
+            $context = \context_module::instance($cm->id);
         }
 
         // Check permissions.
