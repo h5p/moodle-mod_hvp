@@ -86,18 +86,18 @@ $string['contentstatefrequency_help'] = 'En segundos, ¿con qué frecuencia dese
 $string['enabledlrscontenttypes'] = 'Habilitar tipos de contenido dependientes de LRS';
 $string['enabledlrscontenttypes_help'] = 'Permite utilizar tipos de contenido que dependen de un Almacén de Aprendizaje para funcionar correctamente, como el tipo de contenido del Cuestionario.';
 // Admin menu.
-$string['contenttypecacheheader'] = 'Content Type Cache';
-$string['settings'] = 'H5P Settings';
-$string['libraries'] = 'H5P Libraries';
+$string['contenttypecacheheader'] = 'Tipo de contenido Caché';
+$string['settings'] = 'Configuración H5P';
+$string['libraries'] = 'Bibliotecas H5P';
 // Content type cache section.
-$string['ctcacheconnectionfailed'] = "Couldn't communicate with the H5P Hub. Please try again later.";
-$string['ctcachenolibraries'] = 'No content types were received from the H5P Hub. Please try again later.';
-$string['ctcachesuccess'] = 'Library cache was successfully updated!';
-$string['ctcachelastupdatelabel'] = 'Last update';
-$string['ctcachebuttonlabel'] = 'Update content type cache';
-$string['ctcacheneverupdated'] = 'Never';
-$string['ctcachetaskname'] = 'Update content type cache';
-$string['ctcachedescription'] = 'Making sure the content type cache is up to date will ensure that you can view, download and use the latest libraries. This is different from updating the libraries themselves.';
+$string['ctcacheconnectionfailed'] = "No se pudo comunicar con el H5P Hub. Por favor, inténtelo de nuevo más tarde.";
+$string['ctcachenolibraries'] = 'No se recibieron tipos de contenido del H5P Hub. Por favor, inténtelo de nuevo más tarde.';
+$string['ctcachesuccess'] = '¡El caché de la biblioteca se actualizó con éxito!';
+$string['ctcachelastupdatelabel'] = 'Última actualización';
+$string['ctcachebuttonlabel'] = 'Actualizar el tipo de contenido de caché';
+$string['ctcacheneverupdated'] = 'Nunca';
+$string['ctcachetaskname'] = 'Actualizar el tipo de contenido de caché';
+$string['ctcachedescription'] = 'Asegurarse de que la caché del tipo de contenido esté actualizada le garantizará que pueda ver, descargar y usar las últimas bibliotecas. Esto es diferente de actualizar las bibliotecas.';
 // Upload libraries section.
 $string['uploadlibraries'] = 'Upload Libraries';
 $string['options'] = 'Options';
