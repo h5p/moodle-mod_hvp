@@ -224,7 +224,7 @@ class user_grades {
       ));
 
       $ungraded = array_filter($result, function ($var) {
-        return $var->raw_score == NULL && $var->additionals == '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}';
+        return $var->raw_score == NULL && $var->additionals == '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}';
       });
 
       $response = [
