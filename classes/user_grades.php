@@ -197,7 +197,7 @@ class user_grades {
             WHERE parent_id = ?
             AND raw_score IS NULL
             AND additionals = ?", array($answer->parent_id,
-            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
         ));
 
         $response = [
