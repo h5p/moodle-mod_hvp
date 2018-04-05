@@ -56,16 +56,15 @@ if ($hvp === false) {
     print_error('invalidhvp');
 }
 
-// Redirect to report if a specific user is chosen
+// Redirect to report if a specific user is chosen.
 if ($userid) {
-  redirect(new moodle_url('/mod/hvp/review.php',
-      array(
-        'id'     => $hvp->id,
-        'course' => $course->id,
-        'user'   => $userid
-      )
-    )
-  );
+    redirect(new moodle_url('/mod/hvp/review.php',
+        array(
+            'id'     => $hvp->id,
+            'course' => $course->id,
+            'user'   => $userid
+        ))
+    );
 }
 hvp_require_view_results_permission((int)$USER->id, $context, $cm->id);
 
