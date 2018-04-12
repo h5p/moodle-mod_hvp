@@ -184,7 +184,7 @@ $reviewcontext = [
     'report'         => $reporthtml,
     'rawScore'       => $totalrawscore,
     'maxScore'       => $totalmaxscore,
-    'scaledScore'    => $totalscaledscore,
+    'scaledScore'    => round($totalscaledscore, 2),
     'maxScaledScore' => round($basequestion->grademax, 2),
 ];
 
