@@ -175,6 +175,7 @@ function hvp_get_disabled_content_features($hvp) {
     $disablesettings = [
         \H5PCore::DISPLAY_OPTION_FRAME     => isset($hvp->frame) ? $hvp->frame : 0,
         \H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($hvp->export) ? $hvp->export : 0,
+        \H5PCore::DISPLAY_OPTION_EMBED     => isset($hvp->embed) ? $hvp->embed : 0,
         \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($hvp->copyright) ? $hvp->copyright : 0,
     ];
     $core            = \mod_hvp\framework::instance();
@@ -270,7 +271,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             }
 
             // Check permissions.
-            if (!has_capability('mod/hvp:getcontent', $context)) {
+            if (!has_capability('mod/hvp:view', $context)) {
                 return false;
             }
 
@@ -278,23 +279,31 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             break;
 
         case 'exports':
-            if ($context->contextlevel != CONTEXT_COURSE) {
+            if ($context->contextlevel != CONTEXT_MODULE) {
                 return false; // Invalid context.
             }
+
+            // Check permission.
+            if (!has_capability('mod/hvp:view', $context)) {
+                return false;
+            }
+            // Note that the getexport permission is checked after loading the content.
 
             // Get core.
             $h5pinterface = \mod_hvp\framework::instance('interface');
             $h5pcore = \mod_hvp\framework::instance('core');
 
+            $matches = array();
+
             // Get content id from filename.
-            if (!preg_match('/(\d*).h5p/', $args[0], $matches)) {
+            if (!preg_match('/(\d*).h5p$/', $args[0], $matches)) {
                 // Did not find any content ID.
                 return false;
             }
 
             $contentid = $matches[1];
             $content = $h5pinterface->loadContent($contentid);
-            $displayoptions = $h5pcore->getDisplayOptionsForView($content['disable'], $contentid);
+            $displayoptions = $h5pcore->getDisplayOptionsForView($content['disable'], $context->instanceid);
 
             // Check permissions.
             if (!$displayoptions['export']) {
@@ -302,15 +311,17 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             }
 
             $itemid = 0;
+
+            // Change context to course for retrieving file.
+            $cm = get_coursemodule_from_id('hvp', $context->instanceid);
+            $context = context_course::instance($cm->course);
             break;
 
         case 'editor':
-            if ($context->contextlevel != CONTEXT_COURSE) {
-                return false; // Invalid context.
-            }
+            $cap = ($context->contextlevel === CONTEXT_COURSE ? 'addinstance' : 'manage');
 
             // Check permissions.
-            if (!has_capability('mod/hvp:addinstance', $context)) {
+            if (!has_capability("mod/hvp:$cap", $context)) {
                 return false;
             }
 
@@ -355,7 +366,7 @@ function hvp_grade_item_update($hvp, $grades=null) {
     }
 
     // Recalculate rawgrade relative to grademax.
-    if (isset($hvp->rawgrade) && isset($hvp->rawgrademax)) {
+    if (isset($hvp->rawgrade) && isset($hvp->rawgrademax) && $hvp->rawgrademax != 0) {
         // Get max grade Obs: do not try to use grade_get_grades because it
         // requires context which we don't have inside an ajax.
         $gradeitem = grade_item::fetch(array(

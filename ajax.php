@@ -166,6 +166,31 @@ switch($action) {
         break;
 
     /*
+     * Saves a dynamically graded grade to the gradebook
+     *
+     * Type: HTTP POST
+     *
+     * Parameters:
+     *  - subcontent_id
+     *  - score
+     */
+    case 'updatesubcontentscore':
+        \mod_hvp\user_grades::handle_dynamic_grading();
+        break;
+
+    /*
+     * Returns a grade
+     *
+     * Type: HTTP GET
+     *
+     * Parameters:
+     *  - subcontent_id
+     */
+    case 'getsubcontentscore':
+        \mod_hvp\user_grades::return_subcontent_grade();
+        break;
+
+    /*
      * Provide data for results view
      *
      * Type: HTTP GET
@@ -192,6 +217,10 @@ switch($action) {
      *  int minorVersion
      */
     case 'libraries':
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontoviewcontenttypes')) {
+            break;
+        }
+
         // Get parameters.
         $name = optional_param('machineName', '', PARAM_TEXT);
         $major = optional_param('majorVersion', 0, PARAM_INT);
@@ -217,6 +246,10 @@ switch($action) {
      * Load content type cache list to display available libraries in hub
      */
     case 'contenttypecache':
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontoviewcontenttypes')) {
+            break;
+        }
+
         $editor = \mod_hvp\framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::CONTENT_TYPE_CACHE);
         break;
@@ -231,6 +264,10 @@ switch($action) {
     case 'files':
         $token = required_param('token', PARAM_RAW);
         $contentid = required_param('contentId', PARAM_INT);
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadfiles')) {
+            break;
+        }
+
         $editor = \mod_hvp\framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::FILES, $token, $contentid);
         break;
@@ -257,6 +294,10 @@ switch($action) {
      */
     case 'libraryupload':
         $token = required_param('token', PARAM_RAW);
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadcontent')) {
+            break;
+        }
+
         $editor = \mod_hvp\framework::instance('editor');
         $uploadpath = $_FILES['h5p']['tmp_name'];
         $contentid = optional_param('contentId', 0, PARAM_INT);

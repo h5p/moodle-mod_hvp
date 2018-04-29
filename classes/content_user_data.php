@@ -76,20 +76,23 @@ class content_user_data {
      * @param $invalidate
      */
     private static function store_data($contentid, $subcontentid, $dataid, $data, $preload, $invalidate) {
-        global $DB;
-
         // Validate token.
         if (!\H5PCore::validToken('contentuserdata', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
             return;
         }
 
-        // Use context id if supplied.
-        $contextid = optional_param('contextId', null, PARAM_INT);
-        if ($contextid) {
-            $context = \context::instance_by_id($contextid);
-        } else { // Otherwise try to find it from content id.
-            $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $contentid)));
+        if ($contentid === 0) {
+            $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
+        } else {
+            // Load course module for content to get context.
+            $cm = get_coursemodule_from_instance('hvp', $contentid);
+            if (!$cm) {
+                \H5PCore::ajaxError('No such content');
+                http_response_code(404);
+                return;
+            }
+            $context = \context_module::instance($cm->id);
         }
 
         // Check permissions.
@@ -216,7 +219,9 @@ class content_user_data {
     public static function load_pre_loaded_user_data($contentid) {
         global $DB, $USER;
 
-        $preloadeduserdata = array();
+        $preloadeduserdata = array(
+            'state' => '{}'
+        );
 
         $results = $DB->get_records('hvp_content_user_data', array(
             'user_id' => $USER->id,

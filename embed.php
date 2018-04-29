@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * View H5P Content
+ * Embed H5P Content
  *
  * @package    mod_hvp
  * @copyright  2016 Joubel AS <contact@joubel.com>
@@ -36,19 +36,42 @@ $course = $DB->get_record('course', array('id' => $cm->course));
 if (!$course) {
     print_error('coursemisconf');
 }
-require_course_login($course, true, $cm);
+
+try {
+    require_course_login($course, true, $cm, true, true);
+} catch (Exception $e) {
+    $PAGE->set_pagelayout('embedded');
+    $embedfailedsvg = new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/library/images/h5p.svg");
+    echo '<body style="margin:0">' .
+         '<div style="background: #fafafa ' .
+         'url(' . $embedfailedsvg->out() . ') no-repeat center;' .
+         'background-size: 50% 50%;width: 100%;height: 100%;">' .
+         '</div>' .
+         '<div style="width:100%;position:absolute;top:75%;text-align:center;color:#434343;' .
+         'font-family: Consolas,monaco,monospace"' .
+         '>' .
+         get_string('embedloginfailed', 'hvp') .
+         '</div>' .
+         '</body>';
+    return;
+}
 $context = context_module::instance($cm->id);
 require_capability('mod/hvp:view', $context);
 
 // Set up view assets.
-$view    = new \mod_hvp\view_assets($cm, $course);
+$view    = new \mod_hvp\view_assets($cm, $course, 'div');
 $content = $view->getcontent();
 $view->validatecontent();
 
 // Configure page.
-$PAGE->set_url(new \moodle_url('/mod/hvp/view.php', array('id' => $id)));
+$PAGE->set_url(new \moodle_url('/mod/hvp/embed.php', array('id' => $id)));
 $PAGE->set_title(format_string($content['title']));
 $PAGE->set_heading($course->fullname);
+
+// Embed specific page setup.
+$PAGE->add_body_class('h5p-embed');
+$PAGE->set_pagelayout('embedded');
+$PAGE->requires->css(new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/embed.css"));
 
 // Add H5P assets to page.
 $view->addassetstopage();
@@ -56,18 +79,7 @@ $view->logviewed();
 
 // Print page HTML.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(format_string($content['title']));
 echo '<div class="clearer"></div>';
-
-// Output introduction.
-if (trim(strip_tags($content['intro']))) {
-    echo $OUTPUT->box_start('mod_introbox', 'hvpintro');
-    echo format_module_intro('hvp', (object) array(
-        'intro'       => $content['intro'],
-        'introformat' => $content['introformat'],
-    ), $cm->id);
-    echo $OUTPUT->box_end();
-}
 
 // Print any messages.
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));

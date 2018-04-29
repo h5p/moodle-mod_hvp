@@ -97,6 +97,26 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
+     * Check if the current user has editor access, if not then return the
+     * given error message.
+     *
+     * @param string $error
+     * @return boolean
+     */
+    public static function has_editor_access($error) {
+        $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
+        $cap = ($context->contextlevel === CONTEXT_COURSE ? 'addinstance' : 'manage');
+
+        if (!has_capability("mod/hvp:$cap", $context)) {
+            \H5PCore::ajaxError(get_string($error, 'hvp'));
+            http_response_code(403);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get current H5P language code.
      *
      * @return string Language Code
@@ -153,8 +173,13 @@ class framework implements \H5PFrameworkInterface {
             $interface->getUploadedH5pPath($stream);
         }
 
-        $response = download_file_content($url, null, $data, false, 300, 20, false, $stream);
-        return ($response === false ? null : $response);
+        $response = download_file_content($url, null, $data, true, 300, 20, false, $stream);
+
+        if (empty($response->error)) {
+            return $response->results;
+        } else {
+            $this->setErrorMessage($response->error, 'failed-fetching-external-data');
+        }
     }
 
     /**
@@ -176,11 +201,12 @@ class framework implements \H5PFrameworkInterface {
      * Implements setErrorMessage
      *
      * @param string $message translated error message
+     * @param string $code
      */
     // @codingStandardsIgnoreLine
-    public function setErrorMessage($message) {
+    public function setErrorMessage($message, $code = null) {
         if ($message !== null) {
-            self::messages('error', $message);
+            self::messages('error', $message, $code);
         }
     }
 
@@ -199,9 +225,10 @@ class framework implements \H5PFrameworkInterface {
      *
      * @param string $type Type of messages, e.g. 'info' or 'error'
      * @param string $newmessage Optional
+     * @param string $code
      * @return array Array of stored messages
      */
-    public static function messages($type, $newmessage = null) {
+    public static function messages($type, $newmessage = null, $code = null) {
         static $m = 'mod_hvp_messages';
 
         if ($newmessage === null) {
@@ -214,7 +241,17 @@ class framework implements \H5PFrameworkInterface {
             return $messages;
         }
 
-        $_SESSION[$m][$type][] = $newmessage;
+        // We expect to get out an array of strings when getting info
+        // and an array of objects when getting errors for consistency across platforms.
+        // This implementation should be improved for consistency across the data type returned here.
+        if ($type === 'error') {
+            $_SESSION[$m][$type][] = (object)array(
+                'code' => $code,
+                'message' => $newmessage
+            );
+        } else {
+            $_SESSION[$m][$type][] = $newmessage;
+        }
     }
 
     /**
@@ -227,8 +264,17 @@ class framework implements \H5PFrameworkInterface {
     public static function printMessages($type, $messages) {
         global $OUTPUT;
         foreach ($messages as $message) {
-            print $OUTPUT->notification($message, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
+            $out = $type === 'error' ? $message->message : $message;
+            print $OUTPUT->notification($out, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
         }
+    }
+
+    /**
+     * Implements getMessages
+     */
+    // @codingStandardsIgnoreLine
+    public function getMessages($type) {
+        return self::messages($type);
     }
 
     /**
@@ -265,8 +311,13 @@ class framework implements \H5PFrameworkInterface {
                 "Can't read the property %property in %library" => 'invalidlibraryproperty',
                 'The required property %property is missing from %library' => 'missinglibraryproperty',
                 'Illegal option %option in %library' => 'invalidlibraryoption',
-                'Added %new new H5P libraries and updated %old old.' => 'addedandupdatelibraries',
+                'Added %new new H5P library and updated %old old one.' => 'addedandupdatedss',
+                'Added %new new H5P library and updated %old old ones.' => 'addedandupdatedsp',
+                'Added %new new H5P libraries and updated %old old one.' => 'addedandupdatedps',
+                'Added %new new H5P libraries and updated %old old ones.' => 'addedandupdatedpp',
+                'Added %new new H5P library.' => 'addednewlibrary',
                 'Added %new new H5P libraries.' => 'addednewlibraries',
+                'Updated %old H5P library.' =>  'updatedlibrary',
                 'Updated %old H5P libraries.' => 'updatedlibraries',
                 'Missing dependency @dep required by @lib.' => 'missingdependency',
                 'Provided string is not valid according to regexp in semantics. (value: \"%value\", regexp: \"%regexp\")' => 'invalidstring',
@@ -311,7 +362,7 @@ class framework implements \H5PFrameworkInterface {
                 'Could not copy file.' => 'couldnotcopy',
                 'The mbstring PHP extension is not loaded. H5P need this to function properly' => 'missingmbstring',
                 'The version of the H5P library %machineName used in this content is not valid. Content contains %contentLibrary, but it should be %semanticsLibrary.' => 'wrongversion',
-                'The H5P library %library used in the content is not valid' => 'invalidlibrary',
+                'The H5P library %library used in the content is not valid' => 'invalidlibrarynamed',
                 'Your PHP version is outdated. H5P requires version 5.2 to function properly. Version 5.6 or later is recommended.' => 'oldphpversion',
                 'Your PHP max upload size is quite small. With your current setup, you may not upload files larger than %number MB. This might be a problem when trying to upload H5Ps, images and videos. Please consider to increase it to more than 5MB.' => 'maxuploadsizetoosmall',
                 'Your PHP max post size is quite small. With your current setup, you may not upload files larger than %number MB. This might be a problem when trying to upload H5Ps, images and videos. Please consider to increase it to more than 5MB' => 'maxpostsizetoosmall',
@@ -328,6 +379,7 @@ class framework implements \H5PFrameworkInterface {
                 'Invalid security token.' => 'invalidtoken',
                 'No content type was specified.' => 'nocontenttype',
                 'The chosen content type is invalid.' => 'invalidcontenttype',
+                'You do not have permission to install content types. Contact the administrator of your site.' => 'installdenied',
                 'You do not have permission to install content types.' => 'installdenied',
                 'Validating h5p package failed.' => 'validatingh5pfailed',
                 'Failed to download the requested H5P.' => 'failedtodownloadh5p',
@@ -1331,28 +1383,41 @@ class framework implements \H5PFrameworkInterface {
      * Implements hasPermission
      * @method hasPermission
      * @param  \H5PPermission $permission
-     * @param  int $contentid
+     * @param  int $cmid context module id
      * @return boolean
      */
     // @codingStandardsIgnoreLine
-    public function hasPermission($permission, $contentid = null) {
+    public function hasPermission($permission, $cmid = null) {
         switch ($permission) {
             case \H5PPermission::DOWNLOAD_H5P:
-                global $DB;
-                $context = \context_course::instance($DB->get_field('hvp', 'course', array('id' => $contentid)));
-                return has_capability('mod/hvp:getexport', $context);
+                $cmcontext = \context_module::instance($cmid);
+                return has_capability('mod/hvp:getexport', $cmcontext);
             case \H5PPermission::CREATE_RESTRICTED:
-                $context = \context_system::instance();
-                return has_capability('mod/hvp:userestrictedlibraries', $context);
+                return has_capability('mod/hvp:userestrictedlibraries', $this->getajaxcoursecontext());
             case \H5PPermission::UPDATE_LIBRARIES:
                 $context = \context_system::instance();
                 return has_capability('mod/hvp:updatelibraries', $context);
             case \H5PPermission::INSTALL_RECOMMENDED:
-                $context = \context_system::instance();
-                return has_capability('mod/hvp:installrecommendedh5plibraries', $context);
-
+                return has_capability('mod/hvp:installrecommendedh5plibraries', $this->getajaxcoursecontext());
+            case \H5PPermission::EMBED_H5P:
+                $cmcontext = \context_module::instance($cmid);
+                return has_capability('mod/hvp:getembedcode', $cmcontext);
         }
         return false;
+    }
+
+    /**
+     * Gets course context in AJAX
+     *
+     * @return bool|\context|\context_course
+     */
+    private function getajaxcoursecontext() {
+        $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
+        if ($context->contextlevel === CONTEXT_COURSE) {
+            return $context;
+        }
+
+        return $context->get_course_context();
     }
 
     /**

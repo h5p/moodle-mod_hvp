@@ -81,11 +81,17 @@ class results {
      * Print results data
      */
     public function print_results() {
-        global $DB, $USER;
+        global $USER;
+
+        $cm = get_coursemodule_from_instance('hvp', $this->contentid);
+        if (!$cm) {
+            \H5PCore::ajaxError('No such content');
+            http_response_code(404);
+            return;
+        }
 
         // Check permission.
-        $course = $DB->get_field('hvp', 'course', array('id' => $this->contentid));
-        $context = \context_course::instance($course);
+        $context = \context_module::instance($cm->id);
         $viewownresults = has_capability('mod/hvp:viewresults', $context);
         $viewallresults = has_capability('mod/hvp:viewallresults', $context);
         if (!$viewownresults && !$viewallresults) {
@@ -97,7 +103,7 @@ class results {
         // Only get own results if can't view all.
         $uid = $viewallresults ? null : (int)$USER->id;
         $results = $this->get_results($uid);
-        $rows = $this->get_human_readable_results($results, $course);
+        $rows = $this->get_human_readable_results($results, $cm->course);
 
         header('Cache-Control: no-cache');
         header('Content-type: application/json');
@@ -121,7 +127,7 @@ class results {
         foreach ($results as $result) {
             $userlink = \html_writer::link(
                 new \moodle_url('/user/view.php', array(
-                    'id' => $result->user_id,
+                    'id' => $result->id,
                     'course' => $course
                 )),
                 \fullname($result)
@@ -136,7 +142,7 @@ class results {
                         array(
                             'id' => $this->contentid,
                             'course' => $course,
-                            'user' => $result->user_id
+                            'user' => $result->id
                         )
                     ),
                     get_string('viewreportlabel', 'hvp')
@@ -177,6 +183,7 @@ class results {
         // Build where statement.
         $where[] = "i.itemtype = 'mod'";
         $where[] = "i.itemmodule = 'hvp'";
+        $where[] = "x.parent_id IS NULL";
         $where = 'WHERE ' . implode(' AND ', $where);
 
         // Order results by the select column and direction.
@@ -186,15 +193,18 @@ class results {
         $orderby = $this->get_order_sql($order);
 
         // Join on xAPI results.
-        $join .= ' LEFT JOIN {hvp_xapi_results} x ON i.iteminstance = x.content_id AND g.userid = x.user_id';
-        $groupby = ' GROUP BY g.id, u.id, i.iteminstance, x.id';
+        $join .= ' LEFT JOIN {hvp_xapi_results} x ON i.iteminstance = x.content_id';
+        $join .= " LEFT JOIN {user} u ON u.id = x.user_id";
+        $groupby = ' GROUP BY i.id, g.id, u.id, i.iteminstance, x.id';
 
         // Get from statement.
         $from = $this->get_from_sql();
 
         // Execute query and get results.
         return $this->get_sql_results("
-                SELECT g.id,
+                SELECT u.id,
+                       i.id AS gradeitemid,
+                       g.id AS gradeid,
                        {$fields}
                        g.rawgrade,
                        g.rawgrademax,
@@ -269,7 +279,7 @@ class results {
      * @return string
      */
     protected function get_from_sql() {
-        return " FROM {grade_items} i JOIN {grade_grades} g ON i.id = g.itemid";
+        return " FROM {grade_items} i LEFT JOIN {grade_grades} g ON i.id = g.itemid";
     }
 
     /**
@@ -313,8 +323,8 @@ class results {
         global $DB;
 
         $usernamefields = implode(', ', self::get_ordered_user_name_fields());
-        $fields = " u.id AS user_id, {$usernamefields}, ";
-        $join = " LEFT JOIN {user} u ON u.id = g.userid";
+        $fields = " {$usernamefields}, ";
+        $join = "";
         $where = array("i.iteminstance = ?");
         $args = array($this->contentid);
 

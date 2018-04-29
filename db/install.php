@@ -38,8 +38,7 @@ function xmldb_hvp_install() {
          '</p>' .
          '<p>' .
          get_string('welcomecommunity', 'hvp', array(
-             'forums' => 'href="https://h5p.org/forum" target="_blank"',
-             'gitter' => 'href="https://gitter.im/h5p/CommunityChat" target="_blank"'
+             'forums' => 'href="https://h5p.org/forum" target="_blank"'
          )) .
          '</p>' .
          '<p>' . get_string('welcomecontactus', 'hvp',

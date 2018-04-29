@@ -65,6 +65,7 @@ $string['removeoldlogentries'] = 'Eski H5P kütük girdilerini kaldır';
 $string['displayoptionnevershow'] = 'Never show';
 $string['displayoptionalwaysshow'] = 'Always show';
 $string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
+$string['displayoptionpermissionsembed'] = 'Show only if user has permissions to embed H5P';
 $string['displayoptionauthoron'] = 'Controlled by author, default is on';
 $string['displayoptionauthoroff'] = 'Controlled by author, default is off';
 $string['displayoptions'] = 'Seçenekleri Göster';
@@ -74,6 +75,8 @@ $string['enableembed'] = 'Katma tuşu';
 $string['enablecopyright'] = 'Telif hakkı tuşu';
 $string['enableabout'] = 'H5P bilgisi tuşu';
 
+$string['sendusagestatistics'] = 'Contribute usage statistics';
+$string['sendusagestatistics_help'] = 'Usage statistics numbers will automatically be reported to help the developers better understand how H5P is used and to determine potential areas of improvement. Read more about which <a {$a}>data is collected on h5p.org</a>.';
 $string['enablesavecontentstate'] = 'İçerik durumunu kaydet';
 $string['enablesavecontentstate_help'] = 'Her bir kullanıcı için mevcut etkileşimsel çerik durumunu kendiliğinden kaydet. Böylece kullanıcı bıraktığı yerden devam edebilir.';
 $string['contentstatefrequency'] = 'İçerik durumunu kaydetme sıklığı';
@@ -95,6 +98,12 @@ $string['upload'] = 'Yükle';
 $string['installedlibraries'] = 'Kurulu Kitaplıklar';
 $string['invalidtoken'] = 'Güvenlik bilgisi geçersiz.';
 $string['missingparameters'] = 'Parametreler eksik';
+$string['nocontenttype'] = 'No content type was specified.';
+$string['invalidcontenttype'] = 'The chosen content type is invalid.';
+$string['installdenied'] = 'You do not have permission to install content types. Contact the administrator of your site.';
+$string['downloadfailed'] = 'Downloading the requested library failed.';
+$string['validationfailed'] = 'The requested H5P was not valid';
+$string['validatingh5pfailed'] = 'Validating h5p package failed.';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Başlık';
@@ -150,6 +159,9 @@ $string['reportingscorelabel'] = 'Score:';
 $string['reportingscaledscorelabel'] = 'Gradebook score:';
 $string['reportingscoredelimiter'] = 'out of';
 $string['reportingscaledscoredelimiter'] = ',';
+$string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
+$string['reportsubmitgradelabel'] = 'Submit grade';
+$string['noanswersubmitted'] = 'This user hasn\'t submitted an answer to the H5P yet';
 
 // Editor.
 $string['javascriptloading'] = 'JavaScript bekleniyor ...';
@@ -168,17 +180,20 @@ $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities.
+$string['hvp:view'] = 'See and interact with H5P activities';
 $string['hvp:addinstance'] = 'Yeni bir H5P Etkinliği ekle';
-$string['hvp:restrictlibraries'] = 'Bir H5P kitaplığını kısıtla';
-$string['hvp:updatelibraries'] = 'Bir H5P kitaplığı sürümünü yükle';
-$string['hvp:userestrictedlibraries'] = 'Kısıtlı H5P kitaplıkları kullan';
-$string['hvp:savecontentuserdata'] = 'H5P içerik kullanıcısı verisini kaydet';
+$string['hvp:manage'] = 'Edit existing H5P activites';
+$string['hvp:getexport'] = 'Kurs içindeki H5P içeriğinden dışa aktarma dosyası al';
+$string['hvp:getembedcode'] = 'View H5P embed code when \'controlled by permission\' option is set';
 $string['hvp:saveresults'] = 'H5P içeriği için sonucu kaydet';
+$string['hvp:savecontentuserdata'] = 'H5P içerik kullanıcısı verisini kaydet';
 $string['hvp:viewresults'] = 'H5P içeriği için sonucu gör';
 $string['hvp:viewallresults'] = 'View result for all users in course';
+$string['hvp:restrictlibraries'] = 'Bir H5P kitaplığını kısıtla';
+$string['hvp:userestrictedlibraries'] = 'Kısıtlı H5P kitaplıkları kullan';
+$string['hvp:updatelibraries'] = 'Bir H5P kitaplığı sürümünü yükle';
 $string['hvp:getcachedassets'] = 'Ön belleğe alınmış H5P içerik değerlerini al';
-$string['hvp:getcontent'] = 'Kurs içìndeki H5P dosyası içeriğini al/gör';
-$string['hvp:getexport'] = 'Kurs içindeki H5P içeriğinden dışa aktarma dosyası al';
+$string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Kitaplıkları yükseltme yetkiniz yok.';
@@ -212,9 +227,14 @@ $string['invalidlibrarydata'] = '{$a->%library} kitaplığında {$a->%property} 
 $string['invalidlibraryproperty'] = '{$a->%library} kitaplığında {$a->%property} okunamıyor';
 $string['missinglibraryproperty'] = '{$a->%library} kitaplığında gerekli {$a->%property} özelliği yok';
 $string['invalidlibraryoption'] = '{$a->%library} kitaplığında geçersiz seçenek {$a->%option}';
-$string['addedandupdatelibraries'] = '{$a->%new} yeni H5P kitaplığı yüklendi ve {$a->%old} kitaplık güncellendi.';
-$string['addednewlibraries'] = '{$a->%new} yeni H5P kitaplığı yüklendi.';
-$string['updatedlibraries'] = '$a->%old} H5P kitaplığı güncellendi.';
+$string['addedandupdatedss'] = 'Added {$a->%new} new H5P library and updated {$a->%old} old one.';
+$string['addedandupdatedsp'] = 'Added {$a->%new} new H5P library and updated {$a->%old} old ones.';
+$string['addedandupdatedps'] = 'Added {$a->%new} new H5P libraries and updated {$a->%old} old one.';
+$string['addedandupdatedpp'] = 'Added {$a->%new} new H5P libraries and updated {$a->%old} old ones.';
+$string['addednewlibrary'] = 'Added {$a->%new} new H5P library.';
+$string['addednewlibraries'] = 'Added {$a->%new} new H5P libraries.';
+$string['updatedlibrary'] = 'Updated {$a->%old} H5P library.';
+$string['updatedlibraries'] = 'Updated {$a->%old} H5P libraries.';
 $string['missingdependency'] = '{$a->@lib} için gereken bağımlılık {$a->@dep} yok.';
 $string['invalidstring'] = 'Semantikteki regexp değerine göre sağlanan dizge geçersiz. (value: \"{$a->%value}\", regexp: \"{$a->%regexp}\")';
 $string['invalidfile'] = 'Dosya "{$a->%filename}" için izin yok. İzin verilen dosya uzantıları: {$a->%files-allowed}.';
@@ -232,12 +252,14 @@ $string['invalidaudioformat'] = 'Ses dosyası türü geçersiz. mp3 ya da wav ku
 $string['invalidvideoformat'] = 'Video dosyası türü geçersiz. mp4 ya da webm kullanın.';
 $string['couldnotsave'] = 'Dosya kaydedilemedi.';
 $string['couldnotcopy'] = 'Dosya kopyalanamadı.';
+$string['librarynotselected'] = 'You must select a content type.';
 
 // Welcome messages.
 $string['welcomeheader'] = 'H5P dünyasına hoşgeldiniz!';
 $string['welcomegettingstarted'] = 'H5P ve Moodle kullanımına bakmak için <a {$a->moodle_tutorial}>kullanım</a> turumuza bakabilir ve h5p.org üzerinde <a {$a->example_content}>örnek içerik</a> le bir fikir edinebilirsiniz.';
-$string['welcomecommunity'] = 'Umarız H5P kullanmaktan memnun kalır ve sürekli büyüyen topluluğumuza<a {$a->forums}>forumlarımız</a> ve <a {$a->gitter}>Gitter adresinde H5P</a> üzerindeki sohbet odamızla katılırsınız';
+$string['welcomecommunity'] = 'Umarız H5P kullanmaktan memnun kalır ve sürekli büyüyen topluluğumuza<a {$a->forums}>forumlarımız</a>.';
 $string['welcomecontactus'] = 'Herhangi bir geribildiriminiz varsa<a {$a}>bize iletin</a>. Geribildirimleri titizlikle ele alıyor ve her geçen gün H5P yazılımını geliştirmeye çabalıyoruz!';
+$string['invalidlibrarynamed'] = 'The H5P library {$a->%library} used in the content is not valid';
 
 // Licensing.
 $string['copyrightinfo'] = 'Telif hakkı bilgisi';
@@ -276,3 +298,6 @@ $string['licenseV1'] = 'Version 1';
 $string['licenseCC010'] = 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication';
 $string['licenseCC010U'] = 'CC0 1.0 Universal';
 $string['licenseversion'] = 'License Version';
+
+// Embed.
+$string['embedloginfailed'] = 'You do not have access to this content. Try logging in.';

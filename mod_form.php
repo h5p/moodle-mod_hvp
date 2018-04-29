@@ -45,11 +45,6 @@ class mod_hvp_mod_form extends moodleform_mod {
             $this->add_intro_editor(false, get_string('intro', 'hvp'));
         }
 
-        // Max grade.
-        $mform->addElement('text', 'maximumgrade', get_string('maximumgrade', 'hvp'));
-        $mform->setType('maximumgrade', PARAM_INT);
-        $mform->setDefault('maximumgrade', 10);
-
         // Action.
         $h5paction = array();
         $h5paction[] = $mform->createElement('radio', 'h5paction', '', get_string('upload', 'hvp'), 'upload');
@@ -66,7 +61,7 @@ class mod_hvp_mod_form extends moodleform_mod {
             $h5peditor   = [];
             $h5peditor[] = $mform->createElement('html',
                                                  '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
-            $mform->addGroup($h5peditor, 'h5peditorgroup', get_string('editor', 'hvp'));
+            $mform->addGroup($h5peditor, 'h5peditor', get_string('editor', 'hvp'));
         } else {
             $mform->addElement('static', 'h5peditor', get_string('editor', 'hvp'),
                                '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
@@ -95,6 +90,13 @@ class mod_hvp_mod_form extends moodleform_mod {
                 $mform->disabledIf(\H5PCore::DISPLAY_OPTION_DOWNLOAD, 'frame');
             }
 
+            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_EMBED])) {
+                $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_EMBED, get_string('enableembed', 'hvp'));
+                $mform->setType(\H5PCore::DISPLAY_OPTION_EMBED, PARAM_BOOL);
+                $mform->setDefault(\H5PCore::DISPLAY_OPTION_EMBED, $displayoptions[\H5PCore::DISPLAY_OPTION_EMBED]);
+                $mform->disabledIf(\H5PCore::DISPLAY_OPTION_EMBED, 'frame');
+            }
+
             if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
                 $mform->addElement('checkbox', \H5PCore::DISPLAY_OPTION_COPYRIGHT, get_string('enablecopyright', 'hvp'));
                 $mform->setType(\H5PCore::DISPLAY_OPTION_COPYRIGHT, PARAM_BOOL);
@@ -103,6 +105,16 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
         }
 
+        // Grade settings.
+        $this->standard_grading_coursemodule_elements();
+        $mform->removeElement('grade');
+
+        // Max grade.
+        $mform->addElement('text', 'maximumgrade', get_string('maximumgrade', 'hvp'));
+        $mform->setType('maximumgrade', PARAM_INT);
+        $mform->setDefault('maximumgrade', 10);
+
+        // Standard course module settings.
         $this->standard_coursemodule_elements();
 
         $this->add_action_buttons();
@@ -123,6 +135,9 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
             if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD])) {
                 $defaultvalues[\H5PCore::DISPLAY_OPTION_DOWNLOAD] = $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD];
+            }
+            if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_EMBED])) {
+                $defaultvalues[\H5PCore::DISPLAY_OPTION_EMBED] = $displayoptions[\H5PCore::DISPLAY_OPTION_EMBED];
             }
             if (isset($displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT])) {
                 $defaultvalues[\H5PCore::DISPLAY_OPTION_COPYRIGHT] = $displayoptions[\H5PCore::DISPLAY_OPTION_COPYRIGHT];
@@ -222,9 +237,12 @@ class mod_hvp_mod_form extends moodleform_mod {
                 $h5pvalidator = \mod_hvp\framework::instance('validator');
                 if (! $h5pvalidator->isValidPackage()) {
                     // Errors while validating the package.
-                    $infomessages = implode('<br/>', \mod_hvp\framework::messages('info'));
-                    $errormessages = implode('<br/>', \mod_hvp\framework::messages('error'));
-                    $errors['h5pfile'] = ($errormessages ? $errormessages . '<br/>' : '') . $infomessages;
+                    $errors = array_map(function ($message) {
+                        return $message->message;
+                    }, \mod_hvp\framework::messages('error'));
+
+                    $messages = array_merge(\mod_hvp\framework::messages('info'), $errors);
+                    $errors['h5pfile'] = implode('<br/>', $messages);
                 }
             }
         }
@@ -243,7 +261,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         $library = H5PCore::libraryFromString($data['h5plibrary']);
 
         if (!$library) {
-            $errors['h5peditor'] = get_string('invalidlibrary', 'hvp');
+            $errors['h5peditor'] = get_string('librarynotselected', 'hvp');
         } else {
             // Check that library exists.
             $library['libraryId'] = $core->h5pF->getLibraryId($library['machineName'],

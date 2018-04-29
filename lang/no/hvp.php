@@ -73,6 +73,7 @@ $string['removeoldlogentries'] = 'Fjern gamle H5P-loggmeldinger';
 $string['displayoptionnevershow'] = 'Vis aldri';
 $string['displayoptionalwaysshow'] = 'Vis alltid';
 $string['displayoptionpermissions'] = 'Vis kun for brukere som har tilgang til å eksportere H5Per';
+$string['displayoptionpermissionsembed'] = 'Show only if user has permissions to embed H5P';
 $string['displayoptionauthoron'] = 'Settes av forfatter, standard på';
 $string['displayoptionauthoroff'] = 'Settes av forfatter, standard av';
 $string['displayoptions'] = 'Visningsinnstillinger';
@@ -82,6 +83,8 @@ $string['enableembed'] = 'Inkluder-knapp';
 $string['enablecopyright'] = 'Opphavsretts-knapp';
 $string['enableabout'] = 'Om H5P-knapp';
 
+$string['sendusagestatistics'] = 'Bidra med statistikk';
+$string['sendusagestatistics_help'] = 'Bruks-statistikk blir sendt til h5p.org for å bedre forstå hvordan H5P brukes og hvor det ka forbedres. Les mer om hvilke <a {$a}>data som blir samlet på h5p.org</a>.';
 $string['enablesavecontentstate'] = 'Lagre tilstanden til innholdet';
 $string['enablesavecontentstate_help'] = 'Automatisk lagring av hva brukeren har svart og hvor langt brukeren har kommet. Dette betyr brukeren kan fortsette der han avsluttet.';
 $string['contentstatefrequency'] = 'Frekvens for tilstandslagring';
@@ -105,6 +108,12 @@ $string['upload'] = 'Last opp';
 $string['installedlibraries'] = 'Installerte bibliotek';
 $string['invalidtoken'] = 'Ufyldig sikkerhetsnøkkel.';
 $string['missingparameters'] = 'Mangler parametre';
+$string['nocontenttype'] = 'Ingen bibliotek var angitt.';
+$string['invalidcontenttype'] = 'Det valgte biblioteket er ikke gyldig.';
+$string['installdenied'] = 'Du har ikke nok rettigheter til å installere biblioteket. Kontakt nettside-administrator.';
+$string['downloadfailed'] = 'Nedlastingen av det angitte biblioteket klarte ikke å fullføre.';
+$string['validationfailed'] = 'Valgt H5P er ikke gyldig.';
+$string['validatingh5pfailed'] = 'Validering av H5P pakken har feilet.';
 
 // H5P library list headers on admin page.
 $string['librarylisttitle'] = 'Tittel';
@@ -160,6 +169,9 @@ $string['reportingscorelabel'] = 'Score:';
 $string['reportingscaledscorelabel'] = 'Gradebook score:';
 $string['reportingscoredelimiter'] = 'out of';
 $string['reportingscaledscoredelimiter'] = ',';
+$string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
+$string['reportsubmitgradelabel'] = 'Submit grade';
+$string['noanswersubmitted'] = 'This user hasn\'t submitted an answer to the H5P yet';
 
 // Editor.
 $string['javascriptloading'] = 'Venter på JavaScript...';
@@ -178,17 +190,20 @@ $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities.
-$string['hvp:addinstance'] = 'Legg til en ny H5P-aktivitet';
-$string['hvp:restrictlibraries'] = 'Begrense et H5P-bibliotek';
-$string['hvp:updatelibraries'] = 'Oppdatere versjonen til et H5P-bibliotek';
-$string['hvp:userestrictedlibraries'] = 'Bruke begrenset H5P-bibliotek';
-$string['hvp:savecontentuserdata'] = 'Lagre H5P-brukerdata';
-$string['hvp:saveresults'] = 'Lagre resultater for H5P-innhold';
-$string['hvp:viewresults'] = 'Vis resultater for eget H5P-innhold';
-$string['hvp:viewallresults'] = 'Vis resultater for alle brukeres H5P-innhold';
-$string['hvp:getcachedassets'] = 'Tilgang til bufret H5P-innholdsressurser';
-$string['hvp:getcontent'] = 'Tilgang til innholdet til H5P-fil i kurs';
-$string['hvp:getexport'] = 'Tilgang til eksportfil fra H5P i kurs';
+$string['hvp:view'] = 'Se og interager med H5P-aktiviteter';
+$string['hvp:addinstance'] = 'Lag nye H5P-aktiviteter';
+$string['hvp:manage'] = 'Rediger eksisterende H5P-aktiviteter';
+$string['hvp:getexport'] = 'Last ned .h5p-fil når \'kontrollert av rettigheter\' er aktivert';
+$string['hvp:getembedcode'] = 'Se heft ved-koden når \'kontrollert av rettigheter\' er aktivert';
+$string['hvp:saveresults'] = 'Lagre resultatene fra fullførte H5P-aktiviteter';
+$string['hvp:savecontentuserdata'] = 'Lagre brukerens fremgang for H5P-aktiviteter';
+$string['hvp:viewresults'] = 'Se egne resultater for fullførte H5P-aktiviteter';
+$string['hvp:viewallresults'] = 'Se alle resultater for fullførte H5P-aktiviteter';
+$string['hvp:restrictlibraries'] = 'Begrens tilgangen til spesifikke H5P-innholdstyper';
+$string['hvp:userestrictedlibraries'] = 'Bruk av begrensede H5P-innholdstyper';
+$string['hvp:updatelibraries'] = 'Installer nye H5P-innholdstyper eller oppdater eksisterende';
+$string['hvp:getcachedassets'] = 'Påkrevd for å se H5P-aktiviteter';
+$string['hvp:installrecommendedh5plibraries'] = 'Installer nye trygge H5P-innholdstyper anbefelt av H5P.org';
 
 // Capabilities error messages.
 $string['nopermissiontoupgrade'] = 'Du har ikke tillatelse til å oppgradere bibliotek.';
@@ -222,9 +237,14 @@ $string['invalidlibrarydata'] = 'Ugyldig data angitt for {$a->%property} i {$a->
 $string['invalidlibraryproperty'] = 'Kan ikke lese feltet {$a->%property} i {$a->%library}';
 $string['missinglibraryproperty'] = 'Det obligatoriske feltet {$a->%property} finnes ikke i {$a->%library}';
 $string['invalidlibraryoption'] = 'Ulovlig verdi {$a->%option} i {$a->%library}';
-$string['addedandupdatelibraries'] = 'La til {$a->%new} nye H5P-bibliotek og oppdaterte {$a->%old} eksisterende.';
-$string['addednewlibraries'] = 'La til {$a->%new} nye H5P-bibliotek.';
-$string['updatedlibraries'] = 'Oppdaterte {$a->%old} eksisterende H5P-bibliotek.';
+$string['addedandupdatedss'] = 'La til {$a->%new} nytt H5P-bibliotek og oppdaterte {$a->%old} eksisterende.';
+$string['addedandupdatedsp'] = 'La til {$a->%new} nytt H5P-bibliotek og oppdaterte {$a->%old} eksisterende.';
+$string['addedandupdatedps'] = 'La til {$a->%new} nye H5P-biblioteker og oppdaterte {$a->%old} eksisterende.';
+$string['addedandupdatedpp'] = 'La til {$a->%new} nye H5P-biblioteker og oppdaterte {$a->%old} eksisterende.';
+$string['addednewlibrary'] = 'La til {$a->%new} nytt H5P-bibliotek.';
+$string['addednewlibraries'] = 'La til {$a->%new} nye H5P-biblioteker.';
+$string['updatedlibrary'] = 'Oppdaterte {$a->%old} H5P-bibliotek.';
+$string['updatedlibraries'] = 'Oppdaterte {$a->%old} H5P-biblioteker.';
 $string['missingdependency'] = 'Mangler avhengigheten {$a->@dep} som kreves av {$a->@lib}.';
 $string['invalidstring'] = 'Angitt streng er ugyldig iforhold til det regulære uttrykket i semantikken. (verdi: \"{$a->%value}\", regexp: \"{$a->%regexp}\")';
 $string['invalidfile'] = 'Fila "{$a->%filename}" er ikke tillatt. Bare filer med de følgende filendingene er tillatt: {$a->%files-allowed}.';
@@ -241,15 +261,16 @@ $string['invalidaudioformat'] = 'Ugyldig lydfilformat. Bruk mp3 eller wav.';
 $string['invalidvideoformat'] = 'Ugyldig videofilformat. Bruk mp4 eller webm.';
 $string['couldnotsave'] = 'Klarte ikke å lagre fila.';
 $string['couldnotcopy'] = 'Klarte ikke å kopiere fila.';
+$string['librarynotselected'] = 'You must select a content type.';
 
 // Welcome messages.
 $string['welcomeheader'] = 'Welcome to the world of H5P!';
 $string['welcomegettingstarted'] = 'To get started with H5P and Moodle take a look at our <a {$a->moodle_tutorial}>tutorial</a> and check out the <a {$a->example_content}>example content</a> at H5P.org for inspiration.';
-$string['welcomecommunity'] = 'We hope you will enjoy H5P and get engaged in our growing community through our <a {$a->forums}>forums</a> and chat room <a {$a->gitter}>H5P at Gitter</a>';
+$string['welcomecommunity'] = 'We hope you will enjoy H5P and get engaged in our growing community through our <a {$a->forums}>forums</a>.';
 $string['welcomecontactus'] = 'If you have any feedback, don\'t hesitate to <a {$a}>contact us</a>. We take feedback very seriously and are dedicated to making H5P better every day!';
 $string['missingmbstring'] = 'PHP-utvidelsen mbstring mangler. H5P trenger denne for å kunne virke';
 $string['wrongversion'] = 'En ugyldig versjon av H5P-biblioteket {$a->%machineName} er brukt i innholdet. Innholdet bruker {$a->%contentLibrary}, mens det skal bruke {$a->%semanticsLibrary}.';
-$string['invalidlibrary'] = 'H5P-biblioteket {$a->%library} brukt i innholdet er ugyldig';
+$string['invalidlibrarynamed'] = 'H5P-biblioteket {$a->%library} brukt i innholdet er ugyldig';
 
 // Licensing.
 $string['copyrightinfo'] = 'Opphavsrettsinformasjon';
@@ -288,3 +309,6 @@ $string['licenseV1'] = 'Version 1';
 $string['licenseCC010'] = 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication';
 $string['licenseCC010U'] = 'CC0 1.0 Universal';
 $string['licenseversion'] = 'License Version';
+
+// Embed.
+$string['embedloginfailed'] = 'You do not have access to this content. Try logging in.';
