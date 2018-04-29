@@ -1,5 +1,5 @@
 {
-    "name": "h5p/h5p-moodle-plugin",
+    "name": "h5p/moodle-mod_hvp",
     "type": "moodle-mod",
     "require": {
         "composer/installers": "~1.0"
