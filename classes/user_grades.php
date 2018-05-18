@@ -139,7 +139,7 @@ class user_grades {
             FROM {hvp_xapi_results}
             WHERE parent_id = ?
             AND additionals = ?", array($answer->parent_id,
-            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
         ));
 
         // Get the original raw score from the main content type.
