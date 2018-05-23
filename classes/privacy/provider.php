@@ -383,6 +383,7 @@ class provider implements
         if ($context->contextlevel == CONTEXT_USER) {
             // Delete all H5P events.
             $DB->delete_records('hvp_events');
+            return;
         } else if ($context->contextlevel != CONTEXT_MODULE) {
             return;
         }
