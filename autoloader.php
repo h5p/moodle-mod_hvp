@@ -58,7 +58,12 @@ function hvp_autoloader($class) {
         'LongChoiceProcessor' => 'reporting/type-processors/long-choice-processor.class.php',
         'MatchingProcessor' => 'reporting/type-processors/matching-processor.class.php',
         'TrueFalseProcessor' => 'reporting/type-processors/true-false-processor.class.php',
+        'IVOpenEndedQuestionProcessor' => 'reporting/type-processors/iv-open-ended-question-processor.class.php',
         'TypeProcessor' => 'reporting/type-processors/type-processor.class.php',
+        'DocumentationToolProcessor' => 'reporting/type-processors/compound/documentation-tool-processor.class.php',
+        'GoalsPageProcessor' => 'reporting/type-processors/compound/goals-page-processor.class.php',
+        'GoalsAssessmentPageProcessor' => 'reporting/type-processors/compound/goals-assessment-page-processor.class.php',
+        'StandardPageProcessor' => 'reporting/type-processors/compound/standard-page-processor.class.php',
 
         // Plugin specific classes are loaded by Moodle.
         );

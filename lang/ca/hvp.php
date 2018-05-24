@@ -180,6 +180,9 @@ $string['reportingscorelabel'] = 'Puntuació:';
 $string['reportingscaledscorelabel'] = 'Puntuació al llibre de qualificacions:';
 $string['reportingscoredelimiter'] = 'sobre';
 $string['reportingscaledscoredelimiter'] = ',';
+$string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
+$string['reportsubmitgradelabel'] = 'Submit grade';
+$string['noanswersubmitted'] = 'This user hasn\'t submitted an answer to the H5P yet';
 
 // Editor.
 $string['javascriptloading'] = 'S\'està esperant el JavaScript...';

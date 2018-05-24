@@ -98,4 +98,113 @@ class user_grades {
 
         \H5PCore::ajaxSuccess();
     }
+
+    /**
+     *  Since the subcontent types do not have their own row in the table,
+     *  we use the hvp_results_table as a 'staging area' to set and get
+     *  dynamically graded scores.
+     */
+    public static function handle_dynamic_grading() {
+        global $DB;
+
+        if (!\H5PCore::validToken('result', required_param('token', PARAM_RAW))) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            return;
+        }
+
+        $cm = get_coursemodule_from_id('hvp', required_param('contextId', PARAM_INT));
+        if (!$cm) {
+            \H5PCore::ajaxError('No such content');
+            http_response_code(404);
+            return;
+        }
+
+        // Content parameters.
+        $subcontentid = required_param('subcontent_id', PARAM_INT);
+        $score = required_param('score', PARAM_INT);
+
+        // Update the answer's score.
+        $data = (object) [
+            'id' => $subcontentid,
+            'raw_score' => $score
+        ];
+        $DB->update_record('hvp_xapi_results', $data, false);
+
+        // Load freshly updated record.
+        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
+
+        // Get the sum of all the OEQ scores with the same parent.
+        $totalgradablesscore = intval($DB->get_field_sql(
+            "SELECT SUM(raw_score)
+            FROM {hvp_xapi_results}
+            WHERE parent_id = ?
+            AND additionals = ?", array($answer->parent_id,
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
+        ));
+
+        // Get the original raw score from the main content type.
+        $baseanswer = $DB->get_record('hvp_xapi_results', array(
+            'id' => $answer->parent_id
+        ));
+
+        // Get hvp data from content.
+        $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
+        if (!$hvp) {
+            \H5PCore::ajaxError('No such content');
+            http_response_code(404);
+            return;
+        }
+
+        // Set grade using Gradebook API.
+        $hvp->rawgrade = $baseanswer->raw_score + $totalgradablesscore;
+        $hvp->rawgrademax = $baseanswer->max_score;
+        hvp_grade_item_update($hvp, (object) array(
+            'userid' => $answer->user_id
+        ));
+
+        // Get the num of ungraded OEQ answers.
+        $numungraded = intval($DB->get_field_sql(
+            "SELECT COUNT(*)
+            FROM {hvp_xapi_results}
+            WHERE parent_id = ?
+            AND raw_score IS NULL
+            AND additionals = ?", array($answer->parent_id,
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
+        ));
+
+        $response = [
+            'score' => $answer->raw_score,
+            'maxScore' => $answer->max_score,
+            'totalUngraded' => $numungraded,
+        ];
+        \H5PCore::ajaxSuccess($response);
+    }
+
+    /**
+     * Fetch score/maxScore for ungraded item + number of ungraded items.
+     */
+    public static function return_subcontent_grade() {
+        global $DB;
+
+        // Content parameters.
+        $subcontentid = required_param('subcontent_id', PARAM_INT);
+        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
+
+        // Get the num of ungraded OEQ answers.
+        $numungraded = intval($DB->get_field_sql(
+            "SELECT COUNT(*)
+            FROM {hvp_xapi_results}
+            WHERE parent_id = ?
+            AND raw_score IS NULL
+            AND additionals = ?", array($answer->parent_id,
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
+        ));
+
+        $response = [
+            'score' => $answer->raw_score,
+            'maxScore' => $answer->max_score,
+            'totalUngraded' => $numungraded,
+        ];
+        \H5PCore::ajaxSuccess($response);
+    }
 }

@@ -42,20 +42,17 @@ function hvp_get_core_settings($context) {
     // Check permissions and generate ajax paths.
     $ajaxpaths = array();
     $savefreq = false;
-    if ($context->contextlevel == CONTEXT_MODULE) {
-        $ajaxpath = "{$basepath}mod/hvp/ajax.php?contextId={$context->instanceid}&token=";
+    $ajaxpath = "{$basepath}mod/hvp/ajax.php?contextId={$context->instanceid}&token=";
+    if ($context->contextlevel == CONTEXT_MODULE && has_capability('mod/hvp:saveresults', $context)) {
+        $ajaxpaths['setFinished'] = $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished';
+        $ajaxpaths['xAPIResult'] = $ajaxpath . \H5PCore::createToken('xapiresult') . '&action=xapiresult';
+    }
+    if (has_capability('mod/hvp:savecontentuserdata', $context)) {
+        $ajaxpaths['contentUserData'] = $ajaxpath . \H5PCore::createToken('contentuserdata') .
+            '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId';
 
-        if (has_capability('mod/hvp:saveresults', $context)) {
-            $ajaxpaths['setFinished'] = $ajaxpath . \H5PCore::createToken('result') . '&action=set_finished';
-            $ajaxpaths['xAPIResult'] = $ajaxpath . \H5PCore::createToken('xapiresult') . '&action=xapiresult';
-        }
-        if (has_capability('mod/hvp:savecontentuserdata', $context)) {
-            $ajaxpaths['contentUserData'] = $ajaxpath . \H5PCore::createToken('contentuserdata') .
-                '&action=contents_user_data&content_id=:contentId&data_type=:dataType&sub_content_id=:subContentId';
-
-            if (get_config('mod_hvp', 'enable_save_content_state')) {
-                $savefreq = get_config('mod_hvp', 'content_state_frequency');
-            }
+        if (get_config('mod_hvp', 'enable_save_content_state')) {
+            $savefreq = get_config('mod_hvp', 'content_state_frequency');
         }
     }
 
@@ -74,7 +71,8 @@ function hvp_get_core_settings($context) {
             'name' => $USER->firstname . ' ' . $USER->lastname,
             'mail' => $USER->email
         ),
-        'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? true : false
+        'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? true : false,
+        'reportingIsEnabled' => true,
     );
 
     return $settings;
