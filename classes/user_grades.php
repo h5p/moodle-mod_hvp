@@ -128,7 +128,7 @@ class user_grades {
             'id' => $subcontentid,
             'raw_score' => $score
         ];
-        $DB->update_record('hvp_xapi_results', $data, $bulk = false);
+        $DB->update_record('hvp_xapi_results', $data, false);
 
         // Load freshly updated record.
         $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
@@ -139,7 +139,7 @@ class user_grades {
             FROM {hvp_xapi_results}
             WHERE parent_id = ?
             AND additionals = ?", array($answer->parent_id,
-            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
         ));
 
         // Get the original raw score from the main content type.
@@ -169,7 +169,7 @@ class user_grades {
             WHERE parent_id = ?
             AND raw_score IS NULL
             AND additionals = ?", array($answer->parent_id,
-            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
         ));
 
         $response = [
@@ -190,14 +190,14 @@ class user_grades {
         $subcontentid = required_param('subcontent_id', PARAM_INT);
         $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
 
-        // Get the num of ungraded OEQ answers
+        // Get the num of ungraded OEQ answers.
         $numungraded = intval($DB->get_field_sql(
             "SELECT COUNT(*)
             FROM {hvp_xapi_results}
             WHERE parent_id = ?
             AND raw_score IS NULL
             AND additionals = ?", array($answer->parent_id,
-            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.IVOpenEndedQuestion"}}')
+            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
         ));
 
         $response = [

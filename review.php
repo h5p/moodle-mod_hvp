@@ -77,7 +77,10 @@ $xapiresults = $DB->get_records_sql("
 );
 
 if (!$xapiresults) {
-    print_error('invalidxapiresult', 'hvp');
+    echo $OUTPUT->header();
+    echo "<h2>" . get_string('noanswersubmitted', 'hvp') . "</h2>";
+    echo $OUTPUT->footer();
+    return;
 }
 
 $totalrawscore       = null;
@@ -181,7 +184,7 @@ $reviewcontext = [
     'report'         => $reporthtml,
     'rawScore'       => $totalrawscore,
     'maxScore'       => $totalmaxscore,
-    'scaledScore'    => $totalscaledscore,
+    'scaledScore'    => round($totalscaledscore, 2),
     'maxScaledScore' => round($basequestion->grademax, 2),
 ];
 
