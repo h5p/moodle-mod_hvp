@@ -59,7 +59,7 @@ $context = context_module::instance($cm->id);
 require_capability('mod/hvp:view', $context);
 
 // Set up view assets.
-$view    = new \mod_hvp\view_assets($cm, $course, 'div');
+$view    = new \mod_hvp\view_assets($cm, $course);
 $content = $view->getcontent();
 $view->validatecontent();
 
@@ -72,6 +72,7 @@ $PAGE->set_heading($course->fullname);
 $PAGE->add_body_class('h5p-embed');
 $PAGE->set_pagelayout('embedded');
 $PAGE->requires->css(new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/embed.css"));
+$PAGE->requires->js(new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/embed.js"));
 
 // Add H5P assets to page.
 $view->addassetstopage();
