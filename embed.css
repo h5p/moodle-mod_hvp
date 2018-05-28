@@ -6,6 +6,10 @@ body.h5p-embed {
     padding: 0;
 }
 
+body.h5p-embed.h5p-resizing {
+    overflow: hidden;
+}
+
 body.h5p-embed .h5p-container {
     overflow: hidden;
 }
@@ -20,4 +24,10 @@ body.h5p-embed .h5p-content {
 body.h5p-embed .h5p-fullscreen .h5p-content,
 body.h5p-embed .h5p-semi-fullscreen .h5p-content {
     height: 100%;
+}
+
+body.h5p-embed .clearer,
+body.h5p-embed #maincontent,
+body.h5p-embed #user-notifications {
+    display: none;
 }
