@@ -27,9 +27,19 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Define the complete hvp structure for backup, with file and id annotations
+ *
+ * @copyright   2018 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_hvp_activity_structure_step extends backup_activity_structure_step {
 
+    /**
+     * Defines backup element's structure
+     *
+     * @return backup_nested_element
+     * @throws base_element_struct_exception
+     * @throws base_step_exception
+     */
     protected function define_structure() {
 
         // To know if we are including user info.
@@ -110,11 +120,21 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
 }
 
 /**
+ * Backup h5p libraries.
  * Structure step in charge of constructing the hvp_libraries.xml file for
  * all the H5P libraries.
+ *
+ * @copyright   2018 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_hvp_libraries_structure_step extends backup_structure_step {
 
+    /**
+     * Determines if backup step should be executed
+     *
+     * @return bool
+     * @throws backup_step_exception
+     */
     protected function execute_condition() {
         $fullpath = $this->task->get_taskbasepath();
         if (empty($fullpath)) {
@@ -131,6 +151,13 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
         return !file_exists($fullpath);
     }
 
+    /**
+     * Defines the structure to be executed by this backup step
+     *
+     * @return backup_nested_element
+     * @throws base_element_struct_exception
+     * @throws dml_exception
+     */
     protected function define_structure() {
 
         // Define each element separate.

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * \mod_hvp\editor_ajax class
  *
@@ -12,7 +11,7 @@ namespace mod_hvp;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once __DIR__ . '/../autoloader.php';
+require_once(__DIR__ . '/../autoloader.php');
 
 /**
  * Moodle's implementation of the H5P Editor Ajax interface.
@@ -30,18 +29,19 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      *
      * @return array Latest version of all local libraries
      */
+    // @codingStandardsIgnoreLine
     public function getLatestLibraryVersions() {
         global $DB;
 
-        $max_major_version_sql = "
+        $maxmajorversionsql = "
             SELECT hl.machine_name, MAX(hl.major_version) AS major_version
             FROM {hvp_libraries} hl
             WHERE hl.runnable = 1
             GROUP BY hl.machine_name";
 
-        $max_minor_version_sql = "
+        $maxminorversionsql = "
             SELECT hl2.machine_name, hl2.major_version, MAX(hl2.minor_version) AS minor_version
-            FROM ({$max_major_version_sql}) hl1
+            FROM ({$maxmajorversionsql}) hl1
             JOIN {hvp_libraries} hl2
             ON hl1.machine_name = hl2.machine_name
             AND hl1.major_version = hl2.major_version
@@ -51,7 +51,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
             SELECT hl4.id, hl4.machine_name, hl4.title, hl4.major_version,
                 hl4.minor_version, hl4.patch_version, hl4.has_icon, hl4.restricted
             FROM {hvp_libraries} hl4
-            JOIN ({$max_minor_version_sql}) hl3
+            JOIN ({$maxminorversionsql}) hl3
             ON hl4.machine_name = hl3.machine_name
             AND hl4.major_version = hl3.major_version
             AND hl4.minor_version = hl3.minor_version"
@@ -62,19 +62,20 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      * Get locally stored Content Type Cache. If machine name is provided
      * it will only get the given content type from the cache
      *
-     * @param $machineName
+     * @param $machinename
      *
      * @return array|object|null Returns results from querying the database
      */
-    public function getContentTypeCache($machineName = NULL) {
+    // @codingStandardsIgnoreLine
+    public function getContentTypeCache($machinename = null) {
         global $DB;
 
-        if ($machineName) {
+        if ($machinename) {
             return $DB->get_record_sql(
                 "SELECT id, is_recommended
                    FROM {hvp_libraries_hub_cache}
                   WHERE machine_name = ?",
-                array($machineName)
+                array($machinename)
             );
         }
 
@@ -87,10 +88,11 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      * @return array machine names. The first element in the array is the
      * most recently used.
      */
+    // @codingStandardsIgnoreLine
     public function getAuthorsRecentlyUsedLibraries() {
         global $DB;
         global $USER;
-        $recently_used = array();
+        $recentlyused = array();
 
         $results = $DB->get_records_sql(
             "SELECT library_name, max(created_at) AS max_created_at
@@ -100,10 +102,10 @@ class editor_ajax implements \H5PEditorAjaxInterface {
         ORDER BY max_created_at DESC", array($USER->id));
 
         foreach ($results as $row) {
-            $recently_used[] = $row->library_name;
+            $recentlyused[] = $row->library_name;
         }
 
-        return $recently_used;
+        return $recentlyused;
     }
 
     /**
@@ -113,6 +115,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      *
      * @return bool True if successful validation
      */
+    // @codingStandardsIgnoreLine
     public function validateEditorToken($token) {
         return \H5PCore::validToken('editorajax', $token);
     }

@@ -29,6 +29,9 @@ require_once($CFG->dirroot . '/mod/hvp/backup/moodle2/backup_hvp_stepslib.php');
 
 /**
  * Provides the steps to perform one complete backup of a H5P instance
+ *
+ * @copyright   2018 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_hvp_activity_task extends backup_activity_task {
 
