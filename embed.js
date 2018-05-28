@@ -136,5 +136,3 @@ document.onreadystatechange = function () {
     // Trigger initial resize for instance.
     H5P.trigger(instance, 'resize');
 };
-
-
