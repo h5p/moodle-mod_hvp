@@ -13,9 +13,7 @@
             return;
         }
 
-        var placeHolder = $input.val() || HVPSettingsHideKey.value ?
-            HVPSettingsHideKey.placeholder :
-            HVPSettingsHideKey.empty;
+        var placeHolder = $input.val() || HVPSettingsHideKey.value ? HVPSettingsHideKey.placeholder : HVPSettingsHideKey.empty;
         $input.attr('maxlength', 36)
             .attr('placeholder', placeHolder)
             .data('value', HVPSettingsHideKey.value)

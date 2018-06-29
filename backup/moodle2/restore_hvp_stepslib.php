@@ -110,7 +110,7 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
 
 /**
  * Structure step to restore H5P libraries
- * 
+ *
  * @copyright   2018 Joubel AS <contact@joubel.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
