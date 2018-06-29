@@ -346,7 +346,7 @@ function hvp_upgrade_2018062800() {
 
     $table = new xmldb_table('hvp');
 
-    // Remove old, unused metadata fields
+    // Remove old, unused metadata fields.
     if ($dbman->field_exists($table, 'author')) {
         $dbman->drop_field($table, new xmldb_field('author'));
     }
@@ -363,7 +363,7 @@ function hvp_upgrade_2018062800() {
         $dbman->drop_field($table, new xmldb_field('meta_description'));
     }
 
-    // Create new metadata fields
+    // Create new metadata fields.
     if (!$dbman->field_exists($table, 'authors')) {
         $dbman->add_field($table,
             new xmldb_field('authors', XMLDB_TYPE_TEXT, null, null, null, null, null)

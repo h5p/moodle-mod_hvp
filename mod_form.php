@@ -200,13 +200,13 @@ class mod_hvp_mod_form extends moodleform_mod {
         // Set editor defaults.
         $defaultvalues['h5plibrary'] = ($content === null ? 0 : H5PCore::libraryToString($content['library']));
 
-        // Combine params and metadata in one JSON object
+        // Combine params and metadata in one JSON object.
         $params = ($content === null ? '{}' : $core->filterParameters($content));
-        $main_content_data = array('params' => json_decode($params));
+        $maincontentdata = array('params' => json_decode($params));
         if (isset($content['metadata'])) {
-            $main_content_data['metadata'] = $content['metadata'];
+            $maincontentdata['metadata'] = $content['metadata'];
         }
-        $defaultvalues['h5pparams'] = json_encode($main_content_data, TRUE);
+        $defaultvalues['h5pparams'] = json_encode($maincontentdata, true);
 
         // Add required editor assets.
         require_once('locallib.php');

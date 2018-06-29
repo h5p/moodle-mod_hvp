@@ -1,16 +1,17 @@
+/*global H5P*/
 /**
  * Collect results from xAPI events
  */
-(function ($) {
+(function ($){
 
     /**
      * Finds a H5P library instance in an array based on the content ID
      *
      * @param  {Array} instances
      * @param  {number} contentId
-     * @returns {Object} Content instance
+     * @returns {Object|null} Content instance
      */
-    function findInstanceInArray(instances, contentId) {
+    function findInstanceInArray(instances, contentId){
         if (instances !== undefined && contentId !== undefined) {
             for (var i = 0; i < instances.length; i++) {
                 if (instances[i].contentId === contentId) {
@@ -26,8 +27,9 @@
      * @param {number} [contentId] Content identifier
      * @returns {Object} Content instance
      */
-    function getH5PInstance(contentId) {
-        var iframes, instance = null; // Returning null means no instance is found.
+    function getH5PInstance(contentId){
+        var iframes;
+        var instance = null; // Returning null means no instance is found.
 
         // No content id given, search for instance.
         if (!contentId) {
@@ -63,7 +65,7 @@
      * @param {number} contentId Content id
      * @param {Object} event Original xAPI event
      */
-    function storeXAPIData(contentId, event) {
+    function storeXAPIData(contentId, event){
         var xAPIData;
         var instance = getH5PInstance(contentId);
 
@@ -82,14 +84,14 @@
         $.post(H5PIntegration.ajax.xAPIResult, {
             contentId: contentId,
             xAPIResult: JSON.stringify(xAPIData)
-        }).done(function (data) {
+        }).done(function (data){
             if (data.error) {
                 console.debug('Storing xAPI results failed with error message:', data);
             }
         });
     }
 
-    $(document).ready(function () {
+    $(document).ready(function (){
         // No external dispatcher.
         if (!(window.H5P && H5P.externalDispatcher)) {
             console.debug('External dispatcher not found');
@@ -103,7 +105,7 @@
         }
 
         // Get emitted xAPI data.
-        H5P.externalDispatcher.on('xAPI', function (event) {
+        H5P.externalDispatcher.on('xAPI', function (event){
             // Skip malformed events.
             var hasStatement = event && event.data && event.data.statement;
             if (!hasStatement) {

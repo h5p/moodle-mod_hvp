@@ -835,13 +835,14 @@ class file_storage implements \H5PFileStorage {
     /**
      * Check if the library has a presave.js in the root folder
      *
-     * @param string $libraryName
-     * @param string $developmentPath
+     * @param string $libraryname
+     * @param string $developmentpath
      *
      * @return bool
      */
-    public function hasPresave($libraryName, $developmentPath = null) {
-        // TODO: Implement
+    // @codingStandardsIgnoreLine
+    public function hasPresave($libraryname, $developmentpath = null) {
+        // TODO: Implement.
         return false;
     }
 }

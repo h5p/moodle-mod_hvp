@@ -330,9 +330,9 @@ function hvp_content_upgrade_progress($libraryid) {
         }
     }
 
-    // Get updated extras
+    // Get updated extras.
     $extras = filter_input(INPUT_POST, 'extras');
-    if ($extras !== NULL) {
+    if ($extras !== null) {
         // Update extras.
         $extras = json_decode($extras);
         if (isset($extras->metadata)) {
@@ -353,11 +353,11 @@ function hvp_content_upgrade_progress($libraryid) {
             $fieldvalues = array_reduce($fields, function ($carry, $field) use($metadata) {
                 if (isset($metadata->$field)) {
                     $value = $metadata->$field;
-                    // Encode input that contains json
+                    // Encode input that contains json.
                     if (in_array($field, ['authors', 'changes'])) {
                         $value = json_encode($metadata->$field);
                     }
-                    // Store title as name
+                    // Store title as name.
                     if ($field === 'title') {
                         $field = 'name';
                     }
@@ -388,13 +388,13 @@ function hvp_content_upgrade_progress($libraryid) {
             $out->params[$content->id] = $content->params;
             $out->metadata[$content->id] = json_encode(array(
                 'title' => $content->title,
-                'authors' => json_decode($content->authors, TRUE),
+                'authors' => json_decode($content->authors, true),
                 'source' => $content->source,
                 'yearFrom' => $content->year_from,
                 'yearTo' => $content->year_to,
                 'license' => $content->license,
                 'license_version' => $content->license_version,
-                'changes' => json_decode($content->changes, TRUE),
+                'changes' => json_decode($content->changes, true),
                 'license_extras' => $content->license_extras,
                 'author_comments' => $content->author_comments
             ));

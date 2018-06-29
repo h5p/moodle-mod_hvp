@@ -908,10 +908,10 @@ class framework implements \H5PFrameworkInterface {
     public function updateContent($content, $contentmainid = null) {
         global $DB;
 
-        $content_json = json_decode($content['params'], true);
-        $content['params'] = json_encode($content_json['params']);
+        $contentjson = json_decode($content['params'], true);
+        $content['params'] = json_encode($contentjson['params']);
         $content['params'] = str_replace('"params":[]', '"params":{}', $content['params']);
-        $metadata = $content_json['metadata'];
+        $metadata = $contentjson['metadata'];
 
         if (!isset($content['disable'])) {
             $content['disable'] = \H5PCore::DISABLE_NONE;
@@ -928,15 +928,15 @@ class framework implements \H5PFrameworkInterface {
             'filtered' => '',
             'disable' => $content['disable'],
             'timemodified' => time(),
-            'authors' => isset($metadata['authors']) ? json_encode($metadata['authors']) : NULL,
-            'source' => isset($metadata['source']) ? $metadata['source'] : NULL,
-            'year_from' => isset($metadata['yearFrom']) ? $metadata['yearFrom'] : NULL,
-            'year_to' => isset($metadata['yearTo']) ? $metadata['yearTo'] : NULL,
-            'license' => isset($metadata['license']) ? $metadata['license'] : NULL,
-            'license_version' => isset($metadata['licenseVersion']) ? $metadata['licenseVersion'] : NULL,
-            'license_extras' => isset($metadata['licenseExtras']) ? $metadata['licenseExtras'] : NULL,
-            'changes' => isset($metadata['changes']) ? json_encode($metadata['changes']) : NULL,
-            'author_comments' => isset($metadata['authorComments']) ? $metadata['authorComments'] : NULL
+            'authors' => isset($metadata['authors']) ? json_encode($metadata['authors']) : null,
+            'source' => isset($metadata['source']) ? $metadata['source'] : null,
+            'year_from' => isset($metadata['yearFrom']) ? $metadata['yearFrom'] : null,
+            'year_to' => isset($metadata['yearTo']) ? $metadata['yearTo'] : null,
+            'license' => isset($metadata['license']) ? $metadata['license'] : null,
+            'license_version' => isset($metadata['licenseVersion']) ? $metadata['licenseVersion'] : null,
+            'license_extras' => isset($metadata['licenseExtras']) ? $metadata['licenseExtras'] : null,
+            'changes' => isset($metadata['changes']) ? json_encode($metadata['changes']) : null,
+            'author_comments' => isset($metadata['authorComments']) ? $metadata['authorComments'] : null
         );
 
         if (!isset($content['id'])) {
@@ -1126,7 +1126,7 @@ class framework implements \H5PFrameworkInterface {
             array_reduce($metadatafields, function ($array, $field) use ($data) {
                 if (isset($data->$field)) {
                     $value = $data->$field;
-                    // Decode json fields
+                    // Decode json fields.
                     if (in_array($field, ['authors', 'changes'])) {
                         $value = json_decode($data->$field);
                     }
