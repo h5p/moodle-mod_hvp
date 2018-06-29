@@ -908,9 +908,10 @@ class framework implements \H5PFrameworkInterface {
     public function updateContent($content, $contentmainid = null) {
         global $DB;
 
+        $content['params'] = str_replace('{}', '{"REPLACEME":"REPLACEME"}', $content['params']);
         $contentjson = json_decode($content['params'], true);
         $content['params'] = json_encode($contentjson['params']);
-        $content['params'] = str_replace('"params":[]', '"params":{}', $content['params']);
+        $content['params'] = str_replace('{"REPLACEME":"REPLACEME"}', '{}', $content['params']);
         $metadata = $contentjson['metadata'];
 
         if (!isset($content['disable'])) {
