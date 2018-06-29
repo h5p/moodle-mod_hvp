@@ -831,4 +831,17 @@ class file_storage implements \H5PFileStorage {
         }
         closedir($dir);
     }
+
+    /**
+     * Check if the library has a presave.js in the root folder
+     *
+     * @param string $libraryName
+     * @param string $developmentPath
+     *
+     * @return bool
+     */
+    public function hasPresave($libraryName, $developmentPath = null) {
+        // TODO: Implement
+        return false;
+    }
 }

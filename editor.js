@@ -20,7 +20,11 @@
       getRow($editor),
       $editor,
       $('input[name="h5plibrary"]'),
-      $('input[name="h5pparams"]')
+      $('input[name="h5pparams"]'),
+      $('input[name="h5pmaxscore"]'),
+      function (params) {
+        $('input[name="name"]').val(params.metadata.title);
+      }
     );
   }
 
