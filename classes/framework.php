@@ -427,6 +427,32 @@ class framework implements \H5PFrameworkInterface {
                 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication' => 'licenseCC010',
                 'CC0 1.0 Universal' => 'licenseCC010U',
                 'License Version' => 'licenseversion',
+                'Creative Commons' => 'creativecommons',
+                'CC Attribution' => 'ccattribution',
+                'CC Attribution-ShareAlike' => 'ccattributionsa',
+                'CC Attribution-NoDerivs' => 'ccattributionnd',
+                'CC Attribution-NonCommercial' => 'ccattributionnc',
+                'CC Attribution-NonCommercial-ShareAlike' => 'ccattributionncsa',
+                'CC Attribution-NonCommercial-NoDerivs' => 'ccattributionncnd',
+                'CC Public Domain Dedication' => 'ccpdd',
+                'Years (from)' => 'yearsfrom',
+                'Years (to)' => 'yearsto',
+                "Author's name" => 'authorname',
+                "Author's role" => 'authorrole',
+                'Editor' => 'editor',
+                'Licensee' => 'licensee',
+                'Originator' => 'originator',
+                'Any additional information about the license' => 'additionallicenseinfo',
+                'License Extras' => 'licenseextras',
+                'Change Log' => 'changelog',
+                'Question' => 'question',
+                'Date' => 'date',
+                'Changed by' => 'changedby',
+                'Description of change' => 'changedescription',
+                'Photo cropped, text changed, etc.' => 'changeplaceholder',
+                'Additional Information' => 'additionalinfo',
+                'Author comments' => 'authorcomments',
+                'Comments for the editor of the content (This text will not be published as a part of copyright info' => 'authorcommentsdescription',
             ];
             // @codingStandardsIgnoreEnd
         }
@@ -882,12 +908,18 @@ class framework implements \H5PFrameworkInterface {
     public function updateContent($content, $contentmainid = null) {
         global $DB;
 
+        $content['params'] = str_replace('{}', '{"REPLACEME":"REPLACEME"}', $content['params']);
+        $contentjson = json_decode($content['params'], true);
+        $content['params'] = json_encode($contentjson['params']);
+        $content['params'] = str_replace('{"REPLACEME":"REPLACEME"}', '{}', $content['params']);
+        $metadata = $contentjson['metadata'];
+
         if (!isset($content['disable'])) {
             $content['disable'] = \H5PCore::DISABLE_NONE;
         }
 
         $data = array(
-            'name' => $content['name'],
+            'name' => isset($metadata['title']) ? $metadata['title'] : $content['name'],
             'course' => $content['course'],
             'intro' => $content['intro'],
             'introformat' => $content['introformat'],
@@ -896,7 +928,16 @@ class framework implements \H5PFrameworkInterface {
             'main_library_id' => $content['library']['libraryId'],
             'filtered' => '',
             'disable' => $content['disable'],
-            'timemodified' => time()
+            'timemodified' => time(),
+            'authors' => isset($metadata['authors']) ? json_encode($metadata['authors']) : null,
+            'source' => isset($metadata['source']) ? $metadata['source'] : null,
+            'year_from' => isset($metadata['yearFrom']) ? $metadata['yearFrom'] : null,
+            'year_to' => isset($metadata['yearTo']) ? $metadata['yearTo'] : null,
+            'license' => isset($metadata['license']) ? $metadata['license'] : null,
+            'license_version' => isset($metadata['licenseVersion']) ? $metadata['licenseVersion'] : null,
+            'license_extras' => isset($metadata['licenseExtras']) ? $metadata['licenseExtras'] : null,
+            'changes' => isset($metadata['changes']) ? json_encode($metadata['changes']) : null,
+            'author_comments' => isset($metadata['authorComments']) ? $metadata['authorComments'] : null
         );
 
         if (!isset($content['id'])) {
@@ -1012,25 +1053,37 @@ class framework implements \H5PFrameworkInterface {
     public function loadContent($id) {
         global $DB;
 
-        $data = $DB->get_record_sql(
-                "SELECT hc.id
-                      , hc.name
-                      , hc.intro
-                      , hc.introformat
-                      , hc.json_content
-                      , hc.filtered
-                      , hc.slug
-                      , hc.embed_type
-                      , hc.disable
-                      , hl.id AS library_id
-                      , hl.machine_name
-                      , hl.major_version
-                      , hl.minor_version
-                      , hl.embed_types
-                      , hl.fullscreen
-                FROM {hvp} hc
-                JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
-                WHERE hc.id = ?", array($id));
+        $data = $DB->get_record_sql("
+          SELECT
+            hc.id,
+            hc.name,
+            hc.intro,
+            hc.introformat,
+            hc.json_content,
+            hc.filtered,
+            hc.slug,
+            hc.embed_type,
+            hc.disable,
+            hl.id AS library_id,
+            hl.machine_name,
+            hl.major_version,
+            hl.minor_version,
+            hl.embed_types,
+            hl.fullscreen,
+            hc.name as title,
+            hc.authors,
+            hc.source,
+            hc.license,
+            hc.license_version,
+            hc.license_extras,
+            hc.year_from,
+            hc.year_to,
+            hc.changes,
+            hc.author_comments
+          FROM {hvp} hc
+          JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
+          WHERE hc.id = ?", array($id)
+        );
 
         // Return null if not found.
         if ($data === false) {
@@ -1055,6 +1108,34 @@ class framework implements \H5PFrameworkInterface {
             'libraryMinorVersion' => $data->minor_version,
             'libraryEmbedTypes' => $data->embed_types,
             'libraryFullscreen' => $data->fullscreen,
+        );
+
+        $metadatafields = [
+            'title',
+            'authors',
+            'source',
+            'license',
+            'license_version',
+            'license_extras',
+            'year_from',
+            'year_to',
+            'changes',
+            'author_comments',
+        ];
+
+        $content['metadata'] = \H5PCore::snakeToCamel(
+            array_reduce($metadatafields, function ($array, $field) use ($data) {
+                if (isset($data->$field)) {
+                    $value = $data->$field;
+                    // Decode json fields.
+                    if (in_array($field, ['authors', 'changes'])) {
+                        $value = json_decode($data->$field);
+                    }
+
+                    $array[$field] = $value;
+                }
+                return $array;
+            }, [])
         );
 
         return $content;

@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * \mod_hvp\editor_ajax class
  *
@@ -28,6 +43,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      * Gets latest library versions that exists locally
      *
      * @return array Latest version of all local libraries
+     * @throws \dml_exception
      */
     // @codingStandardsIgnoreLine
     public function getLatestLibraryVersions() {
@@ -62,9 +78,10 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      * Get locally stored Content Type Cache. If machine name is provided
      * it will only get the given content type from the cache
      *
-     * @param $machinename
+     * @param null $machinename
      *
-     * @return array|object|null Returns results from querying the database
+     * @return array|mixed|null|object Returns results from querying the database
+     * @throws \dml_exception
      */
     // @codingStandardsIgnoreLine
     public function getContentTypeCache($machinename = null) {

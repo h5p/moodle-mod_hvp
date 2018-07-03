@@ -57,10 +57,15 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
             'embed_type',
             'disable',
             'content_type',
-            'author',
+            'authors',
+            'source',
+            'year_from',
+            'year_to',
             'license',
-            'meta_keywords',
-            'meta_description',
+            'license_version',
+            'changes',
+            'license_extras',
+            'author_comments',
             'slug',
             'timecreated',
             'timemodified'
@@ -121,6 +126,7 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
 
 /**
  * Backup h5p libraries.
+ *
  * Structure step in charge of constructing the hvp_libraries.xml file for
  * all the H5P libraries.
  *

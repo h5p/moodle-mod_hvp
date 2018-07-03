@@ -16,10 +16,15 @@
         <FIELD NAME="disable" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="main_library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The library we first instanciate for this node"/>
         <FIELD NAME="content_type" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="Content type as defined in h5p.json"/>
-        <FIELD NAME="author" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="Author as defined in h5p.json"/>
-        <FIELD NAME="license" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="License as defined in h5p.json"/>
-        <FIELD NAME="meta_keywords" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Keywords as defined in h5p.json"/>
-        <FIELD NAME="meta_description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Meta description as defined in h5p.json"/>
+        <FIELD NAME="authors" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="List of authors in json format"/>
+        <FIELD NAME="source" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Link to the source, could also be citation"/>
+        <FIELD NAME="year_from" TYPE="int" LENGTH="4" UNSIGNED="true" NOTNULL="false" SEQUENCE="false" COMMENT="Start year for copyright"/>
+        <FIELD NAME="year_to" TYPE="int" LENGTH="4" UNSIGNED="true" NOTNULL="false" SEQUENCE="false" COMMENT="End year for copyright"/>
+        <FIELD NAME="license" TYPE="char" LENGTH="63" NOTNULL="false" SEQUENCE="false" COMMENT="License name of the content"/>
+        <FIELD NAME="license_version" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false" COMMENT="Version of the license used for the content"/>
+        <FIELD NAME="changes" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="List of changes in json format"/>
+        <FIELD NAME="license_extras" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Extra licensing terms"/>
+        <FIELD NAME="author_comments" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Comments for the editor"/>
         <FIELD NAME="filtered" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Filtered version of json_content"/>
         <FIELD NAME="slug" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Human readable content identifier that is unique"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -34,14 +39,14 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="content_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="parent_id" TYPE="int" LENGTH="10" SEQUENCE="false"/>
-        <FIELD NAME="interaction_type" TYPE="char" LENGTH="127" NOTNULL="true"/>
-        <FIELD NAME="description" TYPE="text" NOTNULL="true"/>
-        <FIELD NAME="correct_responses_pattern" TYPE="text" NOTNULL="true"/>
-        <FIELD NAME="response" TYPE="text" NOTNULL="true"/>
-        <FIELD NAME="additionals" TYPE="text" NOTNULL="true"/>
-        <FIELD NAME="raw_score" TYPE="int" LENGTH="6" NOTNULL="false"/>
-        <FIELD NAME="max_score" TYPE="int" LENGTH="6" NOTNULL="false"/>
+        <FIELD NAME="parent_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="interaction_type" TYPE="char" LENGTH="127" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="correct_responses_pattern" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="response" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="additionals" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="raw_score" TYPE="int" LENGTH="6" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="max_score" TYPE="int" LENGTH="6" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

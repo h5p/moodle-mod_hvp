@@ -70,6 +70,7 @@ class view_assets {
             'displayOptions'  => $displayoptions,
             'url'             => "{$CFG->httpswwwroot}/mod/hvp/view.php?id={$this->cm->id}",
             'contentUrl'      => "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/{$this->content['id']}",
+            'metadata'        => $this->content['metadata'],
             'contentUserData' => array(
                 0 => content_user_data::load_pre_loaded_user_data($this->content['id'])
             )

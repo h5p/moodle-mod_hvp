@@ -1,9 +1,20 @@
-(function ($) {
-  function getRow ($el) {
+/*global H5PIntegration H5PEditor H5P*/
+(function ($){
+
+    /**
+     * Get closest row of element
+     *
+     * @param $el
+     * @returns jQuery
+     */
+  function getRow ($el){
     return $el.closest('.fitem');
   }
 
-  function init () {
+    /**
+     * Initializes editor
+     */
+  function init (){
     var $editor = $('.h5p-editor');
     var $fileField = $('input[name="h5pfile"]');
 
@@ -20,7 +31,11 @@
       getRow($editor),
       $editor,
       $('input[name="h5plibrary"]'),
-      $('input[name="h5pparams"]')
+      $('input[name="h5pparams"]'),
+      $('input[name="h5pmaxscore"]'),
+      function (params) {
+        $('input[name="name"]').val(params.metadata.title);
+      }
     );
   }
 
