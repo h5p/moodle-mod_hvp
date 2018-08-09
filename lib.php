@@ -258,9 +258,9 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             }
 
             // Check permissions.
-            if (!has_capability('mod/hvp:getcachedassets', $context)) {
-                return false;
-            }
+         //   if (!has_capability('mod/hvp:getcachedassets', $context)) {
+         //       return false;
+         //   }
 
             $itemid = 0;
             break;
