@@ -1551,13 +1551,13 @@ class framework implements \H5PFrameworkInterface {
         $addons = array();
 
         $records = $DB->get_records_sql(
-                "SELECT l1.library_id,
+                "SELECT l1.id AS library_id,
                         l1.machine_name,
                         l1.major_version,
                         l1.minor_version,
                         l1.add_to
-                   FROM {h5p_libraries} l1
-              LEFT JOIN {h5p_libraries} l2
+                   FROM {hvp_libraries} l1
+              LEFT JOIN {hvp_libraries} l2
                      ON l1.machine_name = l2.machine_name
                     AND (l1.major_version < l2.major_version
                          OR (l1.major_version = l2.major_version
