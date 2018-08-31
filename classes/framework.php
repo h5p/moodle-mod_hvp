@@ -783,6 +783,7 @@ class framework implements \H5PFrameworkInterface {
             'drop_library_css' => $droplibrarycss,
             'semantics' => $librarydata['semantics'],
             'has_icon' => $librarydata['hasIcon'],
+            'add_to' => isset($librarydata['addTo']) ? json_encode($librarydata['addTo']) : NULL,
         );
 
         if ($new) {
@@ -1539,5 +1540,45 @@ class framework implements \H5PFrameworkInterface {
                 'owner'             => $ct->owner
             ), false, true);
         }
+    }
+
+    /**
+     * Implements loadAddons
+     */
+    // @codingStandardsIgnoreLine
+    public function loadAddons() {
+        global $DB;
+        $addons = array();
+
+        $records = $DB->get_records_sql(
+                "SELECT l1.library_id,
+                        l1.machine_name,
+                        l1.major_version,
+                        l1.minor_version,
+                        l1.add_to
+                   FROM {h5p_libraries} l1
+              LEFT JOIN {h5p_libraries} l2
+                     ON l1.machine_name = l2.machine_name
+                    AND (l1.major_version < l2.major_version
+                         OR (l1.major_version = l2.major_version
+                             AND l1.minor_version < l2.minor_version))
+                  WHERE l1.add_to IS NOT NULL
+                    AND l2.machine_name IS NULL");
+
+        // Extract num from records.
+        foreach ($records as $addon) {
+            $addons[] = \H5PCore::snakeToCamel($addon);
+        }
+
+        return $addons;
+    }
+
+    /**
+     * Implements getLibraryConfig
+     */
+    // @codingStandardsIgnoreLine
+    public function getLibraryConfig($libraries = NULL) {
+        global $CFG;
+        return (isset($CFG->mod_hvp_mathdisplay_config) ? $CFG->mod_hvp_mathdisplay_config : NULL);
     }
 }

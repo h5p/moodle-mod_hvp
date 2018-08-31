@@ -419,6 +419,19 @@ function hvp_upgrade_2018062800() {
     }
 }
 
+function hvp_upgrade_2018083100() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp_libraries');
+    $field = new xmldb_field('add_to', XMLDB_TYPE_TEXT, null, null, null, null, null, 'has_icon');
+
+    // Conditionally launch add field add_to.
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
+    }
+}
+
 /**
  * Hvp module upgrade function.
  *
@@ -438,6 +451,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2017050900,
         2017060900,
         2018062800,
+        2018083100,
     ];
 
     foreach ($upgrades as $version) {
