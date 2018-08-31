@@ -89,6 +89,7 @@
         <FIELD NAME="tutorial_url" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false" COMMENT="URL to a tutorial for this library"/>
         <FIELD NAME="has_icon" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether or not this library contains an icon.svg"/>
         <FIELD NAME="add_to" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Plugin configuration data"/>
+        <FIELD NAME="metadata" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Whether or not as sublibrary gets metadata button"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

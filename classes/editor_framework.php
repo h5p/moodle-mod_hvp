@@ -119,7 +119,8 @@ class editor_framework implements \H5peditorStorage {
                         "SELECT title,
                                 runnable,
                                 restricted,
-                                tutorial_url
+                                tutorial_url,
+                                metadata
                            FROM {hvp_libraries}
                           WHERE machine_name = ?
                             AND major_version = ?
@@ -137,6 +138,7 @@ class editor_framework implements \H5peditorStorage {
                     $library->title = $details->title;
                     $library->runnable = $details->runnable;
                     $library->restricted = $superuser ? false : ($details->restricted === '1' ? true : false);
+                    $library->metadata = $details->metadata;
                     $librarieswithdetails[] = $library;
                 }
             }
@@ -154,7 +156,8 @@ class editor_framework implements \H5peditorStorage {
                         major_version,
                         minor_version,
                         tutorial_url,
-                        restricted
+                        restricted,
+                        metadata
                    FROM {hvp_libraries}
                   WHERE runnable = 1
                     AND semantics IS NOT NULL
