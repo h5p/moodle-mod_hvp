@@ -74,6 +74,7 @@ function hvp_get_core_settings($context) {
         'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? true : false,
         'reportingIsEnabled' => true,
         'crossorigin' => isset($CFG->mod_hvp_crossorigin) ? $CFG->mod_hvp_crossorigin : null,
+        'libraryConfig' => $core->h5pF->getLibraryConfig(),
     );
 
     return $settings;
