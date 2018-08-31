@@ -1579,6 +1579,6 @@ class framework implements \H5PFrameworkInterface {
     // @codingStandardsIgnoreLine
     public function getLibraryConfig($libraries = null) {
         global $CFG;
-        return (isset($CFG->mod_hvp_mathdisplay_config) ? $CFG->mod_hvp_mathdisplay_config : null);
+        return (isset($CFG->mod_hvp_library_config) ? $CFG->mod_hvp_library_config : null);
     }
 }
