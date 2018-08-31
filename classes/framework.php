@@ -783,7 +783,7 @@ class framework implements \H5PFrameworkInterface {
             'drop_library_css' => $droplibrarycss,
             'semantics' => $librarydata['semantics'],
             'has_icon' => $librarydata['hasIcon'],
-            'add_to' => isset($librarydata['addTo']) ? json_encode($librarydata['addTo']) : NULL,
+            'add_to' => isset($librarydata['addTo']) ? json_encode($librarydata['addTo']) : null,
         );
 
         if ($new) {
@@ -1577,8 +1577,8 @@ class framework implements \H5PFrameworkInterface {
      * Implements getLibraryConfig
      */
     // @codingStandardsIgnoreLine
-    public function getLibraryConfig($libraries = NULL) {
+    public function getLibraryConfig($libraries = null) {
         global $CFG;
-        return (isset($CFG->mod_hvp_mathdisplay_config) ? $CFG->mod_hvp_mathdisplay_config : NULL);
+        return (isset($CFG->mod_hvp_mathdisplay_config) ? $CFG->mod_hvp_mathdisplay_config : null);
     }
 }
