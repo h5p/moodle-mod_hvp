@@ -340,7 +340,7 @@ function hvp_upgrade_2017060900() {
     }
 }
 
-function hvp_upgrade_2018062800() {
+function hvp_upgrade_2018090300() {
     global $DB;
     $dbman = $DB->get_manager();
 
@@ -417,31 +417,19 @@ function hvp_upgrade_2018062800() {
             new xmldb_field('author_comments', XMLDB_TYPE_TEXT, null, null, null, null, null)
         );
     }
-}
 
-function hvp_upgrade_2018083100() {
-    global $DB;
-    $dbman = $DB->get_manager();
-
+    // Add new libraries fields
     $table = new xmldb_table('hvp_libraries');
-    $field = new xmldb_field('add_to', XMLDB_TYPE_TEXT, null, null, null, null, null, 'has_icon');
-
-    // Conditionally launch add field add_to.
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
+    if (!$dbman->field_exists($table, 'add_to')) {
+        $dbman->add_field($table,
+            new xmldb_field('add_to', XMLDB_TYPE_TEXT, null, null, null, null, null, 'has_icon')
+        );
     }
-}
 
-function hvp_upgrade_2018083101() {
-    global $DB;
-    $dbman = $DB->get_manager();
-
-    $table = new xmldb_table('hvp_libraries');
-    $field = new xmldb_field('metadata', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'add_to');
-
-    // Conditionally launch add field add_to.
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
+    if (!$dbman->field_exists($table, 'metadata')) {
+        $dbman->add_field($table,
+            new xmldb_field('metadata', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'add_to')
+        );
     }
 }
 
@@ -463,9 +451,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2017040500,
         2017050900,
         2017060900,
-        2018062800,
-        2018083100,
-        2018083101
+        2018090300
     ];
 
     foreach ($upgrades as $version) {
