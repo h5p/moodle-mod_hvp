@@ -783,6 +783,7 @@ class framework implements \H5PFrameworkInterface {
             'drop_library_css' => $droplibrarycss,
             'semantics' => $librarydata['semantics'],
             'has_icon' => $librarydata['hasIcon'],
+            'metadata' => $librarydata['metadata'] ? 1 : 0,
             'add_to' => isset($librarydata['addTo']) ? json_encode($librarydata['addTo']) : null,
         );
 
