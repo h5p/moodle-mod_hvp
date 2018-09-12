@@ -91,7 +91,7 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
         // Define sources.
 
         // Uses library name and version instead of main_library_id.
-        $hvp->set_source_sql('          
+        $hvp->set_source_sql('
           SELECT h.id,
                  hl.machine_name,
                  hl.major_version,
