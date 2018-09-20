@@ -337,38 +337,12 @@ function hvp_content_upgrade_progress($libraryid) {
         // Update extras.
         $extras = json_decode($extras);
         if (isset($extras->metadata)) {
-            $metadata = $extras->metadata;
-            $fields = [
-                'title',
-                'authors',
-                'source',
-                'year_from',
-                'year_to',
-                'license',
-                'license_version',
-                'license_extras',
-                'changes',
-                'author_comments',
-            ];
+            $fields = \H5PMetadata::toDBArray($extras->metadata);
+            $fields['id'] = $id;
+            $fields['name'] = $fields['title'];
+            unset($fields['title']);
 
-            $fieldvalues = array_reduce($fields, function ($carry, $field) use($metadata) {
-                if (isset($metadata->$field)) {
-                    $value = $metadata->$field;
-                    // Encode input that contains json.
-                    if (in_array($field, ['authors', 'changes'])) {
-                        $value = json_encode($metadata->$field);
-                    }
-                    // Store title as name.
-                    if ($field === 'title') {
-                        $field = 'name';
-                    }
-                    $carry[$field] = $value;
-                }
-                return $carry;
-            }, []);
-
-            $fieldvalues['id'] = $id;
-            $DB->update_record('hvp', (object) $fieldvalues);
+            $DB->update_record('hvp', (object) $fields);
         }
     }
 
@@ -387,18 +361,7 @@ function hvp_content_upgrade_progress($libraryid) {
 
         foreach ($results as $content) {
             $out->params[$content->id] = $content->params;
-            $out->metadata[$content->id] = json_encode(array(
-                'title' => $content->title,
-                'authors' => json_decode($content->authors, true),
-                'source' => $content->source,
-                'yearFrom' => $content->year_from,
-                'yearTo' => $content->year_to,
-                'license' => $content->license,
-                'license_version' => $content->license_version,
-                'changes' => json_decode($content->changes, true),
-                'license_extras' => $content->license_extras,
-                'author_comments' => $content->author_comments
-            ));
+            $out->metadata[$content->id] = \H5PMetadata::toJSON($content);
         }
     }
 

@@ -783,6 +783,7 @@ class framework implements \H5PFrameworkInterface {
             'drop_library_css' => $droplibrarycss,
             'semantics' => $librarydata['semantics'],
             'has_icon' => $librarydata['hasIcon'],
+            'metadata' => $librarydata['metadata'] ? 1 : 0,
             'add_to' => isset($librarydata['addTo']) ? json_encode($librarydata['addTo']) : null,
         );
 
@@ -920,7 +921,7 @@ class framework implements \H5PFrameworkInterface {
             $content['disable'] = \H5PCore::DISABLE_NONE;
         }
 
-        $data = array(
+        $data = array_merge(\H5PMetadata::toDBArray($metadata), array(
             'name' => isset($metadata['title']) ? $metadata['title'] : $content['name'],
             'course' => $content['course'],
             'intro' => $content['intro'],
@@ -931,16 +932,7 @@ class framework implements \H5PFrameworkInterface {
             'filtered' => '',
             'disable' => $content['disable'],
             'timemodified' => time(),
-            'authors' => isset($metadata['authors']) ? json_encode($metadata['authors']) : null,
-            'source' => isset($metadata['source']) ? $metadata['source'] : null,
-            'year_from' => isset($metadata['yearFrom']) ? $metadata['yearFrom'] : null,
-            'year_to' => isset($metadata['yearTo']) ? $metadata['yearTo'] : null,
-            'license' => isset($metadata['license']) ? $metadata['license'] : null,
-            'license_version' => isset($metadata['licenseVersion']) ? $metadata['licenseVersion'] : null,
-            'license_extras' => isset($metadata['licenseExtras']) ? $metadata['licenseExtras'] : null,
-            'changes' => isset($metadata['changes']) ? json_encode($metadata['changes']) : null,
-            'author_comments' => isset($metadata['authorComments']) ? $metadata['authorComments'] : null
-        );
+        ));
 
         if (!isset($content['id'])) {
             $data['slug'] = '';
@@ -1555,7 +1547,9 @@ class framework implements \H5PFrameworkInterface {
                         l1.machine_name,
                         l1.major_version,
                         l1.minor_version,
-                        l1.add_to
+                        l1.add_to,
+                        l1.preloaded_js,
+                        l1.preloaded_css
                    FROM {hvp_libraries} l1
               LEFT JOIN {hvp_libraries} l2
                      ON l1.machine_name = l2.machine_name

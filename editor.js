@@ -1,20 +1,19 @@
-/*global H5PIntegration H5PEditor H5P*/
-(function ($){
+(function($) {
 
-    /**
-     * Get closest row of element
-     *
-     * @param $el
-     * @returns jQuery
-     */
-  function getRow ($el){
+  /**
+   * Get closest row of element
+   *
+   * @param {jQuery} $el
+   * @returns {jQuery}
+   */
+  function getRow($el) {
     return $el.closest('.fitem');
   }
 
     /**
      * Initializes editor
      */
-  function init (){
+  function init() {
     var $editor = $('.h5p-editor');
     var $fileField = $('input[name="h5pfile"]');
 
@@ -33,9 +32,7 @@
       $('input[name="h5plibrary"]'),
       $('input[name="h5pparams"]'),
       $('input[name="h5pmaxscore"]'),
-      function (params) {
-        $('input[name="name"]').val(params.metadata.title);
-      }
+      $('input[name="name"]')
     );
   }
 

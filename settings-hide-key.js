@@ -1,9 +1,9 @@
-/*global HVPSettingsHideKey H5P*/
+/* global HVPSettingsHideKey */
 /**
  * Prepares for hiding of the Site Key setting since you cannot modify attributes and such in Moodle.
  */
-(function ($){
-    $(document).ready(function (){
+(function($) {
+    $(document).ready(function() {
         if (!window.HVPSettingsHideKey) {
             return;
         }

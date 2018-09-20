@@ -1,16 +1,16 @@
-/*global H5PEmbedCommunicator:true*/
+/* global H5PEmbedCommunicator:true */
 /**
  * When embedded the communicator helps talk to the parent page.
  * This is a copy of the H5P.communicator, which we need to communicate in this context
  *
  * @type {H5PEmbedCommunicator}
  */
-H5PEmbedCommunicator = (function (){
+H5PEmbedCommunicator = (function() {
     /**
      * @class
      * @private
      */
-    function Communicator(){
+    function Communicator() {
         var self = this;
 
         // Maps actions to functions.
@@ -33,7 +33,7 @@ H5PEmbedCommunicator = (function (){
          * @param {string} action What you are waiting for
          * @param {function} handler What you want done
          */
-        self.on = function (action, handler){
+        self.on = function(action, handler) {
             actionHandlers[action] = handler;
         };
 
@@ -43,7 +43,7 @@ H5PEmbedCommunicator = (function (){
          * @param {string} action
          * @param {Object} [data] payload
          */
-        self.send = function (action, data){
+        self.send = function(action, data) {
             if (data === undefined) {
                 data = {};
             }
@@ -58,7 +58,7 @@ H5PEmbedCommunicator = (function (){
     return (window.postMessage && window.addEventListener ? new Communicator() : undefined);
 })();
 
-document.onreadystatechange = function (){
+document.onreadystatechange = function() {
     // Wait for instances to be initialize.
     if (document.readyState !== 'complete') {
         return;
@@ -81,12 +81,12 @@ document.onreadystatechange = function (){
     var parentIsFriendly = false;
 
     // Handle that the resizer is loaded after the iframe.
-    H5PEmbedCommunicator.on('ready', function (){
+    H5PEmbedCommunicator.on('ready', function() {
         H5PEmbedCommunicator.send('hello');
     });
 
     // Handle hello message from our parent window.
-    H5PEmbedCommunicator.on('hello', function (){
+    H5PEmbedCommunicator.on('hello', function() {
         // Initial setup/handshake is done.
         parentIsFriendly = true;
 
@@ -103,24 +103,24 @@ document.onreadystatechange = function (){
     });
 
     // When resize has been prepared tell parent window to resize.
-    H5PEmbedCommunicator.on('resizePrepared', function (){
+    H5PEmbedCommunicator.on('resizePrepared', function() {
         H5PEmbedCommunicator.send('resize', {
             scrollHeight: iFrame.contentDocument.body.scrollHeight
         });
     });
 
-    H5PEmbedCommunicator.on('resize', function (){
+    H5PEmbedCommunicator.on('resize', function() {
         H5P.trigger(instance, 'resize');
     });
 
-    H5P.on(instance, 'resize', function (){
+    H5P.on(instance, 'resize', function() {
         if (H5P.isFullscreen) {
             return; // Skip iframe resize.
         }
 
         // Use a delay to make sure iframe is resized to the correct size.
         clearTimeout(resizeDelay);
-        resizeDelay = setTimeout(function (){
+        resizeDelay = setTimeout(function() {
             // Only resize if the iframe can be resized.
             if (parentIsFriendly) {
                 H5PEmbedCommunicator.send('prepareResize',
@@ -129,8 +129,7 @@ document.onreadystatechange = function (){
                         clientHeight: iFrame.contentDocument.body.clientHeight
                     }
                 );
-            }
-            else {
+            } else {
                 H5PEmbedCommunicator.send('hello');
             }
         }, 0);
