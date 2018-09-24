@@ -921,7 +921,7 @@ class framework implements \H5PFrameworkInterface {
             $content['disable'] = \H5PCore::DISABLE_NONE;
         }
 
-        $data = array_merge(\H5PMetadata::toDBArray($metadata), array(
+        $data = array_merge(\H5PMetadata::toDBArray($metadata, false), array(
             'name' => isset($metadata['title']) ? $metadata['title'] : $content['name'],
             'course' => $content['course'],
             'intro' => $content['intro'],

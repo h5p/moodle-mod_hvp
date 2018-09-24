@@ -337,7 +337,7 @@ function hvp_content_upgrade_progress($libraryid) {
         // Update extras.
         $extras = json_decode($extras);
         if (isset($extras->metadata)) {
-            $fields = \H5PMetadata::toDBArray($extras->metadata);
+            $fields = \H5PMetadata::toDBArray($extras->metadata, false);
             $fields['id'] = $id;
             $fields['name'] = $fields['title'];
             unset($fields['title']);
