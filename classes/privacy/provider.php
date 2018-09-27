@@ -115,7 +115,7 @@ class provider implements
      *
      * @return contextlist $contextlist The contextlist containing the list of contexts used in this plugin.
      */
-    public static function _get_contexts_for_userid(int $userid) {
+    public static function _get_contexts_for_userid($userid) {
         $contextlist = new contextlist();
 
         // Context for content_user_data.
