@@ -1,14 +1,14 @@
 /**
  * Collect results from xAPI events
  */
-(function ($) {
+(function($) {
 
     /**
      * Finds a H5P library instance in an array based on the content ID
      *
      * @param  {Array} instances
      * @param  {number} contentId
-     * @returns {Object} Content instance
+     * @returns {Object|undefined} Content instance
      */
     function findInstanceInArray(instances, contentId) {
         if (instances !== undefined && contentId !== undefined) {
@@ -18,6 +18,7 @@
                 }
             }
         }
+        return undefined;
     }
 
     /**
@@ -27,7 +28,8 @@
      * @returns {Object} Content instance
      */
     function getH5PInstance(contentId) {
-        var iframes, instance = null; // Returning null means no instance is found.
+        var iframes;
+        var instance = null; // Returning null means no instance is found.
 
         // No content id given, search for instance.
         if (!contentId) {
@@ -37,8 +39,7 @@
                 // Assume first iframe.
                 instance = iframes[0].contentWindow.H5P.instances[0];
             }
-        }
-        else {
+        } else {
             // Try this documents instances.
             instance = findInstanceInArray(H5P.instances, contentId);
             if (!instance) {
@@ -70,8 +71,7 @@
         // Use getXAPIData contract, needed to get children.
         if (instance && instance.getXAPIData) {
             xAPIData = instance.getXAPIData();
-        }
-        else {
+        } else {
             // Fallback to event data.
             xAPIData = {
                 statement: event.data.statement
@@ -82,28 +82,28 @@
         $.post(H5PIntegration.ajax.xAPIResult, {
             contentId: contentId,
             xAPIResult: JSON.stringify(xAPIData)
-        }).done(function (data) {
+        }).done(function(data) {
             if (data.error) {
-                console.debug('Storing xAPI results failed with error message:', data);
+                console.error('Storing xAPI results failed with error message:', data);
             }
         });
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         // No external dispatcher.
         if (!(window.H5P && H5P.externalDispatcher)) {
-            console.debug('External dispatcher not found');
+            console.error('External dispatcher not found');
             return;
         }
 
         // No ajax path.
         if (!(window.H5PIntegration && H5PIntegration.ajax && H5PIntegration.ajax.xAPIResult)) {
-            console.debug('No ajax path found');
+            console.error('No ajax path found');
             return;
         }
 
         // Get emitted xAPI data.
-        H5P.externalDispatcher.on('xAPI', function (event) {
+        H5P.externalDispatcher.on('xAPI', function(event) {
             // Skip malformed events.
             var hasStatement = event && event.data && event.data.statement;
             if (!hasStatement) {

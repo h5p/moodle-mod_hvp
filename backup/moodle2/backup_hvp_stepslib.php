@@ -57,13 +57,18 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
             'embed_type',
             'disable',
             'content_type',
-            'author',
-            'license',
-            'meta_keywords',
-            'meta_description',
+            'source',
+            'year_from',
+            'year_to',
+            'license_version',
+            'changes',
+            'license_extras',
+            'author_comments',
             'slug',
             'timecreated',
-            'timemodified'
+            'timemodified',
+            'authors',
+            'license'
         ));
 
         // User data.
@@ -86,16 +91,33 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
         // Define sources.
 
         // Uses library name and version instead of main_library_id.
-        $hvp->set_source_sql('SELECT h.id, hl.machine_name,
-                                           hl.major_version,
-                                           hl.minor_version,
-                                     h.name, h.intro, h.introformat, h.json_content,
-                                     h.embed_type, h.disable, h.content_type, h.author,
-                                     h.license, h.meta_keywords, h.meta_description,
-                                     h.slug, h.timecreated, h.timemodified
-                                FROM {hvp} h
-                                JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
-                               WHERE h.id = ?', array(backup::VAR_ACTIVITYID));
+        $hvp->set_source_sql('
+          SELECT h.id,
+                 hl.machine_name,
+                 hl.major_version,
+                 hl.minor_version,
+                 h.name,
+                 h.intro,
+                 h.introformat,
+                 h.json_content,
+                 h.embed_type,
+                 h.disable,
+                 h.content_type,
+                 h.slug,
+                 h.timecreated,
+                 h.timemodified,
+                 h.authors,
+                 h.source,
+                 h.year_from,
+                 h.year_to,
+                 h.license_version,
+                 h.changes,
+                 h.license_extras,
+                 h.author_comments,
+                 h.license
+          FROM {hvp} h
+              JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
+              WHERE h.id = ?', array(backup::VAR_ACTIVITYID));
 
         // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
@@ -121,6 +143,7 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
 
 /**
  * Backup h5p libraries.
+ *
  * Structure step in charge of constructing the hvp_libraries.xml file for
  * all the H5P libraries.
  *
@@ -159,9 +182,6 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
      * @throws dml_exception
      */
     protected function define_structure() {
-
-        // Define each element separate.
-
         // Libraries.
         $libraries = new backup_nested_element('hvp_libraries');
         $library = new backup_nested_element('library', array('id'), array(
@@ -178,7 +198,9 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
             'drop_library_css',
             'semantics',
             'restricted',
-            'tutorial_url'
+            'tutorial_url',
+            'add_to',
+            'metadata'
         ));
 
         // Library translations.

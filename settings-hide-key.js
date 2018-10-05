@@ -1,8 +1,9 @@
+/* global HVPSettingsHideKey */
 /**
  * Prepares for hiding of the Site Key setting since you cannot modify attributes and such in Moodle.
  */
-(function ($) {
-    $(document).ready(function () {
+(function($) {
+    $(document).ready(function() {
         if (!window.HVPSettingsHideKey) {
             return;
         }
@@ -12,8 +13,9 @@
             return;
         }
 
+        var placeHolder = $input.val() || HVPSettingsHideKey.value ? HVPSettingsHideKey.placeholder : HVPSettingsHideKey.empty;
         $input.attr('maxlength', 36)
-            .attr('placeholder', $input.val() || HVPSettingsHideKey.value ? HVPSettingsHideKey.placeholder : HVPSettingsHideKey.empty)
+            .attr('placeholder', placeHolder)
             .data('value', HVPSettingsHideKey.value)
             .val('');
 

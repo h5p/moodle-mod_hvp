@@ -73,6 +73,8 @@ function hvp_get_core_settings($context) {
         ),
         'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? true : false,
         'reportingIsEnabled' => true,
+        'crossorigin' => isset($CFG->mod_hvp_crossorigin) ? $CFG->mod_hvp_crossorigin : null,
+        'libraryConfig' => $core->h5pF->getLibraryConfig(),
     );
 
     return $settings;
@@ -190,6 +192,7 @@ function hvp_add_editor_assets($id = null) {
       'ajaxPath' => "{$url}ajax.php?contextId={$context->id}&token={$editorajaxtoken}&action=",
       'libraryUrl' => $url . 'editor/',
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
+      'metadataSemantics' => $contentvalidator->getMetadataSemantics(),
       'assets' => $assets,
       // @codingStandardsIgnoreLine
       'apiVersion' => H5PCore::$coreApi
@@ -301,6 +304,7 @@ function hvp_content_upgrade_progress($libraryid) {
     $out = new stdClass();
     $out->params = array();
     $out->token = \H5PCore::createToken('contentupgrade');
+    $out->metadata = array();
 
     // Prepare our interface.
     $interface = \mod_hvp\framework::instance('interface');
@@ -327,13 +331,29 @@ function hvp_content_upgrade_progress($libraryid) {
         }
     }
 
+    // Get updated extras.
+    $extras = filter_input(INPUT_POST, 'extras');
+    if ($extras !== null) {
+        // Update extras.
+        $extras = json_decode($extras);
+        if (isset($extras->metadata)) {
+            $fields = \H5PMetadata::toDBArray($extras->metadata, false);
+            $fields['id'] = $id;
+            $fields['name'] = $fields['title'];
+            unset($fields['title']);
+
+            $DB->update_record('hvp', (object) $fields);
+        }
+    }
+
     // Get number of contents for this library.
     $out->left = $interface->getNumContent($libraryid);
 
     if ($out->left) {
         // Find the 40 first contents using this library version and add to params.
         $results = $DB->get_records_sql(
-            "SELECT id, json_content as params
+            "SELECT id, json_content as params, name as title, authors, source, year_from, year_to,
+                    license, license_version, changes, license_extras, author_comments
                FROM {hvp}
               WHERE main_library_id = ?
            ORDER BY name ASC", array($libraryid), 0 , 40
@@ -341,6 +361,7 @@ function hvp_content_upgrade_progress($libraryid) {
 
         foreach ($results as $content) {
             $out->params[$content->id] = $content->params;
+            $out->metadata[$content->id] = \H5PMetadata::toJSON($content);
         }
     }
 
