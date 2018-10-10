@@ -105,6 +105,19 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
         }
 
+        // Autoembed checkbox.
+        $mform->addElement('checkbox', 'autoembed', get_string('autoembed', 'hvp'));
+        $mform->setType('autoembed', PARAM_BOOL);
+
+        // Prevent mobile from autoembeding.
+        $mform->addElement('checkbox', 'mobiledelay', get_string('mobiledelay', 'hvp'));
+        $mform->setType('mobiledelay', PARAM_BOOL);
+
+        // Set a max width for embeded items.
+        $mform->addElement('text', 'embedmaxwidth', get_string('embedmaxwidth', 'hvp'));
+        $mform->setType('embedmaxwidth', PARAM_INT);
+        $mform->addRule('embedmaxwidth', get_string('maximumchars', '', 10), 'maxlength', 10, 'client');
+
         // Grade settings.
         $this->standard_grading_coursemodule_elements();
         $mform->removeElement('grade');
