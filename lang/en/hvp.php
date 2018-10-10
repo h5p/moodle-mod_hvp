@@ -415,3 +415,9 @@ $string['privacy:metadata:hvp_xapi_results:response'] = 'The response the user s
 $string['privacy:metadata:hvp_xapi_results:additionals'] = 'Additional information that the H5P can send in.';
 $string['privacy:metadata:hvp_xapi_results:raw_score'] = 'Achieved score for the event.';
 $string['privacy:metadata:hvp_xapi_results:max_score'] = 'Max achievable score for the event.';
+
+// Autoembed.
+$string['autoembed'] ='Automatically embed this H5P';
+$string['mobiledelay'] = 'Don\'t auto embed for Mobile devices';
+$string['mobilebutton'] = 'Show {$a}';
+$string['embedmaxwidth'] = 'Set the max width (in pixels) for Auto Embedded content';

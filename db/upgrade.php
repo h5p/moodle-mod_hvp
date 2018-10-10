@@ -434,6 +434,34 @@ function hvp_upgrade_2018090300() {
 }
 
 /**
+ * Add autoembed to hvp table
+ */
+function hvp_upgrade_2018112201() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    // Add autoembed to hvp options.
+    $table = new xmldb_table('hvp');
+    if ($dbman->table_exists($table)) {
+
+        $autoembed = new xmldb_field('autoembed', XMLDB_TYPE_INTEGER, '10');
+        if (!$dbman->field_exists($table, $autoembed)) {
+            $dbman->add_field($table, $autoembed);
+        }
+
+        $delayembedformobile = new xmldb_field('mobiledelay', XMLDB_TYPE_INTEGER, '10');
+        if (!$dbman->field_exists($table, $delayembedformobile)) {
+            $dbman->add_field($table, $delayembedformobile);
+        }
+
+        $embedmaxwidth = new xmldb_field('embedmaxwidth', XMLDB_TYPE_CHAR, '50');
+        if (!$dbman->field_exists($table, $embedmaxwidth)) {
+            $dbman->add_field($table, $embedmaxwidth);
+        }
+    }
+}
+
+/**
  * Hvp module upgrade function.
  *
  * @param string $oldversion The version we are upgrading from
@@ -451,7 +479,8 @@ function xmldb_hvp_upgrade($oldversion) {
         2017040500,
         2017050900,
         2017060900,
-        2018090300
+        2018090300,
+        2018112201
     ];
 
     foreach ($upgrades as $version) {
