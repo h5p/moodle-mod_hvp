@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/hvp/db" VERSION="20160113" COMMENT="XMLDB file for Moodle mod/hvp"
+<XMLDB PATH="mod/hvp/db" VERSION="20180831" COMMENT="XMLDB file for Moodle mod/hvp"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -16,10 +16,15 @@
         <FIELD NAME="disable" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="main_library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The library we first instanciate for this node"/>
         <FIELD NAME="content_type" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="Content type as defined in h5p.json"/>
-        <FIELD NAME="author" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="Author as defined in h5p.json"/>
-        <FIELD NAME="license" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="License as defined in h5p.json"/>
-        <FIELD NAME="meta_keywords" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Keywords as defined in h5p.json"/>
-        <FIELD NAME="meta_description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Meta description as defined in h5p.json"/>
+        <FIELD NAME="authors" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="List of authors in json format"/>
+        <FIELD NAME="source" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Link to the source, could also be citation"/>
+        <FIELD NAME="year_from" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="Start year for copyright"/>
+        <FIELD NAME="year_to" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="End year for copyright"/>
+        <FIELD NAME="license" TYPE="char" LENGTH="63" NOTNULL="false" SEQUENCE="false" COMMENT="License name of the content"/>
+        <FIELD NAME="license_version" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false" COMMENT="Version of the license used for the content"/>
+        <FIELD NAME="changes" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="List of changes in json format"/>
+        <FIELD NAME="license_extras" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Extra licensing terms"/>
+        <FIELD NAME="author_comments" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Comments for the editor"/>
         <FIELD NAME="filtered" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Filtered version of json_content"/>
         <FIELD NAME="slug" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Human readable content identifier that is unique"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -34,14 +39,14 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="content_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="parent_id" TYPE="int" LENGTH="10" SEQUENCE="false"/>
-        <FIELD NAME="interaction_type" TYPE="char" LENGTH="127" NOTNULL="true"/>
-        <FIELD NAME="description" TYPE="text" NOTNULL="true"/>
-        <FIELD NAME="correct_responses_pattern" TYPE="text" NOTNULL="true"/>
-        <FIELD NAME="response" TYPE="text" NOTNULL="true"/>
-        <FIELD NAME="additionals" TYPE="text" NOTNULL="true"/>
-        <FIELD NAME="raw_score" TYPE="int" LENGTH="6" NOTNULL="false"/>
-        <FIELD NAME="max_score" TYPE="int" LENGTH="6" NOTNULL="false"/>
+        <FIELD NAME="parent_id" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="interaction_type" TYPE="char" LENGTH="127" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="correct_responses_pattern" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="response" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="additionals" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="raw_score" TYPE="int" LENGTH="6" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="max_score" TYPE="int" LENGTH="6" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -82,7 +87,9 @@
         <FIELD NAME="semantics" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="The semantics definition in json format"/>
         <FIELD NAME="restricted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Restricts the ability to create new content using this library"/>
         <FIELD NAME="tutorial_url" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false" COMMENT="URL to a tutorial for this library"/>
-        <FIELD NAME="has_icon" TYPE="int" LENGTH="1" UNSIGNED="true" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether or not this library contains an icon.svg"/>
+        <FIELD NAME="has_icon" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether or not this library contains an icon.svg"/>
+        <FIELD NAME="add_to" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Plugin configuration data"/>
+        <FIELD NAME="metadata" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Whether or not as sublibrary gets metadata button"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -106,7 +113,7 @@
         <FIELD NAME="icon" TYPE="char" LENGTH="511" NOTNULL="true" SEQUENCE="false" COMMENT="URL to icon"/>
         <FIELD NAME="created_at" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Time that the library was uploaded"/>
         <FIELD NAME="updated_at" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Time that the library has its latest update"/>
-        <FIELD NAME="is_recommended" TYPE="int" LENGTH="1" UNSIGNED="true" NOTNULL="true" SEQUENCE="false" COMMENT="Whether the library is recommended by the HUB moderators"/>
+        <FIELD NAME="is_recommended" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Whether the library is recommended by the HUB moderators"/>
         <FIELD NAME="popularity" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="How many times the library has been downloaded"/>
         <FIELD NAME="screenshots" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Screenshot URLs json encoded"/>
         <FIELD NAME="license" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Library license(s) json encoded"/>

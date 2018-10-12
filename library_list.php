@@ -81,8 +81,7 @@ foreach ($libraries as $versions) {
                 'restrict' => ($restricted ? 0 : 1),
                 'library_id' => $library->id
             )))->out(false);
-        }
-        else {
+        } else {
             $upgradeurl = null;
             $restricted = null;
             $restrictedurl = null;

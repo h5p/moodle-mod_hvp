@@ -33,10 +33,8 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform =& $this->_form;
 
         // Name.
-        $mform->addElement('text', 'name', get_string('name'));
+        $mform->addElement('hidden', 'name', '');
         $mform->setType('name', PARAM_TEXT);
-        $mform->addRule('name', null, 'required', null, 'client');
-        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         // Intro.
         if (method_exists($this, 'standard_intro_elements')) {
@@ -72,6 +70,8 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->setType('h5plibrary', PARAM_RAW);
         $mform->addElement('hidden', 'h5pparams', '');
         $mform->setType('h5pparams', PARAM_RAW);
+        $mform->addElement('hidden', 'h5pmaxscore', '');
+        $mform->setType('h5pmaxscore', PARAM_INT);
 
         $core = \mod_hvp\framework::instance();
         $displayoptions = $core->getDisplayOptionsForEdit();
@@ -199,7 +199,14 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         // Set editor defaults.
         $defaultvalues['h5plibrary'] = ($content === null ? 0 : H5PCore::libraryToString($content['library']));
-        $defaultvalues['h5pparams'] = ($content === null ? '{}' : $core->filterParameters($content));
+
+        // Combine params and metadata in one JSON object.
+        $params = ($content === null ? '{}' : $core->filterParameters($content));
+        $maincontentdata = array('params' => json_decode($params));
+        if (isset($content['metadata'])) {
+            $maincontentdata['metadata'] = $content['metadata'];
+        }
+        $defaultvalues['h5pparams'] = json_encode($maincontentdata, true);
 
         // Add required editor assets.
         require_once('locallib.php');
