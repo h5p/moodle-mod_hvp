@@ -89,9 +89,6 @@ document.onreadystatechange = function () {
         // Initial setup/handshake is done.
         parentIsFriendly = true;
 
-        // Make iframe responsive.
-        iFrame.contentDocument.body.style.height = 'auto';
-
         // Hide scrollbars for correct size.
         iFrame.contentDocument.body.style.overflow = 'hidden';
 
