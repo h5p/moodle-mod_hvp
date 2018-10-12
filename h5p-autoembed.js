@@ -3,9 +3,10 @@ for (var i = 0; i < hvpembedbuttons.length; i++) {
     hvpembedbuttons[i].addEventListener("click", function() {
         var id = this.getAttribute('data-ref');
         this.style.display = 'none';
-        document.getElementById('hvpe' + id ).height = '50';
-        document.getElementById('hvpe' + id).src = '/mod/hvp/embed.php?id=' + id;
-        document.getElementById('hvpe' + id).addEventListener('load', function(){
+        var hvpembednode = document.getElementById('hvpe' + id );
+        hvpembednode.height = '50';
+        hvpembednode.src = '/mod/hvp/embed.php?id=' + id;
+        hvpembednode.addEventListener('load', function(){
             this.className = this.className.replace(/\bmobiledelay\b/g, "");
         }, true);
     });

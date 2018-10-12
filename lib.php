@@ -427,14 +427,16 @@ function mod_hvp_cm_info_view(cm_info $cm) {
             }
             if ($hvp->mobiledelay && (core_useragent::is_ios() || core_useragent::is_webkit_android())) {
                 $extrascript = autoembedhvp($cm->id, 0);
-                $extrascript .= '<button class="btn btn-primary mobileautoembed" data-ref="' . $cm->id . '" '
-                    . '>' . get_string('mobilebutton', 'hvp', $cm->get_formatted_name()) . '</button>';
+                $extrascript .= \html_writer::tag('button',
+                    get_string('mobilebutton', 'hvp', $cm->get_formatted_name()), array(
+                        'class' => 'btn btn-primary mobileautoembed',
+                        'data-ref' => $cm->id));
                 $cm->set_extra_classes('hvpautoembed');
             }
             if (intval($hvp->embedmaxwidth) > 0) {
-                $extrascript = '<div style="max-width:' . intval($hvp->embedmaxwidth) . 'px"> '
-                    . $extrascript
-                    . '</div>';
+                $extrascript = \html_writer::tag('div',
+                    $extrascript,
+                    array('style' => 'max-width:' . intval($hvp->embedmaxwidth) . 'px'));
             }
         }
 
@@ -452,14 +454,20 @@ function mod_hvp_cm_info_view(cm_info $cm) {
  */
 function autoembedhvp($id, $height = 0) {
     global $PAGE;
+    $url = new moodle_url('/mod/hvp/embed.php', ['id' => $id]);
     $class = $height ? '' : 'mobiledelay';
-    $src = $height ? 'src="/mod/hvp/embed.php?id=' . $id . '"' : '';
+    $src = $height ? $url : '';
 
     $PAGE->requires->js('/mod/hvp/library/js/h5p-resizer.js');
     $PAGE->requires->js('/mod/hvp/h5p-autoembed.js');
 
     // Embed the H5P.
-    return '<iframe class="hvpautoembed ' . $class .'" '
-        . 'id="hvpe' . $id . '" ' . $src
-        . ' width="100%" height="' . $height . '" frameborder="0" allowfullscreen="allowfullscreen"></iframe>';
+    return \html_writer::tag('iframe', '', array(
+        'class' => 'hvpautoembed ' . $class,
+        'id' => 'hvpe' . $id,
+        'src' => $src,
+        'width' => "100%",
+        'height' => $height,
+        'frameborder' => 0,
+        'allowfullscreen' => 'allowfullscreen'));
 }

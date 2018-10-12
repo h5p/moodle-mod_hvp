@@ -361,7 +361,7 @@ function hvp_upgrade_2018082201() {
             $dbman->add_field($table, $delayembedformobile);
         }
 
-        $embedmaxwidth = new xmldb_field('embedmaxwidth', XMLDB_TYPE_CHAR, '50');
+        $embedmaxwidth = new xmldb_field('embedmaxwidth', XMLDB_TYPE_INTEGER, '10');
         if (!$dbman->field_exists($table, $embedmaxwidth)) {
             $dbman->add_field($table, $embedmaxwidth);
         }
