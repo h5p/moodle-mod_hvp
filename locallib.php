@@ -315,34 +315,23 @@ function hvp_content_upgrade_progress($libraryid) {
         // Update params.
         $params = json_decode($params);
         foreach ($params as $id => $param) {
-            $DB->update_record('hvp', (object) array(
+            $upgraded = json_decode($param);
+
+            $fields = array_merge(\H5PMetadata::toDBArray($upgraded->metadata, false), array(
                 'id' => $id,
                 'main_library_id' => $tolibrary->id,
-                'json_content' => $param,
+                'json_content' => json_encode($upgraded->params),
                 'filtered' => ''
             ));
 
+            $DB->update_record('hvp', $fields);
+
             // Log content upgrade successful.
             new \mod_hvp\event(
-                    'content', 'upgrade',
-                    $id, $DB->get_field_sql("SELECT name FROM {hvp} WHERE id = ?", array($id)),
-                    $tolibrary->machine_name, $tolibrary->major_version . '.' . $tolibrary->minor_version
+                'content', 'upgrade',
+                $id, $DB->get_field_sql("SELECT name FROM {hvp} WHERE id = ?", array($id)),
+                $tolibrary->machine_name, $tolibrary->major_version . '.' . $tolibrary->minor_version
             );
-        }
-    }
-
-    // Get updated extras.
-    $extras = filter_input(INPUT_POST, 'extras');
-    if ($extras !== null) {
-        // Update extras.
-        $extras = json_decode($extras);
-        if (isset($extras->metadata)) {
-            $fields = \H5PMetadata::toDBArray($extras->metadata, false);
-            $fields['id'] = $id;
-            $fields['name'] = $fields['title'];
-            unset($fields['title']);
-
-            $DB->update_record('hvp', (object) $fields);
         }
     }
 
@@ -360,8 +349,9 @@ function hvp_content_upgrade_progress($libraryid) {
         );
 
         foreach ($results as $content) {
-            $out->params[$content->id] = $content->params;
-            $out->metadata[$content->id] = \H5PMetadata::toJSON($content);
+          $out->params[$content->id] =
+            '{"params":' . $content->params .
+            ',"metadata":' . \H5PMetadata::toJSON($content) . '}';
         }
     }
 
