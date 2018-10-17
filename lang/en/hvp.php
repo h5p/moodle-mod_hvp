@@ -19,7 +19,7 @@ $string['modulename_help'] = 'The H5P activity module enables you to create inte
 
 In addition to being an authoring tool for rich content, H5P enables you to import and export H5P files for effective reuse and sharing of content.
 
-User interactions and scores are tracked using xAPI and are available through the Moodle Gradebook.
+User interactions and scores are tracked using xAPI and are available through the Moodle Gradebook. Note that it is currently possible for people with programming skills to cheat in H5P interactions and obtain the full score without knowing the correct answers. H5Ps must not be used for exams or similar.
 
 You add interactive H5P content by creating content using the built-in authoring tool or uploading H5P files found on other H5P enabled sites.';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
