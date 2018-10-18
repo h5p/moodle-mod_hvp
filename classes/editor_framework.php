@@ -120,7 +120,7 @@ class editor_framework implements \H5peditorStorage {
                                 runnable,
                                 restricted,
                                 tutorial_url,
-                                metadata
+                                metadata_settings
                            FROM {hvp_libraries}
                           WHERE machine_name = ?
                             AND major_version = ?
@@ -138,7 +138,7 @@ class editor_framework implements \H5peditorStorage {
                     $library->title = $details->title;
                     $library->runnable = $details->runnable;
                     $library->restricted = $superuser ? false : ($details->restricted === '1' ? true : false);
-                    $library->metadata = $details->metadata;
+                    $library->metadataSettings = json_decode($details->metadata_settings);
                     $librarieswithdetails[] = $library;
                 }
             }
@@ -153,11 +153,11 @@ class editor_framework implements \H5peditorStorage {
                 "SELECT id,
                         machine_name AS name,
                         title,
-                        major_version,
-                        minor_version,
-                        tutorial_url,
+                        major_version AS majorVersion,
+                        minor_version AS minorVersion,
+                        tutorial_url AS tutorialUrl,
                         restricted,
-                        metadata
+                        metadata_settings AS metadataSettings
                    FROM {hvp_libraries}
                   WHERE runnable = 1
                     AND semantics IS NOT NULL
@@ -167,15 +167,11 @@ class editor_framework implements \H5peditorStorage {
             // Remove unique index.
             unset($library->id);
 
-            // Convert snakes to camels.
-            $library->majorVersion = (int) $library->major_version;
-            unset($library->major_version);
-            $library->minorVersion = (int) $library->minor_version;
-            unset($library->minor_version);
-            if (!empty($library->tutorial_url)) {
-                $library->tutorialUrl = $library->tutorial_url;
-            }
-            unset($library->tutorial_url);
+            $library->metadataSettings = json_decode($library->metadataSettings);
+
+            // Convert to int.
+            $library->majorVersion = (int) $library->majorVersion;
+            $library->minorVersion = (int) $library->minorVersion;
 
             // Make sure we only display the newest version of a library.
             foreach ($libraries as $key => $existinglibrary) {

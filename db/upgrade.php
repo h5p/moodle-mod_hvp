@@ -422,13 +422,13 @@ function hvp_upgrade_2018090300() {
     $table = new xmldb_table('hvp_libraries');
     if (!$dbman->field_exists($table, 'add_to')) {
         $dbman->add_field($table,
-            new xmldb_field('add_to', XMLDB_TYPE_TEXT, null, null, null, null, null, 'has_icon')
+            new xmldb_field('add_to', XMLDB_TYPE_TEXT, null, null, null, null, null)
         );
     }
 
-    if (!$dbman->field_exists($table, 'metadata')) {
+    if (!$dbman->field_exists($table, 'metadata_settings')) {
         $dbman->add_field($table,
-            new xmldb_field('metadata', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'add_to')
+            new xmldb_field('metadata_settings', XMLDB_TYPE_TEXT, null, null, null, null, null)
         );
     }
 }
