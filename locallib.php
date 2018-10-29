@@ -349,9 +349,8 @@ function hvp_content_upgrade_progress($libraryid) {
         );
 
         foreach ($results as $content) {
-          $out->params[$content->id] =
-            '{"params":' . $content->params .
-            ',"metadata":' . \H5PMetadata::toJSON($content) . '}';
+            $out->params[$content->id] = '{"params":' . $content->params .
+                                         ',"metadata":' . \H5PMetadata::toJSON($content) . '}';
         }
     }
 
