@@ -317,7 +317,7 @@ function hvp_content_upgrade_progress($libraryid) {
         foreach ($params as $id => $param) {
             $upgraded = json_decode($param);
 
-            $fields = array_merge(\H5PMetadata::toDBArray($upgraded->metadata, false), array(
+            $fields = array_merge(\H5PMetadata::toDBArray($upgraded->metadata, false, false), array(
                 'id' => $id,
                 'main_library_id' => $tolibrary->id,
                 'json_content' => json_encode($upgraded->params),
