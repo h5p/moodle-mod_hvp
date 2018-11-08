@@ -341,10 +341,10 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         // Remove metadata wrapper from form data
         $params = json_decode($data->h5pparams);
-        if ($params !== NULL) {
+        if ($params !== null) {
             $data->params = json_encode($params->params);
             if (isset($params->metadata)) {
-              $data->metadata = $params->metadata;
+                $data->metadata = $params->metadata;
             }
         }
 
@@ -360,7 +360,5 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
             $data->name = $data->metadata['title']; // Sort of a hack, but there is no JavaScript that sets the value when there is no editor...
         }
-
-        //var_dump($data); exit;
     }
 }
