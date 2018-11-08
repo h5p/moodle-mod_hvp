@@ -312,20 +312,55 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         if ($data['h5paction'] === 'upload') {
             // Validate uploaded H5P file.
+            unset($errors['name']); // Will be set in data_postprocessing().
             $this->validate_upload($data, $errors);
-
         } else {
             $this->validate_created($data, $errors);
-
         }
         return $errors;
     }
 
-    public function get_data() {
-        $data = parent::get_data();
-        if (!$data) {
-            return false;
+    /**
+     * Allows modules to modify the data returned by form get_data().
+     * This method is also called in the bulk activity completion form.
+     *
+     * Only available on moodleform_mod.
+     *
+     * @param stdClass $data passed by reference
+     */
+    public function data_postprocessing($data) {
+        // Determine disabled content features.
+        $options = array(
+            \H5PCore::DISPLAY_OPTION_FRAME     => isset($data->frame) ? $data->frame : 0,
+            \H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($data->export) ? $data->export : 0,
+            \H5PCore::DISPLAY_OPTION_EMBED     => isset($data->embed) ? $data->embed : 0,
+            \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($data->copyright) ? $data->copyright : 0,
+        );
+        $core = \mod_hvp\framework::instance();
+        $data->disable = $core->getStorableDisplayOptions($options, 0);
+
+        // Remove metadata wrapper from form data
+        $params = json_decode($data->h5pparams);
+        if ($params !== NULL) {
+            $data->params = json_encode($params->params);
+            if (isset($params->metadata)) {
+              $data->metadata = $params->metadata;
+            }
         }
-        return $data;
+
+        // Cleanup
+        unset($data->h5pparams);
+
+        if ($data->h5paction === 'upload') {
+            if (empty($data->metadata) || empty($data->metadata['title'])) {
+                // Fix for legacy content upload to work.
+                // Fetch title from h5p.json or use a default string if not available
+                $h5pvalidator = \mod_hvp\framework::instance('validator');
+                $data->metadata['title'] = empty($h5pvalidator->h5pC->mainJsonData['title']) ? 'Uploaded Content' : $h5pvalidator->h5pC->mainJsonData['title'];
+            }
+            $data->name = $data->metadata['title']; // Sort of a hack, but there is no JavaScript that sets the value when there is no editor...
+        }
+
+        //var_dump($data); exit;
     }
 }

@@ -153,11 +153,11 @@ class editor_framework implements \H5peditorStorage {
                 "SELECT id,
                         machine_name AS name,
                         title,
-                        major_version AS majorVersion,
-                        minor_version AS minorVersion,
-                        tutorial_url AS tutorialUrl,
+                        major_version,
+                        minor_version,
+                        tutorial_url,
                         restricted,
-                        metadata_settings AS metadataSettings
+                        metadata_settings
                    FROM {hvp_libraries}
                   WHERE runnable = 1
                     AND semantics IS NOT NULL
@@ -167,11 +167,18 @@ class editor_framework implements \H5peditorStorage {
             // Remove unique index.
             unset($library->id);
 
-            $library->metadataSettings = json_decode($library->metadataSettings);
+            // Convert snakes to camels.
+            $library->majorVersion = (int) $library->major_version;
+            unset($library->major_version);
+            $library->minorVersion = (int) $library->minor_version;
+            unset($library->minor_version);
+            if (!empty($library->tutorial_url)) {
+               $library->tutorialUrl = $library->tutorial_url;
+            }
+            unset($library->tutorial_url);
 
-            // Convert to int.
-            $library->majorVersion = (int) $library->majorVersion;
-            $library->minorVersion = (int) $library->minorVersion;
+            $library->metadataSettings = json_decode($library->metadata_settings);
+            unset($library->metadata_settings);
 
             // Make sure we only display the newest version of a library.
             foreach ($libraries as $key => $existinglibrary) {

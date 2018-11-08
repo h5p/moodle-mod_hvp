@@ -119,9 +119,6 @@ function hvp_update_instance($hvp) {
  * @return int Content ID
  */
 function hvp_save_content($hvp) {
-    // Determine disabled content features.
-    $hvp->disable = hvp_get_disabled_content_features($hvp);
-
     // Determine if we're uploading or creating.
     if ($hvp->h5paction === 'upload') {
         // Save uploaded package.
@@ -142,7 +139,6 @@ function hvp_save_content($hvp) {
         }
 
         // Make params and library available for core to save.
-        $hvp->params = $hvp->h5pparams;
         $hvp->library = H5PCore::libraryFromString($hvp->h5plibrary);
         $hvp->library['libraryId'] = $core->h5pF->getLibraryId($hvp->library['machineName'],
                                                                $hvp->library['majorVersion'],
@@ -162,24 +158,6 @@ function hvp_save_content($hvp) {
     }
 
     return $hvp->id;
-}
-
-/**
- * Help determine which content features have been disabled through the
- * activity form submitted.
- *
- * @param stdClass $hvp
- * @return int Disabled flags
- */
-function hvp_get_disabled_content_features($hvp) {
-    $disablesettings = [
-        \H5PCore::DISPLAY_OPTION_FRAME     => isset($hvp->frame) ? $hvp->frame : 0,
-        \H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($hvp->export) ? $hvp->export : 0,
-        \H5PCore::DISPLAY_OPTION_EMBED     => isset($hvp->embed) ? $hvp->embed : 0,
-        \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($hvp->copyright) ? $hvp->copyright : 0,
-    ];
-    $core            = \mod_hvp\framework::instance();
-    return $core->getStorableDisplayOptions($disablesettings, 0);
 }
 
 /**

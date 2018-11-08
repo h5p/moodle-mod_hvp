@@ -919,18 +919,12 @@ class framework implements \H5PFrameworkInterface {
     public function updateContent($content, $contentmainid = null) {
         global $DB;
 
-        $content['params'] = str_replace('{}', '{"REPLACEME":"REPLACEME"}', $content['params']);
-        $contentjson = json_decode($content['params'], true);
-        $content['params'] = json_encode($contentjson['params']);
-        $content['params'] = str_replace('{"REPLACEME":"REPLACEME"}', '{}', $content['params']);
-        $metadata = $contentjson['metadata'];
-
         if (!isset($content['disable'])) {
             $content['disable'] = \H5PCore::DISABLE_NONE;
         }
 
-        $data = array_merge(\H5PMetadata::toDBArray($metadata, false), array(
-            'name' => isset($metadata['title']) ? $metadata['title'] : $content['name'],
+        $data = array_merge(\H5PMetadata::toDBArray($content['metadata'], false), array(
+            'name' => isset($content['metadata']->title) ? $content['metadata']->title : $content['name'],
             'course' => $content['course'],
             'intro' => $content['intro'],
             'introformat' => $content['introformat'],
