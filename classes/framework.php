@@ -1366,7 +1366,7 @@ class framework implements \H5PFrameworkInterface {
     public function isContentSlugAvailable($slug) {
         global $DB;
 
-        return !$DB->get_field_sql("SELECT slug FROM {hvp} WHERE slug = ?", array($slug));
+        return !$DB->get_records_sql("SELECT id, slug FROM {hvp} WHERE slug = ?", array($slug));
     }
 
     /**
