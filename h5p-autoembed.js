@@ -1,14 +1,16 @@
+var embedlistiner = function() {
+    var id = this.getAttribute('data-ref');
+    this.style.display = 'none';
+    document.getElementById('hvpe' + id ).height = '50';
+    document.getElementById('hvpe' + id).src = '/mod/hvp/embed.php?id=' + id;
+    document.getElementById('hvpe' + id).addEventListener('load', function(){
+        this.className = this.className.replace(/\bmobiledelay\b/g, "");
+    }, true);
+};
+
 var hvpembedbuttons = document.getElementsByClassName('mobileautoembed');
 for (var i = 0; i < hvpembedbuttons.length; i++) {
-    hvpembedbuttons[i].addEventListener("click", function() {
-        var id = this.getAttribute('data-ref');
-        this.style.display = 'none';
-        document.getElementById('hvpe' + id ).height = '50';
-        document.getElementById('hvpe' + id).src = '/mod/hvp/embed.php?id=' + id;
-        document.getElementById('hvpe' + id).addEventListener('load', function(){
-            this.className = this.className.replace(/\bmobiledelay\b/g, "");
-        }, true);
-    });
+    hvpembedbuttons[i].addEventListener("click", embedlistiner);
 }
 
 var style = document.createElement('style');
