@@ -395,7 +395,7 @@ function mod_hvp_cm_info_view(cm_info $cm) {
     global $DB, $PAGE;
 
     // No Embed if page is being edited.
-    if(!$PAGE->user_is_editing()) {
+    if (!$PAGE->user_is_editing()) {
         $extrascript = '';
         if ($DB->record_exists('hvp', ['id' => $cm->instance])) {
             $hvp = $DB->get_record('hvp', ['id' => $cm->instance], "autoembed, mobiledelay, embedmaxwidth");
