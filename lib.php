@@ -386,3 +386,58 @@ function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
         hvp_grade_item_update($hvp);
     }
 }
+
+/**
+ * @param cm_info $cm
+ * @throws dml_exception
+ */
+function mod_hvp_cm_info_view(cm_info $cm) {
+    global $DB, $PAGE;
+
+    // No Embed if page is being edited.
+    if (!$PAGE->user_is_editing()) {
+        $extrascript = '';
+        if ($DB->record_exists('hvp', ['id' => $cm->instance])) {
+            $hvp = $DB->get_record('hvp', ['id' => $cm->instance], "autoembed, mobiledelay, embedmaxwidth");
+            if ($hvp->autoembed) {
+                $extrascript = autoembedhvp($cm->id, 50);
+                $cm->set_extra_classes('hvpautoembed');
+            }
+            if ($hvp->mobiledelay && (core_useragent::is_ios() || core_useragent::is_webkit_android())) {
+                $extrascript = autoembedhvp($cm->id, 0);
+                $extrascript .= '<button class="btn btn-primary mobileautoembed" data-ref="' . $cm->id . '" '
+                    . '>' . get_string('mobilebutton', 'hvp', $cm->get_formatted_name()) . '</button>';
+                $cm->set_extra_classes('hvpautoembed');
+            }
+            if (intval($hvp->embedmaxwidth) > 0) {
+                $extrascript = '<div style="max-width:' . intval($hvp->embedmaxwidth) . 'px"> '
+                    . $extrascript
+                    . '</div>';
+            }
+        }
+
+        // No Embed if the item is hidden.
+        if ($cm->uservisible) {
+            $cm->set_content($cm->content . $extrascript);
+        }
+    }
+}
+
+/**
+ * @param $id
+ * @param int $height
+ * @return string
+ */
+function autoembedhvp($id, $height = 0) {
+    global $PAGE;
+    $class = $height ? '' : 'mobiledelay';
+    $src = $height ? 'src="/mod/hvp/embed.php?id=' . $id . '"' : '';
+
+    $PAGE->requires->js('/mod/hvp/library/js/h5p-resizer.js');
+    $PAGE->requires->js('/mod/hvp/h5p-autoembed.js');
+
+    // Embed the H5P.
+    return '<iframe class="hvpautoembed ' . $class .'" '
+        . 'id="hvpe' . $id . '" ' . $src
+        . ' width="100%" height="' . $height . '" frameborder="0" allowfullscreen="allowfullscreen"></iframe>';
+}

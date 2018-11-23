@@ -934,6 +934,9 @@ class framework implements \H5PFrameworkInterface {
             'filtered' => '',
             'disable' => $content['disable'],
             'timemodified' => time(),
+            'autoembed' => intval($content['autoembed']),
+            'mobiledelay' => intval($content['mobiledelay']),
+            'embedmaxwidth' => intval($content['embedmaxwidth'])
         ));
 
         if (!isset($content['id'])) {
@@ -1075,7 +1078,10 @@ class framework implements \H5PFrameworkInterface {
             hc.year_from,
             hc.year_to,
             hc.changes,
-            hc.author_comments
+            hc.author_comments,
+            hc.autoembed,
+            hc.mobiledelay,
+            hc.embedmaxwidth
           FROM {hvp} hc
           JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
           WHERE hc.id = ?", array($id)
@@ -1104,6 +1110,9 @@ class framework implements \H5PFrameworkInterface {
             'libraryMinorVersion' => $data->minor_version,
             'libraryEmbedTypes' => $data->embed_types,
             'libraryFullscreen' => $data->fullscreen,
+            'autoembed' => $data->autoembed,
+            'mobiledelay' => $data->mobiledelay,
+            'embedmaxwidth' => $data->embedmaxwidth,
         );
 
         $metadatafields = [
