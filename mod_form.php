@@ -361,4 +361,27 @@ class mod_hvp_mod_form extends moodleform_mod {
             $data->name = $data->metadata->title; // Sort of a hack, but there is no JavaScript that sets the value when there is no editor...
         }
     }
+
+    /**
+     * This should not be overridden, but we have to in order to support Moodle <3.2
+     * (Do not override this method, override data_postprocessing() instead.)
+     *
+     * Moodle 3.1 LTS is supported until May 2019, after that this can be dropped.
+     * (could cause issues for new features if they add more to this in Core)
+     *
+     * @return object submitted data; NULL if not valid or not submitted or cancelled
+     */
+    public function get_data() {
+        $data = parent::get_data();
+        if ($data) {
+            // Convert the grade pass value - we may be using a language which uses commas,
+            // rather than decimal points, in numbers. These need to be converted so that
+            // they can be added to the DB.
+            if (isset($data->gradepass)) {
+                $data->gradepass = unformat_float($data->gradepass);
+            }
+            $this->data_postprocessing($data);
+        }
+        return $data;
+    }
 }
