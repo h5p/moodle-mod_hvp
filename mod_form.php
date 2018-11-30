@@ -372,15 +372,19 @@ class mod_hvp_mod_form extends moodleform_mod {
      * @return object submitted data; NULL if not valid or not submitted or cancelled
      */
     public function get_data() {
+        global $CFG;
         $data = parent::get_data();
-        if ($data) {
-            // Convert the grade pass value - we may be using a language which uses commas,
-            // rather than decimal points, in numbers. These need to be converted so that
-            // they can be added to the DB.
-            if (isset($data->gradepass)) {
-                $data->gradepass = unformat_float($data->gradepass);
+        // Check if Moodle version is < 3.2
+        if ($CFG->version < 2016120500) {
+            if ($data) {
+                // Convert the grade pass value - we may be using a language which uses commas,
+                // rather than decimal points, in numbers. These need to be converted so that
+                // they can be added to the DB.
+                if (isset($data->gradepass)) {
+                    $data->gradepass = unformat_float($data->gradepass);
+                }
+                $this->data_postprocessing($data);
             }
-            $this->data_postprocessing($data);
         }
         return $data;
     }
