@@ -26,7 +26,7 @@ require_once("locallib.php");
 global $PAGE, $DB, $CFG, $OUTPUT;
 
 $id = required_param('id', PARAM_INT);
-
+$PAGE->set_url(new \moodle_url('/mod/hvp/view.php', array('id' => $id)));
 // Verify course context.
 $cm = get_coursemodule_from_id('hvp', $id);
 if (!$cm) {
@@ -46,7 +46,7 @@ $content = $view->getcontent();
 $view->validatecontent();
 
 // Configure page.
-$PAGE->set_url(new \moodle_url('/mod/hvp/view.php', array('id' => $id)));
+
 $PAGE->set_title(format_string($content['title']));
 $PAGE->set_heading($course->fullname);
 
