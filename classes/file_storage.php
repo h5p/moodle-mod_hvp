@@ -402,12 +402,7 @@ class file_storage implements \H5PFileStorage {
             'filename' => $file->getName()
         );
         $fs = get_file_storage();
-        $filedata = $file->getData();
-        if ($filedata) {
-            $storedfile = $fs->create_file_from_string($record, $filedata);
-        } else {
-            $storedfile = $fs->create_file_from_pathname($record, $_FILES['file']['tmp_name']);
-        }
+        $storedfile = $fs->create_file_from_pathname($record, $_FILES['file']['tmp_name']);
 
         return $storedfile->get_id();
     }
