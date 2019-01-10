@@ -364,7 +364,7 @@ class mod_hvp_mod_form extends moodleform_mod {
 
     /**
      * This should not be overridden, but we have to in order to support Moodle <3.2
-     * (Do not override this method, override data_postprocessing() instead.)
+     * and older Totara sites.
      *
      * Moodle 3.1 LTS is supported until May 2019, after that this can be dropped.
      * (could cause issues for new features if they add more to this in Core)
@@ -372,11 +372,17 @@ class mod_hvp_mod_form extends moodleform_mod {
      * @return object submitted data; NULL if not valid or not submitted or cancelled
      */
     public function get_data() {
-        global $CFG;
         $data = parent::get_data();
-        // Check if Moodle version is < 3.2
-        if ($CFG->version < 2016120500) {
-            if ($data) {
+
+        if ($data) {
+            // Check if moodleform_mod class has already taken care of the data for us.
+            // If not this is an older Moodle or Totara site that we need to treat differently.
+
+            $class = new ReflectionClass('moodleform_mod');
+            $method = $class->getMethod('get_data');
+            if ($method->class !== 'moodleform_mod') {
+                // Moodleform_mod class doesn't override get_data so we need to convert it ourselves.
+
                 // Convert the grade pass value - we may be using a language which uses commas,
                 // rather than decimal points, in numbers. These need to be converted so that
                 // they can be added to the DB.
