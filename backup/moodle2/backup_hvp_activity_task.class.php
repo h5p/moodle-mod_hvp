@@ -81,6 +81,10 @@ class backup_hvp_activity_task extends backup_activity_task {
         $search = "/(".$base."\/mod\/hvp\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@HVPVIEWBYID*$2@$', $content);
 
+        // Link to hvp embed by module id.
+        $search = "/(".$base."\/mod\/hvp\/embed.php\?id\=)([0-9]+)/";
+        $content = preg_replace($search, '$@HVPEMBEDBYID*$2@$', $content);
+
         return $content;
     }
 }
