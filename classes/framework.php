@@ -1351,11 +1351,12 @@ class framework implements \H5PFrameworkInterface {
      * Implements getNumContent().
      */
     // @codingStandardsIgnoreLine
-    public function getNumContent($libraryid) {
+    public function getNumContent($libraryid, $skip = NULL) {
         global $DB;
+        $skip_query = empty($skip) ? '' : " AND id NOT IN ($skip)";
 
         return (int) $DB->get_field_sql(
-                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?",
+                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?{$skip_query}",
                 array($libraryid));
     }
 
@@ -1549,6 +1550,7 @@ class framework implements \H5PFrameworkInterface {
                         l1.machine_name,
                         l1.major_version,
                         l1.minor_version,
+                        l1.patch_version,
                         l1.add_to,
                         l1.preloaded_js,
                         l1.preloaded_css
@@ -1576,5 +1578,27 @@ class framework implements \H5PFrameworkInterface {
     public function getLibraryConfig($libraries = null) {
         global $CFG;
         return (isset($CFG->mod_hvp_library_config) ? $CFG->mod_hvp_library_config : null);
+    }
+
+    /**
+     * Implements libraryHasUpgrade
+     */
+    public function libraryHasUpgrade($library) {
+        global $DB;
+
+        return !!$DB->get_field_sql(
+                "SELECT id
+                  FROM {hvp_libraries}
+                  WHERE machine_name = ?
+                  AND (major_version > ?
+                       OR (major_version = ? AND minor_version > ?))
+                  LIMIT 1",
+                array(
+                  $library['machineName'],
+                  $library['majorVersion'],
+                  $library['majorVersion'],
+                  $library['minorVersion']
+                )
+        );
     }
 }
