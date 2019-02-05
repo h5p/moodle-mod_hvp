@@ -250,6 +250,15 @@ class mod_hvp_mod_form extends moodleform_mod {
 
                     $messages = array_merge(\mod_hvp\framework::messages('info'), $errors);
                     $errors['h5pfile'] = implode('<br/>', $messages);
+                } else {
+                    foreach ($h5pvalidator->h5pC->mainJsonData['preloadedDependencies'] as $dep) {
+                        if ($dep['machineName'] === $h5pvalidator->h5pC->mainJsonData['mainLibrary']) {
+                            if ($h5pvalidator->h5pF->libraryHasUpgrade($dep)) {
+                                // We do not allow storing old content due to security concerns
+                                $errors['h5pfile'] = get_string('olduploadoldcontent', 'hvp');
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -279,15 +288,20 @@ class mod_hvp_mod_form extends moodleform_mod {
             } else {
                 $data['h5plibrary'] = $library;
 
-                // Verify that parameters are valid.
-                if (empty($data['h5pparams'])) {
-                    $errors['h5peditor'] = get_string('noparameters', 'hvp');
+                if ($core->h5pF->libraryHasUpgrade($library)) {
+                    // We do not allow storing old content due to security concerns
+                    $errors['h5peditor'] = get_string('anunexpectedsave', 'hvp');
                 } else {
-                    $params = json_decode($data['h5pparams']);
-                    if ($params === null) {
-                        $errors['h5peditor'] = get_string('invalidparameters', 'hvp');
+                    // Verify that parameters are valid.
+                    if (empty($data['h5pparams'])) {
+                        $errors['h5peditor'] = get_string('noparameters', 'hvp');
                     } else {
-                        $data['h5pparams'] = $params;
+                        $params = json_decode($data['h5pparams']);
+                        if ($params === null) {
+                            $errors['h5peditor'] = get_string('invalidparameters', 'hvp');
+                        } else {
+                            $data['h5pparams'] = $params;
+                        }
                     }
                 }
             }
