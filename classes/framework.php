@@ -1353,10 +1353,10 @@ class framework implements \H5PFrameworkInterface {
     // @codingStandardsIgnoreLine
     public function getNumContent($libraryid, $skip = NULL) {
         global $DB;
-        $skip_query = empty($skip) ? '' : " AND id NOT IN ($skip)";
+        $skipquery = empty($skip) ? '' : " AND id NOT IN ($skip)";
 
         return (int) $DB->get_field_sql(
-                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?{$skip_query}",
+                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?{$skipquery}",
                 array($libraryid));
     }
 
@@ -1583,6 +1583,7 @@ class framework implements \H5PFrameworkInterface {
     /**
      * Implements libraryHasUpgrade
      */
+    // @codingStandardsIgnoreLine
     public function libraryHasUpgrade($library) {
         global $DB;
 

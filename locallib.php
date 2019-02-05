@@ -337,11 +337,11 @@ function hvp_content_upgrade_progress($libraryid) {
         }
     }
 
-    // Determine if any content has been skipped during the process
+    // Determine if any content has been skipped during the process.
     $skipped = filter_input(INPUT_POST, 'skipped');
-    if ($skipped !== NULL) {
+    if ($skipped !== null) {
         $out->skipped = json_decode($skipped);
-        // Clean up input, only numbers
+        // Clean up input, only numbers.
         foreach ($skipped as $i => $id) {
             $skipped[$i] = intval($id);
         }
@@ -354,7 +354,7 @@ function hvp_content_upgrade_progress($libraryid) {
     $out->left = $interface->getNumContent($libraryid, $skipped);
 
     if ($out->left) {
-        $skip_query = empty($skipped) ? '' : " AND id NOT IN ($skipped)";
+        $skipquery = empty($skipped) ? '' : " AND id NOT IN ($skipped)";
 
         // Find the 40 first contents using this library version and add to params.
         $results = $DB->get_records_sql(
@@ -362,7 +362,7 @@ function hvp_content_upgrade_progress($libraryid) {
                     license, license_version, changes, license_extras, author_comments
                FROM {hvp}
               WHERE main_library_id = ?
-                    {$skip_query}
+                    {$skipquery}
            ORDER BY name ASC", array($libraryid), 0 , 40
         );
 
