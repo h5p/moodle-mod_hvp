@@ -45,7 +45,6 @@ function hvp_autoloader($class) {
         'H5PDefaultStorage' => 'library/h5p-default-storage.class.php',
         'H5PEventBase' => 'library/h5p-event-base.class.php',
         'H5PMetadata' => 'library/h5p-metadata.class.php',
-        'H5PSaveContentOutdatedLibraryException' => 'library/exceptions/h5p-save-content-outdated-library-exception.class.php',
 
         // Editor.
         'H5peditor' => 'editor/h5peditor.class.php',
