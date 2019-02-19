@@ -1,153 +1,56 @@
 <?php
+
 namespace mod_hvp\output;
+
 defined('MOODLE_INTERNAL') || die();
+
 use context_module;
+use mod_hvp;
+
 class mobile {
-	
-    public static function mobile_course_view($args) {
-	global $OUTPUT, $USER, $DB;
-	$data=array('cmid' =>$args['cmid']);
 
-	$files=[];
-        return array(
-            'templates' => array(
-                array(
-                    'id' => 'main',
-                    'html' => $OUTPUT->render_from_template('mod_hvp/mobile_view_page',$data ),
-                ),
-            ),
-            'javascript' => "
-// H5P iframe Resizer
-(function () {
-  if (!window.postMessage || !window.addEventListener || window.h5pResizerInitialized) {
-    return; // Not supported
+  public static function mobile_course_view($args) {
+    global $DB, $CFG;
+
+    $id = $args['cmid'];
+
+    // Verify course context.
+    $cm = get_coursemodule_from_id('hvp', $id);
+    if (!$cm) {
+      print_error('invalidcoursemodule');
+    }
+    $course = $DB->get_record('course', array('id' => $cm->course));
+    if (!$course) {
+      print_error('coursemisconf');
+    }
+    require_course_login($course, true, $cm);
+    $context = context_module::instance($cm->id);
+    require_capability('mod/hvp:view', $context);
+
+    // Set up view assets.
+    $view = new mod_hvp\view_assets($cm, $course);
+    $view->validatecontent();
+
+    $html = '';
+
+    // Print any messages.
+    // $html .= \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
+    // $html .= \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
+
+    $html .= $view->outputview();
+
+    // TODO: Import js from other file
+    $scripts     = $view->getjsassets();
+    $corescripts = $view->getcorejsassets();
+
+    return array(
+      'templates'  => array(
+        array(
+          'id'   => 'main',
+          'html' => $html,
+        ),
+      ),
+      'javascript' => 'console.log("Add JS here..")',
+    );
   }
-  window.h5pResizerInitialized = true;
-
-  // Map actions to handlers
-  var actionHandlers = {};
-
-  /**
-   * Prepare iframe resize.
-   *
-   * @private
-   * @param {Object} iframe Element
-   * @param {Object} data Payload
-   * @param {Function} respond Send a response to the iframe
-   */
-  actionHandlers.hello = function (iframe, data, respond) {
-    // Make iframe responsive
-    iframe.style.width = '100%';
-
-    // Tell iframe that it needs to resize when our window resizes
-    var resize = function (event) {
-      if (iframe.contentWindow) {
-        // Limit resize calls to avoid flickering
-        respond('resize');
-      }
-      else {
-        // Frame is gone, unregister.
-        window.removeEventListener('resize', resize);
-      }
-    };
-    window.addEventListener('resize', resize, false);
-
-    // Respond to let the iframe know we can resize it
-    respond('hello');
-  };
-
-  /**
-   * Prepare iframe resize.
-   *
-   * @private
-   * @param {Object} iframe Element
-   * @param {Object} data Payload
-   * @param {Function} respond Send a response to the iframe
-   */
-  actionHandlers.prepareResize = function (iframe, data, respond) {
-    // Do not resize unless page and scrolling differs
-    if (iframe.clientHeight !== data.scrollHeight ||
-        data.scrollHeight !== data.clientHeight) {
-
-      // Reset iframe height, in case content has shrinked.
-      iframe.style.height = data.clientHeight + 'px';
-      respond('resizePrepared');
-    }
-  };
-
-  /**
-   * Resize parent and iframe to desired height.
-   *
-   * @private
-   * @param {Object} iframe Element
-   * @param {Object} data Payload
-   * @param {Function} respond Send a response to the iframe
-   */
-  actionHandlers.resize = function (iframe, data, respond) {
-    // Resize iframe so all content is visible. Use scrollHeight to make sure we get everything
-    iframe.style.height = data.scrollHeight + 'px';
-  };
-
-  /**
-   * Keyup event handler. Exits full screen on escape.
-   *
-   * @param {Event} event
-   */
-  var escape = function (event) {
-    if (event.keyCode === 27) {
-      exitFullScreen();
-    }
-  };
-
-  // Listen for messages from iframes
-  window.addEventListener('message', function receiveMessage(event) {
-    if (event.data.context !== 'h5p') {
-      return; // Only handle h5p requests.
-    }
-
-    // Find out who sent the message
-    var iframe, iframes = document.getElementsByTagName('iframe');
-    for (var i = 0; i < iframes.length; i++) {
-      if (iframes[i].contentWindow === event.source) {
-        iframe = iframes[i];
-        break;
-      }
-    }
-
-    if (!iframe) {
-      return; // Cannot find sender
-    }
-
-    // Find action handler handler
-    if (actionHandlers[event.data.action]) {
-      actionHandlers[event.data.action](iframe, event.data, function respond(action, data) {
-        if (data === undefined) {
-          data = {};
-        }
-        data.action = action;
-        data.context = 'h5p';
-        event.source.postMessage(data, event.origin);
-      });
-    }
-  }, false);
-
-  // Let h5p iframes know we're ready!
-  var iframes = document.getElementsByTagName('iframe');
-  var ready = {
-    context: 'h5p',
-    action: 'ready'
-  };
-  for (var i = 0; i < iframes.length; i++) {
-    if (iframes[i].src.indexOf('h5p') !== -1) {
-      iframes[i].contentWindow.postMessage(ready, '*');
-    }
-  }
-
-})();
-
-",
-            'otherdata' =>'',
-            'files' => $files,
-        );
-    }
 }

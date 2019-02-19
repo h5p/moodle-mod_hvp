@@ -42,6 +42,7 @@ require_capability('mod/hvp:view', $context);
 
 // Set up view assets.
 $view    = new \mod_hvp\view_assets($cm, $course);
+$view->addcoreassetstopage();
 $content = $view->getcontent();
 $view->validatecontent();
 
@@ -73,5 +74,5 @@ if (trim(strip_tags($content['intro']))) {
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
-$view->outputview();
+echo $view->outputview();
 echo $OUTPUT->footer();
