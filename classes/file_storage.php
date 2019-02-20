@@ -840,4 +840,28 @@ class file_storage implements \H5PFileStorage {
         // TODO: Implement.
         return false;
     }
+
+    /**
+     * Check if upgrades script exist for library.
+     *
+     * @param string $machineName
+     * @param int $majorVersion
+     * @param int $minorVersion
+     * @return string Relative path
+     */
+    // @codingStandardsIgnoreLine
+    public function getUpgradeScript($machinename, $majorversion, $minorversion) {
+        global $CFG;
+
+        $context = \context_system::instance();
+        $fs = get_file_storage();
+        $area = 'libraries';
+        $path = "/{$machinename}-{$majorversion}.{$minorversion}/";
+        $file = 'upgrades.js';
+        if ($fs->get_file($context->id, 'mod_hvp', $area, 0, $path, $file)) {
+            return "/{$area}{$path}{$file}";
+        } else {
+            return null;
+        }
+    }
 }
