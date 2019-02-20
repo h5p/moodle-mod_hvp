@@ -851,8 +851,6 @@ class file_storage implements \H5PFileStorage {
      */
     // @codingStandardsIgnoreLine
     public function getUpgradeScript($machinename, $majorversion, $minorversion) {
-        global $CFG;
-
         $context = \context_system::instance();
         $fs = get_file_storage();
         $area = 'libraries';

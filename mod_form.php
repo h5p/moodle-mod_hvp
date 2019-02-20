@@ -370,7 +370,9 @@ class mod_hvp_mod_form extends moodleform_mod {
                 // Fix for legacy content upload to work.
                 // Fetch title from h5p.json or use a default string if not available.
                 $h5pvalidator = \mod_hvp\framework::instance('validator');
-                $data->metadata->title = empty($h5pvalidator->h5pC->mainJsonData['title']) ? 'Uploaded Content' : $h5pvalidator->h5pC->mainJsonData['title'];
+                $data->metadata->title = empty($h5pvalidator->h5pC->mainJsonData['title'])
+                  ? 'Uploaded Content'
+                  : $h5pvalidator->h5pC->mainJsonData['title'];
             }
             $data->name = $data->metadata->title; // Sort of a hack,
             // but there is no JavaScript that sets the value when there is no editor...
