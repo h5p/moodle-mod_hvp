@@ -75,8 +75,6 @@ function hvp_get_core_settings($context) {
         'reportingIsEnabled' => true,
         'crossorigin' => isset($CFG->mod_hvp_crossorigin) ? $CFG->mod_hvp_crossorigin : null,
         'libraryConfig' => $core->h5pF->getLibraryConfig(),
-        'pluginCacheBuster' => hvp_get_cache_buster(),
-        'libraryUrl' => $basepath . 'mod/hvp/library/js'
     );
 
     return $settings;
@@ -337,32 +335,16 @@ function hvp_content_upgrade_progress($libraryid) {
         }
     }
 
-    // Determine if any content has been skipped during the process.
-    $skipped = filter_input(INPUT_POST, 'skipped');
-    if ($skipped !== null) {
-        $out->skipped = json_decode($skipped);
-        // Clean up input, only numbers.
-        foreach ($out->skipped as $i => $id) {
-            $out->skipped[$i] = intval($id);
-        }
-        $skipped = implode(',', $out->skipped);
-    } else {
-        $out->skipped = array();
-    }
-
     // Get number of contents for this library.
-    $out->left = $interface->getNumContent($libraryid, $skipped);
+    $out->left = $interface->getNumContent($libraryid);
 
     if ($out->left) {
-        $skipquery = empty($skipped) ? '' : " AND id NOT IN ($skipped)";
-
         // Find the 40 first contents using this library version and add to params.
         $results = $DB->get_records_sql(
             "SELECT id, json_content as params, name as title, authors, source, year_from, year_to,
                     license, license_version, changes, license_extras, author_comments
                FROM {hvp}
               WHERE main_library_id = ?
-                    {$skipquery}
            ORDER BY name ASC", array($libraryid), 0 , 40
         );
 
