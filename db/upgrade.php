@@ -434,16 +434,16 @@ function hvp_upgrade_2018090300() {
 }
 
 function hvp_upgrade_2019022200() {
-  global $DB;
-  $dbman = $DB->get_manager();
+    global $DB;
+    $dbman = $DB->get_manager();
 
-  $table = new xmldb_table('hvp');
+    $table = new xmldb_table('hvp');
 
-  if (!$dbman->field_exists($table, 'default_language')) {
-    $dbman->add_field($table,
-      new xmldb_field('default_language', XMLDB_TYPE_CHAR, '32', null, null, null, null)
-    );
-  }
+    if (!$dbman->field_exists($table, 'default_language')) {
+        $dbman->add_field($table,
+            new xmldb_field('default_language', XMLDB_TYPE_CHAR, '32', null, null, null, null)
+        );
+    }
 }
 
 
