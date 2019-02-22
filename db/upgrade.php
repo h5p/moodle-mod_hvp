@@ -418,7 +418,7 @@ function hvp_upgrade_2018090300() {
         );
     }
 
-    // Add new libraries fields
+    // Add new libraries fields.
     $table = new xmldb_table('hvp_libraries');
     if (!$dbman->field_exists($table, 'add_to')) {
         $dbman->add_field($table,

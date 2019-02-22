@@ -81,3 +81,6 @@
 .h5p-data-view th[role="button"].h5p-sort:hover:after {
     color: #999;
 }
+.content-upgrade-log {
+  color: red;
+}
