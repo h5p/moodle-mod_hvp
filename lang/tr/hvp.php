@@ -196,6 +196,7 @@ $string['hvp:getcachedassets'] = 'Ön belleğe alınmış H5P içerik değerleri
 $string['hvp:installrecommendedh5plibraries'] = 'Install recommended H5P libraries';
 
 // Capabilities error messages.
+$string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
 $string['nopermissiontoupgrade'] = 'Kitaplıkları yükseltme yetkiniz yok.';
 $string['nopermissiontorestrict'] = 'Kitaplıkları kısıtlama yetkiniz yok.';
 $string['nopermissiontosavecontentuserdata'] = 'İçerik kullanıcısı verilerini kaydetme yetkiniz yok.';

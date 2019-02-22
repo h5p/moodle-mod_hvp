@@ -218,6 +218,7 @@ $string['hvp:getcachedassets'] = 'Exigido para visualização de atividades H5P'
 $string['hvp:installrecommendedh5plibraries'] = 'Instalar novo conteúdo seguro H5P recomendado pelo H5P.org';
 
 // Capabilities error messages.
+$string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
 $string['nopermissiontoupgrade'] = 'Você não possui permissão para atualizar bibliotecas.';
 $string['nopermissiontorestrict'] = 'Você não possui permissão para acessar bibliotecas restritas.';
 $string['nopermissiontosavecontentuserdata'] = 'Você não possui permissão para salvar dados de usuário de conteúdos.';

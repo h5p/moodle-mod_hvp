@@ -193,6 +193,7 @@ $string['hvp:getcachedassets'] = 'Zwischengespeicherte H5P-Inhaltswerte erhalten
 $string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
 
 // Capabilities error messages.
+$string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
 $string['nopermissiontoupgrade'] = 'Die nötigen Rechte, um die Bibliothek zu aktualisieren, sind nicht vorhanden.';
 $string['nopermissiontorestrict'] = 'Die nötigen Rechte, um Bibliotheken zu beschränken, sind nicht vorhanden.';
 $string['nopermissiontosavecontentuserdata'] = 'Die nötigen Rechte, um Nutzerinhalte zu speichern, sind nicht vorhanden.';

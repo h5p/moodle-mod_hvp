@@ -359,7 +359,7 @@ function hvp_content_upgrade_progress($libraryid) {
         // Find the 40 first contents using this library version and add to params.
         $results = $DB->get_records_sql(
             "SELECT id, json_content as params, name as title, authors, source, year_from, year_to,
-                    license, license_version, changes, license_extras, author_comments
+                    license, license_version, changes, license_extras, author_comments, default_language
                FROM {hvp}
               WHERE main_library_id = ?
                     {$skipquery}

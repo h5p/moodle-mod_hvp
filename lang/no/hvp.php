@@ -206,6 +206,7 @@ $string['hvp:getcachedassets'] = 'Påkrevd for å se H5P-aktiviteter';
 $string['hvp:installrecommendedh5plibraries'] = 'Installer nye trygge H5P-innholdstyper anbefelt av H5P.org';
 
 // Capabilities error messages.
+$string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
 $string['nopermissiontoupgrade'] = 'Du har ikke tillatelse til å oppgradere bibliotek.';
 $string['nopermissiontorestrict'] = 'Du har ikke tillatelse til å begrense tilgang til bibliotek.';
 $string['nopermissiontosavecontentuserdata'] = 'Du har ikke tillatelse til å lagre brukerdata.';

@@ -136,4 +136,45 @@ class editor_ajax implements \H5PEditorAjaxInterface {
     public function validateEditorToken($token) {
         return \H5PCore::validToken('editorajax', $token);
     }
+
+    /**
+     * Get translations for a language for a list of libraries
+     *
+     * @param array $libraries An array of libraries, in the form "<machineName> <majorVersion>.<minorVersion>
+     * @param string $language_code
+     *
+     * @return array
+     * @throws \dml_exception
+     */
+    public function getTranslations($libraries, $language_code) {
+        global $DB;
+
+        $translations = array();
+
+        foreach ($libraries as $library) {
+            $parsedLib = \H5PCore::libraryFromString($library);
+
+            $sql         = "
+                    SELECT language_json
+                    FROM {hvp_libraries} lib
+                      LEFT JOIN {hvp_libraries_languages} lang
+                    ON lib.id = lang.library_id
+                    WHERE lib.machine_name = :machine_name AND
+                      lib.major_version = :major_version AND
+                      lib.minor_version = :minor_version AND
+                      lang.language_code = :language_code";
+            $translation = $DB->get_field_sql($sql, array(
+                'machine_name'  => $parsedLib['machineName'],
+                'major_version' => $parsedLib['majorVersion'],
+                'minor_version' => $parsedLib['minorVersion'],
+                'language_code' => $language_code,
+            ));
+
+            if ($translation !== false) {
+                $translations[$library] = $translation;
+            }
+        }
+
+        return $translations;
+    }
 }

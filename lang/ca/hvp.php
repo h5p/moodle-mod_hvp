@@ -217,6 +217,7 @@ $string['hvp:getcachedassets'] = 'Aconseguir actius H5P desats a la memòria cau
 $string['hvp:installrecommendedh5plibraries'] = 'Instal·lar les biblioteques H5P recomanades';
 
 // Capabilities error messages.
+$string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
 $string['nopermissiontoupgrade'] = 'Mo teniu permís per actualitzar biblioteques.';
 $string['nopermissiontorestrict'] = 'No teniu permís per restringir biblioteques.';
 $string['nopermissiontosavecontentuserdata'] = 'No teniu permís per desar les dades d\'usuari dels continguts interactius.';
