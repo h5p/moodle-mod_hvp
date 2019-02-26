@@ -29,8 +29,8 @@ $id = required_param('id', PARAM_INT);
 // TODO: This needs to be protected by a token or some other security mechanism
 $username = optional_param('username', null, PARAM_ALPHANUMEXT);
 if ($username) {
-  $user = get_complete_user_data('username', $username);
-  complete_user_login($user);
+    $user = get_complete_user_data('username', $username);
+    complete_user_login($user);
 }
 
 // Verify course context.
