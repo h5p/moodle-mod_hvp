@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class mobile_auth {
 
-    const valid_time = 60;
+    const VALID_TIME = 60;
 
     /**
      * Generate embed auth token
@@ -49,10 +49,10 @@ class mobile_auth {
             }
         }
 
-        $valid_for = ceil(time() / self::valid_time);
+        $validfor = ceil(time() / self::VALID_TIME);
 
         return [
-            hash('md5', 'embed_auth' . $valid_for . $secret),
+            hash('md5', 'embed_auth' . $validfor . $secret),
             $secret
         ];
     }
@@ -67,28 +67,28 @@ class mobile_auth {
      * @throws \Exception
      */
     public static function validate_embed_auth_token($token, $secret) {
-        list($generated_token) = self::create_embed_auth_token($secret);
-        return $token === $generated_token;
+        list($generatedtoken) = self::create_embed_auth_token($secret);
+        return $token === $generatedtoken;
     }
 
     /**
      * Check if provided user_id and token are valid for authenticating the user
      *
-     * @param string $user_id
+     * @param string $userid
      * @param string $token
      *
      * @return bool True if token and user_id is valid
      * @throws \dml_exception
      */
-    public static function has_valid_token($user_id, $token) {
+    public static function has_valid_token($userid, $token) {
         global $DB;
 
-        if (!$user_id || !$token) {
+        if (!$userid || !$token) {
             return false;
         }
 
         $auth = $DB->get_record('hvp_auth', array(
-            'user_id' => $user_id,
+            'user_id' => $userid,
         ));
         if (!$auth) {
             return false;

@@ -44,9 +44,9 @@ class remove_old_auth_tokens extends \core\task\scheduled_task {
         global $DB;
 
         require_once(__DIR__ . '/../../autoloader.php');
-        $delete_threshold = time() - mobile_auth::valid_time;
+        $deletethreshold = time() - mobile_auth::VALID_TIME;
         $DB->delete_records_select('hvp_auth', 'created_at < :threshold', array(
-            'threshold' => $delete_threshold,
+            'threshold' => $deletethreshold,
         ));
     }
 }

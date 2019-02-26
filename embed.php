@@ -27,11 +27,11 @@ global $PAGE, $DB, $CFG, $OUTPUT;
 
 $id = required_param('id', PARAM_INT);
 
-// Allow login through an authentication token
-$user_id = optional_param('user_id', null, PARAM_ALPHANUMEXT);
-$token = optional_param('token', null, PARAM_ALPHANUMEXT);
-if (\mod_hvp\mobile_auth::has_valid_token($user_id, $token)) {
-    $user = get_complete_user_data('id', $user_id);
+// Allow login through an authentication token.
+$userid = optional_param('user_id', null, PARAM_ALPHANUMEXT);
+$token  = optional_param('token', null, PARAM_ALPHANUMEXT);
+if (\mod_hvp\mobile_auth::has_valid_token($userid, $token)) {
+    $user = get_complete_user_data('id', $userid);
     complete_user_login($user);
 }
 
