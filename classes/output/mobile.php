@@ -42,6 +42,13 @@ class mobile {
     // TODO: Import js from other file
     $scripts     = $view->getjsassets();
     $corescripts = $view->getcorejsassets();
+    $h5pintegration = $view->getSettings();
+
+    $jscontent = 'window.H5PIntegration = ' . json_encode($h5pintegration) . ';';
+    $jscontent .= file_get_contents($CFG->dirroot . '/mod/hvp/library/js/jquery.js');
+    $jscontent .= file_get_contents($CFG->dirroot . '/mod/hvp/library/js/h5p.js');
+//    $jscontent .= file_get_contents($CFG->dirroot . '/mod/hvp/library/js/h5p-event-dispatcher.js');
+
 
     return array(
       'templates'  => array(
@@ -50,7 +57,7 @@ class mobile {
           'html' => $html,
         ),
       ),
-      'javascript' => 'console.log("Add JS here..")',
+      'javascript' => $jscontent,
     );
   }
 }
