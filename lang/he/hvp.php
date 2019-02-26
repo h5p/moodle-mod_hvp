@@ -56,6 +56,7 @@ $string['noh5ps'] = 'לא קיים תוכן H5P אינטראקטיבי בקור�
 $string['lookforupdates'] = 'Look for H5P updates';
 $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
+$string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
 // Admin settings.
 $string['displayoptionnevershow'] = 'Never show';

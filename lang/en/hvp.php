@@ -61,6 +61,7 @@ $string['lookforupdates'] = 'Look for H5P updates';
 $string['updatelibraries'] = 'Update All Libraries';
 $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
+$string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
 // Admin settings.
 $string['displayoptionnevershow'] = 'Never show';

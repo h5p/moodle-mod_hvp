@@ -56,6 +56,7 @@ $string['confirmlabel'] = 'Bestätigen';
 $string['lookforupdates'] = 'Nach H5P-Aktualisierungen suchen';
 $string['removetmpfiles'] = 'Entfernen alter temporärer H5P-Dateien';
 $string['removeoldlogentries'] = 'Entfernen alter H5P-Logdateien';
+$string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
 // Admin settings.
 $string['displayoptionnevershow'] = 'Nie zeigen';

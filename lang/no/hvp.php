@@ -68,6 +68,7 @@ $string['updatesavailablemsgpt4'] = 'Du kjører en versjon fra: {$a}';
 $string['lookforupdates'] = 'Se etter H5P-oppdateringer';
 $string['removetmpfiles'] = 'Fjern gamle midlertidige filer';
 $string['removeoldlogentries'] = 'Fjern gamle H5P-loggmeldinger';
+$string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
 // Admin settings.
 $string['displayoptionnevershow'] = 'Vis aldri';

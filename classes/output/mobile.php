@@ -41,10 +41,36 @@ class mobile {
         $context = context_module::instance($cm->id);
         require_capability('mod/hvp:view', $context);
 
+
+        list($token, $secret) = mod_hvp\mobile_auth::create_embed_auth_token();
+
+        // Store secret in database
+        $auth              = $DB->get_record('hvp_auth', array(
+            'user_id' => $USER->id,
+        ));
+        $current_timestamp = time();
+        if ($auth) {
+            // Update
+            $DB->update_record('hvp_auth', array(
+                'id'         => $auth->id,
+                'secret'     => $secret,
+                'created_at' => $current_timestamp,
+            ));
+        } else {
+            // Insert
+            $DB->insert_record('hvp_auth', array(
+                'user_id'    => $USER->id,
+                'secret'     => $secret,
+                'created_at' => $current_timestamp
+            ));
+        }
+
+
         $data = [
-            'cmid'     => $cmid,
-            'wwwroot'  => $CFG->wwwroot,
-            'username' => $USER->username,
+            'cmid'    => $cmid,
+            'wwwroot' => $CFG->wwwroot,
+            'user_id' => $USER->id,
+            'token'   => $token,
         ];
 
         return array(

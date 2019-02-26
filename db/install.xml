@@ -217,5 +217,19 @@
         <INDEX NAME="realkey" UNIQUE="false" FIELDS="type, library_name, library_version"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="hvp_auth" COMMENT="Stores tokens for authenticating users for different actions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the user that created the token"/>
+        <FIELD NAME="created_at" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Timestamp for when token was created"/>
+        <FIELD NAME="secret" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" COMMENT="Secret used to generate the authentication token"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_id" UNIQUE="true" FIELDS="user_id"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>
