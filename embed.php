@@ -66,7 +66,6 @@ require_capability('mod/hvp:view', $context);
 
 // Set up view assets.
 $view    = new \mod_hvp\view_assets($cm, $course);
-$view->addcoreassetstopage();
 $content = $view->getcontent();
 $view->validatecontent();
 
@@ -93,5 +92,5 @@ echo '<div class="clearer"></div>';
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
-echo $view->outputview();
+$view->outputview();
 echo $OUTPUT->footer();

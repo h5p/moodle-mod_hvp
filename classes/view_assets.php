@@ -52,8 +52,7 @@ class view_assets {
         $this->course      = $course;
         $this->core        = framework::instance();
         $this->content     = $this->core->loadContent($cm->instance);
-        $settings          = external_functions::hvp_get_core_assets(\context_module::instance($cm->id));
-        $this->settings    = $settings;
+        $this->settings    = hvp_get_core_assets(\context_module::instance($cm->id));
         $this->jsrequires  = [];
         $this->cssrequires = [];
 
@@ -283,22 +282,6 @@ class view_assets {
     }
 
 
-    public function getjsassets() {
-      return $this->jsrequires;
-    }
-
-    public function getcorejsassets() {
-      return $this->settings['core']['scripts'];
-    }
-
-    public function getstyles() {
-      return $this->cssrequires;
-    }
-
-    public function getSettings() {
-      return $this->settings;
-    }
-
     /**
      * Adds js assets to current page
      */
@@ -320,26 +303,14 @@ class view_assets {
         $PAGE->requires->js(new \moodle_url($CFG->httpswwwroot . '/mod/hvp/xapi-collector.js'), true);
     }
 
-    public function addcoreassetstopage() {
-      global $PAGE;
-
-      foreach($this->settings['core']['styles'] as $style) {
-         $PAGE->requires->css(new moodle_url($style));
-      }
-
-      foreach($this->settings['core']['scripts'] as $script) {
-         $PAGE->requires->js(new moodle_url($script), true);
-      }
-    }
-
     /**
      * Outputs h5p view
      */
     public function outputview() {
         if ($this->embedtype === 'div') {
-            return "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
+            echo "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
         } else {
-            return "<div class=\"h5p-iframe-wrapper\">" .
+            echo "<div class=\"h5p-iframe-wrapper\">" .
                  "<iframe id=\"h5p-iframe-{$this->content['id']}\"" .
                  " class=\"h5p-iframe\"" .
                  " data-content-id=\"{$this->content['id']}\"" .
