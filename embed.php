@@ -29,8 +29,8 @@ $id = required_param('id', PARAM_INT);
 
 // Allow login through an authentication token.
 $userid = optional_param('user_id', null, PARAM_ALPHANUMEXT);
-$token  = optional_param('token', null, PARAM_ALPHANUMEXT);
-if (\mod_hvp\mobile_auth::has_valid_token($userid, $token)) {
+$secret  = optional_param('secret', null, PARAM_RAW);
+if (\mod_hvp\mobile_auth::has_valid_token($userid, $secret)) {
     $user = get_complete_user_data('id', $userid);
     complete_user_login($user);
 }

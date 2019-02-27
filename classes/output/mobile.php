@@ -44,20 +44,20 @@ class mobile {
         list($token, $secret) = mod_hvp\mobile_auth::create_embed_auth_token();
 
         // Store secret in database.
-        $auth              = $DB->get_record('hvp_auth', array(
+        $auth             = $DB->get_record('hvp_auth', array(
             'user_id' => $USER->id,
         ));
         $currenttimestamp = time();
         if ($auth) {
             $DB->update_record('hvp_auth', array(
                 'id'         => $auth->id,
-                'secret'     => $secret,
+                'secret'     => $token,
                 'created_at' => $currenttimestamp,
             ));
         } else {
             $DB->insert_record('hvp_auth', array(
                 'user_id'    => $USER->id,
-                'secret'     => $secret,
+                'secret'     => $token,
                 'created_at' => $currenttimestamp
             ));
         }
@@ -66,7 +66,7 @@ class mobile {
             'cmid'    => $cmid,
             'wwwroot' => $CFG->wwwroot,
             'user_id' => $USER->id,
-            'token'   => $token,
+            'secret'  => urlencode($secret)
         ];
 
         return array(

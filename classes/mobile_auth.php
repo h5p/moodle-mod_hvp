@@ -34,11 +34,16 @@ class mobile_auth {
      * Generate embed auth token
      *
      * @param string $secret Secret phrase added to the hash
+     * @param int $validfor Time factor that determines how long the token is valid
      *
      * @return array Login token and secret
      * @throws \Exception
      */
-    public static function create_embed_auth_token($secret = null) {
+    public static function create_embed_auth_token($secret = null, $validfor = null) {
+        if (!$validfor) {
+            $validfor = self::get_time_factor();
+        }
+
         if (empty($secret)) {
             if (function_exists('random_bytes')) {
                 $secret = base64_encode(random_bytes(15));
@@ -48,8 +53,6 @@ class mobile_auth {
                 $secret = uniqid('', true);
             }
         }
-
-        $validfor = ceil(time() / self::VALID_TIME);
 
         return [
             hash('md5', 'embed_auth' . $validfor . $secret),
@@ -67,8 +70,11 @@ class mobile_auth {
      * @throws \Exception
      */
     public static function validate_embed_auth_token($token, $secret) {
-        list($generatedtoken) = self::create_embed_auth_token($secret);
-        return $token === $generatedtoken;
+        $timefactor = self::get_time_factor();
+        // Splitting into two halves and allowing both allows for fractions roundup in the time factor
+        list($generatedtoken) = self::create_embed_auth_token($secret, $timefactor);
+        list($generatedtoken2) = self::create_embed_auth_token($secret, $timefactor - 1);
+        return $token === $generatedtoken || $token === $generatedtoken2;
     }
 
     /**
@@ -80,10 +86,10 @@ class mobile_auth {
      * @return bool True if token and user_id is valid
      * @throws \dml_exception
      */
-    public static function has_valid_token($userid, $token) {
+    public static function has_valid_token($userid, $secret) {
         global $DB;
 
-        if (!$userid || !$token) {
+        if (!$userid || !$secret) {
             return false;
         }
 
@@ -94,6 +100,24 @@ class mobile_auth {
             return false;
         }
 
-        return self::validate_embed_auth_token($token, $auth->secret);
+        $isvalid = self::validate_embed_auth_token($auth->secret, $secret);
+
+        // Cleanup user's token when used
+        if ($isvalid) {
+            $DB->delete_records('hvp_auth', array(
+                'user_id' => $userid
+            ));
+        }
+
+        return $isvalid;
+    }
+
+    /**
+     * Get time factor for how long the token is valid
+     *
+     * @return float
+     */
+    public static function get_time_factor() {
+        return ceil(time() / self::VALID_TIME);
     }
 }
