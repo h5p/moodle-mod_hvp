@@ -673,7 +673,7 @@ class framework implements \H5PFrameworkInterface {
 
         // Check permissions.
         $context = \context_system::instance();
-        if (!has_capability('mod/hvp:updatelibraries', $context)) {
+        if (!CLI_SCRIPT && !has_capability('mod/hvp:updatelibraries', $context)) {
             return false;
         }
 
