@@ -12,8 +12,8 @@ php:
 
 env:
  global:
-  - MOODLE_BRANCH=MOODLE_30_STABLE
-  - IGNORE_PATHS=lang
+  - MOODLE_BRANCH=MOODLE_36_STABLE
+  - IGNORE_PATHS=lang,editor,lirbary,reporting
  matrix:
   - DB=pgsql
   - DB=mysqli

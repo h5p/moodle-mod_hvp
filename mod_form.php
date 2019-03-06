@@ -250,15 +250,6 @@ class mod_hvp_mod_form extends moodleform_mod {
 
                     $messages = array_merge(\mod_hvp\framework::messages('info'), $errors);
                     $errors['h5pfile'] = implode('<br/>', $messages);
-                } else {
-                    foreach ($h5pvalidator->h5pC->mainJsonData['preloadedDependencies'] as $dep) {
-                        if ($dep['machineName'] === $h5pvalidator->h5pC->mainJsonData['mainLibrary']) {
-                            if ($h5pvalidator->h5pF->libraryHasUpgrade($dep)) {
-                                // We do not allow storing old content due to security concerns.
-                                $errors['h5pfile'] = get_string('olduploadoldcontent', 'hvp');
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -288,20 +279,15 @@ class mod_hvp_mod_form extends moodleform_mod {
             } else {
                 $data['h5plibrary'] = $library;
 
-                if ($core->h5pF->libraryHasUpgrade($library)) {
-                    // We do not allow storing old content due to security concerns.
-                    $errors['h5peditor'] = get_string('anunexpectedsave', 'hvp');
+                // Verify that parameters are valid.
+                if (empty($data['h5pparams'])) {
+                    $errors['h5peditor'] = get_string('noparameters', 'hvp');
                 } else {
-                    // Verify that parameters are valid.
-                    if (empty($data['h5pparams'])) {
-                        $errors['h5peditor'] = get_string('noparameters', 'hvp');
+                    $params = json_decode($data['h5pparams']);
+                    if ($params === null) {
+                        $errors['h5peditor'] = get_string('invalidparameters', 'hvp');
                     } else {
-                        $params = json_decode($data['h5pparams']);
-                        if ($params === null) {
-                            $errors['h5peditor'] = get_string('invalidparameters', 'hvp');
-                        } else {
-                            $data['h5pparams'] = $params;
-                        }
+                        $data['h5pparams'] = $params;
                     }
                 }
             }
@@ -353,7 +339,7 @@ class mod_hvp_mod_form extends moodleform_mod {
         $core = \mod_hvp\framework::instance();
         $data->disable = $core->getStorableDisplayOptions($options, 0);
 
-        // Remove metadata wrapper from form data.
+        // Remove metadata wrapper from form data
         $params = json_decode($data->h5pparams);
         if ($params !== null) {
             $data->params = json_encode($params->params);
@@ -362,18 +348,17 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
         }
 
-        // Cleanup.
+        // Cleanup
         unset($data->h5pparams);
 
         if ($data->h5paction === 'upload') {
             if (empty($data->metadata) || empty($data->metadata->title)) {
                 // Fix for legacy content upload to work.
-                // Fetch title from h5p.json or use a default string if not available.
+                // Fetch title from h5p.json or use a default string if not available
                 $h5pvalidator = \mod_hvp\framework::instance('validator');
                 $data->metadata->title = empty($h5pvalidator->h5pC->mainJsonData['title']) ? 'Uploaded Content' : $h5pvalidator->h5pC->mainJsonData['title'];
             }
-            $data->name = $data->metadata->title; // Sort of a hack,
-            // but there is no JavaScript that sets the value when there is no editor...
+            $data->name = $data->metadata->title; // Sort of a hack, but there is no JavaScript that sets the value when there is no editor...
         }
     }
 

@@ -160,9 +160,6 @@ $string['upgradenothingtodo'] = "There's no content instances to upgrade.";
 $string['upgradebuttonlabel'] = 'Upgrade';
 $string['upgradeinvalidtoken'] = 'Error: Invalid security token!';
 $string['upgradelibrarymissing'] = 'Error: Your library is missing!';
-$string['upgradeerrormissinglibrary'] = 'Missing required library %lib.';
-$string['errorTooHighVersion'] = 'Parameters contain %used while only %supported or earlier are supported.';
-$string['errorNotSupported'] = 'Parameters contain %used which is not supported.';
 
 // Results / report page.
 $string['user'] = 'User';
@@ -201,8 +198,6 @@ $string['nosuchlibrary'] = 'No such library';
 $string['noparameters'] = 'No parameters';
 $string['invalidparameters'] = 'Invalid Parameters';
 $string['missingcontentuserdata'] = 'Error: Could not find content user data';
-$string['olduploadoldcontent'] = "You're trying to upload content of an older version of H5P. Please upgrade the content on the server it originated from and try to upload again or turn on the H5P Hub to have this server upgrade it for your automaticall.";
-$string['anunexpectedsave'] = 'Something unexpected happened. We were unable to save this content.';
 
 $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
