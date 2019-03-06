@@ -462,6 +462,10 @@ class framework implements \H5PFrameworkInterface {
                 'Additional Information' => 'additionalinfo',
                 'Author comments' => 'authorcomments',
                 'Comments for the editor of the content (This text will not be published as a part of copyright info)' => 'authorcommentsdescription',
+                'Reuse' => 'reuse',
+                'Reuse Content' => 'reuseContent',
+                'Reuse this content.' => 'reuseDescription',
+                'Content is copied to the clipboard' => 'contentCopied',
             ];
             // @codingStandardsIgnoreEnd
         }
@@ -1470,6 +1474,7 @@ class framework implements \H5PFrameworkInterface {
     public function hasPermission($permission, $cmid = null) {
         switch ($permission) {
             case \H5PPermission::DOWNLOAD_H5P:
+            case \H5PPermission::COPY_H5P:
                 $cmcontext = \context_module::instance($cmid);
                 return has_capability('mod/hvp:getexport', $cmcontext);
             case \H5PPermission::CREATE_RESTRICTED:

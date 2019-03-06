@@ -63,6 +63,9 @@ $string['removetmpfiles'] = 'Elimina els fitxers temporals antics de l\'H5P';
 $string['removeoldlogentries'] = 'Elimina les entrades de registre antigues de l\'H5P';
 
 // Admin settings.
+$string['displayoptiondownloadnever'] = 'Never';
+$string['displayoptiondownloadalways'] = 'Always';
+$string['displayoptiondownloadpermission'] = 'Only if user has permissions to export H5P';
 $string['displayoptionnevershow'] = 'No ho mostris mai';
 $string['displayoptionalwaysshow'] = 'Mostra-ho sempre';
 $string['displayoptionpermissions'] = 'Mostra-ho només si l\'usuari té permís per exportar continguts H5P';
@@ -70,7 +73,7 @@ $string['displayoptionauthoron'] = 'Controlat per l\'autor, activat per defecte'
 $string['displayoptionauthoroff'] = 'Controlat per l\'autor, desactivat per defecte';
 $string['displayoptions'] = 'Opcions de visualització';
 $string['enableframe'] = 'Mostra el marc i la barra d\'accions';
-$string['enabledownload'] = 'Botó de baixades';
+$string['enabledownload'] = 'Allow download';
 $string['enableembed'] = 'Botó d\'incrustació';
 $string['enablecopyright'] = 'Botó de Copyright';
 $string['enableabout'] = 'Botó "Quant a l\'H5P"';
@@ -341,3 +344,9 @@ $string['licenseversion'] = 'Versió de la llicència';
 
 // Embed.
 $string['embedloginfailed'] = 'You do not have access to this content. Try logging in.';
+
+// Reuse.
+$string['reuse'] = 'Reuse';
+$string['reuseContent'] = 'Reuse Content';
+$string['reuseDescription'] = 'Reuse this content.';
+$string['contentCopied'] = 'Content is copied to the clipboard';

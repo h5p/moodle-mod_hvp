@@ -58,6 +58,9 @@ $string['removetmpfiles'] = 'Entfernen alter temporärer H5P-Dateien';
 $string['removeoldlogentries'] = 'Entfernen alter H5P-Logdateien';
 
 // Admin settings.
+$string['displayoptiondownloadnever'] = 'Never';
+$string['displayoptiondownloadalways'] = 'Always';
+$string['displayoptiondownloadpermission'] = 'Only if user has permissions to export H5P';
 $string['displayoptionnevershow'] = 'Nie zeigen';
 $string['displayoptionalwaysshow'] = 'Immer zeigen';
 $string['displayoptionpermissions'] = 'Nur zeigen, wenn der Nutzer H5P exportieren darf';
@@ -66,7 +69,7 @@ $string['displayoptionauthoron'] = 'Vom Autor gesteuert, Standard ist an';
 $string['displayoptionauthoroff'] = 'Vom Autor gesteuert, Standard ist aus';
 $string['displayoptions'] = 'Optionen anzeigen';
 $string['enableframe'] = 'Menüleiste und Rahmen anzeigen.';
-$string['enabledownload'] = 'Download-Knopf';
+$string['enabledownload'] = 'Allow download';
 $string['enableembed'] = 'Einbetten-Knopf';
 $string['enablecopyright'] = 'Urheberrecht-Knopf';
 $string['enableabout'] = 'Über-H5P-Knopf';
@@ -298,3 +301,9 @@ $string['licenseversion'] = 'License Version';
 
 // Embed.
 $string['embedloginfailed'] = 'You do not have access to this content. Try logging in.';
+
+// Reuse.
+$string['reuse'] = 'Reuse';
+$string['reuseContent'] = 'Reuse Content';
+$string['reuseDescription'] = 'Reuse this content.';
+$string['contentCopied'] = 'Content is copied to the clipboard';
