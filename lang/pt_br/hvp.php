@@ -64,6 +64,9 @@ $string['removeoldlogentries'] = 'Remover entradas de log antigas do H5P';
 $string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
 // Admin settings.
+$string['displayoptiondownloadnever'] = 'Never';
+$string['displayoptiondownloadalways'] = 'Always';
+$string['displayoptiondownloadpermission'] = 'Only if user has permissions to export H5P';
 $string['displayoptionnevershow'] = 'Nunca mostrar';
 $string['displayoptionalwaysshow'] = 'Sempre mostrar';
 $string['displayoptionpermissions'] = 'Mostrar apenas se o usuário possui permissões para exportar H5P';
@@ -72,7 +75,7 @@ $string['displayoptionauthoron'] = 'Controlado pelo autor, padrão é habilitado
 $string['displayoptionauthoroff'] = 'Controlado pelo autor, padrão é desabilitado';
 $string['displayoptions'] = 'Mostrar opções';
 $string['enableframe'] = 'Mostrar a barra de ações e o quadro';
-$string['enabledownload'] = 'Botão de download';
+$string['enabledownload'] = 'Allow download';
 $string['enableembed'] = 'Botão de embutir';
 $string['enablecopyright'] = 'Botão de direitos autorais';
 $string['enableabout'] = 'Botão Sobre o H5P';
@@ -219,6 +222,7 @@ $string['hvp:getcachedassets'] = 'Exigido para visualização de atividades H5P'
 $string['hvp:installrecommendedh5plibraries'] = 'Instalar novo conteúdo seguro H5P recomendado pelo H5P.org';
 
 // Capabilities error messages.
+$string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
 $string['nopermissiontoupgrade'] = 'Você não possui permissão para atualizar bibliotecas.';
 $string['nopermissiontorestrict'] = 'Você não possui permissão para acessar bibliotecas restritas.';
 $string['nopermissiontosavecontentuserdata'] = 'Você não possui permissão para salvar dados de usuário de conteúdos.';
@@ -415,3 +419,9 @@ $string['privacy:metadata:hvp_xapi_results:response'] = 'A resposta que o usuár
 $string['privacy:metadata:hvp_xapi_results:additionals'] = 'Informações adicionais que o H5P pode enviar.';
 $string['privacy:metadata:hvp_xapi_results:raw_score'] = 'Pontuação atingida para o evento.';
 $string['privacy:metadata:hvp_xapi_results:max_score'] = 'Pontuação máxima adquirível para o evento.';
+
+// Reuse.
+$string['reuse'] = 'Reuse';
+$string['reuseContent'] = 'Reuse Content';
+$string['reuseDescription'] = 'Reuse this content.';
+$string['contentCopied'] = 'Content is copied to the clipboard';

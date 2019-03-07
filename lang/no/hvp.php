@@ -71,6 +71,9 @@ $string['removeoldlogentries'] = 'Fjern gamle H5P-loggmeldinger';
 $string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
 // Admin settings.
+$string['displayoptiondownloadnever'] = 'Never';
+$string['displayoptiondownloadalways'] = 'Always';
+$string['displayoptiondownloadpermission'] = 'Only if user has permissions to export H5P';
 $string['displayoptionnevershow'] = 'Vis aldri';
 $string['displayoptionalwaysshow'] = 'Vis alltid';
 $string['displayoptionpermissions'] = 'Vis kun for brukere som har tilgang til å eksportere H5Per';
@@ -79,7 +82,7 @@ $string['displayoptionauthoron'] = 'Settes av forfatter, standard på';
 $string['displayoptionauthoroff'] = 'Settes av forfatter, standard av';
 $string['displayoptions'] = 'Visningsinnstillinger';
 $string['enableframe'] = 'Vis handlingslinjen og rammen';
-$string['enabledownload'] = 'Nedlastings-knapp';
+$string['enabledownload'] = 'Allow download';
 $string['enableembed'] = 'Inkluder-knapp';
 $string['enablecopyright'] = 'Opphavsretts-knapp';
 $string['enableabout'] = 'Om H5P-knapp';
@@ -207,6 +210,7 @@ $string['hvp:getcachedassets'] = 'Påkrevd for å se H5P-aktiviteter';
 $string['hvp:installrecommendedh5plibraries'] = 'Installer nye trygge H5P-innholdstyper anbefelt av H5P.org';
 
 // Capabilities error messages.
+$string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
 $string['nopermissiontoupgrade'] = 'Du har ikke tillatelse til å oppgradere bibliotek.';
 $string['nopermissiontorestrict'] = 'Du har ikke tillatelse til å begrense tilgang til bibliotek.';
 $string['nopermissiontosavecontentuserdata'] = 'Du har ikke tillatelse til å lagre brukerdata.';
@@ -313,3 +317,9 @@ $string['licenseversion'] = 'License Version';
 
 // Embed.
 $string['embedloginfailed'] = 'You do not have access to this content. Try logging in.';
+
+// Reuse.
+$string['reuse'] = 'Reuse';
+$string['reuseContent'] = 'Reuse Content';
+$string['reuseDescription'] = 'Reuse this content.';
+$string['contentCopied'] = 'Content is copied to the clipboard';

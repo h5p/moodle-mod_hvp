@@ -69,6 +69,9 @@ if (count($versions) < 2) {
             'errorScript' => get_string('upgradeerrorscript', 'hvp'),
             'errorContent' => get_string('upgradeerrorcontent', 'hvp'),
             'errorParamsBroken' => get_string('upgradeerrorparamsbroken', 'hvp'),
+            'errorLibrary' => get_string('upgradeerrormissinglibrary', 'hvp'),
+            'errorTooHighVersion' => get_string('upgradeerrortoohighversion', 'hvp'),
+            'errorNotSupported' => get_string('upgradeerrornotsupported', 'hvp'),
             'done' => get_string('upgradedone', 'hvp', $numcontents) .
                       ' <a href="' . (new moodle_url('/mod/hvp/library_list.php'))->out(false) . '">' .
                       get_string('upgradereturn', 'hvp') . '</a>',

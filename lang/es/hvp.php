@@ -59,6 +59,9 @@ $string['removeoldlogentries'] = 'Eliminar entradas antiguas de registro H5P';
 $string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
 // Admin settings.
+$string['displayoptiondownloadnever'] = 'Never';
+$string['displayoptiondownloadalways'] = 'Always';
+$string['displayoptiondownloadpermission'] = 'Only if user has permissions to export H5P';
 $string['displayoptionnevershow'] = 'Nunca mostrar';
 $string['displayoptionalwaysshow'] = 'Siempre muestra';
 $string['displayoptionpermissions'] = 'Mostrar solo si el usuario tiene permisos para exportar H5P';
@@ -67,7 +70,7 @@ $string['displayoptionauthoron'] = 'Controlado por el autor, el valor predetermi
 $string['displayoptionauthoroff'] = 'Controlado por el autor, el valor predeterminado está desactivado';
 $string['displayoptions'] = 'Mostrar Opciones';
 $string['enableframe'] = 'Mostrar barra de acción y marco';
-$string['enabledownload'] = 'Botón de Descarga';
+$string['enabledownload'] = 'Allow download';
 $string['enableembed'] = 'Embed button';
 $string['enablecopyright'] = 'Bóton de copyright';
 $string['enableabout'] = 'About H5P button';
@@ -197,6 +200,7 @@ $string['hvp:updatelibraries'] = 'Install new H5P content types or update existi
 $string['hvp:getcachedassets'] = 'Required for viewing H5P activities';
 $string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
 // Capabilities error messages.
+$string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
 $string['nopermissiontorestrict'] = 'You do not have permission to restrict libraries.';
 $string['nopermissiontosavecontentuserdata'] = 'You do not have permission to save content user data.';
@@ -322,3 +326,9 @@ $string['licenseCC010U'] = 'CC0 1.0 Universal';
 $string['licenseversion'] = 'License Version';
 // Embed.
 $string['embedloginfailed'] = 'You do not have access to this content. Try logging in.';
+
+// Reuse.
+$string['reuse'] = 'Reuse';
+$string['reuseContent'] = 'Reuse Content';
+$string['reuseDescription'] = 'Reuse this content.';
+$string['contentCopied'] = 'Content is copied to the clipboard';

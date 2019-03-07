@@ -418,7 +418,7 @@ function hvp_upgrade_2018090300() {
         );
     }
 
-    // Add new libraries fields
+    // Add new libraries fields.
     $table = new xmldb_table('hvp_libraries');
     if (!$dbman->field_exists($table, 'add_to')) {
         $dbman->add_field($table,
@@ -432,6 +432,20 @@ function hvp_upgrade_2018090300() {
         );
     }
 }
+
+function hvp_upgrade_2019022200() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp');
+
+    if (!$dbman->field_exists($table, 'default_language')) {
+        $dbman->add_field($table,
+            new xmldb_field('default_language', XMLDB_TYPE_CHAR, '32', null, null, null, null)
+        );
+    }
+}
+
 
 /**
  * Adds authentication table
@@ -480,6 +494,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2017050900,
         2017060900,
         2018090300,
+        2019022200,
         2019022600
     ];
 

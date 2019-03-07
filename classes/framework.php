@@ -462,6 +462,10 @@ class framework implements \H5PFrameworkInterface {
                 'Additional Information' => 'additionalinfo',
                 'Author comments' => 'authorcomments',
                 'Comments for the editor of the content (This text will not be published as a part of copyright info)' => 'authorcommentsdescription',
+                'Reuse' => 'reuse',
+                'Reuse Content' => 'reuseContent',
+                'Reuse this content.' => 'reuseDescription',
+                'Content is copied to the clipboard' => 'contentCopied',
             ];
             // @codingStandardsIgnoreEnd
         }
@@ -1075,7 +1079,8 @@ class framework implements \H5PFrameworkInterface {
             hc.year_from,
             hc.year_to,
             hc.changes,
-            hc.author_comments
+            hc.author_comments,
+            hc.default_language
           FROM {hvp} hc
           JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
           WHERE hc.id = ?", array($id)
@@ -1117,6 +1122,7 @@ class framework implements \H5PFrameworkInterface {
             'year_to',
             'changes',
             'author_comments',
+            'default_language'
         ];
 
         $content['metadata'] = \H5PCore::snakeToCamel(
@@ -1351,11 +1357,12 @@ class framework implements \H5PFrameworkInterface {
      * Implements getNumContent().
      */
     // @codingStandardsIgnoreLine
-    public function getNumContent($libraryid) {
+    public function getNumContent($libraryid, $skip = NULL) {
         global $DB;
+        $skipquery = empty($skip) ? '' : " AND id NOT IN ($skip)";
 
         return (int) $DB->get_field_sql(
-                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?",
+                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?{$skipquery}",
                 array($libraryid));
     }
 
@@ -1467,6 +1474,7 @@ class framework implements \H5PFrameworkInterface {
     public function hasPermission($permission, $cmid = null) {
         switch ($permission) {
             case \H5PPermission::DOWNLOAD_H5P:
+            case \H5PPermission::COPY_H5P:
                 $cmcontext = \context_module::instance($cmid);
                 return has_capability('mod/hvp:getexport', $cmcontext);
             case \H5PPermission::CREATE_RESTRICTED:
@@ -1549,6 +1557,7 @@ class framework implements \H5PFrameworkInterface {
                         l1.machine_name,
                         l1.major_version,
                         l1.minor_version,
+                        l1.patch_version,
                         l1.add_to,
                         l1.preloaded_js,
                         l1.preloaded_css
@@ -1560,6 +1569,9 @@ class framework implements \H5PFrameworkInterface {
                              AND l1.minor_version < l2.minor_version))
                   WHERE l1.add_to IS NOT NULL
                     AND l2.machine_name IS NULL");
+
+        // NOTE: These are treated as library objects but are missing the following properties:
+        // title, embed_types, drop_library_css, fullscreen, runnable, semantics, has_icon
 
         // Extract num from records.
         foreach ($records as $addon) {
@@ -1576,5 +1588,28 @@ class framework implements \H5PFrameworkInterface {
     public function getLibraryConfig($libraries = null) {
         global $CFG;
         return (isset($CFG->mod_hvp_library_config) ? $CFG->mod_hvp_library_config : null);
+    }
+
+    /**
+     * Implements libraryHasUpgrade
+     */
+    // @codingStandardsIgnoreLine
+    public function libraryHasUpgrade($library) {
+        global $DB;
+
+        return !!$DB->get_field_sql(
+                "SELECT id
+                  FROM {hvp_libraries}
+                  WHERE machine_name = ?
+                  AND (major_version > ?
+                       OR (major_version = ? AND minor_version > ?))
+                  LIMIT 1",
+                array(
+                  $library['machineName'],
+                  $library['majorVersion'],
+                  $library['majorVersion'],
+                  $library['minorVersion']
+                )
+        );
     }
 }
