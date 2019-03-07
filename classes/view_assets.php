@@ -61,6 +61,9 @@ class view_assets {
         if (isset($options['disabledownload']) && $options['disabledownload']) {
             $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD] = false;
         }
+        if (isset($options['disablefullscreen']) && $options['disablefullscreen']) {
+            $this->settings['fullscreenDisabled'] = true;
+        }
 
         // Add JavaScript settings for this content.
         $cid                                  = 'cid-' . $this->content['id'];
