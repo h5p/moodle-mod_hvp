@@ -45,7 +45,7 @@ class view_assets {
     protected $embedtype;
     protected $files;
 
-    public function __construct($cm, $course, $forceembedtype = null) {
+    public function __construct($cm, $course, $options = []) {
         global $CFG;
 
         $this->cm          = $cm;
@@ -58,6 +58,9 @@ class view_assets {
 
         $context        = \context_module::instance($this->cm->id);
         $displayoptions = $this->core->getDisplayOptionsForView($this->content['disable'], $context->instanceid);
+        if (isset($options['disabledownload']) && $options['disabledownload']) {
+            $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD] = false;
+        }
 
         // Add JavaScript settings for this content.
         $cid                                  = 'cid-' . $this->content['id'];
@@ -78,7 +81,7 @@ class view_assets {
             )
         );
 
-        $this->embedtype = isset($forceembedtype) ? $forceembedtype : \H5PCore::determineEmbedType(
+        $this->embedtype = isset($options->forceembedtype) ? $options->forceembedtype : \H5PCore::determineEmbedType(
             $this->content['embedType'], $this->content['library']['embedTypes']
         );
 

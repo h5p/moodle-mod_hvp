@@ -27,6 +27,23 @@ class mobile {
         global $DB, $CFG, $OUTPUT, $USER;
 
         $cmid = $args['cmid'];
+        if (!$CFG->allowframembedding) {
+            $context = \context_system::instance();
+            if (has_capability('moodle/site:config', $context)) {
+                $template = 'mod_hvp/iframe_embedding_disabled';
+            }
+            else {
+                $template = 'mod_hvp/contact_site_administrator';
+            }
+            return array(
+                'templates' => array(
+                    array(
+                        'id' => 'noiframeembedding',
+                        'html' => $OUTPUT->render_from_template($template, [])
+                    )
+                )
+            );
+        }
 
         // Verify course context.
         $cm = get_coursemodule_from_id('hvp', $cmid);
