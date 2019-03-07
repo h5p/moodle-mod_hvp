@@ -31,8 +31,7 @@ class mobile {
             $context = \context_system::instance();
             if (has_capability('moodle/site:config', $context)) {
                 $template = 'mod_hvp/iframe_embedding_disabled';
-            }
-            else {
+            } else {
                 $template = 'mod_hvp/contact_site_administrator';
             }
             return array(
