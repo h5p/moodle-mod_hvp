@@ -433,19 +433,6 @@ function hvp_upgrade_2018090300() {
     }
 }
 
-function hvp_upgrade_2019022200() {
-    global $DB;
-    $dbman = $DB->get_manager();
-
-    $table = new xmldb_table('hvp');
-
-    if (!$dbman->field_exists($table, 'default_language')) {
-        $dbman->add_field($table,
-            new xmldb_field('default_language', XMLDB_TYPE_CHAR, '32', null, null, null, null)
-        );
-    }
-}
-
 
 /**
  * Adds authentication table
@@ -476,6 +463,25 @@ function hvp_upgrade_2019022600() {
 }
 
 /**
+ * Add default language to content
+ *
+ * @throws ddl_exception
+ * @throws ddl_table_missing_exception
+ */
+function hvp_upgrade_2019030700() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp');
+
+    if (!$dbman->field_exists($table, 'default_language')) {
+        $dbman->add_field($table,
+            new xmldb_field('default_language', XMLDB_TYPE_CHAR, '32', null, null, null, null)
+        );
+    }
+}
+
+/**
  * Hvp module upgrade function.
  *
  * @param string $oldversion The version we are upgrading from
@@ -494,8 +500,8 @@ function xmldb_hvp_upgrade($oldversion) {
         2017050900,
         2017060900,
         2018090300,
-        2019022200,
-        2019022600
+        2019022600,
+        2019030700
     ];
 
     foreach ($upgrades as $version) {
