@@ -194,8 +194,8 @@ class results {
 
         // Join on xAPI results.
         $join .= ' LEFT JOIN {hvp_xapi_results} x ON i.iteminstance = x.content_id';
-        $join .= " LEFT JOIN {user} u ON u.id = x.user_id";
-        $groupby = ' GROUP BY i.id, g.id, u.id, i.iteminstance, x.id';
+        $join .= " LEFT JOIN {user} u ON u.id = g.userid";
+        $groupby = ' GROUP BY i.id, g.id, u.id, i.iteminstance';
 
         // Get from statement.
         $from = $this->get_from_sql();
