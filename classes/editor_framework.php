@@ -331,7 +331,6 @@ class editor_framework implements \H5peditorStorage {
     public function getAvailableLanguages($machineName, $majorVersion, $minorVersion) {
         global $DB;
 
-        $DB->set_debug(true);
         $sql = "SELECT language_code
                   FROM {hvp_libraries_languages} hlt
                   JOIN {hvp_libraries} hl
