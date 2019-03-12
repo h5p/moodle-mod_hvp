@@ -151,6 +151,9 @@ $string['upgradenothingtodo'] = 'Det finnes ikke noe innhold å oppgradere';
 $string['upgradebuttonlabel'] = 'Oppgrader';
 $string['upgradeinvalidtoken'] = 'Feil: Ugyldig sikkerhetsnøkkel!';
 $string['upgradelibrarymissing'] = 'Feil: Et bibliotek mangler!';
+$string['upgradeerrormissinglibrary'] = 'Missing required library %lib.';
+$string['upgradeerrortoohighversion'] = 'Parameters contain %used while only %supported or earlier are supported.';
+$string['upgradeerrornotsupported'] = 'Parameters contain %used which is not supported.';
 
 // Results / report page.
 $string['user'] = 'Bruker';

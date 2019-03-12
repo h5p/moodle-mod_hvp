@@ -137,6 +137,9 @@ $string['upgradenothingtodo'] = "There's no content instances to upgrade.";
 $string['upgradebuttonlabel'] = 'Upgrade';
 $string['upgradeinvalidtoken'] = 'Error: Invalid security token!';
 $string['upgradelibrarymissing'] = 'Error: Your library is missing!';
+$string['upgradeerrormissinglibrary'] = 'Missing required library %lib.';
+$string['upgradeerrortoohighversion'] = 'Parameters contain %used while only %supported or earlier are supported.';
+$string['upgradeerrornotsupported'] = 'Parameters contain %used which is not supported.';
 
 // Results / report page.
 $string['user'] = 'משתמש';

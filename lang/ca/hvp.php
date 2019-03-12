@@ -162,6 +162,9 @@ $string['upgradenothingtodo'] = "No hi ha cap instància de contingut interactiu
 $string['upgradebuttonlabel'] = 'Actualitza';
 $string['upgradeinvalidtoken'] = 'Error: El testimoni de seguretat no és vàlid!';
 $string['upgradelibrarymissing'] = 'Error: No es pot trobar la biblioteca!';
+$string['upgradeerrormissinglibrary'] = 'Missing required library %lib.';
+$string['upgradeerrortoohighversion'] = 'Parameters contain %used while only %supported or earlier are supported.';
+$string['upgradeerrornotsupported'] = 'Parameters contain %used which is not supported.';
 
 // Results / report page.
 $string['user'] = 'Usuari';

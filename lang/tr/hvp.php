@@ -141,6 +141,9 @@ $string['upgradenothingtodo'] = "Yükseltilecek içerik oluşumu yok.";
 $string['upgradebuttonlabel'] = 'Yükselt';
 $string['upgradeinvalidtoken'] = 'Hata: Güvenlik bilgisi geçersiz!';
 $string['upgradelibrarymissing'] = 'Hata: Kitaplığınız yok!';
+$string['upgradeerrormissinglibrary'] = 'Missing required library %lib.';
+$string['upgradeerrortoohighversion'] = 'Parameters contain %used while only %supported or earlier are supported.';
+$string['upgradeerrornotsupported'] = 'Parameters contain %used which is not supported.';
 
 // Results / report page.
 $string['user'] = 'Kullanıcı';

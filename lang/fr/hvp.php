@@ -141,6 +141,9 @@ $string['upgradenothingtodo'] = "Il n\'y a aucune instance à mettre à jour.";
 $string['upgradebuttonlabel'] = 'Mettre à jour';
 $string['upgradeinvalidtoken'] = 'Erreur : Token de sécruité invalide!';
 $string['upgradelibrarymissing'] = 'Erreur : Votre bibliothèque est manquante!';
+$string['upgradeerrormissinglibrary'] = 'Missing required library %lib.';
+$string['upgradeerrortoohighversion'] = 'Parameters contain %used while only %supported or earlier are supported.';
+$string['upgradeerrornotsupported'] = 'Parameters contain %used which is not supported.';
 
 // Results / report page.
 $string['user'] = 'Utilisateur';

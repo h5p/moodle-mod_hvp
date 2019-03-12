@@ -137,6 +137,9 @@ $string['upgradenothingtodo'] = "Es gibt keine aktualisierbaren Inhaltsinstanzen
 $string['upgradebuttonlabel'] = 'Aktualisieren';
 $string['upgradeinvalidtoken'] = 'Fehler: Ungültiger Sicherheitsschlüssel!';
 $string['upgradelibrarymissing'] = 'Fehler: Die Bibliothek fehlt!';
+$string['upgradeerrormissinglibrary'] = 'Missing required library %lib.';
+$string['upgradeerrortoohighversion'] = 'Parameters contain %used while only %supported or earlier are supported.';
+$string['upgradeerrornotsupported'] = 'Parameters contain %used which is not supported.';
 
 // Results / report page.
 $string['user'] = 'Nutzer';
