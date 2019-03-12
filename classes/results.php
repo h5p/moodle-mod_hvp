@@ -180,6 +180,10 @@ class results {
             throw new \coding_exception('missing content_id');
         }
 
+        // Xapi join
+        $where[] = "x.content_id = ?";
+        $args[] = $this->contentid;
+
         // Build where statement.
         $where[] = "i.itemtype = 'mod'";
         $where[] = "i.itemmodule = 'hvp'";
@@ -193,8 +197,8 @@ class results {
         $orderby = $this->get_order_sql($order);
 
         // Join on xAPI results.
-        $join .= ' LEFT JOIN {hvp_xapi_results} x ON i.iteminstance = x.content_id';
-        $join .= " LEFT JOIN {user} u ON u.id = x.user_id";
+        $join .= ' LEFT JOIN {hvp_xapi_results} x ON g.userid = x.user_id';
+        $join .= " LEFT JOIN {user} u ON u.id = g.userid";
         $groupby = ' GROUP BY i.id, g.id, u.id, i.iteminstance, x.id';
 
         // Get from statement.
@@ -298,11 +302,8 @@ class results {
                 $ordered = array("{$prefix}firstname", "{$prefix}lastname");
             } else {
                 // Find fields in order.
-                $matches = array();
-                preg_match_all('/' . implode('|', $available) . '/', $displayname, $matches);
-                $ordered = $matches[0];
-                foreach ($ordered as $index => $value) {
-                    $ordered[$index] = "{$prefix}{$value}";
+                foreach ($available as $key => $value) {
+                    $ordered[] = $prefix . $available[$key];
                 }
             }
         }
