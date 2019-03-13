@@ -1597,19 +1597,22 @@ class framework implements \H5PFrameworkInterface {
     public function libraryHasUpgrade($library) {
         global $DB;
 
-        return !!$DB->get_field_sql(
-                "SELECT id
+        $results = $DB->get_records_sql(
+            "SELECT id
                   FROM {hvp_libraries}
                   WHERE machine_name = ?
                   AND (major_version > ?
-                       OR (major_version = ? AND minor_version > ?))
-                  LIMIT 1",
-                array(
-                  $library['machineName'],
-                  $library['majorVersion'],
-                  $library['majorVersion'],
-                  $library['minorVersion']
-                )
+                       OR (major_version = ? AND minor_version > ?))",
+            array(
+                $library['machineName'],
+                $library['majorVersion'],
+                $library['majorVersion'],
+                $library['minorVersion']
+            ),
+            0,
+            1
         );
+
+        return !empty($results);
     }
 }
