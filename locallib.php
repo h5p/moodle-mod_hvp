@@ -197,7 +197,8 @@ function hvp_add_editor_assets($id = null) {
       'metadataSemantics' => $contentvalidator->getMetadataSemantics(),
       'assets' => $assets,
       // @codingStandardsIgnoreLine
-      'apiVersion' => H5PCore::$coreApi
+      'apiVersion' => H5PCore::$coreApi,
+      'language' => $language,
     );
 
     if ($id !== null) {
