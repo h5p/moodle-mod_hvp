@@ -233,7 +233,7 @@ class results {
     protected function get_results_num() {
         global $DB;
 
-        list(, $join, $where, , $args) = $this->get_content_sql();
+        list(, $join, $where, , $args) = $this->get_content_sql(null, 1);
         $where[] = "i.itemtype = 'mod'";
         $where[] = "i.itemmodule = 'hvp'";
         $where = 'WHERE ' . implode(' AND ', $where);
@@ -320,7 +320,7 @@ class results {
      * @param int $uid Only get users with this id
      * @return array $fields, $join, $where, $order, $args
      */
-    protected function get_content_sql($uid=null) {
+    protected function get_content_sql($uid=null, $for_count=null) {
         global $DB;
 
         $usernamefields = implode(', ', self::get_ordered_user_name_fields());
@@ -335,7 +335,7 @@ class results {
             array_push($args, $uid);
         }
 
-        if (isset($this->filters[0])) {
+        if (isset($this->filters[0]) && !($for_count)) {
             $keywordswhere = array();
 
             // Split up keywords using whitespace and comma.
