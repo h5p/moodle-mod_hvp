@@ -320,7 +320,7 @@ class results {
      * @param int $uid Only get users with this id
      * @return array $fields, $join, $where, $order, $args
      */
-    protected function get_content_sql($uid=null, $for_count=null) {
+    protected function get_content_sql($uid=null, $forcount=null) {
         global $DB;
 
         $usernamefields = implode(', ', self::get_ordered_user_name_fields());
@@ -335,7 +335,7 @@ class results {
             array_push($args, $uid);
         }
 
-        if (isset($this->filters[0]) && !($for_count)) {
+        if (isset($this->filters[0]) && !($forcount)) {
             $keywordswhere = array();
 
             // Split up keywords using whitespace and comma.
