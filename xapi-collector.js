@@ -79,7 +79,7 @@
         }
 
         // Ship the xAPI result.
-        const data = {
+        var data = {
             contentId: contentId,
             xAPIResult: JSON.stringify(xAPIData)
         };
