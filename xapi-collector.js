@@ -83,12 +83,12 @@
             contentId: contentId,
             xAPIResult: JSON.stringify(xAPIData)
         };
-        $.post(H5PIntegration.ajax.xAPIResult, data).done(function(data) {
+        $.post(H5PIntegration.ajax.xAPIResult, data).done(function (data) {
             if (data.error) {
                 console.error('Storing xAPI results failed with error message:', data);
             }
         }).fail(function () {
-           H5P.offlineRequestQueue.add(H5PIntegration.ajax.xAPIResult, data);
+            H5P.offlineRequestQueue.add(H5PIntegration.ajax.xAPIResult, data);
         });
     }
 

@@ -180,7 +180,7 @@ class results {
             throw new \coding_exception('missing content_id');
         }
 
-        // Xapi join
+        // Xapi join.
         $where[] = "x.content_id = ?";
         $args[] = $this->contentid;
 
