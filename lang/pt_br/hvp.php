@@ -428,3 +428,8 @@ $string['reuse'] = 'Reuse';
 $string['reuseContent'] = 'Reuse Content';
 $string['reuseDescription'] = 'Reuse this content.';
 $string['contentCopied'] = 'Content is copied to the clipboard';
+
+// Offline
+$string['connectionLost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
+$string['connectionReestablished'] = 'Connection reestablished.';
+$string['resubmitScores'] = 'Attempting to submit stored results.';

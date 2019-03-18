@@ -466,6 +466,10 @@ class framework implements \H5PFrameworkInterface {
                 'Reuse Content' => 'reuseContent',
                 'Reuse this content.' => 'reuseDescription',
                 'Content is copied to the clipboard' => 'contentCopied',
+                'Connection lost. Results will be stored and sent when you regain connection.' => 'connectionLost',
+                'Connection reestablished.' => 'connectionReestablished',
+                'Attempting to submit stored results.' => 'resubmitScores',
+
             ];
             // @codingStandardsIgnoreEnd
         }
