@@ -1484,8 +1484,7 @@ class framework implements \H5PFrameworkInterface {
             case \H5PPermission::CREATE_RESTRICTED:
                 return has_capability('mod/hvp:userestrictedlibraries', $this->getajaxcoursecontext());
             case \H5PPermission::UPDATE_LIBRARIES:
-                $context = \context_system::instance();
-                return has_capability('mod/hvp:updatelibraries', $context);
+                return has_capability('mod/hvp:updatelibraries', $this->getajaxcoursecontext());
             case \H5PPermission::INSTALL_RECOMMENDED:
                 return has_capability('mod/hvp:installrecommendedh5plibraries', $this->getajaxcoursecontext());
             case \H5PPermission::EMBED_H5P:
