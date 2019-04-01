@@ -469,7 +469,10 @@ class framework implements \H5PFrameworkInterface {
                 'Connection lost. Results will be stored and sent when you regain connection.' => 'connectionLost',
                 'Connection reestablished.' => 'connectionReestablished',
                 'Attempting to submit stored results.' => 'resubmitScores',
-
+                'Your connection to the server was lost' => 'offlineDialogHeader',
+                'We were unable to send information about your completion of this task. Please check your internet connection.' => 'offlineDialogBody',
+                'Retrying in :num....' => 'offlineDialogRetryMessage',
+                'Retry now' => 'offlineDialogRetryButtonLabel',
             ];
             // @codingStandardsIgnoreEnd
         }

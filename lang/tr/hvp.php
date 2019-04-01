@@ -320,3 +320,7 @@ $string['contentCopied'] = 'Content is copied to the clipboard';
 $string['connectionLost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
 $string['connectionReestablished'] = 'Connection reestablished.';
 $string['resubmitScores'] = 'Attempting to submit stored results.';
+$string['offlineDialogHeader'] = 'Your connection to the server was lost';
+$string['offlineDialogBody'] = 'We were unable to send information about your completion of this task. Please check your internet connection.';
+$string['offlineDialogRetryMessage'] = 'Retrying in :num....';
+$string['offlineDialogRetryButtonLabel'] = 'Retry now';
