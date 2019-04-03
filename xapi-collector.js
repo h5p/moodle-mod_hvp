@@ -110,6 +110,11 @@
                 console.error('Storing xAPI results failed with error message:', data);
             }
         }).fail(function () {
+            if (H5P.offlineRequestQueue) {
+                H5P.offlineRequestQueue.add(H5PIntegration.ajax.xAPIResult, data);
+                return;
+            }
+
             // Let H5P iframe know that we want to queue the request for late transmission.
             const iframe = getIframe(contentId);
             if (!iframe) {
