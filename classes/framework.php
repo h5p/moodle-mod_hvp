@@ -473,6 +473,7 @@ class framework implements \H5PFrameworkInterface {
                 'We were unable to send information about your completion of this task. Please check your internet connection.' => 'offlineDialogBody',
                 'Retrying in :num....' => 'offlineDialogRetryMessage',
                 'Retry now' => 'offlineDialogRetryButtonLabel',
+                'Successfully submitted results.' => 'offlineSuccessfulSubmit',
             ];
             // @codingStandardsIgnoreEnd
         }

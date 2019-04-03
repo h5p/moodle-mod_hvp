@@ -440,3 +440,4 @@ $string['offlineDialogHeader'] = 'Your connection to the server was lost';
 $string['offlineDialogBody'] = 'We were unable to send information about your completion of this task. Please check your internet connection.';
 $string['offlineDialogRetryMessage'] = 'Retrying in :num....';
 $string['offlineDialogRetryButtonLabel'] = 'Retry now';
+$string['offlineSuccessfulSubmit'] = 'Successfully submitted results.';
