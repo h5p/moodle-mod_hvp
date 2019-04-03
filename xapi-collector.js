@@ -58,6 +58,28 @@
         return instance;
     }
 
+    function getIframe(contentId) {
+        let iFrames;
+
+        // No content id given.
+        if (!contentId) {
+            iFrames = document.getElementsByClassName('h5p-iframe');
+            // Assume first iframe.
+            return iFrames[0];
+        }
+
+        // Locate iFrames.
+        iFrames = document.getElementsByClassName('h5p-iframe');
+        for (let i = 0; i < iFrames.length; i++) {
+            // Search through each iframe for content.
+            if (findInstanceInArray(iFrames[i].contentWindow.H5P.instances, contentId)) {
+                return iFrames[i];
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Get xAPI data for content type and send off.
      *
@@ -88,7 +110,17 @@
                 console.error('Storing xAPI results failed with error message:', data);
             }
         }).fail(function () {
-            H5P.offlineRequestQueue.add(H5PIntegration.ajax.xAPIResult, data);
+            // Let H5P iframe know that we want to queue the request for late transmission
+            const iframe = getIframe(contentId);
+            if (!iframe) {
+                return;
+            }
+            iframe.contentWindow.postMessage( {
+                url: H5PIntegration.ajax.xAPIResult,
+                data: data,
+                context: 'h5p',
+                action: 'queueRequest',
+            });
         });
     }
 
