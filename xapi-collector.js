@@ -110,7 +110,7 @@
                 console.error('Storing xAPI results failed with error message:', data);
             }
         }).fail(function () {
-            // Let H5P iframe know that we want to queue the request for late transmission
+            // Let H5P iframe know that we want to queue the request for late transmission.
             const iframe = getIframe(contentId);
             if (!iframe) {
                 return;

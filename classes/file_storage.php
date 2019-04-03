@@ -872,17 +872,18 @@ class file_storage implements \H5PFileStorage {
      *
      * @return bool
      */
+    // @codingStandardsIgnoreLine
     public function saveFileFromZip($path, $file, $stream) {
-        $filePath = $path . '/' . $file;
+        $filepath = $path . '/' . $file;
 
-        // Make sure the directory exists first
+        // Make sure the directory exists first.
         $matches = array();
-        preg_match('/(.+)\/[^\/]*$/', $filePath, $matches);
+        preg_match('/(.+)\/[^\/]*$/', $filepath, $matches);
         if (!file_exists($matches[1])) {
             mkdir($matches[1]);
         }
 
-        // Store in local storage folder
-        return file_put_contents($filePath, $stream);
+        // Store in local storage folder.
+        return file_put_contents($filepath, $stream);
     }
 }
