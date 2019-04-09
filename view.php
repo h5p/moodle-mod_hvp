@@ -60,7 +60,7 @@ echo $OUTPUT->heading(format_string($content['title']));
 echo '<div class="clearer"></div>';
 
 // Output introduction.
-if (trim(strip_tags($content['intro']))) {
+if (trim(strip_tags($content['intro'], '<img>'))) {
     echo $OUTPUT->box_start('mod_introbox', 'hvpintro');
     echo format_module_intro('hvp', (object) array(
         'intro'       => $content['intro'],
