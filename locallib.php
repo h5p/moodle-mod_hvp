@@ -125,8 +125,12 @@ function hvp_get_core_assets($context) {
  * Add required assets for displaying the editor.
  *
  * @param int $id Content being edited. null for creating new content
+ * @param string $mform_id Id of Moodle form
+ *
+ * @throws coding_exception
+ * @throws moodle_exception
  */
-function hvp_add_editor_assets($id = null) {
+function hvp_add_editor_assets($id = null, $mform_id = null) {
     global $PAGE, $CFG, $COURSE;
 
     // First we need to determine the context for permission handling.
@@ -199,6 +203,7 @@ function hvp_add_editor_assets($id = null) {
       // @codingStandardsIgnoreLine
       'apiVersion' => H5PCore::$coreApi,
       'language' => $language,
+      'formId' => $mform_id,
     );
 
     if ($id !== null) {
