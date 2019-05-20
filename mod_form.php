@@ -210,7 +210,8 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         // Add required editor assets.
         require_once('locallib.php');
-        \hvp_add_editor_assets($content === null ? null : $defaultvalues['id']);
+        $mformid = $this->_form->getAttribute('id');
+        \hvp_add_editor_assets($content === null ? null : $defaultvalues['id'], $mformid);
     }
 
     /**
