@@ -23,8 +23,12 @@
       $('input[name="h5paction"]').parents('.fitem').last().hide();
     }
 
+    const mformId = H5PIntegration.editor && H5PIntegration.editor.formId !== null
+      ? H5PIntegration.editor.formId
+      : 'mform1';
+
     H5PEditor.init(
-      $('#mform1'),
+      $('#' + mformId),
       $('input[name="h5paction"]'),
       getRow($fileField),
       getRow($editor),
