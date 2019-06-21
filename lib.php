@@ -315,7 +315,9 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
     if (!$file) {
         return false; // No such file.
     }
-
+    // Totara: use allowxss option to prevent application/x-javascript mimetype 
+    // from being converted to application/x-forcedownload.
+    $options['allowxss'] = '1';
     send_stored_file($file, 86400, 0, $forcedownload, $options);
 
     return true;
