@@ -14,77 +14,77 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['modulename'] = 'Interactive Content';
-$string['modulename_help'] = 'The H5P activity module enables you to create interactive content such as Interactive Videos, Question Sets, Drag and Drop Questions, Multi-Choice Questions, Presentations and much more.
+$string['modulename'] = 'H5P';
+$string['modulename_help'] = 'H5P-aktiviteetin avulla voit luoda interaktiivisia sisältöjä, kuten interaktiivisia videoita, kysymyssarjoja, vedä ja pudota -kysymyksiä, monivalintakysymyksiä, interaktiivisia esityksiä ja paljon muuta.
 
-In addition to being an authoring tool for rich content, H5P enables you to import and export H5P files for effective reuse and sharing of content.
+Sen lisäksi, että sillä voi luoda monipuolista sisältöä, H5P mahdollistaa H5P-tiedostojen tuonnin ja viennin sekä sisällön tehokkaan uudelleenkäytön ja jakamisen.
 
-User interactions and scores are tracked using xAPI and are available through the Moodle Gradebook. Note that it is currently possible for people with programming skills to cheat in H5P interactions and obtain the full score without knowing the correct answers. H5Ps must not be used for exams or similar.
+Käyttäjien vuorovaikutuksia ja tuloksia seurataan xAPI-ohjelmalla ja ne näkyvät arvioinneissa.
 
-You add interactive H5P content by creating content using the built-in authoring tool or uploading H5P files found on other H5P enabled sites.';
+Voit lisätä vuorovaikutteisen H5P-sisällön luomalla uutta sisältöä tai lataamalla muiden tekemiä H5P-tiedostoja H5P-yhteensopivilta sivustoilta.';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
-$string['modulenameplural'] = 'Interactive Content';
+$string['modulenameplural'] = 'H5P';
 $string['pluginadministration'] = 'H5P';
 $string['pluginname'] = 'H5P';
-$string['intro'] = 'Introduction';
-$string['h5pfile'] = 'H5P File';
-$string['fullscreen'] = 'Fullscreen';
-$string['disablefullscreen'] = 'Disable fullscreen';
-$string['download'] = 'Download';
-$string['copyright'] = 'Rights of use';
-$string['embed'] = 'Embed';
-$string['showadvanced'] = 'Show advanced';
-$string['hideadvanced'] = 'Hide advanced';
+$string['intro'] = 'Esittely';
+$string['h5pfile'] = 'H5P tiedosto';
+$string['fullscreen'] = 'Kokoruutu';
+$string['disablefullscreen'] = 'Aseta kokoruudun tila pois päältä';
+$string['download'] = 'Lataa';
+$string['copyright'] = 'Tekijänoikeustiedot';
+$string['embed'] = 'Upota';
+$string['showadvanced'] = 'Näytä edistyneet asetukset';
+$string['hideadvanced'] = 'Piilota edistyneet asetukset';
 $string['resizescript'] = 'Include this script on your website if you want dynamic sizing of the embedded content:';
-$string['size'] = 'Size';
-$string['close'] = 'Close';
-$string['title'] = 'Title';
-$string['author'] = 'Author';
-$string['year'] = 'Year';
-$string['source'] = 'Source';
-$string['license'] = 'License';
-$string['thumbnail'] = 'Thumbnail';
-$string['nocopyright'] = 'No copyright information available for this content.';
-$string['downloadtitle'] = 'Download this content as a H5P file.';
-$string['copyrighttitle'] = 'View copyright information for this content.';
-$string['embedtitle'] = 'View the embed code for this content.';
-$string['h5ptitle'] = 'Visit H5P.org to check out more cool content.';
-$string['contentchanged'] = 'This content has changed since you last used it.';
-$string['startingover'] = "You'll be starting over.";
-$string['confirmdialogheader'] = 'Confirm action';
-$string['confirmdialogbody'] = 'Please confirm that you wish to proceed. This action is not reversible.';
-$string['cancellabel'] = 'Cancel';
-$string['confirmlabel'] = 'Confirm';
-$string['noh5ps'] = 'There\'s no interactive content available for this course.';
+$string['size'] = 'Koko';
+$string['close'] = 'Sulje';
+$string['title'] = 'Otsikko';
+$string['author'] = 'Tekijä';
+$string['year'] = 'Vuosi';
+$string['source'] = 'Lähde';
+$string['license'] = 'Lisenssi';
+$string['thumbnail'] = 'Pikkukuva';
+$string['nocopyright'] = 'Tälle aineistolle ei ole saatavilla tekijänoikeustietoja.';
+$string['downloadtitle'] = 'Lataa tämä sisältö H5P-tiedostona';
+$string['copyrighttitle'] = 'Näytä tämän aineiston tekijänoikeustiedot.';
+$string['embedtitle'] = 'Näytä tämän aineiston upotuskoodi.';
+$string['h5ptitle'] = 'Vieraile sivustolla H5P.org nähdäksesi coolia sisältöä.';
+$string['contentchanged'] = 'Tämän aineiston sisältö on muuttunut siitä kun viimeksi käytit sitä.';
+$string['startingover'] = "Aloitat suorituksen alusta";
+$string['confirmdialogheader'] = 'Vahvista toiminto';
+$string['confirmdialogbody'] = 'Ole hyvä ja varmista että haluat jatkaa. Tätä toimintoa ei voi perua.';
+$string['cancellabel'] = 'Peruuta';
+$string['confirmlabel'] = 'Vahvista';
+$string['noh5ps'] = 'Tällä kurssilla ei ole interaktiivista aineistoa saatavilla.';
 
-$string['lookforupdates'] = 'Look for H5P updates';
-$string['updatelibraries'] = 'Update All Libraries';
-$string['removetmpfiles'] = 'Remove old H5P temporary files';
-$string['removeoldlogentries'] = 'Remove old H5P log entries';
-$string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
+$string['lookforupdates'] = 'Tarkista H5P päivitykset';
+$string['updatelibraries'] = 'Päivitä kaikki kirjastot';
+$string['removetmpfiles'] = 'Poista vanhat väliaikaiset H5P tiedostot.';
+$string['removeoldlogentries'] = 'Poista vanhat H5P logit';
+$string['removeoldmobileauthentries'] = 'Poista vanhat H5P-mobiiliautentikoinnin tietueet';
 
 // Admin settings.
-$string['displayoptiondownloadnever'] = 'Never';
-$string['displayoptiondownloadalways'] = 'Always';
+$string['displayoptiondownloadnever'] = 'Ei koskaan';
+$string['displayoptiondownloadalways'] = 'Aina';
 $string['displayoptiondownloadpermission'] = 'Only if user has permissions to export H5P';
-$string['displayoptionnevershow'] = 'Never show';
-$string['displayoptionalwaysshow'] = 'Always show';
+$string['displayoptionnevershow'] = 'Älä näytä koskaan';
+$string['displayoptionalwaysshow'] = 'Näytä aina';
 $string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
 $string['displayoptionpermissionsembed'] = 'Show only if user has permissions to embed H5P';
 $string['displayoptionauthoron'] = 'Controlled by author, default is on';
 $string['displayoptionauthoroff'] = 'Controlled by author, default is off';
-$string['displayoptions'] = 'Display Options';
-$string['enableframe'] = 'Display action bar and frame';
-$string['enabledownload'] = 'Allow download';
-$string['enableembed'] = 'Embed button';
-$string['enablecopyright'] = 'Copyright button';
-$string['enableabout'] = 'About H5P button';
-$string['hubsettingsheader'] = 'Content Types';
+$string['displayoptions'] = 'Näyttöasetukset';
+$string['enableframe'] = 'Näytä toimintopalkki ja kehys';
+$string['enabledownload'] = 'Salli lataaminen';
+$string['enableembed'] = 'Upota-painike';
+$string['enablecopyright'] = 'Copyright-painike';
+$string['enableabout'] = 'Tietoja H5P:stä -painike';
+$string['hubsettingsheader'] = 'sisältökirjastot';
 $string['enablehublabel'] = 'Use H5P Hub';
 $string['disablehubdescription'] = "It's strongly encouraged to keep this option enabled. The H5P Hub provides an easy interface for getting new content types and keeping existing content types up to date. In the future, it will also make it easier to share and reuse content. If this option is disabled you'll have to install and update content types through file upload forms.";
-$string['empty'] = 'Empty';
-$string['reveal'] = 'Reveal';
-$string['hide'] = 'Hide';
+$string['empty'] = 'Tyhjä';
+$string['reveal'] = 'Näytä';
+$string['hide'] = 'Piilota';
 $string['sitekey'] = 'Site Key';
 $string['sitekeydescription'] = 'The site key is a secret that uniquely identifies this site with the Hub.';
 
@@ -99,29 +99,29 @@ $string['enabledlrscontenttypes_help'] = 'Makes it possible to use content types
 
 // Admin menu.
 $string['contenttypecacheheader'] = 'Content Type Cache';
-$string['settings'] = 'H5P Settings';
-$string['libraries'] = 'H5P Libraries';
+$string['settings'] = 'H5P Asetukset';
+$string['libraries'] = 'H5P sisältökirjastot';
 
 // Content type cache section.
 $string['ctcacheconnectionfailed'] = "Couldn't communicate with the H5P Hub. Please try again later.";
 $string['ctcachenolibraries'] = 'No content types were received from the H5P Hub. Please try again later.';
 $string['ctcachesuccess'] = 'Library cache was successfully updated!';
-$string['ctcachelastupdatelabel'] = 'Last update';
+$string['ctcachelastupdatelabel'] = 'Viimeksi päivitetty';
 $string['ctcachebuttonlabel'] = 'Update content type cache';
-$string['ctcacheneverupdated'] = 'Never';
+$string['ctcacheneverupdated'] = 'Ei koskaan';
 $string['ctcachetaskname'] = 'Update content type cache';
 $string['ctcachedescription'] = 'Making sure the content type cache is up to date will ensure that you can view, download and use the latest libraries. This is different from updating the libraries themselves.';
 
 // Upload libraries section.
 $string['uploadlibraries'] = 'Upload Libraries';
-$string['options'] = 'Options';
+$string['options'] = 'Asetukset';
 $string['onlyupdate'] = 'Only update existing libraries';
 $string['disablefileextensioncheck'] = 'Disable file extension check';
 $string['disablefileextensioncheckwarning'] = "Warning! Disabling the file extension check may have security implications as it allows for uploading of php files. That in turn could make it possible for attackers to execute malicious code on your site. Please make sure you know exactly what you're uploading.";
-$string['upload'] = 'Upload';
+$string['upload'] = 'Lähetä';
 
 // Installed libraries section.
-$string['installedlibraries'] = 'Installed Libraries';
+$string['installedlibraries'] = 'Asennetut sisältökirjastot';
 $string['invalidtoken'] = 'Invalid security token.';
 $string['missingparameters'] = 'Missing parameters';
 $string['nocontenttype'] = 'No content type was specified.';
@@ -132,16 +132,16 @@ $string['validationfailed'] = 'The requested H5P was not valid';
 $string['validatingh5pfailed'] = 'Validating h5p package failed.';
 
 // H5P library list headers on admin page.
-$string['librarylisttitle'] = 'Title';
-$string['librarylistrestricted'] = 'Restricted';
-$string['librarylistinstances'] = 'Instances';
+$string['librarylisttitle'] = 'Otsikko';
+$string['librarylistrestricted'] = 'Rajoitettu';
+$string['librarylistinstances'] = 'Instanssit';
 $string['librarylistinstancedependencies'] = 'Instance dependencies';
 $string['librarylistlibrarydependencies'] = 'Library dependencies';
-$string['librarylistactions'] = 'Actions';
+$string['librarylistactions'] = 'Toiminnot';
 
 // H5P library page labels.
-$string['addlibraries'] = 'Add libraries';
-$string['installedlibraries'] = 'Installed libraries';
+$string['addlibraries'] = 'Lisää sisältökirjastoja';
+$string['installedlibraries'] = 'Asennetut sisältökirjastot';
 $string['notapplicable'] = 'N/A';
 $string['upgradelibrarycontent'] = 'Upgrade library content';
 
@@ -168,46 +168,46 @@ $string['upgradeerrortoohighversion'] = 'Parameters contain %used while only %su
 $string['upgradeerrornotsupported'] = 'Parameters contain %used which is not supported.';
 
 // Results / report page.
-$string['user'] = 'User';
-$string['score'] = 'Score';
-$string['maxscore'] = 'Maximum Score';
-$string['finished'] = 'Finished';
-$string['loadingdata'] = 'Loading data.';
-$string['ajaxfailed'] = 'Failed to load data.';
-$string['nodata'] = "There's no data available that matches your criteria.";
-$string['currentpage'] = 'Page $current of $total';
-$string['nextpage'] = 'Next page';
-$string['previouspage'] = 'Previous page';
-$string['search'] = 'Search';
-$string['empty'] = 'No results available';
-$string['viewreportlabel'] = 'Report';
+$string['user'] = 'Käyttäjä';
+$string['score'] = 'Pisteet';
+$string['maxscore'] = 'Maksimipisteet';
+$string['finished'] = 'Päättynyt';
+$string['loadingdata'] = 'Ladataan dataa.';
+$string['ajaxfailed'] = 'Datan lataaminen epäonnistui';
+$string['nodata'] = "Hakuasi vastaavaa dataa ei ole saatavilla.";
+$string['currentpage'] = 'Sivu $current - $total';
+$string['nextpage'] = 'Seuraava sivu';
+$string['previouspage'] = 'Edellinen sivu';
+$string['search'] = 'Haku';
+$string['empty'] = 'Ei hakutuloksia';
+$string['viewreportlabel'] = 'Raportti';
 $string['dataviewreportlabel'] = 'View Answers';
 $string['invalidxapiresult'] = 'No xAPI results were found for the given content and user id combination';
-$string['reportnotsupported'] = 'Not supported';
-$string['reportingscorelabel'] = 'Score:';
-$string['reportingscaledscorelabel'] = 'Gradebook score:';
-$string['reportingscoredelimiter'] = 'out of';
+$string['reportnotsupported'] = 'Ei tuettu';
+$string['reportingscorelabel'] = 'Pisteet:';
+$string['reportingscaledscorelabel'] = 'Arvioijan raportin pisteet:';
+$string['reportingscoredelimiter'] = 'stä';
 $string['reportingscaledscoredelimiter'] = ',';
-$string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
-$string['reportsubmitgradelabel'] = 'Submit grade';
-$string['noanswersubmitted'] = 'This user hasn\'t submitted an answer to the H5P yet';
+$string['reportingquestionsremaininglabel'] = 'kysymystä odottaa arviontia';
+$string['reportsubmitgradelabel'] = 'Lähetä arvosana';
+$string['noanswersubmitted'] = 'Tämä käyttäjät ie loe vielä palauttanut vastauksiaan H5P-aktiviteettiin.';
 
 // Editor.
-$string['javascriptloading'] = 'Waiting for JavaScript...';
-$string['action'] = 'Action';
-$string['upload'] = 'Upload';
-$string['create'] = 'Create';
-$string['editor'] = 'Editor';
+$string['javascriptloading'] = 'Odotetaan JavaScriptiä...';
+$string['action'] = 'Toiminto';
+$string['upload'] = 'Lähetä';
+$string['create'] = 'Luo';
+$string['editor'] = 'Editori';
 
-$string['invalidlibrary'] = 'Invalid library';
-$string['nosuchlibrary'] = 'No such library';
-$string['noparameters'] = 'No parameters';
-$string['invalidparameters'] = 'Invalid Parameters';
+$string['invalidlibrary'] = 'Epäkelpo sisältökirjasto';
+$string['nosuchlibrary'] = 'Sisältökirjastoa ei löytynyt';
+$string['noparameters'] = 'ei parametrejä';
+$string['invalidparameters'] = 'Epäkelpoja parametrejä';
 $string['missingcontentuserdata'] = 'Error: Could not find content user data';
 $string['olduploadoldcontent'] = "You're trying to upload content of an older version of H5P. Please upgrade the content on the server it originated from and try to upload again or turn on the H5P Hub to have this server upgrade it for your automaticall.";
 $string['anunexpectedsave'] = 'Something unexpected happened. We were unable to save this content.';
 
-$string['maximumgrade'] = 'Maximum grade';
+$string['maximumgrade'] = 'Maksimiarvosana';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
 
 // Capabilities.
@@ -320,8 +320,8 @@ $string['failedtodownloadh5p'] = 'Failed to download the requested H5P.';
 $string['postmessagerequired'] = 'A post message is required to access the given endpoint';
 
 // Licensing.
-$string['copyrightinfo'] = 'Copyright information';
-$string['years'] = 'Year(s)';
+$string['copyrightinfo'] = 'Tekijänoikeustiedot';
+$string['years'] = 'Vuotta';
 $string['undisclosed'] = 'Undisclosed';
 $string['attribution'] = 'Attribution 4.0';
 $string['attributionsa'] = 'Attribution-ShareAlike 4.0';
@@ -335,8 +335,8 @@ $string['pddl'] = 'Public Domain Dedication and Licence';
 $string['pdm'] = 'Public Domain Mark';
 $string['copyrightstring'] = 'Copyright';
 $string['by'] = 'by';
-$string['showmore'] = 'Show more';
-$string['showless'] = 'Show less';
+$string['showmore'] = 'Näytä enemmän';
+$string['showless'] = 'Näytä vähemmän';
 $string['sublevel'] = 'Sublevel';
 $string['noversionattribution'] = 'Attribution';
 $string['noversionattributionsa'] = 'Attribution-ShareAlike';
@@ -365,21 +365,21 @@ $string['ccattributionncsa'] = 'Attribution-NonCommercial-ShareAlike (CC BY-NC-S
 $string['ccattributionncnd'] = 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)';
 $string['ccpdd'] = 'Public Domain Dedication (CC0)';
 $string['ccpdm'] = 'Public Domain Mark (PDM)';
-$string['yearsfrom'] = 'Years (from)';
-$string['yearsto'] = 'Years (to)';
-$string['authorname'] = "Author's name";
-$string['authorrole'] = "Author's role";
-$string['editor'] = 'Editor';
+$string['yearsfrom'] = 'Vuosia (alkaen)';
+$string['yearsto'] = 'Vuoteen (saakka)';
+$string['authorname'] = "Tekijän nimi";
+$string['authorrole'] = "Tekijän rooli";
+$string['editor'] = 'Editori';
 $string['licensee'] = 'Licensee';
 $string['originator'] = 'Originator';
 $string['additionallicenseinfo'] = 'Any additional information about the license';
 $string['licenseextras'] = 'License Extras';
-$string['changelog'] = 'Changelog';
-$string['contenttype'] = 'Content Type';
-$string['question'] = 'Question';
-$string['date'] = 'Date';
+$string['changelog'] = 'Muutoslogi';
+$string['contenttype'] = 'Sisältötyyppi';
+$string['question'] = 'Kysymys';
+$string['date'] = 'Päivämäärä';
 $string['changedby'] = 'Changed by';
-$string['changedescription'] = 'Description of change';
+$string['changedescription'] = 'Muutoksen kuvaus';
 $string['changeplaceholder'] = 'Photo cropped, text changed, etc.';
 $string['additionalinfo'] = 'Additional Information';
 $string['authorcomments'] = 'Author comments';
@@ -427,7 +427,7 @@ $string['privacy:metadata:hvp_xapi_results:raw_score'] = 'Achieved score for the
 $string['privacy:metadata:hvp_xapi_results:max_score'] = 'Max achievable score for the event.';
 
 // Reuse.
-$string['reuse'] = 'Reuse';
-$string['reuseContent'] = 'Reuse Content';
-$string['reuseDescription'] = 'Reuse this content.';
-$string['contentCopied'] = 'Content is copied to the clipboard';
+$string['reuse'] = 'Käytä uudelleen';
+$string['reuseContent'] = 'Käytä sisältö uudelleen';
+$string['reuseDescription'] = 'Uudelleenkäytä tätä sisältöä';
+$string['contentCopied'] = 'Sisältö kopioitiin leikepöydälle';
