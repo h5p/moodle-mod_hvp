@@ -61,4 +61,4 @@ Feel free to contribute by:
 * Testing and creating issues. But remember to check if the issues is already
 reported before creating a new one. Perhaps you can contribute to an already
 existing issue?
-* Solving issues and submitting code through Pull Requests.
+* Solving issues and submitting code through Pull Requests to the 'master' branch.
