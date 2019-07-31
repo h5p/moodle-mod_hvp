@@ -34,7 +34,7 @@ require(__DIR__ . '/../lib.php');
 class user_grades {
 
     public static function handle_ajax() {
-        global $DB, $USER;
+        global $DB, $USER, $CFG;
 
         if (!\H5PCore::validToken('result', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
@@ -88,6 +88,16 @@ class user_grades {
                   WHERE c.id = ?",
                 array($hvp->id)
         );
+
+        require_once($CFG->libdir.'/completionlib.php');
+
+        // Load Course.
+        $course = $DB->get_record('course', array('id' => $cm->course));
+        $completion = new \completion_info( $course );
+
+        if ( $completion->is_enabled( $cm) ) {
+            $completion->update_state($cm,COMPLETION_COMPLETE);
+        }
 
         // Log results set event.
         new \mod_hvp\event(

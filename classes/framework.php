@@ -948,6 +948,10 @@ class framework implements \H5PFrameworkInterface {
             'timemodified' => time(),
         ));
 
+        if( isset( $content[ 'completionpass' ] ) ){
+            $data[ 'completionpass' ] = $content[ 'completionpass' ];
+        }
+
         if (!isset($content['id'])) {
             $data['slug'] = '';
             $data['timecreated'] = $data['timemodified'];
