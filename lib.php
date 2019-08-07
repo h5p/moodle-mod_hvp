@@ -386,3 +386,33 @@ function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
         hvp_grade_item_update($hvp);
     }
 }
+
+
+
+
+function hvp_get_coursemodule_info($coursemodule) {
+    global $DB, $OUTPUT;
+	
+	$defaulturl = null;
+	
+	$info = new cached_cm_info();
+	
+	$modtype = $DB->get_field_sql('SELECT main_library_id FROM {hvp} WHERE id = ?', array($coursemodule->instance));
+	$result = $DB->get_record_sql('SELECT has_icon, machine_name, major_version, minor_version FROM {hvp_libraries} WHERE id = ?', array($modtype));
+	
+	if ($result->has_icon) {
+		$info->iconurl = $OUTPUT->image_url('types/'.substr($result->machine_name,4).'/icon','mod_hvp');
+	} else {
+		$result2 = $DB->get_record_sql('SELECT has_icon, machine_name, major_version, minor_version FROM {hvp_libraries} WHERE has_icon = ? AND machine_name = ?', array('1', $result->machine_name));
+		if ($result2) {
+			$info->iconurl = $OUTPUT->image_url('types/'.substr($result2->machine_name,4).'/icon','mod_hvp');
+		}
+	}
+	
+	if ($info->iconurl === null) {
+		$info->iconurl = $defaulturl;
+	}
+	$info->name = $coursemodule->name;
+	
+	return $info;
+}
