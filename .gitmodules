@@ -1,6 +1,6 @@
 [submodule "library"]
 	path = library
-	url = https://github.com/h5p/h5p-php-library.git
+	url = https://github.com/uofr/h5p-php-library.git
 	branch = stable
 [submodule "editor"]
 	path = editor
