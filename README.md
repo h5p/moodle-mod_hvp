@@ -57,7 +57,7 @@ Settings can be found at: Site Administration -> Plugins -> Activity Modules -> 
 
 ## Contributing
 Feel free to contribute by:
-* Submitting translations
+* Submitting translations to the [Moodle AMOS translator](https://lang.moodle.org/local/amos/view.php)
 * Testing and creating issues. But remember to check if the issues is already
 reported before creating a new one. Perhaps you can contribute to an already
 existing issue?
