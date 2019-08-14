@@ -1340,12 +1340,23 @@ class framework implements \H5PFrameworkInterface {
 
     /**
      * Implements clearFilteredParameters().
+     *
+     * @param array $library_ids array of library ids
+     *
+     * @throws \dml_exception
+     * @throws \coding_exception
      */
     // @codingStandardsIgnoreLine
-    public function clearFilteredParameters($libraryid) {
+    public function clearFilteredParameters($library_ids) {
         global $DB;
 
-        $DB->execute("UPDATE {hvp} SET filtered = null WHERE main_library_id = ?", array($libraryid));
+        list($insql, $inparams) = $DB->get_in_or_equal($library_ids);
+        $DB->execute("
+            UPDATE {hvp}
+            SET filtered = null 
+            WHERE main_library_id $insql",
+            $inparams
+        );
     }
 
     /**

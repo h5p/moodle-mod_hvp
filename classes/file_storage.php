@@ -879,8 +879,9 @@ class file_storage implements \H5PFileStorage {
         // Make sure the directory exists first.
         $matches = array();
         preg_match('/(.+)\/[^\/]*$/', $filepath, $matches);
+        // Recursively make directories
         if (!file_exists($matches[1])) {
-            mkdir($matches[1]);
+            mkdir($matches[1], 0777, true);
         }
 
         // Store in local storage folder.
