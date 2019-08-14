@@ -190,7 +190,7 @@ $string['reportingscoredelimiter'] = 'stä';
 $string['reportingscaledscoredelimiter'] = ',';
 $string['reportingquestionsremaininglabel'] = 'kysymystä odottaa arviontia';
 $string['reportsubmitgradelabel'] = 'Lähetä arvosana';
-$string['noanswersubmitted'] = 'Tämä käyttäjät ie loe vielä palauttanut vastauksiaan H5P-aktiviteettiin.';
+$string['noanswersubmitted'] = 'Tämä käyttäjä ei ole vielä palauttanut vastauksiaan H5P-aktiviteettiin.';
 
 // Editor.
 $string['javascriptloading'] = 'Odotetaan JavaScriptiä...';
