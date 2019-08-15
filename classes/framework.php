@@ -1349,6 +1349,9 @@ class framework implements \H5PFrameworkInterface {
     // @codingStandardsIgnoreLine
     public function clearFilteredParameters($libraryids) {
         global $DB;
+        if (empty($libraryids)) {
+            return;
+        }
 
         list($insql, $inparams) = $DB->get_in_or_equal($libraryids);
         $DB->execute("
