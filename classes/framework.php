@@ -1353,7 +1353,7 @@ class framework implements \H5PFrameworkInterface {
         list($insql, $inparams) = $DB->get_in_or_equal($libraryids);
         $DB->execute("
             UPDATE {hvp}
-            SET filtered = null 
+            SET filtered = null
             WHERE main_library_id $insql",
             $inparams
         );
