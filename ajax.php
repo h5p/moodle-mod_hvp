@@ -326,14 +326,14 @@ switch($action) {
      */
     case 'filter':
         $token = required_param('token', PARAM_RAW);
-        $libraryParameters = required_param('libraryParameters', PARAM_RAW);
+        $libraryparameters = required_param('libraryParameters', PARAM_RAW);
 
         if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadfiles')) {
             break;
         }
 
         $editor = \mod_hvp\framework::instance('editor');
-        $editor->ajax->action(H5PEditorEndpoints::FILTER, $token, $libraryParameters);
+        $editor->ajax->action(H5PEditorEndpoints::FILTER, $token, $libraryparameters);
         break;
 
     /*
