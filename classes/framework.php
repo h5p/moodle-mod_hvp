@@ -474,6 +474,11 @@ class framework implements \H5PFrameworkInterface {
                 'Retrying in :num....' => 'offlineDialogRetryMessage',
                 'Retry now' => 'offlineDialogRetryButtonLabel',
                 'Successfully submitted results.' => 'offlineSuccessfulSubmit',
+                'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)' => 'fileExceedsMaxSize',
+                'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)' => 'unpackedFilesExceedsMaxSize',
+                'Unable to read file from the package: %fileName' => 'couldNotReadFileFromZip',
+                'Unable to parse JSON from the package: %fileName' => 'couldNotParseJSONFromZip',
+                'Could not parse post data.' => 'couldNotParsePostData'
             ];
             // @codingStandardsIgnoreEnd
         }
