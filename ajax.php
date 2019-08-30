@@ -321,6 +321,20 @@ switch($action) {
         $editor->ajax->action(H5PEditorEndpoints::TRANSLATIONS, $language);
         break;
 
+    /*
+     * Handle filtering of parameters through AJAX.
+     */
+    case 'filter':
+        $token = required_param('token', PARAM_RAW);
+        $libraryparameters = required_param('libraryParameters', PARAM_RAW);
+
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadfiles')) {
+            break;
+        }
+
+        $editor = \mod_hvp\framework::instance('editor');
+        $editor->ajax->action(H5PEditorEndpoints::FILTER, $token, $libraryparameters);
+        break;
 
     /*
      * Throw error if AJAX isnt handeled

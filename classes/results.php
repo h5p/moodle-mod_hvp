@@ -180,7 +180,7 @@ class results {
             throw new \coding_exception('missing content_id');
         }
 
-        // Xapi join
+        // Xapi join.
         $where[] = "x.content_id = ?";
         $args[] = $this->contentid;
 
@@ -198,7 +198,6 @@ class results {
 
         // Join on xAPI results.
         $join .= ' LEFT JOIN {hvp_xapi_results} x ON g.userid = x.user_id';
-        $join .= " LEFT JOIN {user} u ON u.id = g.userid";
         $groupby = ' GROUP BY i.id, g.id, u.id, i.iteminstance, x.id';
 
         // Get from statement.
@@ -283,7 +282,7 @@ class results {
      * @return string
      */
     protected function get_from_sql() {
-        return " FROM {grade_items} i LEFT JOIN {grade_grades} g ON i.id = g.itemid";
+        return " FROM {grade_items} i LEFT JOIN {grade_grades} g ON i.id = g.itemid LEFT JOIN {user} u ON u.id = g.userid";
     }
 
     /**

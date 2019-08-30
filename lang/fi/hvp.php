@@ -431,3 +431,10 @@ $string['reuse'] = 'Käytä uudelleen';
 $string['reuseContent'] = 'Käytä sisältö uudelleen';
 $string['reuseDescription'] = 'Uudelleenkäytä tätä sisältöä';
 $string['contentCopied'] = 'Sisältö kopioitiin leikepöydälle';
+
+// Error messages.
+$string['fileExceedsMaxSize'] = 'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)';
+$string['unpackedFilesExceedsMaxSize'] = 'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)';
+$string['couldNotReadFileFromZip'] = 'Unable to read file from the package: %fileName';
+$string['couldNotParseJSONFromZip'] = 'Unable to parse JSON from the package: %fileName';
+$string['couldNotParsePostData'] = 'Could not parse post data.';

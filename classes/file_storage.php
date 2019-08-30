@@ -719,8 +719,6 @@ class file_storage implements \H5PFileStorage {
 
         // Get h5p and content json.
         $contentsource = $source . DIRECTORY_SEPARATOR . 'content';
-        $h5pjson = file_get_contents($source . DIRECTORY_SEPARATOR . 'h5p.json');
-        $contentjson = file_get_contents($contentsource . DIRECTORY_SEPARATOR . 'content.json');
 
         // Move all temporary content files to editor.
         $contentfiles = array_diff(scandir($contentsource), array('.', '..', 'content.json'));
@@ -732,10 +730,7 @@ class file_storage implements \H5PFileStorage {
             }
         }
 
-        return (object) array(
-            'h5pJson' => $h5pjson,
-            'contentJson' => $contentjson
-        );
+        // TODO: Return list of all files so they can be marked as temporary. JI-366
     }
 
     /**
@@ -861,5 +856,30 @@ class file_storage implements \H5PFileStorage {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Store the given stream into the given file.
+     *
+     * @param string $path
+     * @param string $file
+     * @param resource $stream
+     *
+     * @return bool
+     */
+    // @codingStandardsIgnoreLine
+    public function saveFileFromZip($path, $file, $stream) {
+        $filepath = $path . '/' . $file;
+
+        // Make sure the directory exists first.
+        $matches = array();
+        preg_match('/(.+)\/[^\/]*$/', $filepath, $matches);
+        // Recursively make directories
+        if (!file_exists($matches[1])) {
+            mkdir($matches[1], 0777, true);
+        }
+
+        // Store in local storage folder.
+        return file_put_contents($filepath, $stream);
     }
 }
