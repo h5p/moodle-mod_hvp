@@ -71,7 +71,7 @@ class mobile_auth {
      */
     public static function validate_embed_auth_token($token, $secret) {
         $timefactor = self::get_time_factor();
-        // Splitting into two halves and allowing both allows for fractions roundup in the time factor
+        // Splitting into two halves and allowing both allows for fractions roundup in the time factor.
         list($generatedtoken) = self::create_embed_auth_token($secret, $timefactor);
         list($generatedtoken2) = self::create_embed_auth_token($secret, $timefactor - 1);
         return $token === $generatedtoken || $token === $generatedtoken2;
@@ -102,7 +102,7 @@ class mobile_auth {
 
         $isvalid = self::validate_embed_auth_token($auth->secret, $secret);
 
-        // Cleanup user's token when used
+        // Cleanup user's token when used.
         if ($isvalid) {
             $DB->delete_records('hvp_auth', array(
                 'user_id' => $userid

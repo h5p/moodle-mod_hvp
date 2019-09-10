@@ -466,6 +466,19 @@ class framework implements \H5PFrameworkInterface {
                 'Reuse Content' => 'reuseContent',
                 'Reuse this content.' => 'reuseDescription',
                 'Content is copied to the clipboard' => 'contentCopied',
+                'Connection lost. Results will be stored and sent when you regain connection.' => 'connectionLost',
+                'Connection reestablished.' => 'connectionReestablished',
+                'Attempting to submit stored results.' => 'resubmitScores',
+                'Your connection to the server was lost' => 'offlineDialogHeader',
+                'We were unable to send information about your completion of this task. Please check your internet connection.' => 'offlineDialogBody',
+                'Retrying in :num....' => 'offlineDialogRetryMessage',
+                'Retry now' => 'offlineDialogRetryButtonLabel',
+                'Successfully submitted results.' => 'offlineSuccessfulSubmit',
+                'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)' => 'fileExceedsMaxSize',
+                'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)' => 'unpackedFilesExceedsMaxSize',
+                'Unable to read file from the package: %fileName' => 'couldNotReadFileFromZip',
+                'Unable to parse JSON from the package: %fileName' => 'couldNotParseJSONFromZip',
+                'Could not parse post data.' => 'couldNotParsePostData'
             ];
             // @codingStandardsIgnoreEnd
         }
@@ -1332,12 +1345,26 @@ class framework implements \H5PFrameworkInterface {
 
     /**
      * Implements clearFilteredParameters().
+     *
+     * @param array $libraryids array of library ids
+     *
+     * @throws \dml_exception
+     * @throws \coding_exception
      */
     // @codingStandardsIgnoreLine
-    public function clearFilteredParameters($libraryid) {
+    public function clearFilteredParameters($libraryids) {
         global $DB;
+        if (empty($libraryids)) {
+            return;
+        }
 
-        $DB->execute("UPDATE {hvp} SET filtered = null WHERE main_library_id = ?", array($libraryid));
+        list($insql, $inparams) = $DB->get_in_or_equal($libraryids);
+        $DB->execute("
+            UPDATE {hvp}
+            SET filtered = null
+            WHERE main_library_id $insql",
+            $inparams
+        );
     }
 
     /**
@@ -1571,7 +1598,7 @@ class framework implements \H5PFrameworkInterface {
                     AND l2.machine_name IS NULL");
 
         // NOTE: These are treated as library objects but are missing the following properties:
-        // title, embed_types, drop_library_css, fullscreen, runnable, semantics, has_icon
+        // title, embed_types, drop_library_css, fullscreen, runnable, semantics, has_icon.
 
         // Extract num from records.
         foreach ($records as $addon) {
