@@ -60,7 +60,7 @@ if ($hvp === false) {
 $pageurl = new moodle_url('/mod/hvp/review.php', [
     'id' => $hvp->id,
 ]);
-$basepath = \mod_hvp\view_assets::getSiteRoot();
+$basepath = \mod_hvp\view_assets::getsiteroot();
 $PAGE->set_url($pageurl);
 $PAGE->set_title($hvp->title);
 $PAGE->set_heading($COURSE->fullname);

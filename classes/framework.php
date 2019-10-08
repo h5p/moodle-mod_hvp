@@ -58,7 +58,7 @@ class framework implements \H5PFrameworkInterface {
             $fs = new \mod_hvp\file_storage();
 
             $context = \context_system::instance();
-            $root = view_assets::getSiteRoot();
+            $root = view_assets::getsiteroot();
             $url = "{$root}/pluginfile.php/{$context->id}/mod_hvp";
 
             $language = self::get_language();
@@ -504,7 +504,7 @@ class framework implements \H5PFrameworkInterface {
     // @codingStandardsIgnoreLine
     public function getLibraryFileUrl($libraryfoldername, $fileName) {
         $context  = \context_system::instance();
-        $basepath = view_assets::getSiteRoot() . '/';
+        $basepath = view_assets::getsiteroot() . '/';
         return "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/{$fileName}";
     }
 

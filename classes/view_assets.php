@@ -65,7 +65,7 @@ class view_assets {
 
         // Add JavaScript settings for this content.
         $cid                                  = 'cid-' . $this->content['id'];
-        $root = self::getSiteRoot();
+        $root = self::getsiteroot();
         $this->settings['contents'][ $cid ]   = array(
             'library'         => \H5PCore::libraryToString($this->content['library']),
             'jsonContent'     => $this->getfilteredparameters(),
@@ -152,7 +152,7 @@ class view_assets {
             return '';
         }
 
-        $root = self::getSiteRoot();
+        $root = self::getsiteroot();
         $embedurl = new \moodle_url("{$root}/mod/hvp/embed.php?id={$this->cm->id}");
 
         return "<iframe src=\"{$embedurl->out()}\" width=\":w\" height=\":h\" frameborder=\"0\" " .
@@ -171,7 +171,7 @@ class view_assets {
             return '';
         }
 
-        $resizeurl = new \moodle_url(self::getSiteRoot() . '/mod/hvp/library/js/h5p-resizer.js');
+        $resizeurl = new \moodle_url(self::getsiteroot() . '/mod/hvp/library/js/h5p-resizer.js');
 
         return "<script src=\"{$resizeurl->out()}\" charset=\"UTF-8\"></script>";
     }
@@ -213,7 +213,7 @@ class view_assets {
                     $url = $hvppath . $url;
                 }
                 $this->settings['loadedJs'][] = $url;
-                $this->jsrequires[]           = new \moodle_url($isexternal ? $url : self::getSiteRoot() . $url);
+                $this->jsrequires[]           = new \moodle_url($isexternal ? $url : self::getsiteroot() . $url);
             }
 
             // Schedule stylesheets for loading through Moodle.
@@ -226,7 +226,7 @@ class view_assets {
                     $url = $hvppath . $url;
                 }
                 $this->settings['loadedCss'][] = $url;
-                $this->cssrequires[]           = new \moodle_url($isexternal ? $url : self::getSiteRoot() . $url);
+                $this->cssrequires[]           = new \moodle_url($isexternal ? $url : self::getsiteroot() . $url);
             }
         } else {
             // JavaScripts and stylesheets will be loaded through h5p.js.
@@ -300,7 +300,7 @@ class view_assets {
         $PAGE->requires->data_for_js('H5PIntegration', $this->settings, true);
 
         // Add xAPI collector script.
-        $PAGE->requires->js(new \moodle_url(self::getSiteRoot() . '/mod/hvp/xapi-collector.js'), true);
+        $PAGE->requires->js(new \moodle_url(self::getsiteroot() . '/mod/hvp/xapi-collector.js'), true);
     }
 
     /**
@@ -337,7 +337,7 @@ class view_assets {
      *
      * @return string Root address for the site
      */
-    public static function getSiteRoot() {
+    public static function getsiteroot() {
         global $CFG;
         // In Moodle 3.4 version wwwroot is always the same as httpswwwroot
         if ($CFG->version < 2017111300) {
