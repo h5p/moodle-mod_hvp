@@ -58,7 +58,8 @@ class framework implements \H5PFrameworkInterface {
             $fs = new \mod_hvp\file_storage();
 
             $context = \context_system::instance();
-            $url = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp";
+            $root = view_assets::getSiteRoot();
+            $url = "{$root}/pluginfile.php/{$context->id}/mod_hvp";
 
             $language = self::get_language();
 
@@ -478,7 +479,8 @@ class framework implements \H5PFrameworkInterface {
                 'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)' => 'unpackedfilesexceedsmaxsize',
                 'Unable to read file from the package: %fileName' => 'couldnotreadfilefromzip',
                 'Unable to parse JSON from the package: %fileName' => 'couldnotparsejsonfromzip',
-                'Could not parse post data.' => 'couldnotparsepostdata'
+                'Could not parse post data.' => 'couldnotparsepostdata',
+                'The mbstring PHP extension is not loaded. H5P needs this to function properly' => 'nombstringexteension',
             ];
             // @codingStandardsIgnoreEnd
         }
@@ -501,9 +503,8 @@ class framework implements \H5PFrameworkInterface {
      */
     // @codingStandardsIgnoreLine
     public function getLibraryFileUrl($libraryfoldername, $fileName) {
-        global $CFG;
         $context  = \context_system::instance();
-        $basepath = $CFG->httpswwwroot . '/';
+        $basepath = view_assets::getSiteRoot() . '/';
         return "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/{$fileName}";
     }
 

@@ -448,3 +448,4 @@ $string['unpackedfilesexceedsmaxsize'] = 'The total size of the unpacked files e
 $string['couldnotreadfilefromzip'] = 'Unable to read file from the package: %fileName';
 $string['couldnotparsejsonfromzip'] = 'Unable to parse JSON from the package: %fileName';
 $string['couldnotparsepostdata'] = 'Could not parse post data.';
+$string['nombstringexteension'] = 'The mbstring PHP extension is not loaded. H5P needs this to function properly';
