@@ -485,6 +485,13 @@ class framework implements \H5PFrameworkInterface {
             // @codingStandardsIgnoreEnd
         }
 
+        // Some strings such as error messages are not translatable, in this case use message
+        // directly instead of crashing
+        // @see https://github.com/h5p/h5p-php-library/commit/2bd972168e7b22aaeea2dd13682ced9cf8233452#diff-5ca86cd0514d58be6708beff914aba66R1296
+        if (!isset($translationsmap[$message])) {
+            return $message;
+        }
+
         return get_string($translationsmap[$message], 'hvp', $replacements);
     }
 
