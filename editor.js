@@ -27,6 +27,11 @@
       ? H5PIntegration.editor.formId
       : 'mform1';
 
+    // Cancel validation and submission of form if clicking cancel button
+    const cancelSubmitCallback = function ($button) {
+      return $button.is('[name="cancel"]');
+    };
+
     H5PEditor.init(
       $('#' + mformId),
       $('input[name="h5paction"]'),
@@ -36,7 +41,8 @@
       $('input[name="h5plibrary"]'),
       $('input[name="h5pparams"]'),
       $('input[name="h5pmaxscore"]'),
-      $('input[name="name"]')
+      $('input[name="name"]'),
+      cancelSubmitCallback,
     );
   }
 

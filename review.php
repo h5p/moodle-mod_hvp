@@ -60,10 +60,11 @@ if ($hvp === false) {
 $pageurl = new moodle_url('/mod/hvp/review.php', [
     'id' => $hvp->id,
 ]);
+$basepath = \mod_hvp\view_assets::getsiteroot();
 $PAGE->set_url($pageurl);
 $PAGE->set_title($hvp->title);
 $PAGE->set_heading($COURSE->fullname);
-$PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/xapi-custom-report.css'));
+$PAGE->requires->css(new moodle_url($basepath . '/mod/hvp/xapi-custom-report.css'));
 
 // We have to get grades from gradebook as well.
 $xapiresults = $DB->get_records_sql("
@@ -145,16 +146,15 @@ $reporthtml = $reporter->generateReport($basequestion, null, count($xapiresults)
 $styles     = $reporter->getStylesUsed();
 $scripts    = $reporter->getScriptsUsed();
 foreach ($styles as $style) {
-    $PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $style));
+    $PAGE->requires->css(new moodle_url($basepath . '/mod/hvp/reporting/' . $style));
 }
 foreach ($scripts as $script) {
-    $PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/reporting/' . $script));
+    $PAGE->requires->js(new moodle_url($basepath . '/mod/hvp/reporting/' . $script));
 }
 
-$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/jquery.js'), true);
+$PAGE->requires->js(new moodle_url($basepath . '/mod/hvp/library/js/jquery.js'), true);
 
 // Send the enpoints necessary for dynamic grading to the view.
-$basepath = $CFG->httpswwwroot;
 $setsubcontentendpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" .
     \H5PCore::createToken('result') . '&action=updatesubcontentscore';
 $getsubcontentendpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" .

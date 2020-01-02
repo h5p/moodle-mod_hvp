@@ -428,23 +428,24 @@ $string['privacy:metadata:hvp_xapi_results:max_score'] = 'Max achievable score f
 
 // Reuse.
 $string['reuse'] = 'Reuse';
-$string['reuseContent'] = 'Reuse Content';
-$string['reuseDescription'] = 'Reuse this content.';
-$string['contentCopied'] = 'Content is copied to the clipboard';
+$string['reusecontent'] = 'Reuse Content';
+$string['reusedescription'] = 'Reuse this content.';
+$string['contentcopied'] = 'Content is copied to the clipboard';
 
 // Offline
-$string['connectionLost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
-$string['connectionReestablished'] = 'Connection reestablished.';
-$string['resubmitScores'] = 'Attempting to submit stored results.';
-$string['offlineDialogHeader'] = 'Your connection to the server was lost';
-$string['offlineDialogBody'] = 'We were unable to send information about your completion of this task. Please check your internet connection.';
-$string['offlineDialogRetryMessage'] = 'Retrying in :num....';
-$string['offlineDialogRetryButtonLabel'] = 'Retry now';
-$string['offlineSuccessfulSubmit'] = 'Successfully submitted results.';
+$string['connectionlost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
+$string['connectionreestablished'] = 'Connection reestablished.';
+$string['resubmitscores'] = 'Attempting to submit stored results.';
+$string['offlinedialogheader'] = 'Your connection to the server was lost';
+$string['offlinedialogbody'] = 'We were unable to send information about your completion of this task. Please check your internet connection.';
+$string['offlinedialogretrymessage'] = 'Retrying in :num....';
+$string['offlinedialogretrybuttonlabel'] = 'Retry now';
+$string['offlinesuccessfulsubmit'] = 'Successfully submitted results.';
 
 // Error messages.
-$string['fileExceedsMaxSize'] = 'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)';
-$string['unpackedFilesExceedsMaxSize'] = 'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)';
-$string['couldNotReadFileFromZip'] = 'Unable to read file from the package: %fileName';
-$string['couldNotParseJSONFromZip'] = 'Unable to parse JSON from the package: %fileName';
-$string['couldNotParsePostData'] = 'Could not parse post data.';
+$string['fileexceedsmaxsize'] = 'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)';
+$string['unpackedfilesexceedsmaxsize'] = 'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)';
+$string['couldnotreadfilefromzip'] = 'Unable to read file from the package: %fileName';
+$string['couldnotparsejsonfromzip'] = 'Unable to parse JSON from the package: %fileName';
+$string['couldnotparsepostdata'] = 'Could not parse post data.';
+$string['nombstringexteension'] = 'The mbstring PHP extension is not loaded. H5P needs this to function properly';

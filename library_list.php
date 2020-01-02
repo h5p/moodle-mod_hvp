@@ -114,7 +114,7 @@ $settings['libraryList']['listHeaders'] = array(
 );
 
 // Add js.
-$liburl = $CFG->httpswwwroot . '/mod/hvp/library/';
+$liburl = \mod_hvp\view_assets::getsiteroot() . '/mod/hvp/library/';
 
 hvp_admin_add_generic_css_and_js($PAGE, $liburl, $settings);
 $PAGE->requires->js(new moodle_url($liburl . 'js/h5p-library-list.js' . hvp_get_cache_buster()), true);
