@@ -23,6 +23,9 @@
  * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use core\message\message;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once('autoloader.php');
@@ -458,4 +461,193 @@ function hvp_require_view_results_permission($userid, $context, $redirectcontent
             require_capability('mod/hvp:viewallresults', $context);
         }
     }
+}
+
+/**
+ * Sends notification messages to the interested parties that assign the role capability
+ *
+ * @param object $recipient user object of the intended recipient
+ * @param $submitter
+ * @param object $a associative array of replaceable fields for the templates
+ *
+ * @return int|false as for {@link message_send()}.
+ * @throws coding_exception
+ */
+function hvp_send_notification($recipient, $submitter, $a) {
+    // Recipient info for template.
+    $a->useridnumber = $recipient->id;
+    $a->username     = fullname($recipient);
+    $a->userusername = $recipient->username;
+
+    // Prepare the message.
+    $message                    = new message();
+    $message->component         = 'mod_hvp';
+    $message->name              = 'submission';
+    $message->userfrom          = $submitter;
+    $message->userto            = $recipient;
+    $message->subject           = get_string('emailnotifysubject', 'hvp', $a);
+    $message->fullmessage       = get_string('emailnotifybody', 'hvp', $a);
+    $message->fullmessageformat = FORMAT_PLAIN;
+    $message->fullmessagehtml   = '';
+    $message->smallmessage      = get_string('emailnotifysmall', 'hvp', $a);
+    $message->courseid          = $a->courseid;
+
+    $message->contexturl     = $a->hvpreporturl;
+    $message->contexturlname = $a->hvpname;
+
+    return message_send($message);
+}
+
+/**
+ * Sends a confirmation message to the student confirming that the attempt was processed.
+ *
+ * @param object $a useful information that can be used in the message
+ *      subject and body.
+ *
+ * @return int|false as for {@link message_send()}.
+ * @throws coding_exception
+ */
+function hvp_send_confirmation($recipient, $a) {
+    // Add information about the recipient to $a.
+    $a->username     = fullname($recipient);
+    $a->userusername = $recipient->username;
+
+    // Prepare the message.
+    $eventdata               = new \core\message\message();
+    $eventdata->courseid     = $a->courseid;
+    $eventdata->component    = 'mod_hvp';
+    $eventdata->name         = 'confirmation';
+    $eventdata->notification = 1;
+
+    $eventdata->userfrom          = core_user::get_noreply_user();
+    $eventdata->userto            = $recipient;
+    $eventdata->subject           = get_string('emailconfirmsubject', 'hvp', $a);
+    $eventdata->fullmessage       = get_string('emailconfirmbody', 'hvp', $a);
+    $eventdata->fullmessageformat = FORMAT_PLAIN;
+    $eventdata->fullmessagehtml   = '';
+
+    $eventdata->smallmessage   = get_string('emailconfirmsmall', 'hvp', $a);
+    $eventdata->contexturl     = $a->hvpurl;
+    $eventdata->contexturlname = $a->hvpname;
+
+    return message_send($eventdata);
+}
+
+/**
+ * Send all the required messages when a h5p attempt is submitted.
+ *
+ * @param object $course the course
+ * @param object $hvp the h5p
+ * @param object $attempt this attempt just finished
+ * @param context $context the h5p context
+ * @param object $cm the coursemodule for this h5p
+ *
+ * @return bool true if all necessary messages were sent successfully, else false.
+ * @throws coding_exception
+ * @throws dml_exception
+ */
+function hvp_send_notification_messages($course, $hvp, $attempt, $context, $cm) {
+    global $CFG, $DB;
+
+    // Do nothing if required objects not present.
+    if (empty($course) or empty($hvp) or empty($attempt) or empty($context)) {
+        throw new coding_exception('$course, $hvp, $attempt, $context and $cm must all be set.');
+    }
+
+    $submitter = $DB->get_record('user', array('id' => $attempt->userid), '*', MUST_EXIST);
+
+    // Check for confirmation required.
+    $sendconfirm        = false;
+    $notifyexcludeusers = '';
+    if (has_capability('mod/hvp:emailconfirmsubmission', $context, $submitter, false)) {
+        $notifyexcludeusers = $submitter->id;
+        $sendconfirm        = true;
+    }
+
+    // Check for notifications required.
+    $notifyfields = 'u.id, u.username, u.idnumber, u.email, u.emailstop, u.lang,
+            u.timezone, u.mailformat, u.maildisplay, u.auth, u.suspended, u.deleted, ';
+    $notifyfields .= get_all_user_name_fields(true, 'u');
+    $groups       = groups_get_all_groups($course->id, $submitter->id, $cm->groupingid);
+    if (is_array($groups) && count($groups) > 0) {
+        $groups = array_keys($groups);
+    } else if (groups_get_activity_groupmode($cm, $course) != NOGROUPS) {
+        // If the user is not in a group, and the hvp is set to group mode,
+        // then set $groups to a non-existant id so that only users with
+        // 'moodle/site:accessallgroups' get notified.
+        $groups = - 1;
+    } else {
+        $groups = '';
+    }
+    $userstonotify = get_users_by_capability($context, 'mod/hvp:emailnotifysubmission',
+        $notifyfields, '', '', '', $groups, $notifyexcludeusers, false, false, true);
+
+    if (empty($userstonotify) && !$sendconfirm) {
+        return true; // Nothing to do.
+    }
+
+    $a = new stdClass();
+    // Course info.
+    $a->courseid        = $course->id;
+    $a->coursename      = $course->fullname;
+    $a->courseshortname = $course->shortname;
+
+    // H5P info.
+    $a->hvpname       = $hvp->name;
+    $report           = "{$CFG->wwwroot}/mod/hvp/review.php?id={$hvp->id}&course={$course->id}&user={$submitter->id}";
+    $a->hvpreporturl  = $report;
+    $a->hvpreportlink = '<a href="' . $a->hvpreporturl . '">' .
+                        format_string($hvp->name, true, ['context' => $context]) . ' report</a>';
+    $a->hvpurl        = $CFG->wwwroot . '/mod/hvp/view.php?id=' . $cm->id;
+    $a->hvplink       = '<a href="' . $a->hvpurl . '">' .
+                        format_string($hvp->name, true, ['context' => $context]) . '</a>';
+    $a->hvpid         = $hvp->id;
+    $a->hvpcmid       = $cm->id;
+
+    // Student who sat the hvp info.
+    $a->studentidnumber = $submitter->id;
+    $a->studentname     = fullname($submitter);
+    $a->studentusername = $submitter->username;
+
+    $allok = true;
+
+    // Send notifications if required.
+    if (!empty($userstonotify)) {
+        foreach ($userstonotify as $recipient) {
+            $allok = $allok && hvp_send_notification($recipient, $submitter, $a);
+        }
+    }
+
+    // Send confirmation if required. We send the student confirmation last, so
+    // that if message sending is being intermittently buggy, which means we send
+    // some but not all messages, and then try again later, then teachers may get
+    // duplicate messages, but the student will always get exactly one.
+    if ($sendconfirm) {
+        $allok = $allok && hvp_send_confirmation($submitter, $a);
+    }
+
+    return $allok;
+}
+
+/**
+ * Callback for the attempt_submitted event.
+ * Sends out notification messages.
+ *
+ * @param $event
+ *
+ * @throws coding_exception
+ * @throws dml_exception
+ */
+function hvp_attempt_submitted_handler($event) {
+    global $DB, $PAGE;
+    $course  = $DB->get_record('course', array('id' => $event->courseid));
+    $cm      = get_coursemodule_from_id('hvp', $event->get_context()->instanceid, $event->courseid);
+    $hvp     = $DB->get_record('hvp', array('id' => $cm->instance));
+    $attempt = (object) [
+        'userid' => $event->userid
+    ];
+    $context = context_module::instance($cm->id);
+    $PAGE->set_context($context);
+
+    hvp_send_notification_messages($course, $hvp, $attempt, $context, $cm);
 }

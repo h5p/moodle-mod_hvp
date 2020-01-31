@@ -225,6 +225,8 @@ $string['hvp:userestrictedlibraries'] = 'Use restricted H5P content types';
 $string['hvp:updatelibraries'] = 'Install new H5P content types or update existing ones';
 $string['hvp:getcachedassets'] = 'Required for viewing H5P activities';
 $string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
+$string['hvp:emailconfirmsubmission'] = 'Get a confirmation message when submitting';
+$string['hvp:emailnotifysubmission'] = 'Get a notification message when an attempt is submitted';
 
 // Capabilities error messages.
 $string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
@@ -449,3 +451,23 @@ $string['couldnotreadfilefromzip'] = 'Unable to read file from the package: %fil
 $string['couldnotparsejsonfromzip'] = 'Unable to parse JSON from the package: %fileName';
 $string['couldnotparsepostdata'] = 'Could not parse post data.';
 $string['nombstringexteension'] = 'The mbstring PHP extension is not loaded. H5P needs this to function properly';
+
+// Messaging api
+$string['messageprovider:confirmation'] = 'Confirmation of your own H5P submissions';
+$string['messageprovider:submission'] = 'Notification of H5P submissions';
+$string['emailnotifysubject'] = '{$a->studentname} has completed {$a->hvpname}';
+$string['emailnotifybody'] = 'Hi {$a->username},
+
+{$a->studentname} has completed \'{$a->hvpname}\' ({$a->hvpurl}) in course \'{$a->coursename}\'.
+
+You can review this attempt at {$a->hvpreporturl}.';
+$string['emailnotifysmall'] = '{$a->studentname} has completed {$a->hvpname}. See {$a->hvpreporturl}';
+$string['emailconfirmbody'] = 'Hi {$a->username},
+
+Thank you for submitting your answers to \'{$a->hvpname}\' in course \'{$a->coursename}\'.
+
+This message confirms that your answers have been saved.
+
+You can access this H5P at {$a->hvpurl}.';
+$string['emailconfirmsmall'] = 'Thank you for submitting your answers to \'{$a->hvpname}\'';
+$string['emailconfirmsubject'] = 'Submission confirmation: {$a->hvpname}';
