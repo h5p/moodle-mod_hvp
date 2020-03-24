@@ -430,9 +430,9 @@ $string['privacy:metadata:hvp_xapi_results:max_score'] = 'Max achievable score f
 
 // Reuse.
 $string['reuse'] = 'Reuse';
-$string['reusecontent'] = 'Reuse Content';
-$string['reusedescription'] = 'Reuse this content.';
-$string['contentcopied'] = 'Content is copied to the clipboard';
+$string['reusecontent1'] = 'Reuse Content';
+$string['reusedescription1'] = 'Reuse this content.';
+$string['contentcopied1'] = 'Content is copied to the clipboard';
 
 // Offline
 $string['connectionlost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
