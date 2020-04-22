@@ -482,6 +482,31 @@ function hvp_upgrade_2019030700() {
 }
 
 /**
+ * Update uppercase language strings with lowercase in the table tool_customlang
+ *
+ * @throws ddl_exception
+ */
+function hvp_upgrade_2020042200() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = 'tool_customlang';
+    $select = 'stringid = :stringid';
+
+    $reusecontentrecord = $DB->get_record($table, ['stringid' => 'reuseContent']);
+    $reusecontentrecord->stringid = 'reusecontent';
+    $DB->update_record($table, $reusecontentrecord);
+
+    $reusedescriptionrecord = $DB->get_record($table, ['stringid' => 'reuseDescription']);
+    $reusedescriptionrecord->stringid = 'reusedescription';
+    $DB->update_record($table, $reusedescriptionrecord);
+
+    $contentcopiedrecord = $DB->get_record($table, ['stringid' => 'contentCopied']);
+    $contentcopiedrecord->stringid = 'contentcopied';
+    $DB->update_record($table, $contentcopiedrecord);
+}
+
+/**
  * Hvp module upgrade function.
  *
  * @param string $oldversion The version we are upgrading from
@@ -501,7 +526,8 @@ function xmldb_hvp_upgrade($oldversion) {
         2017060900,
         2018090300,
         2019022600,
-        2019030700
+        2019030700,
+        2020042200,
     ];
 
     foreach ($upgrades as $version) {
