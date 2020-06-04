@@ -15,17 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    mod
- * @subpackage hvp
- * @copyright  2016 Joubel AS <contact@joubel.com>
+ * Attempt submitted event
+ *
+ * @package    mod_hvp
+ * @copyright  2020 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_hvp\event;
+
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2020020500;
-$plugin->requires  = 2013051403;
-$plugin->cron      = 0;
-$plugin->component = 'mod_hvp';
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.20.2';
+/**
+ * The mod_hvp instance list viewed event class.
+ *
+ * @package    mod_hvp
+ * @copyright  @copyright  2016 Joubel AS <contact@joubel.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class attempt_submitted extends \core\event\base
+{
+
+    /**
+     * @inheritDoc
+     */
+    protected function init() {
+        $this->data['crud'] = 'u';
+        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
+    }
+}

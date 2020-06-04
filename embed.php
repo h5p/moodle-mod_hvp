@@ -53,7 +53,8 @@ try {
     require_course_login($course, true, $cm, true, true);
 } catch (Exception $e) {
     $PAGE->set_pagelayout('embedded');
-    $embedfailedsvg = new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/library/images/h5p.svg");
+    $root = \mod_hvp\view_assets::getsiteroot();
+    $embedfailedsvg = new \moodle_url("{$root}/mod/hvp/library/images/h5p.svg");
     echo '<body style="margin:0">' .
          '<div style="background: #fafafa ' .
          'url(' . $embedfailedsvg->out() . ') no-repeat center;' .
@@ -83,8 +84,9 @@ $PAGE->set_heading($course->fullname);
 // Embed specific page setup.
 $PAGE->add_body_class('h5p-embed');
 $PAGE->set_pagelayout('embedded');
-$PAGE->requires->css(new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/embed.css"));
-$PAGE->requires->js(new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/embed.js"));
+$root = \mod_hvp\view_assets::getsiteroot();
+$PAGE->requires->css(new \moodle_url("{$root}/mod/hvp/embed.css"));
+$PAGE->requires->js(new \moodle_url("{$root}/mod/hvp/embed.js"));
 
 // Add H5P assets to page.
 $view->addassetstopage();

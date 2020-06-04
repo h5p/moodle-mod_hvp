@@ -173,4 +173,18 @@ $capabilities = array(
         )
     ),
 
+    // Receive a confirmation message of own h5p submission.
+    'mod/hvp:emailconfirmsubmission' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array()
+    ),
+
+    // Receive a notification message of other peoples' h5p submissions.
+    'mod/hvp:emailnotifysubmission' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array()
+    ),
+
 );
