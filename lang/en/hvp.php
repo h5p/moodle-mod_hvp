@@ -225,6 +225,8 @@ $string['hvp:userestrictedlibraries'] = 'Use restricted H5P content types';
 $string['hvp:updatelibraries'] = 'Install new H5P content types or update existing ones';
 $string['hvp:getcachedassets'] = 'Required for viewing H5P activities';
 $string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
+$string['hvp:emailconfirmsubmission'] = 'Get a confirmation message when submitting';
+$string['hvp:emailnotifysubmission'] = 'Get a notification message when an attempt is submitted';
 
 // Capabilities error messages.
 $string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
@@ -428,23 +430,44 @@ $string['privacy:metadata:hvp_xapi_results:max_score'] = 'Max achievable score f
 
 // Reuse.
 $string['reuse'] = 'Reuse';
-$string['reuseContent'] = 'Reuse Content';
-$string['reuseDescription'] = 'Reuse this content.';
-$string['contentCopied'] = 'Content is copied to the clipboard';
+$string['reusecontent'] = 'Reuse Content';
+$string['reusedescription'] = 'Reuse this content.';
+$string['contentcopied'] = 'Content is copied to the clipboard';
 
 // Offline
-$string['connectionLost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
-$string['connectionReestablished'] = 'Connection reestablished.';
-$string['resubmitScores'] = 'Attempting to submit stored results.';
-$string['offlineDialogHeader'] = 'Your connection to the server was lost';
-$string['offlineDialogBody'] = 'We were unable to send information about your completion of this task. Please check your internet connection.';
-$string['offlineDialogRetryMessage'] = 'Retrying in :num....';
-$string['offlineDialogRetryButtonLabel'] = 'Retry now';
-$string['offlineSuccessfulSubmit'] = 'Successfully submitted results.';
+$string['connectionlost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
+$string['connectionreestablished'] = 'Connection reestablished.';
+$string['resubmitscores'] = 'Attempting to submit stored results.';
+$string['offlinedialogheader'] = 'Your connection to the server was lost';
+$string['offlinedialogbody'] = 'We were unable to send information about your completion of this task. Please check your internet connection.';
+$string['offlinedialogretrymessage'] = 'Retrying in :num....';
+$string['offlinedialogretrybuttonlabel'] = 'Retry now';
+$string['offlinesuccessfulsubmit'] = 'Successfully submitted results.';
 
 // Error messages.
-$string['fileExceedsMaxSize'] = 'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)';
-$string['unpackedFilesExceedsMaxSize'] = 'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)';
-$string['couldNotReadFileFromZip'] = 'Unable to read file from the package: %fileName';
-$string['couldNotParseJSONFromZip'] = 'Unable to parse JSON from the package: %fileName';
-$string['couldNotParsePostData'] = 'Could not parse post data.';
+$string['fileexceedsmaxsize'] = 'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)';
+$string['unpackedfilesexceedsmaxsize'] = 'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)';
+$string['couldnotreadfilefromzip'] = 'Unable to read file from the package: %fileName';
+$string['couldnotparsejsonfromzip'] = 'Unable to parse JSON from the package: %fileName';
+$string['couldnotparsepostdata'] = 'Could not parse post data.';
+$string['nombstringexteension'] = 'The mbstring PHP extension is not loaded. H5P needs this to function properly';
+
+// Messaging api
+$string['messageprovider:confirmation'] = 'Confirmation of your own H5P submissions';
+$string['messageprovider:submission'] = 'Notification of H5P submissions';
+$string['emailnotifysubject'] = '{$a->studentname} has completed {$a->hvpname}';
+$string['emailnotifybody'] = 'Hi {$a->username},
+
+{$a->studentname} has completed \'{$a->hvpname}\' ({$a->hvpurl}) in course \'{$a->coursename}\'.
+
+You can review this attempt at {$a->hvpreporturl}.';
+$string['emailnotifysmall'] = '{$a->studentname} has completed {$a->hvpname}. See {$a->hvpreporturl}';
+$string['emailconfirmbody'] = 'Hi {$a->username},
+
+Thank you for submitting your answers to \'{$a->hvpname}\' in course \'{$a->coursename}\'.
+
+This message confirms that your answers have been saved.
+
+You can access this H5P at {$a->hvpurl}.';
+$string['emailconfirmsmall'] = 'Thank you for submitting your answers to \'{$a->hvpname}\'';
+$string['emailconfirmsubject'] = 'Submission confirmation: {$a->hvpname}';

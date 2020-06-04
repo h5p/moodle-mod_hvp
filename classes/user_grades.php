@@ -96,6 +96,12 @@ class user_grades {
                 $content->name, $content->major_version . '.' . $content->minor_version
         );
 
+        // Trigger Moodle event for async notification messages
+        $event = \mod_hvp\event\attempt_submitted::create([
+            'context' => $context,
+        ]);
+        $event->trigger();
+
         \H5PCore::ajaxSuccess();
     }
 

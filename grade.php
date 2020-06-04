@@ -86,17 +86,18 @@ $PAGE->set_heading($course->fullname);
 $dataviewid = 'h5p-results';
 
 // Add required assets for data views.
-$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/jquery.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/h5p-utils.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/h5p-data-view.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/dataviews.js'), true);
-$PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/styles.css'));
+$root = \mod_hvp\view_assets::getsiteroot();
+$PAGE->requires->js(new moodle_url($root . '/mod/hvp/library/js/jquery.js'), true);
+$PAGE->requires->js(new moodle_url($root . '/mod/hvp/library/js/h5p-utils.js'), true);
+$PAGE->requires->js(new moodle_url($root . '/mod/hvp/library/js/h5p-data-view.js'), true);
+$PAGE->requires->js(new moodle_url($root . '/mod/hvp/dataviews.js'), true);
+$PAGE->requires->css(new moodle_url($root . '/mod/hvp/styles.css'));
 
 // Add JavaScript settings to data views.
 $settings = array(
     'dataViews' => array(
         "{$dataviewid}" => array(
-            'source' => "{$CFG->httpswwwroot}/mod/hvp/ajax.php?action=results&content_id={$hvp->id}",
+            'source' => "{$root}/mod/hvp/ajax.php?action=results&content_id={$hvp->id}",
             'headers' => array(
                 (object) array(
                     'text' => get_string('user', 'hvp'),

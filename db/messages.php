@@ -15,17 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    mod
- * @subpackage hvp
- * @copyright  2016 Joubel AS <contact@joubel.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Defines message providers (types of message sent) for the hvp module.
+ *
+ * @package   mod_hvp
+ * @copyright 2020 Joubel AS <contact@joubel.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2020020500;
-$plugin->requires  = 2013051403;
-$plugin->cron      = 0;
-$plugin->component = 'mod_hvp';
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.20.2';
+$messageproviders = array(
+    // Notify teacher that a student has submitted an attempt.
+    'submission' => array(
+        'capability' => 'mod/hvp:emailnotifysubmission'
+    ),
+
+    // Confirm a student's quiz attempt.
+    'confirmation' => array(
+        'capability' => 'mod/hvp:emailconfirmsubmission',
+        'defaults' => array(
+            'airnotifier' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+        ),
+    ),
+);
