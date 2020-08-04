@@ -68,7 +68,8 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
             'timecreated',
             'timemodified',
             'authors',
-            'license'
+            'license',
+            'completionpass'
         ));
 
         // User data.
@@ -114,7 +115,8 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
                  h.changes,
                  h.license_extras,
                  h.author_comments,
-                 h.license
+                 h.license,
+                 h.completionpass
           FROM {hvp} h
               JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
               WHERE h.id = ?', array(backup::VAR_ACTIVITYID));
