@@ -55,7 +55,14 @@ class framework implements \H5PFrameworkInterface {
         if (!isset($interface)) {
             $interface = new \mod_hvp\framework();
 
-            $fs = new \mod_hvp\file_storage();
+            // Support alternate file storage class defined in $CFG
+            if (!empty($CFG->mod_hvp_file_storage_class)) {
+                $fsclass = $CFG->mod_hvp_file_storage_class;
+            } else {
+                $fsclass = '\mod_hvp\file_storage';
+            }
+
+            $fs = new $fsclass();
 
             $context = \context_system::instance();
             $root = view_assets::getsiteroot();
