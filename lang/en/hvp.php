@@ -471,3 +471,9 @@ This message confirms that your answers have been saved.
 You can access this H5P at {$a->hvpurl}.';
 $string['emailconfirmsmall'] = 'Thank you for submitting your answers to \'{$a->hvpname}\'';
 $string['emailconfirmsubject'] = 'Submission confirmation: {$a->hvpname}';
+
+$string['completionpass'] = 'Require passing grade';
+$string['completionpassdesc'] = 'Student must achieve a passing grade to complete this activity';
+$string['completionpass_help'] = 'If enabled, this activity is considered complete when the student receives a pass grade (as specified in the Grade section of the H5P activity settings) or higher.';
+$string['gradetopassnotset'] = 'This H5P activity does not yet have a grade to pass set. It may be set in the Grade section of the H5P activity settings.';
+$string['gradetopassmustbeset'] = 'Grade to pass cannot be zero as this H5P activity has its completion method set to require passing grade. Please set a non-zero value.';
