@@ -481,7 +481,7 @@ function hvp_upgrade_2019030700() {
     }
 }
 
-function hvp_upgrade_2020080400(){
+function hvp_upgrade_2020080400() {
     global $DB;
     $dbman = $DB->get_manager();
     // Define field completionscorerequired to be added to hvp.

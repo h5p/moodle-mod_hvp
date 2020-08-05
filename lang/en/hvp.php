@@ -434,7 +434,7 @@ $string['reusecontent'] = 'Reuse Content';
 $string['reusedescription'] = 'Reuse this content.';
 $string['contentcopied'] = 'Content is copied to the clipboard';
 
-// Offline
+// Offline.
 $string['connectionlost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
 $string['connectionreestablished'] = 'Connection reestablished.';
 $string['resubmitscores'] = 'Attempting to submit stored results.';
@@ -452,7 +452,7 @@ $string['couldnotparsejsonfromzip'] = 'Unable to parse JSON from the package: %f
 $string['couldnotparsepostdata'] = 'Could not parse post data.';
 $string['nombstringexteension'] = 'The mbstring PHP extension is not loaded. H5P needs this to function properly';
 
-// Messaging api
+// Messaging api.
 $string['messageprovider:confirmation'] = 'Confirmation of your own H5P submissions';
 $string['messageprovider:submission'] = 'Notification of H5P submissions';
 $string['emailnotifysubject'] = '{$a->studentname} has completed {$a->hvpname}';

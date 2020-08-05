@@ -64,7 +64,8 @@ function hvp_get_core_settings($context) {
     $settings = array(
         'baseUrl' => $basepath,
         'url' => "{$basepath}pluginfile.php/{$context->instanceid}/mod_hvp",
-        'urlLibraries' => "{$basepath}pluginfile.php/{$systemcontext->id}/mod_hvp/libraries", // NOTE: Separate context from content URL !
+        // NOTE: Separate context from content URL !
+        'urlLibraries' => "{$basepath}pluginfile.php/{$systemcontext->id}/mod_hvp/libraries",
         'postUserStatistics' => true,
         'ajax' => $ajaxpaths,
         'saveFreq' => $savefreq,

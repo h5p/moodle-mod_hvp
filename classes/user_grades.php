@@ -96,7 +96,7 @@ class user_grades {
         $completion = new \completion_info( $course );
 
         if ( $completion->is_enabled( $cm) ) {
-            $completion->update_state($cm,COMPLETION_COMPLETE);
+            $completion->update_state($cm, COMPLETION_COMPLETE);
         }
 
         // Log results set event.
@@ -106,7 +106,7 @@ class user_grades {
                 $content->name, $content->major_version . '.' . $content->minor_version
         );
 
-        // Trigger Moodle event for async notification messages
+        // Trigger Moodle event for async notification messages.
         $event = \mod_hvp\event\attempt_submitted::create([
             'context' => $context,
         ]);

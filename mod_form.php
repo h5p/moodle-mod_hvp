@@ -393,7 +393,9 @@ class mod_hvp_mod_form extends moodleform_mod {
                 // Fix for legacy content upload to work.
                 // Fetch title from h5p.json or use a default string if not available.
                 $h5pvalidator = \mod_hvp\framework::instance('validator');
-                $data->metadata->title = empty($h5pvalidator->h5pC->mainJsonData['title']) ? 'Uploaded Content' : $h5pvalidator->h5pC->mainJsonData['title'];
+                $data->metadata->title = empty($h5pvalidator->h5pC->mainJsonData['title'])
+                    ? 'Uploaded Content'
+                    : $h5pvalidator->h5pC->mainJsonData['title'];
             }
             $data->name = $data->metadata->title; // Sort of a hack,
             // but there is no JavaScript that sets the value when there is no editor...
@@ -432,17 +434,18 @@ class mod_hvp_mod_form extends moodleform_mod {
         }
         return $data;
     }
-    
+
     public function add_completion_rules() {
-        $mform =& $this->_form;
-        $items = array();
-        $group = array();
+        $mform   =& $this->_form;
+        $items   = array();
+        $group   = array();
         $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'hvp'),
-                array('group' => 'cpass'));
+            array('group' => 'cpass'));
         $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
         $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'hvp'), ' &nbsp; ', false);
         $mform->addHelpButton('completionpassgroup', 'completionpass', 'hvp');
         $items[] = 'completionpassgroup';
+
         return $items;
     }
 }
