@@ -7,6 +7,11 @@ language: php
 addons:
  postgresql: "9.5"
 
+services:
+ - mysql
+ - postgresql
+ - docker
+
 # Cache NPM's and Composer's caches to speed up build times.
 cache:
  directories:
