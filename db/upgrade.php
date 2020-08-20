@@ -495,6 +495,18 @@ function hvp_upgrade_2020080400() {
     }
 }
 
+function hvp_upgrade_2020080401() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    // Changing nullability of field completionpass on table hvp to not null.
+    $table = new xmldb_table('hvp');
+    $field = new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'timemodified');
+
+    // Launch change of nullability for field completionpass.
+    $dbman->change_field_notnull($table, $field);
+}
+
 /**
  * Hvp module upgrade function.
  *
@@ -517,6 +529,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2019022600,
         2019030700,
         2020080400,
+        2020080401,
     ];
 
     foreach ($upgrades as $version) {
