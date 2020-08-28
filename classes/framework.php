@@ -1112,7 +1112,8 @@ class framework implements \H5PFrameworkInterface {
             hc.year_to,
             hc.changes,
             hc.author_comments,
-            hc.default_language
+            hc.default_language,
+            hc.a11y_title
           FROM {hvp} hc
           JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
           WHERE hc.id = ?", array($id)
@@ -1154,7 +1155,8 @@ class framework implements \H5PFrameworkInterface {
             'year_to',
             'changes',
             'author_comments',
-            'default_language'
+            'default_language',
+            'a11y_title'
         ];
 
         $content['metadata'] = \H5PCore::snakeToCamel(

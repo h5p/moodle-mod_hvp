@@ -507,6 +507,19 @@ function hvp_upgrade_2020080401() {
     $dbman->change_field_notnull($table, $field);
 }
 
+function hvp_upgrade_2020082800() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp');
+
+    if (!$dbman->field_exists($table, 'a11y_title')) {
+        $dbman->add_field($table,
+            new xmldb_field('a11y_title', XMLDB_TYPE_CHAR, '255', null, null, null, null)
+        );
+    }
+}
+
 /**
  * Hvp module upgrade function.
  *
@@ -530,6 +543,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2019030700,
         2020080400,
         2020080401,
+        2020082800,
     ];
 
     foreach ($upgrades as $version) {

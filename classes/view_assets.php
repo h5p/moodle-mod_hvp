@@ -157,9 +157,15 @@ class view_assets {
         $language = isset($this->content['metadata']['defaultLanguage'])
             ? $this->content['metadata']['defaultLanguage']
             : 'en';
+        $title = isset($this->content['metadata']['a11yTitle'])
+            ? $this->content['metadata']['a11yTitle']
+            : (isset($this->content['metadata']['title'])
+                ? $this->content['metadata']['title']
+                : ''
+            );
 
         return "<iframe src=\"{$embedurl->out()}\" width=\":w\" height=\":h\" frameborder=\"0\" " .
-               "allowfullscreen=\"allowfullscreen\" lang=\"{$language}\"></iframe>";
+               "allowfullscreen=\"allowfullscreen\" lang=\"{$language}\" title=\"{$title}\"></iframe>";
     }
 
     /**
@@ -316,6 +322,12 @@ class view_assets {
             $language = isset($this->content['metadata']['defaultLanguage'])
                 ? $this->content['metadata']['defaultLanguage']
                 : 'en';
+            $title = isset($this->content['metadata']['a11yTitle'])
+                ? $this->content['metadata']['a11yTitle']
+                : (isset($this->content['metadata']['title'])
+                    ? $this->content['metadata']['title']
+                    : ''
+                );
 
             echo "<div class=\"h5p-iframe-wrapper\">" .
                  "<iframe id=\"h5p-iframe-{$this->content['id']}\"" .
@@ -325,7 +337,8 @@ class view_assets {
                  " src=\"about:blank\"" .
                  " frameBorder=\"0\"" .
                  " lang=\"{$language}\"" .
-                 " scrolling=\"no\">" .
+                 " scrolling=\"no\"" .
+                 " title=\"{$title}\">" .
                  "</iframe>" .
                  "</div>";
         }
