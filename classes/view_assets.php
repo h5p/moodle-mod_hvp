@@ -154,9 +154,6 @@ class view_assets {
 
         $root = self::getsiteroot();
         $embedurl = new \moodle_url("{$root}/mod/hvp/embed.php?id={$this->cm->id}");
-        $language = isset($this->content['metadata']['defaultLanguage'])
-            ? $this->content['metadata']['defaultLanguage']
-            : 'en';
         $title = isset($this->content['metadata']['a11yTitle'])
             ? $this->content['metadata']['a11yTitle']
             : (isset($this->content['metadata']['title'])
@@ -165,7 +162,7 @@ class view_assets {
             );
 
         return "<iframe src=\"{$embedurl->out()}\" width=\":w\" height=\":h\" frameborder=\"0\" " .
-               "allowfullscreen=\"allowfullscreen\" lang=\"{$language}\" title=\"{$title}\"></iframe>";
+               "allowfullscreen=\"allowfullscreen\" title=\"{$title}\"></iframe>";
     }
 
     /**
@@ -319,9 +316,6 @@ class view_assets {
         if ($this->embedtype === 'div') {
             echo "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
         } else {
-            $language = isset($this->content['metadata']['defaultLanguage'])
-                ? $this->content['metadata']['defaultLanguage']
-                : 'en';
             $title = isset($this->content['metadata']['a11yTitle'])
                 ? $this->content['metadata']['a11yTitle']
                 : (isset($this->content['metadata']['title'])
@@ -336,7 +330,6 @@ class view_assets {
                  " style=\"height:1px\"" .
                  " src=\"about:blank\"" .
                  " frameBorder=\"0\"" .
-                 " lang=\"{$language}\"" .
                  " scrolling=\"no\"" .
                  " title=\"{$title}\">" .
                  "</iframe>" .
