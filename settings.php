@@ -28,9 +28,6 @@ require_once($CFG->dirroot . '/mod/hvp/lib.php');
 
 global $PAGE;
 
-// Make sure core is loaded.
-$core = \mod_hvp\framework::instance('core');
-
 // Redefine the H5P admin menu entry to be expandable.
 $modltifolder = new admin_category('modhvpfolder', new lang_string('pluginname', 'mod_hvp'), $module->is_enabled() === false);
 // Add the Settings admin menu entry.
