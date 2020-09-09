@@ -313,6 +313,7 @@ class view_assets {
      * Outputs h5p view
      */
     public function outputview() {
+        $title = s(strip_tags(format_string($this->content['title'])));
         if ($this->embedtype === 'div') {
             echo "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
         } else {
@@ -325,6 +326,7 @@ class view_assets {
 
             echo "<div class=\"h5p-iframe-wrapper\">" .
                  "<iframe id=\"h5p-iframe-{$this->content['id']}\"" .
+                 " title=\"{$title}\"" .
                  " class=\"h5p-iframe\"" .
                  " data-content-id=\"{$this->content['id']}\"" .
                  " style=\"height:1px\"" .
