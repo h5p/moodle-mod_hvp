@@ -496,6 +496,20 @@ function hvp_upgrade_2020080400() {
 }
 
 /**
+ * Drop old unused unique index, add nonunique index.
+ */
+function hvp_upgrade_2020091500() {
+    global $DB;
+    $dbman = $DB->get_manager();
+    $table = new xmldb_table('hvp_xapi_results');
+    $index = new xmldb_index('results', XMLDB_INDEX_NOTUNIQUE, ['content_id', 'user_id']);
+    $dbman->add_index($table, $index);
+    
+    $oldindex = new xmldb_index('result', XMLDB_INDEX_UNIQUE, ['id', 'content_id', 'user_id']);
+    $dbman->drop_index($table, $oldindex);
+}
+
+/**
  * Hvp module upgrade function.
  *
  * @param string $oldversion The version we are upgrading from
@@ -517,6 +531,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2019022600,
         2019030700,
         2020080400,
+        2020091500,
     ];
 
     foreach ($upgrades as $version) {
