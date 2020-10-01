@@ -191,6 +191,7 @@ $string['reportingscaledscoredelimiter'] = ',';
 $string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
 $string['reportsubmitgradelabel'] = 'Submit grade';
 $string['noanswersubmitted'] = 'This user hasn\'t submitted an answer to the H5P yet';
+$string['nostudentsubmission'] = 'No student submission found';
 
 // Editor.
 $string['javascriptloading'] = 'Waiting for JavaScript...';
