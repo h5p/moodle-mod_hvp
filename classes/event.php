@@ -81,8 +81,8 @@ class event extends \H5PEventBase {
             // No counter found, insert new one.
             $DB->insert_record('hvp_counters', array(
                 'type' => $type,
-                'library_name' => $this->library_name,
-                'library_version' => $this->library_version,
+                'library_name' => $this->library_name ?? '',
+                'library_version' => $this->library_version ?? '',
                 'num' => 1
             ));
         } else {
