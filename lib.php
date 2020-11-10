@@ -230,6 +230,17 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             return false; // Invalid file area.
 
         case 'libraries':
+            if ($context->contextlevel != CONTEXT_SYSTEM) {
+                return false; // Invalid context.
+            }
+
+            // Check permissions.
+            if (!has_capability('mod/hvp:getcachedassets', $context)) {
+                return false;
+            }
+
+            $itemid = 0;
+            break;
         case 'cachedassets':
             if ($context->contextlevel != CONTEXT_SYSTEM) {
                 return false; // Invalid context.
@@ -239,6 +250,9 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             if (!has_capability('mod/hvp:getcachedassets', $context)) {
                 return false;
             }
+
+            $options['cacheability'] = 'public';
+            $options['immutable'] = true;
 
             $itemid = 0;
             break;
