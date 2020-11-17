@@ -198,12 +198,15 @@ function hvp_delete_instance($id) {
             array($hvp->main_library_id)
     );
 
-    // Log content delete.
-    new \mod_hvp\event(
+    // Only log event if we found library
+    if ($library) {
+        // Log content delete.
+        new \mod_hvp\event(
             'content', 'delete',
             $hvp->id, $hvp->name,
             $library->name, $library->major_version . '.' . $library->minor_version
-    );
+        );
+    }
 
     return true;
 }
