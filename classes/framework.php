@@ -488,6 +488,7 @@ class framework implements \H5PFrameworkInterface {
                 'Unable to parse JSON from the package: %fileName' => 'couldnotparsejsonfromzip',
                 'Could not parse post data.' => 'couldnotparsepostdata',
                 'The mbstring PHP extension is not loaded. H5P needs this to function properly' => 'nombstringexteension',
+                'Assistive Technologies label' => 'assistivetechnologieslabel',
             ];
             // @codingStandardsIgnoreEnd
         }
