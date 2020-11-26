@@ -164,7 +164,7 @@ class framework implements \H5PFrameworkInterface {
      * @inheritdoc
      */
     // @codingStandardsIgnoreLine
-    public function fetchExternalData($url, $data = null, $blocking = true, $stream = null) {
+    public function fetchExternalData($url, $data = null, $blocking = true, $stream = null, $allData = false, $headers = array(), $files = array(), $method = 'POST') {
         global $CFG;
 
         if ($stream !== null) {
@@ -1112,7 +1112,10 @@ class framework implements \H5PFrameworkInterface {
             hc.year_to,
             hc.changes,
             hc.author_comments,
-            hc.default_language
+            hc.default_language,
+            hc.shared AS shared,
+            hc.synced AS synced,
+            hc.hub_id AS contentHubId
           FROM {hvp} hc
           JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
           WHERE hc.id = ?", array($id)
@@ -1661,4 +1664,35 @@ class framework implements \H5PFrameworkInterface {
 
         return !empty($results);
     }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function replaceContentHubMetadataCache($metadata, $lang = 'en') {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function getContentHubMetadataCache($lang = 'en') {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+   // @codingStandardsIgnoreLine
+   public function getContentHubMetadataChecked($lang = 'en') {
+
+   }
+
+   /**
+    * @inheritdoc
+    */
+   public function setContentHubMetadataChecked($time, $lang = 'en') {
+
+   }
 }
