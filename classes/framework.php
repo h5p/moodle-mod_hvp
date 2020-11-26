@@ -1670,7 +1670,26 @@ class framework implements \H5PFrameworkInterface {
      */
     // @codingStandardsIgnoreLine
     public function replaceContentHubMetadataCache($metadata, $lang = 'en') {
+        global $DB;
 
+        // Check if exist in database
+        $cache = $DB->get_record_sql(
+                'SELECT id
+                   FROM {hvp_content_hub_cache}
+                  WHERE language = ?',
+                array($lang)
+        );
+        if ($cache) {
+          // Update
+          $DB->execute("UPDATE {hvp_content_hub_cache} SET json = ? WHERE id = ?", array($metadata, $cache->id));
+        }
+        else {
+          // Insert
+          $DB->insert_record('hvp_content_hub_cache', (object) array(
+              'json' => $metadata,
+              'language' => $lang,
+          ));
+        }
     }
 
     /**
@@ -1678,7 +1697,14 @@ class framework implements \H5PFrameworkInterface {
      */
     // @codingStandardsIgnoreLine
     public function getContentHubMetadataCache($lang = 'en') {
-
+      global $DB;
+      $cache = $DB->get_record_sql(
+              'SELECT json
+                 FROM {hvp_content_hub_cache}
+                WHERE language = ?',
+              array($lang)
+      );
+      return $cache ? $cache->json : null;
     }
 
     /**
@@ -1686,13 +1712,25 @@ class framework implements \H5PFrameworkInterface {
      */
    // @codingStandardsIgnoreLine
    public function getContentHubMetadataChecked($lang = 'en') {
-
+       global $DB;
+       $cache = $DB->get_record_sql(
+               'SELECT last_checked
+                  FROM {hvp_content_hub_cache}
+                 WHERE language = ?',
+               array($lang)
+       );
+       if ($cache) {
+         $time = new DateTime($cache->last_checked);
+         $cache = $time->format("D, d M Y H:i:s \G\M\T");
+       }
+       return $cache;
    }
 
    /**
     * @inheritdoc
     */
    public function setContentHubMetadataChecked($time, $lang = 'en') {
-
+       global $DB;
+       $DB->execute("UPDATE {hvp_content_hub_cache} SET last_checked = ? WHERE language = ?", array($time, $lang));
    }
 }
