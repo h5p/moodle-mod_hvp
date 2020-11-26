@@ -211,6 +211,9 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
       'apiVersion' => H5PCore::$coreApi,
       'language' => $language,
       'formId' => $mformid,
+      'hub' => [
+        'contentSearchUrl' => \H5PHubEndpoints::createURL(\H5PHubEndpoints::CONTENT),
+      ],
     );
 
     if ($id !== null) {

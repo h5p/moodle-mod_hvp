@@ -1761,6 +1761,7 @@ class framework implements \H5PFrameworkInterface {
           $DB->insert_record('hvp_content_hub_cache', (object) array(
               'json' => $metadata,
               'language' => $lang,
+              'last_checked' => time(),
           ));
         }
     }
