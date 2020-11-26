@@ -337,6 +337,17 @@ switch($action) {
         break;
 
     /*
+     * Handle filtering of parameters through AJAX.
+     */
+    case 'contenthubmetadatacache':
+        if (!\mod_hvp\framework::has_editor_access('nopermissiontoviewcontenttypes')) {
+            break;
+        }
+        $editor = \mod_hvp\framework::instance('editor');
+        $editor->ajax->action(H5PEditorEndpoints::CONTENT_HUB_METADATA_CACHE, \mod_hvp\framework::get_language());
+        break;
+
+    /*
      * Throw error if AJAX isnt handeled
      */
     default:
