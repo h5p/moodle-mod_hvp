@@ -348,6 +348,17 @@ switch($action) {
         break;
 
     /*
+     * Handle filtering of parameters through AJAX.
+     */
+    case 'getcontent':
+        $token = required_param('token', PARAM_RAW);
+        $hubid = required_param('hubId', PARAM_INT);
+
+        $editor = \mod_hvp\framework::instance('editor');
+        $editor->ajax->action(H5PEditorEndpoints::GET_HUB_CONTENT, $token, $hubid, null);
+        break;
+
+    /*
      * Throw error if AJAX isnt handeled
      */
     default:
