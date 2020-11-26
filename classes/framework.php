@@ -167,6 +167,38 @@ class framework implements \H5PFrameworkInterface {
     public function fetchExternalData($url, $data = null, $blocking = true, $stream = null, $allData = false, $headers = array(), $files = array(), $method = 'POST') {
         global $CFG;
 
+        if (!empty($files)) {
+            foreach ($files as $name => $file) {
+                if ($file === NULL) {
+                    continue;
+                }
+                elseif (is_array($file['name'])) {
+                    // Array of files uploaded (multiple)
+                    for ($i = 0; $i < count($file['name']); $i++) {
+                        $data[$name . '[]'] = new \CurlFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
+                    }
+                }
+                else {
+                    // Single file
+                    $data[$name] = new \CurlFile($file['tmp_name'], $file['type'], $file['name']);
+                }
+            }
+        }
+        elseif (!empty($data)) {
+            // application/x-www-form-urlencoded
+            $data = format_postdata_for_curlcall($data);
+        }
+
+        $options = array(
+            'CURLOPT_SSL_VERIFYPEER' => true,
+            'CURLOPT_CONNECTTIMEOUT' => 20,
+            'CURLOPT_FOLLOWLOCATION' => 1,
+            'CURLOPT_MAXREDIRS' => 5,
+            'CURLOPT_RETURNTRANSFER' => true,
+            'CURLOPT_NOBODY' => false,
+            'CURLOPT_TIMEOUT' => 300,
+        );
+
         if ($stream !== null) {
             // Download file.
             @set_time_limit(0);
@@ -179,14 +211,55 @@ class framework implements \H5PFrameworkInterface {
             $interface = self::instance('interface');
             $interface->getUploadedH5pFolderPath($localfolder);
             $interface->getUploadedH5pPath($stream);
+
+            $stream = fopen($stream, 'w');
+            $options['CURLOPT_FILE'] = $stream;
         }
 
-        $response = download_file_content($url, null, $data, true, 300, 20, false, $stream);
+        $curl = new curl();
 
-        if (empty($response->error)) {
-            return $response->results;
-        } else {
-            $this->setErrorMessage($response->error, 'failed-fetching-external-data');
+        // Massage headers to work with curl.
+        foreach ($headers as $key => $value) {
+            $curl->setHeader(is_numeric($key) ? $value : "$key: $value");
+        }
+
+        if (empty($data) || $method === 'GET') {
+            $response = $curl->get($url, array(), $options);
+        }
+        elseif ($method === 'POST') {
+            $response = $curl->post($url, $data, $options);
+        }
+        elseif ($method === 'PUT') {
+            $response = $curl->put($url, $data, $options);
+        }
+
+        if ($stream !== null) {
+            fclose($stream);
+            @chmod($stream, $CFG->filepermissions);
+        }
+
+        $error_no = $curl->get_errno();
+        // Error handling
+        if ($error_no) {
+            if ($allData) {
+                $response = null;
+            }
+            else {
+                $this->setErrorMessage($response, 'failed-fetching-external-data');
+                return FALSE;
+            }
+        }
+
+        if ($allData) {
+            $info = $curl->get_info();
+            return [
+              'status' => intval($info['http_code']),
+              'data' => empty($response) ? null : $response,
+              'headers' => $curl->get_raw_response(),
+            ];
+        }
+        else {
+            return $response;
         }
     }
 
@@ -1688,6 +1761,7 @@ class framework implements \H5PFrameworkInterface {
           $DB->insert_record('hvp_content_hub_cache', (object) array(
               'json' => $metadata,
               'language' => $lang,
+              'last_checked' => time(),
           ));
         }
     }
@@ -1697,40 +1771,41 @@ class framework implements \H5PFrameworkInterface {
      */
     // @codingStandardsIgnoreLine
     public function getContentHubMetadataCache($lang = 'en') {
-      global $DB;
-      $cache = $DB->get_record_sql(
-              'SELECT json
-                 FROM {hvp_content_hub_cache}
-                WHERE language = ?',
-              array($lang)
-      );
-      return $cache ? $cache->json : null;
+        global $DB;
+        $cache = $DB->get_record_sql(
+                'SELECT json
+                   FROM {hvp_content_hub_cache}
+                  WHERE language = ?',
+                array($lang)
+        );
+        return $cache ? $cache->json : null;
     }
 
     /**
      * @inheritdoc
      */
-   // @codingStandardsIgnoreLine
-   public function getContentHubMetadataChecked($lang = 'en') {
-       global $DB;
-       $cache = $DB->get_record_sql(
-               'SELECT last_checked
+    // @codingStandardsIgnoreLine
+    public function getContentHubMetadataChecked($lang = 'en') {
+        global $DB;
+        $cache = $DB->get_record_sql(
+                'SELECT last_checked
                   FROM {hvp_content_hub_cache}
                  WHERE language = ?',
-               array($lang)
-       );
-       if ($cache) {
-         $time = new DateTime($cache->last_checked);
-         $cache = $time->format("D, d M Y H:i:s \G\M\T");
-       }
-       return $cache;
-   }
+                array($lang)
+        );
+        if ($cache) {
+            $time = new DateTime($cache->last_checked);
+            $cache = $time->format("D, d M Y H:i:s \G\M\T");
+        }
+        return $cache;
+    }
 
-   /**
-    * @inheritdoc
-    */
-   public function setContentHubMetadataChecked($time, $lang = 'en') {
-       global $DB;
-       $DB->execute("UPDATE {hvp_content_hub_cache} SET last_checked = ? WHERE language = ?", array($time, $lang));
-   }
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function setContentHubMetadataChecked($time, $lang = 'en') {
+        global $DB;
+        $DB->execute("UPDATE {hvp_content_hub_cache} SET last_checked = ? WHERE language = ?", array($time, $lang));
+    }
 }
