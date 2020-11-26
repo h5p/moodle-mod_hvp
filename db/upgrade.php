@@ -495,6 +495,37 @@ function hvp_upgrade_2020080400() {
     }
 }
 
+function hvp_upgrade_2020112600() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    // Add Content Hub fields to main content table
+    $table = new xmldb_table('hvp');
+    if (!$dbman->field_exists($table, 'shared')) {
+        $dbman->add_field($table, new xmldb_field('shared', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'completionpass'));
+    }
+    if (!$dbman->field_exists($table, 'synced')) {
+        $dbman->add_field($table, new xmldb_field('synced', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'shared'));
+    }
+    if (!$dbman->field_exists($table, 'hub_id')) {
+        $dbman->add_field($table, new xmldb_field('hub_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'synced'));
+    }
+
+    // Create table for caching content hub metadata
+    $table = new xmldb_table('hvp_content_hub_cache');
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('language', XMLDB_TYPE_CHAR, '31', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('json', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+    $table->add_field('last_checked', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+    $table->add_index('language', XMLDB_INDEX_UNIQUE, ['language']);
+
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+}
+
 /**
  * Hvp module upgrade function.
  *
@@ -517,6 +548,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2019022600,
         2019030700,
         2020080400,
+        2020112600,
     ];
 
     foreach ($upgrades as $version) {
