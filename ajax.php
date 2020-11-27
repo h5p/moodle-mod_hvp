@@ -359,6 +359,98 @@ switch($action) {
         break;
 
     /*
+     * Handle filtering of parameters through AJAX.
+     */
+    case 'share':
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+        }
+        $token = required_param('_token', PARAM_RAW);
+        $id = required_param('id', PARAM_INT);
+
+        if (!\H5PCore::validToken('share_' . $id, $token)) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            break;
+        }
+
+        $data = array(
+            'title'                => required_param('title', PARAM_RAW),
+            'language'             => required_param('language', PARAM_RAW),
+            'level'                => required_param('level', PARAM_RAW),
+            'license'              => required_param('license', PARAM_RAW),
+            'license_version'      => required_param('license_version', PARAM_RAW),
+            'disciplines'          => required_param_array('disciplines', PARAM_RAW),
+            'keywords'             => optional_param_array('keywords', null, PARAM_RAW),
+            'summary'              => optional_param('summary', null, PARAM_RAW),
+            'description'          => optional_param('description', null, PARAM_RAW),
+            'screenshot_alt_texts' => optional_param_array('screenshot_alt_texts', null, PARAM_RAW),
+            'remove_screenshots'   => optional_param_array('remove_screenshots', null, PARAM_RAW),
+            'remove_icon'          => optional_param('remove_icon', null, PARAM_RAW),
+        );
+
+        // Load content
+        $core = \mod_hvp\framework::instance();
+        $cm = get_coursemodule_from_id('hvp', $id);
+        $content = $core->loadContent($cm->instance);
+
+        if ($content['synced'] === \H5PContentHubSyncStatus::WAITING) {
+            \H5PCore::ajaxError(get_string('contentissyncing', 'hvp'));
+            break;
+        }
+
+        // Create URL
+        $slug = $content['slug'] ? $content['slug'] . '-' : '';
+        $filename = "{$slug}{$content['id']}.h5p";
+        $data['download_url'] = \moodle_url::make_pluginfile_url($cm->module, 'mod_hvp', 'exports', 0, '/', $filename)->out(false);
+
+        // Get file size
+        $file = get_file_storage()->get_file($cm->module, 'mod_hvp', 'exports', 0, '/', $filename);
+        if (!$file) {
+            \H5PCore::ajaxError(get_string('noexport', 'hvp'));
+            break;
+        }
+        $size = $file->get_filesize();
+        $data['size'] = empty($size) ? -1 : $size;
+
+        // Add the icon and any screenshots
+        $files = array(
+            'icon' => !empty($_FILES['icon']) ? $_FILES['icon'] : NULL,
+            'screenshots' => !empty($_FILES['screenshots']) ? $_FILES['screenshots'] : NULL,
+        );
+
+        try {
+            $isedit = !empty($content['hub_id']);
+            $updatecontent = intval($content['synced']) === \H5PContentHubSyncStatus::NOT_SYNCED && $isedit;
+            if ($updatecontent) {
+              // node has been edited since the last time it was published
+              $data['resync'] = 1;
+            }
+            $result = $core->hubPublishContent($data, $files, $isedit ? $content['hub_id'] : NULL);
+
+            $fields = array(
+              'shared' => 1, // Content is always shared after sharing or editing
+            );
+            if (!$isedit) {
+              $fields['hub_id'] = $result->content->id;
+              // Sync will not happen on 'edit info', only for 'publish' or 'sync'.
+              $fields['synced'] = \H5PContentHubSyncStatus::WAITING;
+            }
+            else if ($updatecontent) {
+              $fields['synced'] = \H5PContentHubSyncStatus::WAITING;
+            }
+
+            // Store the content hub id
+            $core->h5pF->updateContentFields($cm->instance, $fields);
+
+            H5PCore::ajaxSuccess();
+        }
+        catch (Exception $e) {
+            H5PCore::ajaxError(!empty($e->errors) ? $e->errors : $e->getMessage());
+        }
+
+        break;
+
+    /*
      * Throw error if AJAX isnt handeled
      */
     default:
