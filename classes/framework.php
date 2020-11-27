@@ -1186,9 +1186,9 @@ class framework implements \H5PFrameworkInterface {
             hc.changes,
             hc.author_comments,
             hc.default_language,
-            hc.shared AS shared,
-            hc.synced AS synced,
-            hc.hub_id AS contentHubId
+            hc.shared,
+            hc.synced,
+            hc.hub_id
           FROM {hvp} hc
           JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
           WHERE hc.id = ?", array($id)
@@ -1211,6 +1211,9 @@ class framework implements \H5PFrameworkInterface {
             'slug' => $data->slug,
             'embedType' => $data->embed_type,
             'disable' => $data->disable,
+            'shared' => $data->shared,
+            'synced' => $data->synced,
+            'contentHubId' => $data->hub_id,
             'libraryId' => $data->library_id,
             'libraryName' => $data->machine_name,
             'libraryMajorVersion' => $data->major_version,
@@ -1794,7 +1797,7 @@ class framework implements \H5PFrameworkInterface {
                 array($lang)
         );
         if ($cache) {
-            $time = new DateTime($cache->last_checked);
+            $time = new \DateTime($cache->last_checked);
             $cache = $time->format("D, d M Y H:i:s \G\M\T");
         }
         return $cache;
