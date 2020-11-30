@@ -118,9 +118,8 @@ class file_storage implements \H5PFileStorage {
      */
     // @codingStandardsIgnoreLine
     public function getTmpPath() {
-        global $CFG;
-
-        return $CFG->tempdir . uniqid('/hvp-');
+        // Use request directory. This is generally the lowest latency available storage.
+        return get_request_storage_directory() . uniqid('/hvp-');
     }
 
     /**
@@ -494,30 +493,81 @@ class file_storage implements \H5PFileStorage {
      *  Path to source directory
      * @param array $options
      *  For Moodle's file record
+     * @param \ZipArchive $archive
+     *  A currently open archive to store complete libraries. Used in recursive calls.
+     * @param string $relativepath
+     *  The current relative path from the base function call. Used in recursive calls.
+     * @param bool $ziponly
+     *  Create only the zip archive, not the base files.
+     *
      * @throws \Exception Unable to copy
      */
     // @codingStandardsIgnoreLine
-    private static function readFileTree($source, $options) {
+    private static function readFileTree($source, $options, $archive = null, $relativepath = '', $ziponly = false) {
         $dir = opendir($source);
         if ($dir === false) {
             trigger_error('Unable to open directory ' . $source, E_USER_WARNING);
             throw new \Exception('unabletocopy');
         }
 
+        // Should we build a zipped copy? (Is this a lib).
+        $exportzip = $options['filearea'] === 'libraries';
+
+        // Create an empty zip to store a full lib archive as well.
+        if (empty($archive) && $exportzip) {
+            $archive = new \ZipArchive();
+            $path = tempnam(get_request_storage_directory(),'libdir');
+            $archive->open($path, \ZipArchive::CREATE || \ZipArchive::OVERWRITE);
+            // Set recursion flag.
+            $top = true;
+        } else {
+            $top = false;
+        }
+
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..') && $file != '.git' && $file != '.gitignore') {
                 if (is_dir($source . DIRECTORY_SEPARATOR . $file)) {
                     $suboptions = $options;
-                    $suboptions['filepath'] .= $file . '/';
-                    self::readFileTree($source . '/' . $file, $suboptions);
+                    $pathchunk = $file . '/';
+                    $suboptions['filepath'] .= $pathchunk;
+
+                    // Setup the relative path from the root dir.
+                    $origpath = $relativepath;
+                    $relativepath = !empty($relativepath) ? $relativepath . $pathchunk : $pathchunk;
+                    self::readFileTree($source . '/' . $file, $suboptions, $archive, $relativepath, $ziponly);
+                    // Reset path after recursing.
+                    $relativepath = $origpath;
                 } else {
-                    $record = $options;
-                    $record['filename'] = $file;
-                    $fs = get_file_storage();
-                    $fs->create_file_from_pathname($record, $source . '/' . $file);
+                    // Are we building the full lib?
+                    if (!$ziponly) {
+                        $record = $options;
+                        $record['filename'] = $file;
+                        $fs = get_file_storage();
+                        $fs->create_file_from_pathname($record, $source . '/' . $file);
+                    }
+
+                    $zippath = !empty($relativepath) ? $relativepath . $file : $file;
+                    // Also add file to open archive.
+                    if ($exportzip) {
+                        $archive->addFile($source . '/' . $file, $zippath);
+                    }
                 }
             }
         }
+
+        // Store the zipfile alongside the lib files.
+        if ($top) {
+            if (empty($fs)) {
+                $fs = get_file_storage();
+            }
+            $record = $options;
+            $record['filearea'] = 'library_archives';
+            $record['filename'] = 'lib-export.zip';
+            $archive->close();
+            $fs->create_file_from_pathname($record, $path);
+            unlink($path);
+        }
+
         closedir($dir);
     }
 
@@ -545,20 +595,53 @@ class file_storage implements \H5PFileStorage {
         // Read source files.
         $fs = get_file_storage();
         $files = $fs->get_directory_files($contextid, 'mod_hvp', $filearea, $itemid, $filepath, true);
+        $library = $filearea === 'libraries';
 
-        foreach ($files as $file) {
-            // Correct target path for file.
-            $path = $target . str_replace($filepath, '/', $file->get_filepath());
+        if ($library && $file = $fs->get_file(
+            $contextid,
+            'mod_hvp',
+            'library_archives',
+            $itemid,
+            $filepath,
+            'lib-export.zip'
+        )) {
+            // Libraries may have a precompiled zip to extract
+            $reqpath = get_request_storage_directory() . '/libzip.zip';
+            $file->copy_content_to($reqpath);
 
-            if ($file->is_directory()) {
-                // Create directory.
-                $path = rtrim($path, '/');
-                if (!file_exists($path)) {
-                    mkdir($path, 0777, true);
+            // Extract the archive to the required dir.
+            $zip = new \ZipArchive();
+            $zip->open($reqpath);
+            $zip->extractTo($target);
+            $zip->close();
+            unlink($reqpath);
+        } else {
+            foreach ($files as $file) {
+                // Correct target path for file.
+                $path = $target . str_replace($filepath, '/', $file->get_filepath());
+
+                if ($file->is_directory()) {
+                    // Create directory.
+                    $path = rtrim($path, '/');
+                    if (!file_exists($path)) {
+                        mkdir($path, 0777, true);
+                    }
+                } else {
+                    // Copy file.
+                    $file->copy_content_to($path . $file->get_filename());
                 }
-            } else {
-                // Copy file.
-                $file->copy_content_to($path . $file->get_filename());
+            }
+
+            // Now that the filetree is exported, create a zip for future use.
+            if ($library) {
+                $options = [
+                    'contextid' => $contextid,
+                    'component' => 'mod_hvp',
+                    'filearea' => $filearea,
+                    'itemid' => $itemid,
+                    'filepath' => $filepath
+                ];
+                self::readFileTree($target, $options, null, '', true);
             }
         }
     }
