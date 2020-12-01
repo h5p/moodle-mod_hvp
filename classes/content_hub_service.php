@@ -35,22 +35,22 @@ class content_hub_service {
      * @return array
      * @throws Exception
      */
-    public static function getRegistrationUISettings() {
-        $core = framework::instance();
-        $registrationUrl = new moodle_url('/mod/hvp/ajax.php', [
+    public static function get_registration_ui_settings() {
+        $core               = framework::instance();
+        $registrationurl    = new moodle_url('/mod/hvp/ajax.php', [
             'action' => 'contenthubregistration',
         ]);
-        $accountSettingsUrl = new moodle_url('/admin/settings.php?section=modsettinghvp');
+        $accountsettingsurl = new moodle_url('/admin/settings.php?section=modsettinghvp');
 
         return [
-            'registrationURL' => $registrationUrl->out(true),
-            'accountSettingsUrl' => $accountSettingsUrl->out(true),
-            'token' => $core::createToken('contentHubRegistration'),
-            'l10n' => $core->getLocalization(),
-            'licenseAgreementTitle' => get_string('contenthub:licenseagreementtitle', 'hvp',),
-            'licenseAgreementDescription' => get_string('contenthub:licenseagreementdescription', 'hvp',),
-            'licenseAgreementMainText' => get_string('contenthub:licenseagreementmaintext', 'hvp',),
-            'accountInfo' => $core->hubAccountInfo(),
+            'registrationURL'             => $registrationurl->out(true),
+            'accountSettingsUrl'          => $accountsettingsurl->out(true),
+            'token'                       => $core::createToken('contentHubRegistration'),
+            'l10n'                        => $core->getLocalization(),
+            'licenseAgreementTitle'       => get_string('contenthub:licenseagreementtitle', 'hvp'),
+            'licenseAgreementDescription' => get_string('contenthub:licenseagreementdescription', 'hvp'),
+            'licenseAgreementMainText'    => get_string('contenthub:licenseagreementmaintext', 'hvp'),
+            'accountInfo'                 => $core->hubAccountInfo(),
         ];
     }
 }

@@ -113,9 +113,9 @@ if ($ADMIN->fulltree) {
     );
 
     // Content Hub
-    try {
-        $hubInfo = $core->hubAccountInfo();
+    $hubinfo = $core->hubAccountInfo();
 
+    if ($hubinfo) {
         $settings->add(new admin_setting_heading(
             'mod_hvp/content_hub_settings',
             get_string('contenthub:settings:heading', 'hvp'),
@@ -125,11 +125,8 @@ if ($ADMIN->fulltree) {
         $settings->add(new admin_setting_html(
             'mod_hvp/content_hub_settings_box',
             get_string('contenthub:settings:box', 'hvp'),
-            $hubInfo
+            $hubinfo
         ));
-    }
-    catch (Exception $e) {
-        // Not showing account form
     }
 
     // Load js for disable hub confirmation dialog functionality.

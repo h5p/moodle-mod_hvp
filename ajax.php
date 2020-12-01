@@ -365,7 +365,7 @@ switch($action) {
         }
         $logo = isset($_FILES['logo']) ? $_FILES['logo'] : null;
 
-        $formData = [
+        $formdata = [
             'name'           => required_param('name', PARAM_TEXT),
             'email'          => required_param('email', PARAM_EMAIL),
             'description'    => optional_param('description', '', PARAM_TEXT),
@@ -379,7 +379,7 @@ switch($action) {
         ];
 
         $core = framework::instance();
-        $result = $core->hubRegisterAccount($formData, $logo);
+        $result = $core->hubRegisterAccount($formdata, $logo);
 
         if ($result['success'] === false) {
             $core->h5pF->setErrorMessage($result['message']);
@@ -439,7 +439,7 @@ switch($action) {
 
         // Update Hub status for content before proceeding
         $newstate = hvp_update_hub_status($content);
-        $synced = $newstate ? $newstate : intval($content['synced']);
+        $synced = $newstate !== false ? $newstate : intval($content['synced']);
 
         if ($synced === \H5PContentHubSyncStatus::WAITING) {
             \H5PCore::ajaxError(get_string('contentissyncing', 'hvp'));
@@ -462,37 +462,35 @@ switch($action) {
 
         // Add the icon and any screenshots
         $files = array(
-            'icon' => !empty($_FILES['icon']) ? $_FILES['icon'] : NULL,
-            'screenshots' => !empty($_FILES['screenshots']) ? $_FILES['screenshots'] : NULL,
+            'icon' => !empty($_FILES['icon']) ? $_FILES['icon'] : null,
+            'screenshots' => !empty($_FILES['screenshots']) ? $_FILES['screenshots'] : null,
         );
 
         try {
             $isedit = !empty($content['contentHubId']);
             $updatecontent = $synced === \H5PContentHubSyncStatus::NOT_SYNCED && $isedit;
             if ($updatecontent) {
-              // node has been edited since the last time it was published
-              $data['resync'] = 1;
+                // node has been edited since the last time it was published
+                $data['resync'] = 1;
             }
-            $result = $core->hubPublishContent($data, $files, $isedit ? $content['contentHubId'] : NULL);
+            $result = $core->hubPublishContent($data, $files, $isedit ? $content['contentHubId'] : null);
 
             $fields = array(
-              'shared' => 1, // Content is always shared after sharing or editing
+                'shared' => 1, // Content is always shared after sharing or editing
             );
             if (!$isedit) {
-              $fields['hub_id'] = $result->content->id;
-              // Sync will not happen on 'edit info', only for 'publish' or 'sync'.
-              $fields['synced'] = \H5PContentHubSyncStatus::WAITING;
-            }
-            else if ($updatecontent) {
-              $fields['synced'] = \H5PContentHubSyncStatus::WAITING;
+                $fields['hub_id'] = $result->content->id;
+                // Sync will not happen on 'edit info', only for 'publish' or 'sync'.
+                $fields['synced'] = \H5PContentHubSyncStatus::WAITING;
+            } else if ($updatecontent) {
+                $fields['synced'] = \H5PContentHubSyncStatus::WAITING;
             }
 
             // Store the content hub id
             $core->h5pF->updateContentFields($cm->instance, $fields);
 
             H5PCore::ajaxSuccess();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             H5PCore::ajaxError(!empty($e->errors) ? $e->errors : $e->getMessage());
         }
 

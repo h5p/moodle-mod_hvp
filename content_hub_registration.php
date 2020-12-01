@@ -22,11 +22,11 @@
  */
 use mod_hvp\content_hub_service;
 
-global $PAGE, $SITE, $OUTPUT, $CFG;
-
 require_once("../../config.php");
 require_once($CFG->libdir.'/adminlib.php');
 require_once("locallib.php");
+
+global $PAGE, $SITE, $OUTPUT, $CFG;
 
 // No guest autologin.
 require_login(0, false);
@@ -40,7 +40,7 @@ $PAGE->set_url($pageurl);
 $PAGE->set_title("{$SITE->shortname}: " . get_string('upgrade', 'hvp'));
 $PAGE->set_heading(get_string('contenthub:settings:heading', 'mod_hvp'));
 
-$settings = content_hub_service::getRegistrationUISettings();
+$settings = content_hub_service::get_registration_ui_settings();
 $PAGE->requires->data_for_js('H5PSettings', $settings, true);
 $PAGE->requires->css(new moodle_url('library/styles/h5p.css'));
 $PAGE->requires->css(new moodle_url('library/styles/h5p-hub-registration.css'));
