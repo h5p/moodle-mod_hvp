@@ -359,7 +359,7 @@ switch($action) {
         break;
 
     /*
-     * Handle filtering of parameters through AJAX.
+     * Handle publishing of content to the H5P OER Hub.
      */
     case 'share':
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -393,6 +393,16 @@ switch($action) {
         $cm = get_coursemodule_from_id('hvp', $id);
         $content = $core->loadContent($cm->instance);
 
+        // Update Hub status for content before proceeding
+        if (!empty($content['contentHubId']) && $content->synced === H5PContentHubSyncStatus::WAITING) {
+            // Only check sync status when waiting
+            $newState = $core->getHubContentStatus($content['contentHubId'], $content['synced']);
+            if ($newState !== false) {
+                $core->h5pF->updateContentFields($content['id'], array('synced' => $newState));
+            }
+
+        }
+
         if ($content['synced'] === \H5PContentHubSyncStatus::WAITING) {
             \H5PCore::ajaxError(get_string('contentissyncing', 'hvp'));
             break;
@@ -419,13 +429,13 @@ switch($action) {
         );
 
         try {
-            $isedit = !empty($content['hub_id']);
+            $isedit = !empty($content['contentHubId']);
             $updatecontent = intval($content['synced']) === \H5PContentHubSyncStatus::NOT_SYNCED && $isedit;
             if ($updatecontent) {
               // node has been edited since the last time it was published
               $data['resync'] = 1;
             }
-            $result = $core->hubPublishContent($data, $files, $isedit ? $content['hub_id'] : NULL);
+            $result = $core->hubPublishContent($data, $files, $isedit ? $content['contentHubId'] : NULL);
 
             $fields = array(
               'shared' => 1, // Content is always shared after sharing or editing

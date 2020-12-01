@@ -481,3 +481,4 @@ $string['gradetopassmustbeset'] = 'Grade to pass cannot be zero as this H5P acti
 // Content Hub
 $string['contentissyncing'] = 'Content is being synced.';
 $string['noexport'] = 'Missing export file.';
+$string['contentnotshared'] = 'Content is not shared on the Hub.';
