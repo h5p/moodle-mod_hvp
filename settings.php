@@ -114,20 +114,17 @@ if ($ADMIN->fulltree) {
 
     // Content Hub
     $hubinfo = $core->hubAccountInfo();
+    $settings->add(new admin_setting_heading(
+        'mod_hvp/content_hub_settings',
+        get_string('contenthub:settings:heading', 'hvp'),
+        ''
+    ));
 
-    if ($hubinfo) {
-        $settings->add(new admin_setting_heading(
-            'mod_hvp/content_hub_settings',
-            get_string('contenthub:settings:heading', 'hvp'),
-            ''
-        ));
-
-        $settings->add(new admin_setting_html(
-            'mod_hvp/content_hub_settings_box',
-            get_string('contenthub:settings:box', 'hvp'),
-            $hubinfo
-        ));
-    }
+    $settings->add(new admin_setting_html(
+        'mod_hvp/content_hub_settings_box',
+        get_string('contenthub:settings:box', 'hvp'),
+        $hubinfo
+    ));
 
     // Load js for disable hub confirmation dialog functionality.
     $PAGE->requires->js('/mod/hvp/library/js/jquery.js', true);
