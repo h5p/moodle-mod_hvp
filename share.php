@@ -42,10 +42,10 @@ require_capability('mod/hvp:share', $context);
 
 // Check if Hub registered, if not redirect to hub registration
 if (empty(get_config('mod_hvp', 'site_uuid')) || empty(get_config('mod_hvp', 'hub_secret'))) {
-  if (!has_capability('mod/hvp:register', $context)) { // TODO: Change when we know the permission for registering
+  if (!has_capability('mod/hvp:contenthubregistration', $context)) {
     print_error('nohubregistration');
   }
-  redirect(new moodle_url('/mod/hvp/register.php', ['id' => $id])); // TODO: Update when we know the real URL
+  redirect(new moodle_url('/mod/hvp/content_hub_registration.php', ['id' => $id]));
 }
 
 // Try to load existing content from the Hub
