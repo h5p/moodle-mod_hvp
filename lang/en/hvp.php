@@ -490,3 +490,4 @@ $string['contenthub:changesettings'] = 'Change account settings <a href="/mod/hv
 $string['contenthub:nopermissions'] = 'You do not have permission to register the site with the content hub.';
 $string['contentissyncing'] = 'Content is being synced.';
 $string['noexport'] = 'Missing export file.';
+$string['contentnotshared'] = 'Content is not shared on the Hub.';

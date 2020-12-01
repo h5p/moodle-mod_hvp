@@ -52,6 +52,40 @@ if (empty(get_config('mod_hvp', 'site_uuid')) || empty(get_config('mod_hvp', 'hu
 $core = \mod_hvp\framework::instance();
 $content = $core->loadContent($cm->instance);
 
+$action = optional_param('action', '', PARAM_TEXT);
+if ($action) {
+    // Prepare to do a Hub Action
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+    }
+    $token = required_param('_token', PARAM_RAW);
+    if (!\H5PCore::validToken('share_' . $id, $token)) {
+        print_error('invalidtoken');
+    }
+    if (empty($content['contentHubId']) || empty($content['shared'])) {
+        print_error('contentnotshared');
+    }
+
+    $core = \mod_hvp\framework::instance();
+    if ($action === 'sync') {
+        // Sync content already shared on the Hub
+        $slug = $content['slug'] ? $content['slug'] . '-' : '';
+        $filename = "{$slug}{$content['id']}.h5p";
+        $exporturl = \moodle_url::make_pluginfile_url($cm->module, 'mod_hvp', 'exports', 0, '/', $filename)->out(false);
+        if ($core->hubSyncContent($content['contentHubId'], $exporturl)) {
+            $core->h5pF->updateContentFields($content['id'], array('synced' => \H5PContentHubSyncStatus::WAITING));
+        }
+    }
+    elseif ($action === 'unpublish') {
+        // Unpublish content already shared on the Hub
+        if ($core->hubUnpublishContent($content['contentHubId'])) {
+            $core->h5pF->updateContentFields($content['id'], array('shared' => 0));
+        }
+    }
+    redirect(new moodle_url('/mod/hvp/view.php', ['id' => $id]));
+    exit;
+}
+
 $hubcontent = !empty($content['contentHubId']) ? $core->hubRetrieveContent($content['contentHubId']) : null;
 if (empty($content['contentHubId'])) {
   // Try to populate with license from content
@@ -75,7 +109,7 @@ $settings = [
   'contentType' => "{$content['library']['name']} {$content['library']['majorVersion']}.{$content['library']['minorVersion']}",
   'language' => $locale,
   'hubContent' => $hubcontent,
-  'context' => empty($content['contentHubId']) ? 'share' : 'edit',
+  'context' => empty($content['shared']) ? 'share' : 'edit',
 ];
 
 // Configure page.
