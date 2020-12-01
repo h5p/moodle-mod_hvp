@@ -69,9 +69,7 @@ if ($action) {
     $core = \mod_hvp\framework::instance();
     if ($action === 'sync') {
         // Sync content already shared on the Hub
-        $slug      = $content['slug'] ? $content['slug'] . '-' : '';
-        $filename  = "{$slug}{$content['id']}.h5p";
-        $exporturl = \moodle_url::make_pluginfile_url($cm->module, 'mod_hvp', 'exports', 0, '/', $filename)->out(false);
+        $exporturl = hvp_create_hub_export_url($cm->id, $content);
         if ($core->hubSyncContent($content['contentHubId'], $exporturl)) {
             $core->h5pF->updateContentFields($content['id'], array('synced' => \H5PContentHubSyncStatus::WAITING));
         }

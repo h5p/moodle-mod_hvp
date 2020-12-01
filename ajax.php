@@ -447,9 +447,7 @@ switch($action) {
         }
 
         // Create URL
-        $slug = $content['slug'] ? $content['slug'] . '-' : '';
-        $filename = "{$slug}{$content['id']}.h5p";
-        $data['download_url'] = \moodle_url::make_pluginfile_url($cm->module, 'mod_hvp', 'exports', 0, '/', $filename)->out(false);
+        $data['download_url'] = hvp_create_hub_export_url($cm->id, $content);
 
         // Get file size
         $file = get_file_storage()->get_file($cm->module, 'mod_hvp', 'exports', 0, '/', $filename);

@@ -676,3 +676,34 @@ function hvp_update_hub_status($content) {
       return $newstate;
   }
 }
+
+/**
+ * Create URL for Content Hub to download content
+ *
+ * @param $content
+ */
+function hvp_create_hub_export_url($cmid, $content) {
+  // Create URL
+  $modulecontext = \context_module::instance($cmid);
+  $slug = $content['slug'] ? $content['slug'] . '-' : '';
+  $filename = "{$slug}{$content['id']}.h5p";
+  $exporturl = \moodle_url::make_pluginfile_url($modulecontext->id, 'mod_hvp', 'exports', '', '', $filename)->out(false);
+
+  // To prevent anyone else from downloading we add an extra token
+  $time = time();
+  $data = $time . ':' . get_config('mod_hvp', 'site_uuid');
+  $hash = hash_hmac('SHA512', $data, get_config('mod_hvp', 'hub_secret'), true);
+  $token = hvp_base64_encode($time) . '.' . hvp_base64_encode($hash);
+
+  return "$exporturl?hub=$token";
+}
+
+/**
+ * URL compatible base64 encoding.
+ *
+ * @param string $string
+ * @return string
+ */
+function hvp_base64_encode($string) {
+    return str_replace('=', '', strtr(base64_encode($string), '+/', '-_'));
+}
