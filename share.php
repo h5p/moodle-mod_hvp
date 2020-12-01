@@ -42,14 +42,14 @@ require_capability('mod/hvp:share', $context);
 
 // Check if Hub registered, if not redirect to hub registration
 if (empty(get_config('mod_hvp', 'site_uuid')) || empty(get_config('mod_hvp', 'hub_secret'))) {
-  if (!has_capability('mod/hvp:register', $context)) { // TODO: Change when we know the permission for registering
-    print_error('nohubregistration');
-  }
-  redirect(new moodle_url('/mod/hvp/register.php', ['id' => $id])); // TODO: Update when we know the real URL
+    if (!has_capability('mod/hvp:register', $context)) { // TODO: Change when we know the permission for registering
+        print_error('nohubregistration');
+    }
+    redirect(new moodle_url('/mod/hvp/register.php', ['id' => $id])); // TODO: Update when we know the real URL
 }
 
 // Try to load existing content from the Hub
-$core = \mod_hvp\framework::instance();
+$core    = \mod_hvp\framework::instance();
 $content = $core->loadContent($cm->instance);
 
 $action = optional_param('action', '', PARAM_TEXT);
@@ -69,14 +69,13 @@ if ($action) {
     $core = \mod_hvp\framework::instance();
     if ($action === 'sync') {
         // Sync content already shared on the Hub
-        $slug = $content['slug'] ? $content['slug'] . '-' : '';
-        $filename = "{$slug}{$content['id']}.h5p";
+        $slug      = $content['slug'] ? $content['slug'] . '-' : '';
+        $filename  = "{$slug}{$content['id']}.h5p";
         $exporturl = \moodle_url::make_pluginfile_url($cm->module, 'mod_hvp', 'exports', 0, '/', $filename)->out(false);
         if ($core->hubSyncContent($content['contentHubId'], $exporturl)) {
             $core->h5pF->updateContentFields($content['id'], array('synced' => \H5PContentHubSyncStatus::WAITING));
         }
-    }
-    elseif ($action === 'unpublish') {
+    } else if ($action === 'unpublish') {
         // Unpublish content already shared on the Hub
         if ($core->hubUnpublishContent($content['contentHubId'])) {
             $core->h5pF->updateContentFields($content['id'], array('shared' => 0));
@@ -88,28 +87,28 @@ if ($action) {
 
 $hubcontent = !empty($content['contentHubId']) ? $core->hubRetrieveContent($content['contentHubId']) : null;
 if (empty($content['contentHubId'])) {
-  // Try to populate with license from content
-  $license = !empty($content['metadata']['license']) ? $content['metadata']['license'] : null;
-  $licenseVersion = !empty($license) && !empty($content['metadata']['licenseVersion']) ? $content['metadata']['licenseVersion'] : null;
-  $hubcontent = [
-    'license' => $license,
-    'licenseVersion' => $licenseVersion,
-  ];
+    // Try to populate with license from content
+    $license        = !empty($content['metadata']['license']) ? $content['metadata']['license'] : null;
+    $licenseversion = !empty($license) && !empty($content['metadata']['licenseVersion']) ? $content['metadata']['licenseVersion'] : null;
+    $hubcontent     = [
+        'license'        => $license,
+        'licenseVersion' => $licenseversion,
+    ];
 }
 
 // Prepare settings for the UI
-$locale = \mod_hvp\framework::get_language();
+$locale   = \mod_hvp\framework::get_language();
 $settings = [
-  'token' => \H5PCore::createToken('share_' . $id),
-  'publishURL' => (new \moodle_url('/mod/hvp/ajax.php', array('action' => 'share', 'id' => $id)))->out(false),
-  'returnURL' => (new \moodle_url('/mod/hvp/view.php', array('id' => $id)))->out(false),
-  'l10n' => $core->getLocalization(),
-  'metadata' => json_decode($core->getUpdatedContentHubMetadataCache($locale)),
-  'title' => $cm->name,
-  'contentType' => "{$content['library']['name']} {$content['library']['majorVersion']}.{$content['library']['minorVersion']}",
-  'language' => $locale,
-  'hubContent' => $hubcontent,
-  'context' => empty($content['shared']) ? 'share' : 'edit',
+    'token'       => \H5PCore::createToken('share_' . $id),
+    'publishURL'  => (new \moodle_url('/mod/hvp/ajax.php', array('action' => 'share', 'id' => $id)))->out(false),
+    'returnURL'   => (new \moodle_url('/mod/hvp/view.php', array('id' => $id)))->out(false),
+    'l10n'        => $core->getLocalization(),
+    'metadata'    => json_decode($core->getUpdatedContentHubMetadataCache($locale)),
+    'title'       => $cm->name,
+    'contentType' => "{$content['library']['name']} {$content['library']['majorVersion']}.{$content['library']['minorVersion']}",
+    'language'    => $locale,
+    'hubContent'  => $hubcontent,
+    'context'     => empty($content['shared']) ? 'share' : 'edit',
 ];
 
 // Configure page.
@@ -120,7 +119,7 @@ $PAGE->set_heading($course->fullname);
 // Load JavaScript and styles
 $PAGE->requires->js(new \moodle_url(\mod_hvp\view_assets::getsiteroot() . '/mod/hvp/library/js/h5p-hub-sharing.js'), true);
 foreach (\H5PCore::$styles as $style) {
-  $PAGE->requires->css(new \moodle_url(\mod_hvp\view_assets::getsiteroot() . "/mod/hvp/library/{$style}"));
+    $PAGE->requires->css(new \moodle_url(\mod_hvp\view_assets::getsiteroot() . "/mod/hvp/library/{$style}"));
 }
 $PAGE->requires->css(new \moodle_url(\mod_hvp\view_assets::getsiteroot() . '/mod/hvp/library/styles/h5p-hub-sharing.css'));
 
@@ -129,14 +128,14 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($cm->name));
 
 ?>
-<div id="h5p-hub-share">
-  <div class="loading-screen">
-    Waiting for JavaScript
-  </div>
-</div>
-<script>
-  H5PHub.createSharingUI(document.getElementById('h5p-hub-share'), <?php echo json_encode($settings); ?>);
-</script>
+    <div id="h5p-hub-share">
+        <div class="loading-screen">
+            Waiting for JavaScript
+        </div>
+    </div>
+    <script>
+      H5PHub.createSharingUI(document.getElementById('h5p-hub-share'), <?php echo json_encode($settings); ?>);
+    </script>
 <?php
 
 echo $OUTPUT->footer();

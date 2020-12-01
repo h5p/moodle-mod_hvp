@@ -164,7 +164,7 @@ class framework implements \H5PFrameworkInterface {
      * @inheritdoc
      */
     // @codingStandardsIgnoreLine
-    public function fetchExternalData($url, $data = null, $blocking = true, $stream = null, $allData = false, $headers = array(), $files = array(), $method = 'POST') {
+    public function fetchExternalData($url, $data = null, $blocking = true, $stream = null, $alldata = false, $headers = array(), $files = array(), $method = 'POST') {
         global $CFG;
 
         if (!empty($files)) {
@@ -177,29 +177,25 @@ class framework implements \H5PFrameworkInterface {
                     foreach ($value as $subvalue) {
                         $curldata[$key . '[]'] = $subvalue;
                     }
-                }
-                else {
+                } else {
                     $curldata[$key] = $value;
                 }
             }
 
             foreach ($files as $name => $file) {
-                if ($file === NULL) {
+                if ($file === null) {
                     continue;
-                }
-                elseif (is_array($file['name'])) {
+                } else if (is_array($file['name'])) {
                     // Array of files uploaded (multiple)
-                    for ($i = 0; $i < count($file['name']); $i++) {
+                    for ($i = 0; $i < count($file['name']); $i ++) {
                         $curldata[$name . '[]'] = new \CurlFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
                     }
-                }
-                else {
+                } else {
                     // Single file
                     $curldata[$name] = new \CurlFile($file['tmp_name'], $file['type'], $file['name']);
                 }
             }
-        }
-        elseif (!empty($data)) {
+        } else if (!empty($data)) {
             // application/x-www-form-urlencoded
             $curldata = format_postdata_for_curlcall($data);
         }
@@ -208,10 +204,10 @@ class framework implements \H5PFrameworkInterface {
             'CURLOPT_SSL_VERIFYPEER' => true,
             'CURLOPT_CONNECTTIMEOUT' => 20,
             'CURLOPT_FOLLOWLOCATION' => 1,
-            'CURLOPT_MAXREDIRS' => 5,
+            'CURLOPT_MAXREDIRS'      => 5,
             'CURLOPT_RETURNTRANSFER' => true,
-            'CURLOPT_NOBODY' => false,
-            'CURLOPT_TIMEOUT' => 300,
+            'CURLOPT_NOBODY'         => false,
+            'CURLOPT_TIMEOUT'        => 300,
         );
 
         if ($stream !== null) {
@@ -220,14 +216,14 @@ class framework implements \H5PFrameworkInterface {
 
             // Generate local tmp file path.
             $localfolder = $CFG->tempdir . uniqid('/hvp-');
-            $stream = $localfolder . '.h5p';
+            $stream      = $localfolder . '.h5p';
 
             // Add folder and file paths to H5P Core.
             $interface = self::instance('interface');
             $interface->getUploadedH5pFolderPath($localfolder);
             $interface->getUploadedH5pPath($stream);
 
-            $stream = fopen($stream, 'w');
+            $stream                  = fopen($stream, 'w');
             $options['CURLOPT_FILE'] = $stream;
         }
 
@@ -240,11 +236,9 @@ class framework implements \H5PFrameworkInterface {
 
         if (empty($data) || $method === 'GET') {
             $response = $curl->get($url, array(), $options);
-        }
-        elseif ($method === 'POST') {
+        } else if ($method === 'POST') {
             $response = $curl->post($url, $curldata, $options);
-        }
-        elseif ($method === 'PUT') {
+        } else if ($method === 'PUT') {
             $response = $curl->put($url, $curldata, $options);
         }
 
@@ -253,27 +247,27 @@ class framework implements \H5PFrameworkInterface {
             @chmod($stream, $CFG->filepermissions);
         }
 
-        $error_no = $curl->get_errno();
+        $errorno = $curl->get_errno();
         // Error handling
-        if ($error_no) {
-            if ($allData) {
+        if ($errorno) {
+            if ($alldata) {
                 $response = null;
-            }
-            else {
+            } else {
                 $this->setErrorMessage($response, 'failed-fetching-external-data');
-                return FALSE;
+
+                return false;
             }
         }
 
-        if ($allData) {
+        if ($alldata) {
             $info = $curl->get_info();
+
             return [
-              'status' => intval($info['http_code']),
-              'data' => empty($response) ? null : $response,
-              'headers' => $curl->get_raw_response(),
+                'status'  => intval($info['http_code']),
+                'data'    => empty($response) ? null : $response,
+                'headers' => $curl->get_raw_response(),
             ];
-        }
-        else {
+        } else {
             return $response;
         }
     }
@@ -1765,22 +1759,21 @@ class framework implements \H5PFrameworkInterface {
 
         // Check if exist in database
         $cache = $DB->get_record_sql(
-                'SELECT id
+            'SELECT id
                    FROM {hvp_content_hub_cache}
                   WHERE language = ?',
-                array($lang)
+            array($lang)
         );
         if ($cache) {
-          // Update
-          $DB->execute("UPDATE {hvp_content_hub_cache} SET json = ? WHERE id = ?", array($metadata, $cache->id));
-        }
-        else {
-          // Insert
-          $DB->insert_record('hvp_content_hub_cache', (object) array(
-              'json' => $metadata,
-              'language' => $lang,
-              'last_checked' => time(),
-          ));
+            // Update
+            $DB->execute("UPDATE {hvp_content_hub_cache} SET json = ? WHERE id = ?", array($metadata, $cache->id));
+        } else {
+            // Insert
+            $DB->insert_record('hvp_content_hub_cache', (object) array(
+                'json'         => $metadata,
+                'language'     => $lang,
+                'last_checked' => time(),
+            ));
         }
     }
 
