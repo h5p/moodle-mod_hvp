@@ -83,7 +83,7 @@ if ($content['shared'] === '1' && has_capability('mod/hvp:share', $context)) {
     $token = \H5PCore::createToken('share_' . $id);
     ?><div class="content-hub-options">
       <div><i class="h5picon-content-hub" aria-hidden="false"></i><?php echo get_string('contenthuboptions', 'hvp'); ?></div>
-      <div class="content-hub-edit"><a href="{{ route('content.share', $content) }}"><span><?php echo get_string('contenthubeditsharing', 'hvp'); ?></span></a></div>
+      <div class="content-hub-edit"><a href="share.php?id=<?php echo $id; ?>"><span><?php echo get_string('contenthubeditsharing', 'hvp'); ?></span></a></div>
       <?php if ($synced !== \H5PContentHubSyncStatus::SYNCED && $synced !== \H5PContentHubSyncStatus::WAITING): ?>
         <div class="content-hub-sync">
           <form action="share.php?action=sync&id=<?php echo $id; ?>" method="post">
