@@ -228,6 +228,7 @@ $string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content ty
 $string['hvp:emailconfirmsubmission'] = 'Get a confirmation message when submitting';
 $string['hvp:emailnotifysubmission'] = 'Get a notification message when an attempt is submitted';
 $string['hvp:contenthubregistration'] = 'Register site with the H5P Content Hub';
+$string['hvp:share'] = 'Share content on the H5P OER Hub';
 
 // Capabilities error messages.
 $string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
