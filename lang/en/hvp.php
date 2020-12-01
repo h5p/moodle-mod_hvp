@@ -488,4 +488,5 @@ $string['contenthub:licenseagreementmaintext'] = 'TODO';
 $string['contenthub:register'] = 'Register an account on the H5P Hub <a href="/mod/hvp/content_hub_registration.php">here</a>';
 $string['contenthub:changesettings'] = 'Change account settings <a href="/mod/hvp/content_hub_registration.php">here</a>';
 $string['contenthub:nopermissions'] = 'You do not have permission to register the site with the content hub.';
-
+$string['contentissyncing'] = 'Content is being synced.';
+$string['noexport'] = 'Missing export file.';

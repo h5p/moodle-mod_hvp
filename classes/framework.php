@@ -168,6 +168,21 @@ class framework implements \H5PFrameworkInterface {
         global $CFG;
 
         if (!empty($files)) {
+            $curldata = array();
+            foreach ($data as $key => $value) {
+                if (empty($value)) {
+                    continue; // Skip empty values
+                }
+                if (is_array($value)) {
+                    foreach ($value as $subvalue) {
+                        $curldata[$key . '[]'] = $subvalue;
+                    }
+                }
+                else {
+                    $curldata[$key] = $value;
+                }
+            }
+
             foreach ($files as $name => $file) {
                 if ($file === NULL) {
                     continue;
@@ -175,18 +190,18 @@ class framework implements \H5PFrameworkInterface {
                 elseif (is_array($file['name'])) {
                     // Array of files uploaded (multiple)
                     for ($i = 0; $i < count($file['name']); $i++) {
-                        $data[$name . '[]'] = new \CurlFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
+                        $curldata[$name . '[]'] = new \CurlFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
                     }
                 }
                 else {
                     // Single file
-                    $data[$name] = new \CurlFile($file['tmp_name'], $file['type'], $file['name']);
+                    $curldata[$name] = new \CurlFile($file['tmp_name'], $file['type'], $file['name']);
                 }
             }
         }
         elseif (!empty($data)) {
             // application/x-www-form-urlencoded
-            $data = format_postdata_for_curlcall($data);
+            $curldata = format_postdata_for_curlcall($data);
         }
 
         $options = array(
@@ -227,10 +242,10 @@ class framework implements \H5PFrameworkInterface {
             $response = $curl->get($url, array(), $options);
         }
         elseif ($method === 'POST') {
-            $response = $curl->post($url, $data, $options);
+            $response = $curl->post($url, $curldata, $options);
         }
         elseif ($method === 'PUT') {
-            $response = $curl->put($url, $data, $options);
+            $response = $curl->put($url, $curldata, $options);
         }
 
         if ($stream !== null) {
@@ -1186,9 +1201,9 @@ class framework implements \H5PFrameworkInterface {
             hc.changes,
             hc.author_comments,
             hc.default_language,
-            hc.shared AS shared,
-            hc.synced AS synced,
-            hc.hub_id AS contentHubId
+            hc.shared,
+            hc.synced,
+            hc.hub_id
           FROM {hvp} hc
           JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
           WHERE hc.id = ?", array($id)
@@ -1211,6 +1226,9 @@ class framework implements \H5PFrameworkInterface {
             'slug' => $data->slug,
             'embedType' => $data->embed_type,
             'disable' => $data->disable,
+            'shared' => $data->shared,
+            'synced' => $data->synced,
+            'contentHubId' => $data->hub_id,
             'libraryId' => $data->library_id,
             'libraryName' => $data->machine_name,
             'libraryMajorVersion' => $data->major_version,
@@ -1794,7 +1812,7 @@ class framework implements \H5PFrameworkInterface {
                 array($lang)
         );
         if ($cache) {
-            $time = new DateTime($cache->last_checked);
+            $time = new \DateTime($cache->last_checked);
             $cache = $time->format("D, d M Y H:i:s \G\M\T");
         }
         return $cache;
