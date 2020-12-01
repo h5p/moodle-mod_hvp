@@ -62,7 +62,7 @@ if ($action) {
     if (!\H5PCore::validToken('share_' . $id, $token)) {
         print_error('invalidtoken');
     }
-    if (empty($content['contentHubId']) || empty($content['shared'])) {
+    if (empty($content['contentHubId']) || $content['shared'] !== '1') {
         print_error('contentnotshared');
     }
 
@@ -109,7 +109,7 @@ $settings = [
   'contentType' => "{$content['library']['name']} {$content['library']['majorVersion']}.{$content['library']['minorVersion']}",
   'language' => $locale,
   'hubContent' => $hubcontent,
-  'context' => empty($content['shared']) ? 'share' : 'edit',
+  'context' => $content['shared'] !== '1' ? 'share' : 'edit',
 ];
 
 // Configure page.

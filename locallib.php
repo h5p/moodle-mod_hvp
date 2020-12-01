@@ -655,3 +655,24 @@ function hvp_attempt_submitted_handler($event) {
 
     hvp_send_notification_messages($course, $hvp, $attempt, $context, $cm);
 }
+
+/**
+ * Check and update content hub status for shared content.
+ *
+ * @param $content
+ */
+function hvp_update_hub_status($content) {
+  $synced = intval($content['synced']);
+
+  // Only check sync status when waiting
+  if (empty($content['contentHubId']) || $synced !== H5PContentHubSyncStatus::WAITING) {
+      return;
+  }
+
+  $core = \mod_hvp\framework::instance();
+  $newstate = $core->getHubContentStatus($content['contentHubId'], $synced);
+  if ($newstate !== false) {
+      $core->h5pF->updateContentFields($content['id'], array('synced' => $newstate));
+      return $newstate;
+  }
+}
