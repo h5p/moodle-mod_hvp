@@ -1,0 +1,31 @@
+<div style="margin-bottom: 2em;">
+    {{^name}}
+        {{# str }} contenthub:register, mod_hvp {{/str}}
+    {{/name}}
+    {{#name}}
+        <div>
+            <img src="{{logo}}" style="max-width: 5em; display: inline-block; vertical-align: top;" />
+            <div style="display: inline-block">
+                <div>{{name}}</div>
+                {{#contactPerson}}
+                    <div>{{contactPerson}}</div>
+                {{/contactPerson}}
+                {{#email}}
+                    <div>{{email}}</div>
+                {{/email}}
+                <div>
+                    {{address}} {{zip}} {{city}}
+                </div>
+                {{#country}}
+                    <div>{{country}}</div>
+                {{/country}}
+                {{#phone}}
+                    <div>{{phone}}</div>
+                {{/phone}}
+                <div style="margin-top: 1em">
+                    {{# str}} contenthub:changesettings, mod_hvp {{/str}}
+                </div>
+            </div>
+        </div>
+    {{/name}}
+</div>

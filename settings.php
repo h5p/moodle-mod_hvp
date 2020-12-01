@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/hvp/lib.php');
+require_once($CFG->dirroot . '/mod/hvp/classes/admin_setting_html.php');
 
 global $PAGE;
 
@@ -110,6 +111,26 @@ if ($ADMIN->fulltree) {
             1
         )
     );
+
+    // Content Hub
+    try {
+        $hubInfo = $core->hubAccountInfo();
+
+        $settings->add(new admin_setting_heading(
+            'mod_hvp/content_hub_settings',
+            get_string('contenthub:settings:heading', 'hvp'),
+            ''
+        ));
+
+        $settings->add(new admin_setting_html(
+            'mod_hvp/content_hub_settings_box',
+            get_string('contenthub:settings:box', 'hvp'),
+            $hubInfo
+        ));
+    }
+    catch (Exception $e) {
+        // Not showing account form
+    }
 
     // Load js for disable hub confirmation dialog functionality.
     $PAGE->requires->js('/mod/hvp/library/js/jquery.js', true);
