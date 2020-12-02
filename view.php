@@ -71,15 +71,18 @@ if (trim(strip_tags($content['intro'], '<img>'))) {
     echo $OUTPUT->box_end();
 }
 
+$isShared = $content['shared'] === '1' && has_capability('mod/hvp:share', $context);
+// Update Hub status for content before printing out messages
+if ($isShared) {
+    $newstate = hvp_update_hub_status($content);
+}
+
 // Print any messages.
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
-if ($content['shared'] === '1' && has_capability('mod/hvp:share', $context)) {
-    // Update Hub status for content before proceeding
-    $newstate = hvp_update_hub_status($content);
+if ($isShared) {
     $synced = $newstate ? $newstate : intval($content['synced']);
-
     $token = \H5PCore::createToken('share_' . $id);
     ?><div class="content-hub-options">
       <div><i class="h5picon-content-hub" aria-hidden="false"></i><?php echo get_string('contenthuboptions', 'hvp'); ?></div>
