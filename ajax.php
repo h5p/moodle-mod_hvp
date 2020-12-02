@@ -451,7 +451,8 @@ switch($action) {
 
         // Get file size
         $slug = $content['slug'] ? $content['slug'] . '-' : '';
-        $file = get_file_storage()->get_file($cm->module, 'mod_hvp', 'exports', 0, '/', "{$slug}{$content['id']}.h5p");
+        $filecontext = context_course::instance($cm->course);
+        $file = get_file_storage()->get_file($filecontext->id, 'mod_hvp', 'exports', 0, '/', "{$slug}{$content['id']}.h5p");
         if (!$file) {
             \H5PCore::ajaxError(get_string('noexport', 'hvp'));
             break;

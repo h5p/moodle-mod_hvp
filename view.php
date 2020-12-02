@@ -71,12 +71,19 @@ if (trim(strip_tags($content['intro'], '<img>'))) {
     echo $OUTPUT->box_end();
 }
 
+$hashub = (has_capability('mod/hvp:share', $context) && !empty(get_config('mod_hvp', 'site_uuid')) && !empty(get_config('mod_hvp', 'hub_secret')));
+$isshared = $content['shared'] === '1';
+// Update Hub status for content before printing out messages
+if ($hashub && $isshared) {
+    $newstate = hvp_update_hub_status($content);
+}
+
 // Print any messages.
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
-if (has_capability('mod/hvp:share', $context) && !empty(get_config('mod_hvp', 'site_uuid')) && !empty(get_config('mod_hvp', 'hub_secret'))) {
-    if ($content['shared'] !== '1') {
+if ($hashub) {
+    if ($isshared) {
         ?><div class="content-hub-options">
           <div class="content-hub-share">
             <a href="share.php?id=<?php echo $id; ?>"><span><?php echo get_string('contenthubshare', 'hvp'); ?></span></a>
