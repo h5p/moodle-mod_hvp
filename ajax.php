@@ -450,7 +450,8 @@ switch($action) {
         $data['download_url'] = hvp_create_hub_export_url($cm->id, $content);
 
         // Get file size
-        $file = get_file_storage()->get_file($cm->module, 'mod_hvp', 'exports', 0, '/', $filename);
+        $slug = $content['slug'] ? $content['slug'] . '-' : '';
+        $file = get_file_storage()->get_file($cm->module, 'mod_hvp', 'exports', 0, '/', "{$slug}{$content['id']}.h5p");
         if (!$file) {
             \H5PCore::ajaxError(get_string('noexport', 'hvp'));
             break;
