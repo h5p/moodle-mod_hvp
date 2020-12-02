@@ -342,7 +342,7 @@ switch($action) {
      * Handle filtering of parameters through AJAX.
      */
     case 'contenthubmetadatacache':
-        if (!framework::has_editor_access('nopermissiontoviewcontenttypes')) {
+        if (!framework::has_editor_access('nopermissiontoviewcontenthubcache')) {
             break;
         }
         $editor = framework::instance('editor');

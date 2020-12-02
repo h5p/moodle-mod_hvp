@@ -240,6 +240,7 @@ $string['nopermissiontoviewresult'] = 'You do not have permission to view result
 $string['nopermissiontouploadfiles'] = 'You do not have permission to upload files here.';
 $string['nopermissiontouploadcontent'] = 'You do not have permission to upload content here.';
 $string['nopermissiontoviewcontenttypes'] = 'You do not have permission to view the content types.';
+$string['nopermissiontoviewcontenthubcache'] = 'You do not have permission to view the metadata for the content hub.';
 
 // Editor translations.
 $string['noziparchive'] = 'Your PHP version does not support ZipArchive.';
