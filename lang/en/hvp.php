@@ -497,3 +497,4 @@ $string['contenthubeditsharing'] = 'Edit sharing info';
 $string['contenthubsyncchanges'] = 'Sync changes';
 $string['contenthubsharinginprogress'] = 'Sharing...';
 $string['contenthubunshare'] = 'Unshare';
+$string['contenthubshare'] = 'Share on H5P Hub';

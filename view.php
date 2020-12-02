@@ -75,33 +75,42 @@ if (trim(strip_tags($content['intro'], '<img>'))) {
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
 
-if ($content['shared'] === '1' && has_capability('mod/hvp:share', $context)) {
-    // Update Hub status for content before proceeding
-    $newstate = hvp_update_hub_status($content);
-    $synced = $newstate ? $newstate : intval($content['synced']);
+if (has_capability('mod/hvp:share', $context) && !empty(get_config('mod_hvp', 'site_uuid')) && !empty(get_config('mod_hvp', 'hub_secret'))) {
+    if ($content['shared'] !== '1') {
+        ?><div class="content-hub-options">
+          <div class="content-hub-share">
+            <a href="share.php?id=<?php echo $id; ?>"><span><?php echo get_string('contenthubshare', 'hvp'); ?></span></a>
+          </div>
+        </div><?php
+    }
+    else {
+        // Update Hub status for content before proceeding
+        $newstate = hvp_update_hub_status($content);
+        $synced = $newstate ? $newstate : intval($content['synced']);
+        $token = \H5PCore::createToken('share_' . $id);
 
-    $token = \H5PCore::createToken('share_' . $id);
-    ?><div class="content-hub-options">
-      <div><i class="h5picon-content-hub" aria-hidden="false"></i><?php echo get_string('contenthuboptions', 'hvp'); ?></div>
-      <div class="content-hub-edit"><a href="share.php?id=<?php echo $id; ?>"><span><?php echo get_string('contenthubeditsharing', 'hvp'); ?></span></a></div>
-      <?php if ($synced !== \H5PContentHubSyncStatus::SYNCED && $synced !== \H5PContentHubSyncStatus::WAITING): ?>
-        <div class="content-hub-sync">
-          <form action="share.php?action=sync&id=<?php echo $id; ?>" method="post">
-            <input type="hidden" name="_token" value="<?php echo $token; ?>">
-            <a href="#" onclick="this.parentElement.submit()"><span><?php echo get_string('contenthubsyncchanges', 'hvp'); ?></span></a>
-          </form>
-        </div>
-      <?php endif; ?>
-      <div class="content-hub-sharing<?php echo ($synced === \H5PContentHubSyncStatus::WAITING ? '' : ' hidden'); ?>">
-        <?php echo get_string('contenthubsharinginprogress', 'hvp'); ?>
-      </div>
-      <div class="content-hub-unshare">
-        <form action="share.php?action=unpublish&id=<?php echo $id; ?>" method="post">
-          <input type="hidden" name="_token" value="<?php echo $token; ?>">
-          <a href="#" onclick="this.parentElement.submit()"><span><?php echo get_string('contenthubunshare', 'hvp'); ?></span></a>
-        </form>
-      </div>
-    </div><?php
+        ?><div class="content-hub-options">
+          <div><i class="h5picon-content-hub" aria-hidden="false"></i><?php echo get_string('contenthuboptions', 'hvp'); ?></div>
+          <div class="content-hub-edit"><a href="share.php?id=<?php echo $id; ?>"><span><?php echo get_string('contenthubeditsharing', 'hvp'); ?></span></a></div>
+          <?php if ($synced !== \H5PContentHubSyncStatus::SYNCED && $synced !== \H5PContentHubSyncStatus::WAITING): ?>
+            <div class="content-hub-sync">
+              <form action="share.php?action=sync&id=<?php echo $id; ?>" method="post">
+                <input type="hidden" name="_token" value="<?php echo $token; ?>">
+                <a href="#" onclick="this.parentElement.submit()"><span><?php echo get_string('contenthubsyncchanges', 'hvp'); ?></span></a>
+              </form>
+            </div>
+          <?php endif; ?>
+          <div class="content-hub-sharing<?php echo ($synced === \H5PContentHubSyncStatus::WAITING ? '' : ' hidden'); ?>">
+            <?php echo get_string('contenthubsharinginprogress', 'hvp'); ?>
+          </div>
+          <div class="content-hub-unshare">
+            <form action="share.php?action=unpublish&id=<?php echo $id; ?>" method="post">
+              <input type="hidden" name="_token" value="<?php echo $token; ?>">
+              <a href="#" onclick="this.parentElement.submit()"><span><?php echo get_string('contenthubunshare', 'hvp'); ?></span></a>
+            </form>
+          </div>
+        </div><?php
+    }
 }
 
 $view->outputview();
