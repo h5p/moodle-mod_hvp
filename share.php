@@ -128,7 +128,7 @@ echo $OUTPUT->heading(format_string($cm->name));
 ?>
     <div id="h5p-hub-share">
         <div class="loading-screen">
-            Waiting for JavaScript
+            <?php echo get_string('javascriptloading', 'hvp'); ?>
         </div>
     </div>
     <script>
