@@ -261,8 +261,25 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // Check permission.
-            if (!has_capability('mod/hvp:view', $context)) {
+            // Allow download if valid temporary hash
+            $ishub = false;
+            $hub = optional_param('hub', null, PARAM_RAW);
+            if ($hub) {
+                list($time, $hash) = explode('.', $hub, 2);
+                $time = hvp_base64_decode($time);
+                $hash = hvp_base64_decode($hash);
+
+                $data = $time . ':' . get_config('mod_hvp', 'site_uuid');
+                $signature = hash_hmac('SHA512', $data, get_config('mod_hvp', 'hub_secret'), true);
+
+                if ($time < (time() - 43200) || !hash_equals($signature, $hash)) {
+                    // No valid hash
+                    return false;
+                }
+                $ishub = true;
+            }
+            elseif (!has_capability('mod/hvp:view', $context)) {
+                // No permission.
                 return false;
             }
             // Note that the getexport permission is checked after loading the content.
@@ -284,7 +301,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             $displayoptions = $h5pcore->getDisplayOptionsForView($content['disable'], $context->instanceid);
 
             // Check permissions.
-            if (!$displayoptions['export']) {
+            if (!$displayoptions['export'] && !$ishub) {
                 return false;
             }
 
@@ -421,4 +438,19 @@ function hvp_get_completion_state($course, $cm, $userid, $type) {
         }
     }
     return false;
+}
+
+/**
+ * URL compatible base64 decoding.
+ *
+ * @param string $string
+ * @return string
+ */
+function hvp_base64_decode($string) {
+    $r = strlen($string) % 4;
+    if ($r) {
+        $l = 4 - $r;
+        $string .= str_repeat('=', $l);
+    }
+    return base64_decode(strtr($string, '-_', '+/'));
 }
