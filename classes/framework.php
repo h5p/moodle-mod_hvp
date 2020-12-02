@@ -1061,6 +1061,7 @@ class framework implements \H5PFrameworkInterface {
             $id = $DB->insert_record('hvp', $data);
         } else {
             $data['id'] = $content['id'];
+            $data['synced'] = \H5PContentHubSyncStatus::NOT_SYNCED;
             $DB->update_record('hvp', $data);
             $eventtype = 'update';
             $id = $data['id'];
