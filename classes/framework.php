@@ -174,8 +174,8 @@ class framework implements \H5PFrameworkInterface {
                     continue; // Skip empty values
                 }
                 if (is_array($value)) {
-                    foreach ($value as $subvalue) {
-                        $curldata[$key . '[]'] = $subvalue;
+                    foreach ($value as $i => $subvalue) {
+                        $curldata["{$key}[{$i}]"] = $subvalue;
                     }
                 } else {
                     $curldata[$key] = $value;
@@ -188,7 +188,7 @@ class framework implements \H5PFrameworkInterface {
                 } else if (is_array($file['name'])) {
                     // Array of files uploaded (multiple)
                     for ($i = 0; $i < count($file['name']); $i ++) {
-                        $curldata[$name . '[]'] = new \CurlFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
+                        $curldata["{$name}[{$i}]"] = new \CurlFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
                     }
                 } else {
                     // Single file
