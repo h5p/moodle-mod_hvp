@@ -1805,7 +1805,8 @@ class framework implements \H5PFrameworkInterface {
                 array($lang)
         );
         if ($cache) {
-            $time = new \DateTime($cache->last_checked);
+            $time = new \DateTime();
+            $time->setTimestamp($cache->last_checked);
             $cache = $time->format("D, d M Y H:i:s \G\M\T");
         }
         return $cache;
