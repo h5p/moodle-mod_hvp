@@ -561,11 +561,22 @@ class file_storage implements \H5PFileStorage {
                 $fs = get_file_storage();
             }
             $record = $options;
-            $record['filearea'] = 'library_archives';
-            $record['filename'] = 'lib-export.zip';
-            $archive->close();
-            $fs->create_file_from_pathname($record, $path);
-            unlink($path);
+
+            // Only store the lib if it doesn't already exist.
+            if (!$fs->file_exists(
+                $record['contextid'],
+                $record['component'],
+                'library_archives',
+                $record['itemid'],
+                $record['filepath'],
+                'lib-export.zip'
+            )) {
+                $record['filearea'] = 'library_archives';
+                $record['filename'] = 'lib-export.zip';
+                $archive->close();
+                $fs->create_file_from_pathname($record, $path);
+                unlink($path);
+            }
         }
 
         closedir($dir);
