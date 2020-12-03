@@ -81,7 +81,7 @@ $huboptionsdata = array(
 // Update Hub status for content before printing out messages
 if ($hashub && $isshared) {
     $newstate = hvp_update_hub_status($content);
-    $synced = $newstate ? $newstate : intval($content['synced']);
+    $synced = $newstate !== false ? $newstate : intval($content['synced']);
     $huboptionsdata['canbesynced'] = $synced !== \H5PContentHubSyncStatus::SYNCED && $synced !== \H5PContentHubSyncStatus::WAITING;
     $huboptionsdata['waitingclass'] = $synced === \H5PContentHubSyncStatus::WAITING ? '' : ' hidden';
     $huboptionsdata['token'] = \H5PCore::createToken('share_' . $id);

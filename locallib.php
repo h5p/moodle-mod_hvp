@@ -666,7 +666,7 @@ function hvp_update_hub_status($content) {
 
   // Only check sync status when waiting
   if (empty($content['contentHubId']) || $synced !== H5PContentHubSyncStatus::WAITING) {
-      return;
+      return false;
   }
 
   $core = \mod_hvp\framework::instance();
@@ -675,6 +675,8 @@ function hvp_update_hub_status($content) {
       $core->h5pF->updateContentFields($content['id'], array('synced' => $newstate));
       return $newstate;
   }
+
+  return false;
 }
 
 /**
