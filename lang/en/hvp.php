@@ -480,6 +480,8 @@ $string['completionpassdesc'] = 'Student must achieve a passing grade to complet
 $string['completionpass_help'] = 'If enabled, this activity is considered complete when the student receives a pass grade (as specified in the Grade section of the H5P activity settings) or higher.';
 $string['gradetopassnotset'] = 'This H5P activity does not yet have a grade to pass set. It may be set in the Grade section of the H5P activity settings.';
 $string['gradetopassmustbeset'] = 'Grade to pass cannot be zero as this H5P activity has its completion method set to require passing grade. Please set a non-zero value.';
+$string['gradeheading'] = 'Results for {$a}';
+$string['assistivetechnologieslabel'] = 'Assistive Technologies label';
 
 // Content hub
 $string['contenthub:settings:heading'] = 'H5P Hub Account Settings';

@@ -495,6 +495,31 @@ function hvp_upgrade_2020080400() {
     }
 }
 
+function hvp_upgrade_2020080401() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    // Changing nullability of field completionpass on table hvp to not null.
+    $table = new xmldb_table('hvp');
+    $field = new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'timemodified');
+
+    // Launch change of nullability for field completionpass.
+    $dbman->change_field_notnull($table, $field);
+}
+
+function hvp_upgrade_2020082800() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp');
+
+    if (!$dbman->field_exists($table, 'a11y_title')) {
+        $dbman->add_field($table,
+            new xmldb_field('a11y_title', XMLDB_TYPE_CHAR, '255', null, null, null, null)
+        );
+    }
+}
+
 function hvp_upgrade_2020112600() {
     global $DB;
     $dbman = $DB->get_manager();
@@ -548,6 +573,8 @@ function xmldb_hvp_upgrade($oldversion) {
         2019022600,
         2019030700,
         2020080400,
+        2020080401,
+        2020082800,
         2020112600,
     ];
 

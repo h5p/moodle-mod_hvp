@@ -24,6 +24,8 @@ use \core_privacy\local\request\writer;
 use \core_privacy\local\request\contextlist;
 use \core_privacy\local\request\approved_contextlist;
 use \core_privacy\local\request\deletion_criteria;
+use \core_privacy\local\request\approved_userlist;
+use \core_privacy\local\request\userlist;
 use \core_privacy\local\metadata\collection;
 
 defined('MOODLE_INTERNAL') || die();
@@ -34,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
 class provider implements
     // This plugin has data.
     \core_privacy\local\metadata\provider,
-
+    \core_privacy\local\request\core_userlist_provider,
     // This plugin currently implements the original plugin_provider interface.
     \core_privacy\local\request\plugin\provider {
 
@@ -442,5 +444,76 @@ class provider implements
         $DB->delete_records('hvp_events', [
             'user_id' => $userid,
         ]);
+    }
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+        if (!is_a($context, \context_module::class)) {
+            return;
+        }
+
+        $sql = "
+          SELECT d.user_id
+          FROM {course_modules} cm
+            INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'hvp'
+            INNER JOIN {context} c ON c.instanceid = cm.id
+            INNER JOIN {hvp} h ON h.id = cm.instance
+            INNER JOIN {hvp_content_user_data} d ON h.id = d.hvp_id
+          WHERE c.contextlevel = :contextlevel AND c.id = :contextid";
+
+        $params = [
+            'contextlevel' => CONTEXT_MODULE,
+            'contextid'    => $context->id,
+        ];
+        $userlist->add_from_sql('user_id', $sql, $params);
+
+        $sql = "
+          SELECT
+            x.user_id
+          FROM {course_modules} cm
+            INNER JOIN {modules} m ON m.id = cm.module AND m.name = 'hvp'
+            INNER JOIN {context} c ON c.instanceid = cm.id
+            INNER JOIN {hvp} h ON h.id = cm.instance
+            INNER JOIN {hvp_xapi_results} x ON x.content_id = h.id
+          WHERE c.contextlevel = :contextlevel AND c.id = :contextid";
+        $userlist->add_from_sql('user_id', $sql, $params);
+    }
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param   approved_userlist       $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+        $context = $userlist->get_context();
+        if (!is_a($context, \context_module::class)) {
+            return;
+        }
+        $cm = get_coursemodule_from_id('hvp', $context->instanceid);
+
+        // Prepare SQL to gather all completed IDs.
+        $userids = $userlist->get_userids();
+        list($insql, $inparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+
+        $inparams['hvpid'] = $cm->instance;
+
+        $DB->delete_records_select(
+            'hvp_content_user_data',
+            "hvp_id = :hvpid AND user_id $insql",
+            $inparams
+        );
+
+        $DB->delete_records_select(
+            'hvp_xapi_results',
+            "hvp_id = :hvpid AND user_id $insql",
+            $inparams
+        );
+
     }
 }

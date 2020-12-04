@@ -657,6 +657,7 @@ class framework implements \H5PFrameworkInterface {
                 'Unable to parse JSON from the package: %fileName' => 'couldnotparsejsonfromzip',
                 'Could not parse post data.' => 'couldnotparsepostdata',
                 'The mbstring PHP extension is not loaded. H5P needs this to function properly' => 'nombstringexteension',
+                'Assistive Technologies label' => 'assistivetechnologieslabel',
             ];
             // @codingStandardsIgnoreEnd
         }
@@ -1285,7 +1286,8 @@ class framework implements \H5PFrameworkInterface {
             hc.default_language,
             hc.shared,
             hc.synced,
-            hc.hub_id
+            hc.hub_id,
+            hc.a11y_title
           FROM {hvp} hc
           JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
           WHERE hc.id = ?", array($id)
@@ -1330,7 +1332,8 @@ class framework implements \H5PFrameworkInterface {
             'year_to',
             'changes',
             'author_comments',
-            'default_language'
+            'default_language',
+            'a11y_title'
         ];
 
         $content['metadata'] = \H5PCore::snakeToCamel(
