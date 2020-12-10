@@ -632,7 +632,7 @@ class framework implements \H5PFrameworkInterface {
                 'Zip' => 'zip',
                 'Country' => 'country',
                 'Organization logo or avatar' => 'logouploadtext',
-                'I accept the terms of the license agreement' => 'acceptterms',
+                'I accept the <a href=":url" target="_blank">terms of use</a>' => 'acceptterms',
                 'You have successfully registered an account on the H5P Hub' => 'successfullyregistred',
                 'You account details can be changed' => 'successfullyregistreddescription',
                 'here' => 'accountdetailslinktext',

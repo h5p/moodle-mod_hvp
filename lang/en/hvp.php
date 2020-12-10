@@ -568,7 +568,7 @@ $string['city'] = 'City';
 $string['zip'] = 'Zip';
 $string['country'] = 'Country';
 $string['logouploadtext'] = 'Organization logo or avatar';
-$string['acceptterms'] = 'I accept the terms of the license agreement';
+$string['acceptterms'] = 'I accept the <a href=":url" target="_blank">terms of use</a>';
 $string['successfullyregistred'] = 'You have successfully registered an account on the H5P Hub';
 $string['successfullyregistreddescription'] = 'You account details can be changed';
 $string['accountdetailslinktext'] = 'here';
