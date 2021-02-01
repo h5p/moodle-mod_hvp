@@ -154,9 +154,15 @@ class view_assets {
 
         $root = self::getsiteroot();
         $embedurl = new \moodle_url("{$root}/mod/hvp/embed.php?id={$this->cm->id}");
+        $title = isset($this->content['metadata']['a11yTitle'])
+            ? $this->content['metadata']['a11yTitle']
+            : (isset($this->content['metadata']['title'])
+                ? $this->content['metadata']['title']
+                : ''
+            );
 
         return "<iframe src=\"{$embedurl->out()}\" width=\":w\" height=\":h\" frameborder=\"0\" " .
-               "allowfullscreen=\"allowfullscreen\"></iframe>";
+               "allowfullscreen=\"allowfullscreen\" title=\"{$title}\"></iframe>";
     }
 
     /**
@@ -310,6 +316,13 @@ class view_assets {
         if ($this->embedtype === 'div') {
             echo "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
         } else {
+            $title = isset($this->content['metadata']['a11yTitle'])
+                ? $this->content['metadata']['a11yTitle']
+                : (isset($this->content['metadata']['title'])
+                    ? $this->content['metadata']['title']
+                    : ''
+                );
+
             echo "<div class=\"h5p-iframe-wrapper\">" .
                  "<iframe id=\"h5p-iframe-{$this->content['id']}\"" .
                  " class=\"h5p-iframe\"" .
@@ -317,7 +330,8 @@ class view_assets {
                  " style=\"height:1px\"" .
                  " src=\"about:blank\"" .
                  " frameBorder=\"0\"" .
-                 " scrolling=\"no\">" .
+                 " scrolling=\"no\"" .
+                 " title=\"{$title}\">" .
                  "</iframe>" .
                  "</div>";
         }
