@@ -566,7 +566,6 @@ class framework implements \H5PFrameworkInterface {
                 'Successfully submitted results.' => 'offlinesuccessfulsubmit',
                 'Sharing <strong>:title</strong>' => 'maintitle',
                 'Edit info for <strong>:title</strong>' => 'editinfotitle',
-                'Cancel' => 'cancellabel',
                 'Back' => 'back',
                 'Next' => 'next',
                 'Review info' => 'reviewinfo',
@@ -581,7 +580,6 @@ class framework implements \H5PFrameworkInterface {
                 'Step :step of :total' => 'currentstep',
                 'All content details can be edited after sharing' => 'sharingnote',
                 'Select a license for your content' => 'licensedescription',
-                'License Version' => 'licenseversion',
                 'Select a license version' => 'licenseversiondescription',
                 'Disciplines' => 'disciplinelabel',
                 'You can select multiple disciplines' => 'disciplinedescription',
@@ -658,6 +656,12 @@ class framework implements \H5PFrameworkInterface {
                 'Could not parse post data.' => 'couldnotparsepostdata',
                 'The mbstring PHP extension is not loaded. H5P needs this to function properly' => 'nombstringexteension',
                 'Assistive Technologies label' => 'assistivetechnologieslabel',
+                'Typical age' => 'age',
+                'The target audience of this content. Possible input formats separated by commas: "1,34-45,-50,59-".' => 'agedescription',
+                'Invalid input format for Typical age. Possible input formats separated by commas: "1, 34-45, -50, -59-".' => 'invalidage',
+                'H5P will reach out to the contact person in case there are any issues with the content shared by the publisher. The contact person\'s name or other information will not be published or shared with third parties' => 'contactpersondescription',
+                'The email address will be used by H5P to reach out to the publisher in case of any issues with the content or in case the publisher needs to recover their account. It will not be published or shared with any third parties' => 'emailaddressdescription',
+                'Copyrighted material cannot be shared in the H5P Content Hub. If the content is licensed with a OER friendly license like Creative Commons, please choose the appropriate license. If not this content cannot be shared.' => 'copyrightwarning',
             ];
             // @codingStandardsIgnoreEnd
         }

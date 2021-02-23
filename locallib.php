@@ -195,6 +195,12 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     $filespathbase = "{$root}/pluginfile.php/{$context->id}/mod_hvp/";
     $contentvalidator = \mod_hvp\framework::instance('contentvalidator');
     $editorajaxtoken = \H5PCore::createToken('editorajax');
+
+    $interface = \mod_hvp\framework::instance('interface');
+    $siteuuid = $interface->getOption('site_uuid', null);
+    $secret   = $interface->getOption('hub_secret', null);
+    $enablecontenthub = !empty($siteuuid) && !empty($secret);
+
     $settings['editor'] = array(
       'filesPath' => $filespathbase . 'editor',
       'fileIcon' => array(
@@ -212,8 +218,9 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
       'language' => $language,
       'formId' => $mformid,
       'hub' => [
-        'contentSearchUrl' => \H5PHubEndpoints::createURL(\H5PHubEndpoints::CONTENT),
+        'contentSearchUrl' => \H5PHubEndpoints::createURL(\H5PHubEndpoints::CONTENT) . '/search',
       ],
+      'enableContentHub' => $enablecontenthub,
     );
 
     if ($id !== null) {

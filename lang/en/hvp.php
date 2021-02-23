@@ -587,3 +587,11 @@ $string['cancelpublishconfirmationdialogconfirmbuttontext'] = 'Yes';
 $string['add'] = 'Add';
 $string['updateregistrationonhub'] = 'Save account settings';
 $string['successfullyupdated'] = 'Your H5P Hub account settings have successfully been changed';
+
+# Content hub
+$string['age'] = 'Typical age';
+$string['agedescription'] = 'The target audience of this content. Possible input formats separated by commas: "1,34-45,-50,59-".';
+$string['invalidage'] = 'Invalid input format for Typical age. Possible input formats separated by commas: "1, 34-45, -50, -59-".';
+$string['contactpersondescription'] = 'H5P will reach out to the contact person in case there are any issues with the content shared by the publisher. The contact person\'s name or other information will not be published or shared with third parties';
+$string['emailaddressdescription'] = 'The email address will be used by H5P to reach out to the publisher in case of any issues with the content or in case the publisher needs to recover their account. It will not be published or shared with any third parties';
+$string['copyrightwarning'] = 'Copyrighted material cannot be shared in the H5P Content Hub. If the content is licensed with a OER friendly license like Creative Commons, please choose the appropriate license. If not this content cannot be shared.';

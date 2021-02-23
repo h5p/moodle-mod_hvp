@@ -88,9 +88,21 @@ if (empty($content['contentHubId'])) {
     // Try to populate with license from content
     $license        = !empty($content['metadata']['license']) ? $content['metadata']['license'] : null;
     $licenseversion = !empty($license) && !empty($content['metadata']['licenseVersion']) ? $content['metadata']['licenseVersion'] : null;
+    $showcopyrightwarning = false;
+
+    if ($license === 'U') {
+        $license = null;
+    }
+
+    if ($license === 'C') {
+        $license = null;
+        $showcopyrightwarning = true;
+    }
+
     $hubcontent     = [
         'license'        => $license,
         'licenseVersion' => $licenseversion,
+        'showCopyrightWarning' => $showcopyrightwarning,
     ];
 }
 

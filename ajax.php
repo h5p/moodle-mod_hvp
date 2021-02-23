@@ -420,16 +420,17 @@ switch($action) {
         $data = array(
             'title'                => required_param('title', PARAM_RAW),
             'language'             => required_param('language', PARAM_RAW),
-            'level'                => required_param('level', PARAM_RAW),
             'license'              => required_param('license', PARAM_RAW),
             'license_version'      => required_param('license_version', PARAM_RAW),
-            'disciplines'          => required_param_array('disciplines', PARAM_RAW),
+            'level'                => optional_param('level', null, PARAM_RAW),
+            'disciplines'          => optional_param_array('disciplines', null, PARAM_RAW),
             'keywords'             => optional_param_array('keywords', null, PARAM_RAW),
             'summary'              => optional_param('summary', null, PARAM_RAW),
             'description'          => optional_param('description', null, PARAM_RAW),
             'screenshot_alt_texts' => optional_param_array('screenshot_alt_texts', null, PARAM_RAW),
             'remove_screenshots'   => optional_param_array('remove_screenshots', null, PARAM_RAW),
             'remove_icon'          => optional_param('remove_icon', null, PARAM_RAW),
+            'age'                  => optional_param('age', null, PARAM_RAW),
         );
 
         // Load content
