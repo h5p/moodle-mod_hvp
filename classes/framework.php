@@ -614,7 +614,7 @@ class framework implements \H5PFrameworkInterface {
                 'Submitted!' => 'submitted',
                 'Is now submitted to H5P Hub' => 'isnowsubmitted',
                 'A change has been submited for' => 'changehasbeensubmitted',
-                'Your content will soon be available for download' => 'contentavailable',
+                'Your content will normally be available in the Hub within one business day.' => 'contentavailable',
                 'Your content will update soon' => 'contentupdatesoon',
                 'Content License Info' => 'contentlicensetitle',
                 'Click on a specific license to get info about proper usage' => 'licensedialogdescription',
