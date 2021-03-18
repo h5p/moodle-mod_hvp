@@ -584,7 +584,7 @@ class framework implements \H5PFrameworkInterface {
                 'Disciplines' => 'disciplinelabel',
                 'You can select multiple disciplines' => 'disciplinedescription',
                 'You can select up to :numDisciplines disciplines' => 'disciplinelimitreachedmessage',
-                'Select one or more disciplines' =>'searchplaceholder',
+                'Type to search for disciplines' =>'searchplaceholder',
                 'in' => 'in',
                 'Dropdown button' => 'dropdownbutton',
                 'Remove :chip from the list' => 'removechip',
