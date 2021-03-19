@@ -662,6 +662,8 @@ class framework implements \H5PFrameworkInterface {
                 'H5P will reach out to the contact person in case there are any issues with the content shared by the publisher. The contact person\'s name or other information will not be published or shared with third parties' => 'contactpersondescription',
                 'The email address will be used by H5P to reach out to the publisher in case of any issues with the content or in case the publisher needs to recover their account. It will not be published or shared with any third parties' => 'emailaddressdescription',
                 'Copyrighted material cannot be shared in the H5P Content Hub. If the content is licensed with a OER friendly license like Creative Commons, please choose the appropriate license. If not this content cannot be shared.' => 'copyrightwarning',
+                'Keywords already exists!' => 'keywordsexists',
+                'Some of these keywords already exist' => 'somekeywordsexists',
             ];
             // @codingStandardsIgnoreEnd
         }
