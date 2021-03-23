@@ -339,7 +339,7 @@ class view_assets {
      */
     public static function getsiteroot() {
         global $CFG;
-        // In Moodle 3.4 version wwwroot is always the same as httpswwwroot
+        // In Moodle 3.4 version wwwroot is always the same as httpswwwroot.
         if ($CFG->version < 2017111300) {
             return $CFG->httpswwwroot;
         }

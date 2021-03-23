@@ -730,7 +730,7 @@ class file_storage implements \H5PFileStorage {
             }
         }
 
-        // TODO: Return list of all files so they can be marked as temporary. JI-366
+        // TODO: Return list of all files so they can be marked as temporary. JI-366.
     }
 
     /**
@@ -874,7 +874,7 @@ class file_storage implements \H5PFileStorage {
         // Make sure the directory exists first.
         $matches = array();
         preg_match('/(.+)\/[^\/]*$/', $filepath, $matches);
-        // Recursively make directories
+        // Recursively make directories.
         if (!file_exists($matches[1])) {
             mkdir($matches[1], 0777, true);
         }

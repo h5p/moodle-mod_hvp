@@ -1,19 +1,16 @@
 # This is the language of our project.
 language: php
 
-# If using Behat, then this should be true due to an issue with Travis CI.
-# If not using Behat, recommended to use `sudo: false` as it is faster.
-sudo: false
-
 # Installs the required version of Firefox for Behat, an updated version
 # of PostgreSQL and extra APT packages. Java 8 is only required
 # for Mustache command.
 addons:
- firefox: "47.0.1"
- postgresql: "9.4"
- apt:
-  packages:
-   - openjdk-8-jre-headless
+ postgresql: "9.5"
+
+services:
+ - mysql
+ - postgresql
+ - docker
 
 # Cache NPM's and Composer's caches to speed up build times.
 cache:
@@ -27,12 +24,15 @@ cache:
 php:
  - 7.0
  - 7.1
+ - 7.2
+ - 7.3
+ - 7.4
 
 # This section sets up the environment variables for the build.
 env:
  global:
   # This line determines which version branch of Moodle to test against.
-  - MOODLE_BRANCH=MOODLE_35_STABLE
+  - MOODLE_BRANCH=MOODLE_39_STABLE
   - IGNORE_PATHS=lang,editor,library,reporting
  # This matrix is used for testing against multiple databases.  So for
  # each version of PHP being tested, one build will be created for each
@@ -41,7 +41,7 @@ env:
  # using PHP 5.6 and mysqli.
  matrix:
   - DB=pgsql
-#  - DB=mysqli
+  - DB=mysqli
 
 # Optionally, it is possible to specify a different Moodle repo to use
 # (git://github.com/moodle/moodle.git is used by default):
@@ -51,14 +51,11 @@ env:
 before_install:
  # This disables XDebug which should speed up the build.
  - phpenv config-rm xdebug.ini
- # This installs NodeJS which is used by Grunt, etc.
- - nvm install 8.9
- - nvm use 8.9
  # Currently we are inside of the clone of your repository.  We move up two
  # directories to build the project.
  - cd ../..
  # Install this project into a directory called "ci".
- - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
+ - composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^3
  # Update the $PATH so scripts from this project can be called easily.
  - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
 

@@ -225,6 +225,8 @@ $string['hvp:userestrictedlibraries'] = 'Use restricted H5P content types';
 $string['hvp:updatelibraries'] = 'Install new H5P content types or update existing ones';
 $string['hvp:getcachedassets'] = 'Required for viewing H5P activities';
 $string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
+$string['hvp:emailconfirmsubmission'] = 'Get a confirmation message when submitting';
+$string['hvp:emailnotifysubmission'] = 'Get a notification message when an attempt is submitted';
 
 // Capabilities error messages.
 $string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
@@ -432,7 +434,7 @@ $string['reusecontent'] = 'Reuse Content';
 $string['reusedescription'] = 'Reuse this content.';
 $string['contentcopied'] = 'Content is copied to the clipboard';
 
-// Offline
+// Offline.
 $string['connectionlost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
 $string['connectionreestablished'] = 'Connection reestablished.';
 $string['resubmitscores'] = 'Attempting to submit stored results.';
@@ -449,3 +451,29 @@ $string['couldnotreadfilefromzip'] = 'Unable to read file from the package: %fil
 $string['couldnotparsejsonfromzip'] = 'Unable to parse JSON from the package: %fileName';
 $string['couldnotparsepostdata'] = 'Could not parse post data.';
 $string['nombstringexteension'] = 'The mbstring PHP extension is not loaded. H5P needs this to function properly';
+
+// Messaging api.
+$string['messageprovider:confirmation'] = 'Confirmation of your own H5P submissions';
+$string['messageprovider:submission'] = 'Notification of H5P submissions';
+$string['emailnotifysubject'] = '{$a->studentname} has completed {$a->hvpname}';
+$string['emailnotifybody'] = 'Hi {$a->username},
+
+{$a->studentname} has completed \'{$a->hvpname}\' ({$a->hvpurl}) in course \'{$a->coursename}\'.
+
+You can review this attempt at {$a->hvpreporturl}.';
+$string['emailnotifysmall'] = '{$a->studentname} has completed {$a->hvpname}. See {$a->hvpreporturl}';
+$string['emailconfirmbody'] = 'Hi {$a->username},
+
+Thank you for submitting your answers to \'{$a->hvpname}\' in course \'{$a->coursename}\'.
+
+This message confirms that your answers have been saved.
+
+You can access this H5P at {$a->hvpurl}.';
+$string['emailconfirmsmall'] = 'Thank you for submitting your answers to \'{$a->hvpname}\'';
+$string['emailconfirmsubject'] = 'Submission confirmation: {$a->hvpname}';
+
+$string['completionpass'] = 'Require passing grade';
+$string['completionpassdesc'] = 'Student must achieve a passing grade to complete this activity';
+$string['completionpass_help'] = 'If enabled, this activity is considered complete when the student receives a pass grade (as specified in the Grade section of the H5P activity settings) or higher.';
+$string['gradetopassnotset'] = 'This H5P activity does not yet have a grade to pass set. It may be set in the Grade section of the H5P activity settings.';
+$string['gradetopassmustbeset'] = 'Grade to pass cannot be zero as this H5P activity has its completion method set to require passing grade. Please set a non-zero value.';

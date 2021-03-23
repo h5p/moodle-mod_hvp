@@ -481,6 +481,20 @@ function hvp_upgrade_2019030700() {
     }
 }
 
+function hvp_upgrade_2020080400() {
+    global $DB;
+    $dbman = $DB->get_manager();
+    // Define field completionscorerequired to be added to hvp.
+    $table = new xmldb_table('hvp');
+    // Conditionally launch add field completionscorerequired.
+    if (!$dbman->field_exists($table, 'completionpass')) {
+        $dbman->add_field(
+            $table,
+            new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, null, null, 0, 'timemodified')
+        );
+    }
+}
+
 /**
  * Hvp module upgrade function.
  *
@@ -501,7 +515,8 @@ function xmldb_hvp_upgrade($oldversion) {
         2017060900,
         2018090300,
         2019022600,
-        2019030700
+        2019030700,
+        2020080400,
     ];
 
     foreach ($upgrades as $version) {

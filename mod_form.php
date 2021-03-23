@@ -208,6 +208,11 @@ class mod_hvp_mod_form extends moodleform_mod {
         }
         $defaultvalues['h5pparams'] = json_encode($maincontentdata, true);
 
+        // Completion settings check.
+        if (empty($defaultvalues['completionusegrade'])) {
+            $defaultvalues['completionpass'] = 0; // Forced unchecked.
+        }
+
         // Add required editor assets.
         require_once('locallib.php');
         $mformid = $this->_form->getAttribute('id');
@@ -332,6 +337,19 @@ class mod_hvp_mod_form extends moodleform_mod {
         } else {
             $this->validate_created($data, $errors);
         }
+
+        if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
+            $completionpass = isset($data['completionpass']) ? $data['completionpass'] : $this->current->completionpass;
+            // Show an error if require passing grade was selected and the grade to pass was set to 0.
+            if ($completionpass && (empty($data['gradepass']) || grade_floatval($data['gradepass']) == 0)) {
+                if (isset($data['completionpass'])) {
+                    $errors['completionpassgroup'] = get_string('gradetopassnotset', 'hvp');
+                } else {
+                    $errors['gradepass'] = get_string('gradetopassmustbeset', 'hvp');
+                }
+            }
+        }
+
         return $errors;
     }
 
@@ -375,7 +393,9 @@ class mod_hvp_mod_form extends moodleform_mod {
                 // Fix for legacy content upload to work.
                 // Fetch title from h5p.json or use a default string if not available.
                 $h5pvalidator = \mod_hvp\framework::instance('validator');
-                $data->metadata->title = empty($h5pvalidator->h5pC->mainJsonData['title']) ? 'Uploaded Content' : $h5pvalidator->h5pC->mainJsonData['title'];
+                $data->metadata->title = empty($h5pvalidator->h5pC->mainJsonData['title'])
+                    ? 'Uploaded Content'
+                    : $h5pvalidator->h5pC->mainJsonData['title'];
             }
             $data->name = $data->metadata->title; // Sort of a hack,
             // but there is no JavaScript that sets the value when there is no editor...
@@ -413,5 +433,19 @@ class mod_hvp_mod_form extends moodleform_mod {
             }
         }
         return $data;
+    }
+
+    public function add_completion_rules() {
+        $mform   =& $this->_form;
+        $items   = array();
+        $group   = array();
+        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'hvp'),
+            array('group' => 'cpass'));
+        $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
+        $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'hvp'), ' &nbsp; ', false);
+        $mform->addHelpButton('completionpassgroup', 'completionpass', 'hvp');
+        $items[] = 'completionpassgroup';
+
+        return $items;
     }
 }

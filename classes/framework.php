@@ -55,7 +55,14 @@ class framework implements \H5PFrameworkInterface {
         if (!isset($interface)) {
             $interface = new \mod_hvp\framework();
 
-            $fs = new \mod_hvp\file_storage();
+            // Support alternate file storage class defined in $CFG.
+            if (!empty($CFG->mod_hvp_file_storage_class)) {
+                $fsclass = $CFG->mod_hvp_file_storage_class;
+            } else {
+                $fsclass = '\mod_hvp\file_storage';
+            }
+
+            $fs = new $fsclass();
 
             $context = \context_system::instance();
             $root = view_assets::getsiteroot();
@@ -487,7 +494,7 @@ class framework implements \H5PFrameworkInterface {
 
         // Some strings such as error messages are not translatable, in this case use message
         // directly instead of crashing
-        // @see https://github.com/h5p/h5p-php-library/commit/2bd972168e7b22aaeea2dd13682ced9cf8233452#diff-5ca86cd0514d58be6708beff914aba66R1296
+        // @see https://github.com/h5p/h5p-php-library/commit/2bd972168e7b22aaeea2dd13682ced9cf8233452#diff-5ca86cd0514d58be6708beff914aba66R1296.
         if (!isset($translationsmap[$message])) {
             return $message;
         }
@@ -960,6 +967,10 @@ class framework implements \H5PFrameworkInterface {
             'disable' => $content['disable'],
             'timemodified' => time(),
         ));
+
+        if (isset($content[ 'completionpass'])) {
+            $data[ 'completionpass' ] = $content[ 'completionpass' ];
+        }
 
         if (!isset($content['id'])) {
             $data['slug'] = '';

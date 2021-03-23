@@ -71,8 +71,14 @@ try {
 $context = context_module::instance($cm->id);
 require_capability('mod/hvp:view', $context);
 
+// Unlock session during embed.
+core\session\manager::write_close();
+
 // Set up view assets.
-$view    = new \mod_hvp\view_assets($cm, $course, ['disabledownload' => $disabledownload, 'disablefullscreen' => $disablefullscreen]);
+$view = new \mod_hvp\view_assets($cm, $course, [
+    'disabledownload'   => $disabledownload,
+    'disablefullscreen' => $disablefullscreen
+]);
 $content = $view->getcontent();
 $view->validatecontent();
 

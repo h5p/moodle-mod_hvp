@@ -42,7 +42,7 @@
       $('input[name="h5pparams"]'),
       $('input[name="h5pmaxscore"]'),
       $('input[name="name"]'),
-      cancelSubmitCallback,
+      cancelSubmitCallback
     );
   }
 
