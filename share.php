@@ -114,7 +114,7 @@ $settings = [
     'returnURL'   => (new \moodle_url('/mod/hvp/view.php', array('id' => $id)))->out(false),
     'l10n'        => $core->getLocalization(),
     'metadata'    => json_decode($core->getUpdatedContentHubMetadataCache($locale)),
-    'title'       => $cm->name,
+    'title'       => html_entity_decode($cm->name, ENT_QUOTES),
     'contentType' => "{$content['library']['name']} {$content['library']['majorVersion']}.{$content['library']['minorVersion']}",
     'language'    => $locale,
     'hubContent'  => $hubcontent,
