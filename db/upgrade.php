@@ -520,6 +520,20 @@ function hvp_upgrade_2020082800() {
     }
 }
 
+/**
+ * Drop old unused unique index, add nonunique index.
+ */
+function hvp_upgrade_2020091500() {
+  global $DB;
+  $dbman = $DB->get_manager();
+  $table = new xmldb_table('hvp_xapi_results');
+  $index = new xmldb_index('results', XMLDB_INDEX_NOTUNIQUE, ['content_id', 'user_id']);
+  $dbman->add_index($table, $index);
+
+  $oldindex = new xmldb_index('result', XMLDB_INDEX_UNIQUE, ['id', 'content_id', 'user_id']);
+  $dbman->drop_index($table, $oldindex);
+}
+
 function hvp_upgrade_2020112600() {
     global $DB;
     $dbman = $DB->get_manager();
@@ -575,6 +589,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2020080400,
         2020080401,
         2020082800,
+        2020091500,
         2020112600,
     ];
 
