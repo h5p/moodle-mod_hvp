@@ -40,7 +40,7 @@ require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/hvp:share', $context);
 
-// Check if Hub registered, if not redirect to hub registration
+// Check if Hub registered, if not redirect to hub registration.
 if (empty(get_config('mod_hvp', 'site_uuid')) || empty(get_config('mod_hvp', 'hub_secret'))) {
     if (!has_capability('mod/hvp:contenthubregistration', \context_system::instance())) {
         print_error('nohubregistration');
@@ -48,13 +48,13 @@ if (empty(get_config('mod_hvp', 'site_uuid')) || empty(get_config('mod_hvp', 'hu
     redirect(new moodle_url('/mod/hvp/content_hub_registration.php'));
 }
 
-// Try to load existing content from the Hub
+// Try to load existing content from the Hub.
 $core    = \mod_hvp\framework::instance();
 $content = $core->loadContent($cm->instance);
 
 $action = optional_param('action', '', PARAM_TEXT);
 if ($action) {
-    // Prepare to do a Hub Action
+    // Prepare to do a Hub Action.
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         http_response_code(405);
     }
@@ -68,13 +68,13 @@ if ($action) {
 
     $core = \mod_hvp\framework::instance();
     if ($action === 'sync') {
-        // Sync content already shared on the Hub
+        // Sync content already shared on the Hub.
         $exporturl = hvp_create_hub_export_url($cm->id, $content);
         if ($core->hubSyncContent($content['contentHubId'], $exporturl)) {
             $core->h5pF->updateContentFields($content['id'], array('synced' => \H5PContentHubSyncStatus::WAITING));
         }
     } else if ($action === 'unpublish') {
-        // Unpublish content already shared on the Hub
+        // Unpublish content already shared on the Hub.
         if ($core->hubUnpublishContent($content['contentHubId'])) {
             $core->h5pF->updateContentFields($content['id'], array('shared' => 0));
         }
@@ -85,7 +85,7 @@ if ($action) {
 
 $hubcontent = !empty($content['contentHubId']) ? $core->hubRetrieveContent($content['contentHubId']) : null;
 if (empty($content['contentHubId'])) {
-    // Try to populate with license from content
+    // Try to populate with license from content.
     $license        = !empty($content['metadata']['license']) ? $content['metadata']['license'] : null;
     $licenseversion = !empty($license) && !empty($content['metadata']['licenseVersion']) ? $content['metadata']['licenseVersion'] : null;
     $showcopyrightwarning = false;
@@ -106,7 +106,7 @@ if (empty($content['contentHubId'])) {
     ];
 }
 
-// Prepare settings for the UI
+// Prepare settings for the UI.
 $locale   = \mod_hvp\framework::get_language();
 $settings = [
     'token'       => \H5PCore::createToken('share_' . $id),
@@ -126,7 +126,7 @@ $PAGE->set_url(new \moodle_url('/mod/hvp/share.php', array('id' => $id)));
 $PAGE->set_title(format_string($cm->name));
 $PAGE->set_heading($course->fullname);
 
-// Load JavaScript and styles
+// Load JavaScript and styles.
 $PAGE->requires->js(new \moodle_url(\mod_hvp\view_assets::getsiteroot() . '/mod/hvp/library/js/h5p-hub-sharing.js'), true);
 foreach (\H5PCore::$styles as $style) {
     $PAGE->requires->css(new \moodle_url(\mod_hvp\view_assets::getsiteroot() . "/mod/hvp/library/{$style}"));

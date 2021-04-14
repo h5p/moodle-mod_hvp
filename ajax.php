@@ -350,7 +350,7 @@ switch($action) {
         break;
 
     case 'contenthubregistration':
-        // Check permission
+        // Check permission.
         $context = \context_system::instance();
         if (!has_capability('mod/hvp:contenthubregistration', $context)) {
             \H5PCore::ajaxError(get_string('contenthub:nopermissions', 'hvp'), 'NO_PERMISSION', 403);
@@ -433,12 +433,12 @@ switch($action) {
             'age'                  => optional_param('age', null, PARAM_RAW),
         );
 
-        // Load content
+        // Load content.
         $core = \mod_hvp\framework::instance();
         $cm = get_coursemodule_from_id('hvp', $id);
         $content = $core->loadContent($cm->instance);
 
-        // Update Hub status for content before proceeding
+        // Update Hub status for content before proceeding.
         $newstate = hvp_update_hub_status($content);
         $synced = $newstate !== false ? $newstate : intval($content['synced']);
 
@@ -447,10 +447,10 @@ switch($action) {
             break;
         }
 
-        // Create URL
+        // Create URL.
         $data['download_url'] = hvp_create_hub_export_url($cm->id, $content);
 
-        // Get file size
+        // Get file size.
         $slug = $content['slug'] ? $content['slug'] . '-' : '';
         $filecontext = context_course::instance($cm->course);
         $file = get_file_storage()->get_file($filecontext->id, 'mod_hvp', 'exports', 0, '/', "{$slug}{$content['id']}.h5p");
@@ -461,7 +461,7 @@ switch($action) {
         $size = $file->get_filesize();
         $data['size'] = empty($size) ? -1 : $size;
 
-        // Add the icon and any screenshots
+        // Add the icon and any screenshots.
         $files = array(
             'icon' => !empty($_FILES['icon']) ? $_FILES['icon'] : null,
             'screenshots' => !empty($_FILES['screenshots']) ? $_FILES['screenshots'] : null,
@@ -471,13 +471,13 @@ switch($action) {
             $isedit = !empty($content['contentHubId']);
             $updatecontent = $synced === \H5PContentHubSyncStatus::NOT_SYNCED && $isedit;
             if ($updatecontent) {
-                // node has been edited since the last time it was published
+                // Node has been edited since the last time it was published.
                 $data['resync'] = 1;
             }
             $result = $core->hubPublishContent($data, $files, $isedit ? $content['contentHubId'] : null);
 
             $fields = array(
-                'shared' => 1, // Content is always shared after sharing or editing
+                'shared' => 1, // Content is always shared after sharing or editing.
             );
             if (!$isedit) {
                 $fields['hub_id'] = $result->content->id;
@@ -487,7 +487,7 @@ switch($action) {
                 $fields['synced'] = \H5PContentHubSyncStatus::WAITING;
             }
 
-            // Store the content hub id
+            // Store the content hub id.
             $core->h5pF->updateContentFields($cm->instance, $fields);
 
             H5PCore::ajaxSuccess();

@@ -78,7 +78,7 @@ $huboptionsdata = array(
   'isshared' => $isshared
 );
 
-// Update Hub status for content before printing out messages
+// Update Hub status for content before printing out messages.
 if ($hashub && $isshared) {
     $newstate = hvp_update_hub_status($content);
     $synced = $newstate !== false ? $newstate : intval($content['synced']);

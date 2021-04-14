@@ -483,7 +483,7 @@ $string['gradetopassmustbeset'] = 'Grade to pass cannot be zero as this H5P acti
 $string['gradeheading'] = 'Results for {$a}';
 $string['assistivetechnologieslabel'] = 'Assistive Technologies label';
 
-// Content hub
+// Content hub.
 $string['contenthub:settings:heading'] = 'H5P Hub Account Settings';
 $string['contenthub:settings:box'] = 'Content Hub Account';
 $string['contenthub:licenseagreementtitle'] = 'End User License Agreement (EULA)';
@@ -588,7 +588,7 @@ $string['add'] = 'Add';
 $string['updateregistrationonhub'] = 'Save account settings';
 $string['successfullyupdated'] = 'Your H5P Hub account settings have successfully been changed';
 
-# Content hub
+// Content hub.
 $string['age'] = 'Typical age';
 $string['agedescription'] = 'The target audience of this content. Possible input formats separated by commas: "1,34-45,-50,59-".';
 $string['invalidage'] = 'Invalid input format for Typical age. Possible input formats separated by commas: "1, 34-45, -50, -59-".';

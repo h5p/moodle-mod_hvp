@@ -213,7 +213,7 @@ function hvp_delete_instance($id) {
             array($hvp->main_library_id)
     );
 
-    // Only log event if we found library
+    // Only log event if we found library.
     if ($library) {
         // Log content delete.
         new \mod_hvp\event(
@@ -293,7 +293,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // Allow download if valid temporary hash
+            // Allow download if valid temporary hash.
             $ishub = false;
             $hub = optional_param('hub', null, PARAM_RAW);
             if ($hub) {
@@ -305,12 +305,11 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 $signature = hash_hmac('SHA512', $data, get_config('mod_hvp', 'hub_secret'), true);
 
                 if ($time < (time() - 43200) || !hash_equals($signature, $hash)) {
-                    // No valid hash
+                    // No valid hash.
                     return false;
                 }
                 $ishub = true;
-            }
-            elseif (!has_capability('mod/hvp:view', $context)) {
+            } else if (!has_capability('mod/hvp:view', $context)) {
                 // No permission.
                 return false;
             }

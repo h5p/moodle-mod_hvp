@@ -670,21 +670,22 @@ function hvp_attempt_submitted_handler($event) {
  * @param $content
  */
 function hvp_update_hub_status($content) {
-  $synced = intval($content['synced']);
+    $synced = intval($content['synced']);
 
-  // Only check sync status when waiting
-  if (empty($content['contentHubId']) || $synced !== H5PContentHubSyncStatus::WAITING) {
-      return false;
-  }
+    // Only check sync status when waiting.
+    if (empty($content['contentHubId']) || $synced !== H5PContentHubSyncStatus::WAITING) {
+        return false;
+    }
 
-  $core = \mod_hvp\framework::instance();
-  $newstate = $core->getHubContentStatus($content['contentHubId'], $synced);
-  if ($newstate !== false) {
-      $core->h5pF->updateContentFields($content['id'], array('synced' => $newstate));
-      return $newstate;
-  }
+    $core = \mod_hvp\framework::instance();
+    $newstate = $core->getHubContentStatus($content['contentHubId'], $synced);
+    if ($newstate !== false) {
+        $core->h5pF->updateContentFields($content['id'], array('synced' => $newstate));
 
-  return false;
+        return $newstate;
+    }
+
+    return false;
 }
 
 /**
@@ -693,25 +694,27 @@ function hvp_update_hub_status($content) {
  * @param $content
  */
 function hvp_create_hub_export_url($cmid, $content) {
-  // Create URL
-  $modulecontext = \context_module::instance($cmid);
-  $slug = $content['slug'] ? $content['slug'] . '-' : '';
-  $filename = "{$slug}{$content['id']}.h5p";
-  $exporturl = \moodle_url::make_pluginfile_url($modulecontext->id, 'mod_hvp', 'exports', '', '', $filename)->out(false);
+    // Create URL.
+    $modulecontext = \context_module::instance($cmid);
+    $slug          = $content['slug'] ? $content['slug'] . '-' : '';
+    $filename      = "{$slug}{$content['id']}.h5p";
+    $exporturl     = \moodle_url::make_pluginfile_url($modulecontext->id, 'mod_hvp', 'exports', '', '', $filename)
+        ->out(false);
 
-  // To prevent anyone else from downloading we add an extra token
-  $time = time();
-  $data = $time . ':' . get_config('mod_hvp', 'site_uuid');
-  $hash = hash_hmac('SHA512', $data, get_config('mod_hvp', 'hub_secret'), true);
-  $token = hvp_base64_encode($time) . '.' . hvp_base64_encode($hash);
+    // To prevent anyone else from downloading we add an extra token.
+    $time  = time();
+    $data  = $time . ':' . get_config('mod_hvp', 'site_uuid');
+    $hash  = hash_hmac('SHA512', $data, get_config('mod_hvp', 'hub_secret'), true);
+    $token = hvp_base64_encode($time) . '.' . hvp_base64_encode($hash);
 
-  return "$exporturl?hub=$token";
+    return "$exporturl?hub=$token";
 }
 
 /**
  * URL compatible base64 encoding.
  *
- * @param string $string
+ * @param  string  $string
+ *
  * @return string
  */
 function hvp_base64_encode($string) {

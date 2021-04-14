@@ -524,21 +524,21 @@ function hvp_upgrade_2020082800() {
  * Drop old unused unique index, add nonunique index.
  */
 function hvp_upgrade_2020091500() {
-  global $DB;
-  $dbman = $DB->get_manager();
-  $table = new xmldb_table('hvp_xapi_results');
-  $index = new xmldb_index('results', XMLDB_INDEX_NOTUNIQUE, ['content_id', 'user_id']);
-  $dbman->add_index($table, $index);
+      global $DB;
+      $dbman = $DB->get_manager();
+      $table = new xmldb_table('hvp_xapi_results');
+      $index = new xmldb_index('results', XMLDB_INDEX_NOTUNIQUE, ['content_id', 'user_id']);
+      $dbman->add_index($table, $index);
 
-  $oldindex = new xmldb_index('result', XMLDB_INDEX_UNIQUE, ['id', 'content_id', 'user_id']);
-  $dbman->drop_index($table, $oldindex);
+      $oldindex = new xmldb_index('result', XMLDB_INDEX_UNIQUE, ['id', 'content_id', 'user_id']);
+      $dbman->drop_index($table, $oldindex);
 }
 
 function hvp_upgrade_2020112600() {
     global $DB;
     $dbman = $DB->get_manager();
 
-    // Add Content Hub fields to main content table
+    // Add Content Hub fields to main content table.
     $table = new xmldb_table('hvp');
     if (!$dbman->field_exists($table, 'shared')) {
         $dbman->add_field($table, new xmldb_field('shared', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'completionpass'));
@@ -550,7 +550,7 @@ function hvp_upgrade_2020112600() {
         $dbman->add_field($table, new xmldb_field('hub_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'synced'));
     }
 
-    // Create table for caching content hub metadata
+    // Create table for caching content hub metadata.
     $table = new xmldb_table('hvp_content_hub_cache');
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('language', XMLDB_TYPE_CHAR, '31', null, XMLDB_NOTNULL, null, null);

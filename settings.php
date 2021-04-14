@@ -112,7 +112,7 @@ if ($ADMIN->fulltree) {
         )
     );
 
-    // Content Hub
+    // Content Hub.
     $hubinfo = $core->hubAccountInfo();
     $settings->add(new admin_setting_heading(
         'mod_hvp/content_hub_settings',

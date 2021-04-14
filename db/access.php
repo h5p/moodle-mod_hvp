@@ -201,7 +201,7 @@ $capabilities = array(
     'mod/hvp:contenthubregistration' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [], // only admins by default
+        'archetypes' => [], // Only admins by default.
     ],
 
 );

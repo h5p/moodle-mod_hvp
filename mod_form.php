@@ -361,13 +361,13 @@ class mod_hvp_mod_form extends moodleform_mod {
     public function data_postprocessing($data) {
         // Determine disabled content features.
 
-        // mod_form may be loaded without the H5P editor, so we have to check if
+        // Mod_form may be loaded without the H5P editor, so we have to check if
         // data is present if we want to process them.
-        $hasDisplayOptions = isset($data->frame)
+        $hasdisplayoptions = isset($data->frame)
             || isset($data->export)
             || isset($data->embed)
             || isset($data->copyright);
-        if ($hasDisplayOptions) {
+        if ($hasdisplayoptions) {
             $options = array(
                 \H5PCore::DISPLAY_OPTION_FRAME     => isset($data->frame) ? $data->frame : 0,
                 \H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($data->export) ? $data->export : 0,

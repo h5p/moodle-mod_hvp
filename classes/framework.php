@@ -171,7 +171,7 @@ class framework implements \H5PFrameworkInterface {
             $curldata = array();
             foreach ($data as $key => $value) {
                 if (empty($value)) {
-                    continue; // Skip empty values
+                    continue; // Skip empty values.
                 }
                 if (is_array($value)) {
                     foreach ($value as $i => $subvalue) {
@@ -186,17 +186,17 @@ class framework implements \H5PFrameworkInterface {
                 if ($file === null) {
                     continue;
                 } else if (is_array($file['name'])) {
-                    // Array of files uploaded (multiple)
+                    // Array of files uploaded (multiple).
                     for ($i = 0; $i < count($file['name']); $i ++) {
                         $curldata["{$name}[{$i}]"] = new \CurlFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
                     }
                 } else {
-                    // Single file
+                    // Single file.
                     $curldata[$name] = new \CurlFile($file['tmp_name'], $file['type'], $file['name']);
                 }
             }
         } else if (!empty($data)) {
-            // application/x-www-form-urlencoded
+            // Application/x-www-form-urlencoded.
             $curldata = format_postdata_for_curlcall($data);
         }
 
@@ -248,7 +248,7 @@ class framework implements \H5PFrameworkInterface {
         }
 
         $errorno = $curl->get_errno();
-        // Error handling
+        // Error handling.
         if ($errorno) {
             if ($alldata) {
                 $response = null;
@@ -1854,7 +1854,7 @@ class framework implements \H5PFrameworkInterface {
     public function replaceContentHubMetadataCache($metadata, $lang = 'en') {
         global $DB;
 
-        // Check if exist in database
+        // Check if exist in database.
         $cache = $DB->get_record_sql(
             'SELECT id
                    FROM {hvp_content_hub_cache}
@@ -1862,10 +1862,10 @@ class framework implements \H5PFrameworkInterface {
             array($lang)
         );
         if ($cache) {
-            // Update
+            // Update.
             $DB->execute("UPDATE {hvp_content_hub_cache} SET json = ? WHERE id = ?", array($metadata, $cache->id));
         } else {
-            // Insert
+            // Insert.
             $DB->insert_record('hvp_content_hub_cache', (object) array(
                 'json'         => $metadata,
                 'language'     => $lang,
