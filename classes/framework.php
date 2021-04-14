@@ -590,7 +590,7 @@ class framework implements \H5PFrameworkInterface {
                 'Remove :chip from the list' => 'removechip',
                 'Add keywords' => 'keywordsplaceholder',
                 'Keywords' => 'keywords',
-                'You can add multiple keywords. Press "Enter" to confirm each keyword' => 'keywordsdescription',
+                'You can add multiple keywords separated by commas. Press "Enter" or "Add" to confirm keywords' => 'keywordsdescription',
                 'Alt text' => 'alttext',
                 'Please review the info below before you share' => 'reviewmessage',
                 'Sub-content (images, questions etc.) will be shared under :license unless otherwise specified in the authoring tool' => 'subcontentwarning',
