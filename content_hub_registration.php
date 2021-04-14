@@ -42,12 +42,12 @@ $PAGE->set_heading(get_string('contenthub:settings:heading', 'mod_hvp'));
 
 $settings = content_hub_service::get_registration_ui_settings();
 $PAGE->requires->data_for_js('H5PSettings', $settings, true);
+$PAGE->requires->js(new moodle_url('library/js/h5p-hub-registration.js'), true);
 $PAGE->requires->css(new moodle_url('library/styles/h5p.css'));
 $PAGE->requires->css(new moodle_url('library/styles/h5p-hub-registration.css'));
 
 echo $OUTPUT->header();
 
-$PAGE->requires->js(new moodle_url('library/js/h5p-hub-registration.js'));
 echo $OUTPUT->render_from_template('mod_hvp/content_hub_registration', []);
 $PAGE->requires->js_call_amd('mod_hvp/contenthubregistration', 'init');
 
