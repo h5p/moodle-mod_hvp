@@ -38,9 +38,8 @@
 .content-hub-options > div:first-child > i {
     margin-right: 0.5em;
     font-size: 1.25em;
-    vertical-align: bottom;
+    vertical-align: middle;
     display: inline-block;
-    margin-bottom: 3px;
 }
 .content-hub-options a {
     color: #186df7;
