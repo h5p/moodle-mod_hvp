@@ -28,6 +28,10 @@
  * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use core_calendar\action_factory;
+use core_calendar\local\event\entities\action_interface;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once('autoloader.php');
@@ -88,6 +92,11 @@ function hvp_add_instance($hvp) {
     // Set and create grade item.
     hvp_grade_item_update($hvp);
 
+    if (class_exists('\core_completion\api')) {
+        $completiontimeexpected = !empty($hvp->completionexpected) ? $hvp->completionexpected : null;
+        \core_completion\api::update_completion_date_event($hvp->coursemodule, 'hvp', $hvp->id, $completiontimeexpected);
+    }
+
     return $hvp->id;
 }
 
@@ -108,6 +117,12 @@ function hvp_update_instance($hvp) {
     // Save content.
     hvp_save_content($hvp);
     hvp_grade_item_update($hvp);
+
+    if (class_exists('\core_completion\api')) {
+        $completiontimeexpected = !empty($hvp->completionexpected) ? $hvp->completionexpected : null;
+        \core_completion\api::update_completion_date_event($hvp->coursemodule, 'hvp', $hvp->id, $completiontimeexpected);
+    }
+
     return true;
 }
 
@@ -198,12 +213,15 @@ function hvp_delete_instance($id) {
             array($hvp->main_library_id)
     );
 
-    // Log content delete.
-    new \mod_hvp\event(
+    // Only log event if we found library.
+    if ($library) {
+        // Log content delete.
+        new \mod_hvp\event(
             'content', 'delete',
             $hvp->id, $hvp->name,
             $library->name, $library->major_version . '.' . $library->minor_version
-    );
+        );
+    }
 
     return true;
 }
@@ -230,6 +248,17 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             return false; // Invalid file area.
 
         case 'libraries':
+            if ($context->contextlevel != CONTEXT_SYSTEM) {
+                return false; // Invalid context.
+            }
+
+            // Check permissions.
+            if (!has_capability('mod/hvp:getcachedassets', $context)) {
+                return false;
+            }
+
+            $itemid = 0;
+            break;
         case 'cachedassets':
             if ($context->contextlevel != CONTEXT_SYSTEM) {
                 return false; // Invalid context.
@@ -239,6 +268,9 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             if (!has_capability('mod/hvp:getcachedassets', $context)) {
                 return false;
             }
+
+            $options['cacheability'] = 'public';
+            $options['immutable'] = true;
 
             $itemid = 0;
             break;
@@ -261,8 +293,24 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // Check permission.
-            if (!has_capability('mod/hvp:view', $context)) {
+            // Allow download if valid temporary hash.
+            $ishub = false;
+            $hub = optional_param('hub', null, PARAM_RAW);
+            if ($hub) {
+                list($time, $hash) = explode('.', $hub, 2);
+                $time = hvp_base64_decode($time);
+                $hash = hvp_base64_decode($hash);
+
+                $data = $time . ':' . get_config('mod_hvp', 'site_uuid');
+                $signature = hash_hmac('SHA512', $data, get_config('mod_hvp', 'hub_secret'), true);
+
+                if ($time < (time() - 43200) || !hash_equals($signature, $hash)) {
+                    // No valid hash.
+                    return false;
+                }
+                $ishub = true;
+            } else if (!has_capability('mod/hvp:view', $context)) {
+                // No permission.
                 return false;
             }
             // Note that the getexport permission is checked after loading the content.
@@ -284,7 +332,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             $displayoptions = $h5pcore->getDisplayOptionsForView($content['disable'], $context->instanceid);
 
             // Check permissions.
-            if (!$displayoptions['export']) {
+            if (!$displayoptions['export'] && !$ishub) {
                 return false;
             }
 
@@ -422,3 +470,49 @@ function hvp_get_completion_state($course, $cm, $userid, $type) {
     }
     return false;
 }
+
+/**
+ * URL compatible base64 decoding.
+ *
+ * @param string $string
+ * @return string
+ */
+function hvp_base64_decode($string) {
+    $r = strlen($string) % 4;
+    if ($r) {
+        $l = 4 - $r;
+        $string .= str_repeat('=', $l);
+    }
+    return base64_decode(strtr($string, '-_', '+/'));
+}
+
+
+/**
+ * This function receives a calendar event and returns the action associated with it, or null if there is none.
+ *
+ * This is used by block_myoverview in order to display the event appropriately. If null is returned then the event
+ * is not displayed on the block.
+ *
+ * @param calendar_event $event
+ * @param action_factory $factory
+ * @return action_interface|null
+ */
+function mod_hvp_core_calendar_provide_event_action(calendar_event $event, action_factory $factory) {
+    $cm = get_fast_modinfo($event->courseid)->instances['hvp'][$event->instance];
+
+    $completion = new \completion_info($cm->get_course());
+
+    $completiondata = $completion->get_data($cm, false);
+
+    if ($completiondata->completionstate != COMPLETION_INCOMPLETE) {
+        return null;
+    }
+
+    return $factory->create_instance(
+            get_string('view'),
+            new moodle_url('/mod/hvp/view.php', ['id' => $cm->id]),
+            1,
+            true
+    );
+}
+

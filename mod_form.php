@@ -178,9 +178,6 @@ class mod_hvp_mod_form extends moodleform_mod {
         if (!empty($defaultvalues['id'])) {
             // Load Content.
             $content = $core->loadContent($defaultvalues['id']);
-            if ($content === null) {
-                print_error('invalidhvp');
-            }
         }
 
         $this->set_max_grade($content, $defaultvalues);
@@ -363,28 +360,37 @@ class mod_hvp_mod_form extends moodleform_mod {
      */
     public function data_postprocessing($data) {
         // Determine disabled content features.
-        $options = array(
-            \H5PCore::DISPLAY_OPTION_FRAME     => isset($data->frame) ? $data->frame : 0,
-            \H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($data->export) ? $data->export : 0,
-            \H5PCore::DISPLAY_OPTION_EMBED     => isset($data->embed) ? $data->embed : 0,
-            \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($data->copyright) ? $data->copyright : 0,
-        );
-        $core = \mod_hvp\framework::instance();
-        $data->disable = $core->getStorableDisplayOptions($options, 0);
 
-        // Remove metadata wrapper from form data.
-        $params = json_decode($data->h5pparams);
-        if ($params !== null) {
-            $data->params = json_encode($params->params);
-            if (isset($params->metadata)) {
-                $data->metadata = $params->metadata;
+        // Mod_form may be loaded without the H5P editor, so we have to check if
+        // data is present if we want to process them.
+        $hasdisplayoptions = isset($data->frame)
+            || isset($data->export)
+            || isset($data->embed)
+            || isset($data->copyright);
+        if ($hasdisplayoptions) {
+            $options = array(
+                \H5PCore::DISPLAY_OPTION_FRAME     => isset($data->frame) ? $data->frame : 0,
+                \H5PCore::DISPLAY_OPTION_DOWNLOAD  => isset($data->export) ? $data->export : 0,
+                \H5PCore::DISPLAY_OPTION_EMBED     => isset($data->embed) ? $data->embed : 0,
+                \H5PCore::DISPLAY_OPTION_COPYRIGHT => isset($data->copyright) ? $data->copyright : 0,
+            );
+            $core = \mod_hvp\framework::instance();
+            $data->disable = $core->getStorableDisplayOptions($options, 0);
+        }
+        if (isset($data->h5pparams)) {
+            // Remove metadata wrapper from form data.
+            $params = json_decode($data->h5pparams);
+            if ($params !== null) {
+                $data->params = json_encode($params->params);
+                if (isset($params->metadata)) {
+                    $data->metadata = $params->metadata;
+                }
             }
+            // Cleanup.
+            unset($data->h5pparams);
         }
 
-        // Cleanup.
-        unset($data->h5pparams);
-
-        if ($data->h5paction === 'upload') {
+        if (isset($data->h5paction)  && $data->h5paction === 'upload') {
             if (empty($data->metadata)) {
                 $data->metadata = new stdClass();
             }

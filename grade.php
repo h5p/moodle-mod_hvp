@@ -78,7 +78,7 @@ new \mod_hvp\event(
 // Set page properties.
 $pageurl = new moodle_url('/mod/hvp/grade.php', array('id' => $hvp->id));
 $PAGE->set_url($pageurl);
-$title = "Results for {$hvp->title}";
+$title = get_string('gradeheading', 'hvp', $hvp->title);
 $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
 

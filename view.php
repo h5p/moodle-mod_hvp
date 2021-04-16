@@ -54,6 +54,8 @@ $PAGE->set_heading($course->fullname);
 $view->addassetstopage();
 $view->logviewed();
 
+$PAGE->requires->css(new moodle_url(\mod_hvp\view_assets::getsiteroot() . '/mod/hvp/view.css'));
+
 // Print page HTML.
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($content['title']));
@@ -69,9 +71,29 @@ if (trim(strip_tags($content['intro'], '<img>'))) {
     echo $OUTPUT->box_end();
 }
 
+$hashub = (has_capability('mod/hvp:share', $context) && !empty(get_config('mod_hvp', 'site_uuid')) && !empty(get_config('mod_hvp', 'hub_secret')));
+$isshared = $content['shared'] === '1';
+$huboptionsdata = array(
+  'id' => $id,
+  'isshared' => $isshared
+);
+
+// Update Hub status for content before printing out messages.
+if ($hashub && $isshared) {
+    $newstate = hvp_update_hub_status($content);
+    $synced = $newstate !== false ? $newstate : intval($content['synced']);
+    $huboptionsdata['canbesynced'] = $synced !== \H5PContentHubSyncStatus::SYNCED && $synced !== \H5PContentHubSyncStatus::WAITING;
+    $huboptionsdata['waitingclass'] = $synced === \H5PContentHubSyncStatus::WAITING ? '' : ' hidden';
+    $huboptionsdata['token'] = \H5PCore::createToken('share_' . $id);
+}
+
 // Print any messages.
 \mod_hvp\framework::printMessages('info', \mod_hvp\framework::messages('info'));
 \mod_hvp\framework::printMessages('error', \mod_hvp\framework::messages('error'));
+
+if ($hashub) {
+    echo $OUTPUT->render_from_template('mod_hvp/hub_options', $huboptionsdata);
+}
 
 $view->outputview();
 echo $OUTPUT->footer();

@@ -21,6 +21,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_hvp\framework;
+
 define('AJAX_SCRIPT', true);
 require(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/filelib.php');
@@ -217,7 +219,7 @@ switch($action) {
      *  int minorVersion
      */
     case 'libraries':
-        if (!\mod_hvp\framework::has_editor_access('nopermissiontoviewcontenttypes')) {
+        if (!framework::has_editor_access('nopermissiontoviewcontenttypes')) {
             break;
         }
 
@@ -225,12 +227,12 @@ switch($action) {
         $name = optional_param('machineName', '', PARAM_TEXT);
         $major = optional_param('majorVersion', 0, PARAM_INT);
         $minor = optional_param('minorVersion', 0, PARAM_INT);
-        $editor = \mod_hvp\framework::instance('editor');
+        $editor = framework::instance('editor');
         $language = optional_param('default-language', null, PARAM_RAW);
 
         if (!empty($name)) {
             $editor->ajax->action(H5PEditorEndpoints::SINGLE_LIBRARY, $name,
-                $major, $minor, \mod_hvp\framework::get_language(), '', '', $language);
+                $major, $minor, framework::get_language(), '', '', $language);
 
             new \mod_hvp\event(
                     'library', null,
@@ -247,11 +249,11 @@ switch($action) {
      * Load content type cache list to display available libraries in hub
      */
     case 'contenttypecache':
-        if (!\mod_hvp\framework::has_editor_access('nopermissiontoviewcontenttypes')) {
+        if (!framework::has_editor_access('nopermissiontoviewcontenttypes')) {
             break;
         }
 
-        $editor = \mod_hvp\framework::instance('editor');
+        $editor = framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::CONTENT_TYPE_CACHE);
         break;
 
@@ -265,11 +267,11 @@ switch($action) {
     case 'files':
         $token = required_param('token', PARAM_RAW);
         $contentid = required_param('contentId', PARAM_INT);
-        if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadfiles')) {
+        if (!framework::has_editor_access('nopermissiontouploadfiles')) {
             break;
         }
 
-        $editor = \mod_hvp\framework::instance('editor');
+        $editor = framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::FILES, $token, $contentid);
         break;
 
@@ -283,7 +285,7 @@ switch($action) {
     case 'libraryinstall':
         $token = required_param('token', PARAM_RAW);
         $machinename = required_param('id', PARAM_TEXT);
-        $editor = \mod_hvp\framework::instance('editor');
+        $editor = framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::LIBRARY_INSTALL, $token, $machinename);
         break;
 
@@ -295,11 +297,11 @@ switch($action) {
      */
     case 'libraryupload':
         $token = required_param('token', PARAM_RAW);
-        if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadcontent')) {
+        if (!framework::has_editor_access('nopermissiontouploadcontent')) {
             break;
         }
 
-        $editor = \mod_hvp\framework::instance('editor');
+        $editor = framework::instance('editor');
         $uploadpath = $_FILES['h5p']['tmp_name'];
         $contentid = optional_param('contentId', 0, PARAM_INT);
         $editor->ajax->action(H5PEditorEndpoints::LIBRARY_UPLOAD, $token, $uploadpath, $contentid);
@@ -313,11 +315,11 @@ switch($action) {
         break;
 
     case 'translations':
-        if (!\mod_hvp\framework::has_editor_access('nopermissiontogettranslations')) {
+        if (!framework::has_editor_access('nopermissiontogettranslations')) {
             break;
         }
         $language = required_param('language', PARAM_RAW);
-        $editor = \mod_hvp\framework::instance('editor');
+        $editor = framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::TRANSLATIONS, $language);
         break;
 
@@ -328,12 +330,171 @@ switch($action) {
         $token = required_param('token', PARAM_RAW);
         $libraryparameters = required_param('libraryParameters', PARAM_RAW);
 
-        if (!\mod_hvp\framework::has_editor_access('nopermissiontouploadfiles')) {
+        if (!framework::has_editor_access('nopermissiontouploadfiles')) {
             break;
         }
 
-        $editor = \mod_hvp\framework::instance('editor');
+        $editor = framework::instance('editor');
         $editor->ajax->action(H5PEditorEndpoints::FILTER, $token, $libraryparameters);
+        break;
+
+    /*
+     * Handle filtering of parameters through AJAX.
+     */
+    case 'contenthubmetadatacache':
+        if (!framework::has_editor_access('nopermissiontoviewcontenthubcache')) {
+            break;
+        }
+        $editor = framework::instance('editor');
+        $editor->ajax->action(H5PEditorEndpoints::CONTENT_HUB_METADATA_CACHE, framework::get_language());
+        break;
+
+    case 'contenthubregistration':
+        // Check permission.
+        $context = \context_system::instance();
+        if (!has_capability('mod/hvp:contenthubregistration', $context)) {
+            \H5PCore::ajaxError(get_string('contenthub:nopermissions', 'hvp'), 'NO_PERMISSION', 403);
+            return;
+        }
+
+        $token = required_param('_token', PARAM_RAW);
+
+        if (!H5PCore::validToken('contentHubRegistration', $token)) {
+            H5PCore::ajaxError('Invalid token', 'INVALID_TOKEN', 401);
+            return;
+        }
+        $logo = isset($_FILES['logo']) ? $_FILES['logo'] : null;
+
+        $formdata = [
+            'name'           => required_param('name', PARAM_TEXT),
+            'email'          => required_param('email', PARAM_EMAIL),
+            'description'    => optional_param('description', '', PARAM_TEXT),
+            'contact_person' => optional_param('contact_person', '', PARAM_TEXT),
+            'phone'          => optional_param('phone', '', PARAM_TEXT),
+            'address'        => optional_param('address', '', PARAM_TEXT),
+            'city'           => optional_param('city', '', PARAM_TEXT),
+            'zip'            => optional_param('zip', '', PARAM_TEXT),
+            'country'        => optional_param('country', '', PARAM_TEXT),
+            'remove_logo'    => optional_param('remove_logo', '', PARAM_BOOL),
+        ];
+
+        $core = framework::instance();
+        $result = $core->hubRegisterAccount($formdata, $logo);
+
+        if ($result['success'] === false) {
+            $core->h5pF->setErrorMessage($result['message']);
+            H5PCore::ajaxError($result['message'], $result['error_code'], $result['status_code']);
+            return;
+        }
+
+        $core->h5pF->setInfoMessage($result['message']);
+        H5PCore::ajaxSuccess($result['message']);
+        break;
+
+    /*
+     * Handle filtering of parameters through AJAX.
+     */
+    case 'getcontent':
+        $token = required_param('token', PARAM_RAW);
+        $hubid = required_param('hubId', PARAM_INT);
+
+        $editor = \mod_hvp\framework::instance('editor');
+        $editor->ajax->action(H5PEditorEndpoints::GET_HUB_CONTENT, $token, $hubid, null);
+        break;
+
+    /*
+     * Handle publishing of content to the H5P OER Hub.
+     */
+    case 'share':
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+        }
+        $token = required_param('_token', PARAM_RAW);
+        $id = required_param('id', PARAM_INT);
+
+        if (!\H5PCore::validToken('share_' . $id, $token)) {
+            \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
+            break;
+        }
+
+        $data = array(
+            'title'                => required_param('title', PARAM_RAW),
+            'language'             => required_param('language', PARAM_RAW),
+            'license'              => required_param('license', PARAM_RAW),
+            'license_version'      => required_param('license_version', PARAM_RAW),
+            'level'                => optional_param('level', null, PARAM_RAW),
+            'disciplines'          => optional_param_array('disciplines', null, PARAM_RAW),
+            'keywords'             => optional_param_array('keywords', null, PARAM_RAW),
+            'summary'              => optional_param('summary', null, PARAM_RAW),
+            'description'          => optional_param('description', null, PARAM_RAW),
+            'screenshot_alt_texts' => optional_param_array('screenshot_alt_texts', null, PARAM_RAW),
+            'remove_screenshots'   => optional_param_array('remove_screenshots', null, PARAM_RAW),
+            'remove_icon'          => optional_param('remove_icon', null, PARAM_RAW),
+            'age'                  => optional_param('age', null, PARAM_RAW),
+        );
+
+        // Load content.
+        $core = \mod_hvp\framework::instance();
+        $cm = get_coursemodule_from_id('hvp', $id);
+        $content = $core->loadContent($cm->instance);
+
+        // Update Hub status for content before proceeding.
+        $newstate = hvp_update_hub_status($content);
+        $synced = $newstate !== false ? $newstate : intval($content['synced']);
+
+        if ($synced === \H5PContentHubSyncStatus::WAITING) {
+            \H5PCore::ajaxError(get_string('contentissyncing', 'hvp'));
+            break;
+        }
+
+        // Create URL.
+        $data['download_url'] = hvp_create_hub_export_url($cm->id, $content);
+
+        // Get file size.
+        $slug = $content['slug'] ? $content['slug'] . '-' : '';
+        $filecontext = context_course::instance($cm->course);
+        $file = get_file_storage()->get_file($filecontext->id, 'mod_hvp', 'exports', 0, '/', "{$slug}{$content['id']}.h5p");
+        if (!$file) {
+            \H5PCore::ajaxError(get_string('noexport', 'hvp'));
+            break;
+        }
+        $size = $file->get_filesize();
+        $data['size'] = empty($size) ? -1 : $size;
+
+        // Add the icon and any screenshots.
+        $files = array(
+            'icon' => !empty($_FILES['icon']) ? $_FILES['icon'] : null,
+            'screenshots' => !empty($_FILES['screenshots']) ? $_FILES['screenshots'] : null,
+        );
+
+        try {
+            $isedit = !empty($content['contentHubId']);
+            $updatecontent = $synced === \H5PContentHubSyncStatus::NOT_SYNCED && $isedit;
+            if ($updatecontent) {
+                // Node has been edited since the last time it was published.
+                $data['resync'] = 1;
+            }
+            $result = $core->hubPublishContent($data, $files, $isedit ? $content['contentHubId'] : null);
+
+            $fields = array(
+                'shared' => 1, // Content is always shared after sharing or editing.
+            );
+            if (!$isedit) {
+                $fields['hub_id'] = $result->content->id;
+                // Sync will not happen on 'edit info', only for 'publish' or 'sync'.
+                $fields['synced'] = \H5PContentHubSyncStatus::WAITING;
+            } else if ($updatecontent) {
+                $fields['synced'] = \H5PContentHubSyncStatus::WAITING;
+            }
+
+            // Store the content hub id.
+            $core->h5pF->updateContentFields($cm->instance, $fields);
+
+            H5PCore::ajaxSuccess();
+        } catch (Exception $e) {
+            H5PCore::ajaxError(!empty($e->errors) ? $e->errors : $e->getMessage());
+        }
+
         break;
 
     /*
