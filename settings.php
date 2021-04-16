@@ -25,11 +25,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/hvp/lib.php');
+require_once($CFG->dirroot . '/mod/hvp/classes/admin_setting_html.php');
 
 global $PAGE;
-
-// Make sure core is loaded.
-$core = \mod_hvp\framework::instance('core');
 
 // Redefine the H5P admin menu entry to be expandable.
 $modltifolder = new admin_category('modhvpfolder', new lang_string('pluginname', 'mod_hvp'), $module->is_enabled() === false);
@@ -42,6 +40,9 @@ $ADMIN->add('modhvpfolder', new admin_externalpage('h5plibraries',
     get_string('libraries', 'hvp'), new moodle_url('/mod/hvp/library_list.php')));
 
 if ($ADMIN->fulltree) {
+    // Make sure core is loaded.
+    $core = \mod_hvp\framework::instance('core');
+
     // Settings is stored on the global $CFG object.
 
     // Content state.
@@ -111,6 +112,20 @@ if ($ADMIN->fulltree) {
         )
     );
 
+    // Content Hub.
+    $hubinfo = $core->hubAccountInfo();
+    $settings->add(new admin_setting_heading(
+        'mod_hvp/content_hub_settings',
+        get_string('contenthub:settings:heading', 'hvp'),
+        ''
+    ));
+
+    $settings->add(new admin_setting_html(
+        'mod_hvp/content_hub_settings_box',
+        get_string('contenthub:settings:box', 'hvp'),
+        $hubinfo
+    ));
+
     // Load js for disable hub confirmation dialog functionality.
     $PAGE->requires->js('/mod/hvp/library/js/jquery.js', true);
     $PAGE->requires->js('/mod/hvp/library/js/h5p-event-dispatcher.js', true);
@@ -126,7 +141,6 @@ if ($ADMIN->fulltree) {
     }
 
     // Find missing requirements.
-    $core = \mod_hvp\framework::instance('core');
     $errors = $core->checkSetupErrorMessage()->errors;
 
     $PAGE->requires->data_for_js('H5PDisableHubData', array(
