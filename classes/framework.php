@@ -164,8 +164,51 @@ class framework implements \H5PFrameworkInterface {
      * @inheritdoc
      */
     // @codingStandardsIgnoreLine
-    public function fetchExternalData($url, $data = null, $blocking = true, $stream = null) {
+    public function fetchExternalData($url, $data = null, $blocking = true, $stream = null, $alldata = false, $headers = array(), $files = array(), $method = 'POST') {
         global $CFG;
+
+        if (!empty($files)) {
+            $curldata = array();
+            foreach ($data as $key => $value) {
+                if (empty($value)) {
+                    continue; // Skip empty values.
+                }
+                if (is_array($value)) {
+                    foreach ($value as $i => $subvalue) {
+                        $curldata["{$key}[{$i}]"] = $subvalue;
+                    }
+                } else {
+                    $curldata[$key] = $value;
+                }
+            }
+
+            foreach ($files as $name => $file) {
+                if ($file === null) {
+                    continue;
+                } else if (is_array($file['name'])) {
+                    // Array of files uploaded (multiple).
+                    for ($i = 0; $i < count($file['name']); $i ++) {
+                        $curldata["{$name}[{$i}]"] = new \CurlFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
+                    }
+                } else {
+                    // Single file.
+                    $curldata[$name] = new \CurlFile($file['tmp_name'], $file['type'], $file['name']);
+                }
+            }
+        } else if (!empty($data)) {
+            // Application/x-www-form-urlencoded.
+            $curldata = format_postdata_for_curlcall($data);
+        }
+
+        $options = array(
+            'CURLOPT_SSL_VERIFYPEER' => true,
+            'CURLOPT_CONNECTTIMEOUT' => 20,
+            'CURLOPT_FOLLOWLOCATION' => 1,
+            'CURLOPT_MAXREDIRS'      => 5,
+            'CURLOPT_RETURNTRANSFER' => true,
+            'CURLOPT_NOBODY'         => false,
+            'CURLOPT_TIMEOUT'        => 300,
+        );
 
         if ($stream !== null) {
             // Download file.
@@ -173,20 +216,59 @@ class framework implements \H5PFrameworkInterface {
 
             // Generate local tmp file path.
             $localfolder = $CFG->tempdir . uniqid('/hvp-');
-            $stream = $localfolder . '.h5p';
+            $stream      = $localfolder . '.h5p';
 
             // Add folder and file paths to H5P Core.
             $interface = self::instance('interface');
             $interface->getUploadedH5pFolderPath($localfolder);
             $interface->getUploadedH5pPath($stream);
+
+            $stream                  = fopen($stream, 'w');
+            $options['CURLOPT_FILE'] = $stream;
         }
 
-        $response = download_file_content($url, null, $data, true, 300, 20, false, $stream);
+        $curl = new curl();
 
-        if (empty($response->error)) {
-            return $response->results;
+        // Massage headers to work with curl.
+        foreach ($headers as $key => $value) {
+            $curl->setHeader(is_numeric($key) ? $value : "$key: $value");
+        }
+
+        if (empty($data) || $method === 'GET') {
+            $response = $curl->get($url, array(), $options);
+        } else if ($method === 'POST') {
+            $response = $curl->post($url, $curldata, $options);
+        } else if ($method === 'PUT') {
+            $response = $curl->put($url, $curldata, $options);
+        }
+
+        if ($stream !== null) {
+            fclose($stream);
+            @chmod($stream, $CFG->filepermissions);
+        }
+
+        $errorno = $curl->get_errno();
+        // Error handling.
+        if ($errorno) {
+            if ($alldata) {
+                $response = null;
+            } else {
+                $this->setErrorMessage($response, 'failed-fetching-external-data');
+
+                return false;
+            }
+        }
+
+        if ($alldata) {
+            $info = $curl->get_info();
+
+            return [
+                'status'  => intval($info['http_code']),
+                'data'    => empty($response) ? null : $response,
+                'headers' => $curl->get_raw_response(),
+            ];
         } else {
-            $this->setErrorMessage($response->error, 'failed-fetching-external-data');
+            return $response;
         }
     }
 
@@ -482,12 +564,106 @@ class framework implements \H5PFrameworkInterface {
                 'Retrying in :num....' => 'offlinedialogretrymessage',
                 'Retry now' => 'offlinedialogretrybuttonlabel',
                 'Successfully submitted results.' => 'offlinesuccessfulsubmit',
+                'Sharing <strong>:title</strong>' => 'maintitle',
+                'Edit info for <strong>:title</strong>' => 'editinfotitle',
+                'Back' => 'back',
+                'Next' => 'next',
+                'Review info' => 'reviewinfo',
+                'Share' => 'share',
+                'Save changes' => 'savechanges',
+                'Register on the H5P Hub' => 'registeronhub',
+                'Required Info' => 'requiredinfo',
+                'Optional Info' => 'optionalinfo',
+                'Review & Share' => 'reviewandshare',
+                'Review & Save' => 'reviewandsave',
+                'Shared' => 'shared',
+                'Step :step of :total' => 'currentstep',
+                'All content details can be edited after sharing' => 'sharingnote',
+                'Select a license for your content' => 'licensedescription',
+                'Select a license version' => 'licenseversiondescription',
+                'Disciplines' => 'disciplinelabel',
+                'You can select multiple disciplines' => 'disciplinedescription',
+                'You can select up to :numDisciplines disciplines' => 'disciplinelimitreachedmessage',
+                'Type to search for disciplines' =>'searchplaceholder',
+                'in' => 'in',
+                'Dropdown button' => 'dropdownbutton',
+                'Remove :chip from the list' => 'removechip',
+                'Add keywords' => 'keywordsplaceholder',
+                'Keywords' => 'keywords',
+                'You can add multiple keywords separated by commas. Press "Enter" or "Add" to confirm keywords' => 'keywordsdescription',
+                'Alt text' => 'alttext',
+                'Please review the info below before you share' => 'reviewmessage',
+                'Sub-content (images, questions etc.) will be shared under :license unless otherwise specified in the authoring tool' => 'subcontentwarning',
+                'Disciplines' => 'disciplines',
+                'Short description' => 'shortdescription',
+                'Long description' => 'longdescription',
+                'Icon' => 'icon',
+                'Screenshots' => 'screenshots',
+                'Help me choose a license' => 'helpchoosinglicense',
+                'Share failed.' => 'sharefailed',
+                'Editing failed.' => 'editingfailed',
+                'Something went wrong, please try to share again.' => 'sharetryagain',
+                'Please wait...' => 'pleasewait',
+                'Language' => 'language',
+                'Level' => 'level',
+                'Short description of your content' => 'shortdescriptionplaceholder',
+                'Long description of your content' => 'longdescriptionplaceholder',
+                'Description' => 'description',
+                '640x480px. If not selected content will use category icon' => 'icondescription',
+                'Add up to five screenshots of your content' => 'screenshotsdescription',
+                'Submitted!' => 'submitted',
+                'Is now submitted to H5P Hub' => 'isnowsubmitted',
+                'A change has been submited for' => 'changehasbeensubmitted',
+                'Your content will normally be available in the Hub within one business day.' => 'contentavailable',
+                'Your content will update soon' => 'contentupdatesoon',
+                'Content License Info' => 'contentlicensetitle',
+                'Click on a specific license to get info about proper usage' => 'licensedialogdescription',
+                'Publisher' => 'publisherfieldtitle',
+                'This will display as the "Publisher name" on shared content' => 'publisherfielddescription',
+                'Email Address' => 'emailaddress',
+                'Publisher description' => 'publisherdescription',
+                'This will be displayed under "Publisher info" on shared content' => 'publisherdescriptiontext',
+                'Contact Person' => 'contactperson',
+                'Phone' => 'phone',
+                'Address' => 'address',
+                'City' => 'city',
+                'Zip' => 'zip',
+                'Country' => 'country',
+                'Organization logo or avatar' => 'logouploadtext',
+                'I accept the <a href=":url" target="_blank">terms of use</a>' => 'acceptterms',
+                'You have successfully registered an account on the H5P Hub' => 'successfullyregistred',
+                'You account details can be changed' => 'successfullyregistreddescription',
+                'here' => 'accountdetailslinktext',
+                'H5P Hub Registration' => 'registrationtitle',
+                'An error occurred' => 'registrationfailed',
+                'We were not able to create an account at this point. Something went wrong. Try again later.' => 'registrationfaileddescription',
+                ':length is the maximum number of characters' => 'maxlength',
+                'Keyword already exists!' => 'keywordexists',
+                'License details' => 'licensedetails',
+                'Remove' => 'remove',
+                'Remove image' => 'removeimage',
+                'Cancel sharing' => 'cancelpublishconfirmationdialogtitle',
+                'Are you sure you want to cancel the sharing process?' => 'cancelpublishconfirmationdialogdescription',
+                'No' => 'cancelpublishconfirmationdialogcancelbuttontext',
+                'Yes' => 'cancelpublishconfirmationdialogconfirmbuttontext',
+                'Add' => 'add',
+                'Save account settings' => 'updateregistrationonhub',
+                'Your H5P Hub account settings have successfully been changed' => 'successfullyupdated',
                 'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)' => 'fileexceedsmaxsize',
                 'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)' => 'unpackedfilesexceedsmaxsize',
                 'Unable to read file from the package: %fileName' => 'couldnotreadfilefromzip',
                 'Unable to parse JSON from the package: %fileName' => 'couldnotparsejsonfromzip',
                 'Could not parse post data.' => 'couldnotparsepostdata',
                 'The mbstring PHP extension is not loaded. H5P needs this to function properly' => 'nombstringexteension',
+                'Assistive Technologies label' => 'assistivetechnologieslabel',
+                'Typical age' => 'age',
+                'The target audience of this content. Possible input formats separated by commas: "1,34-45,-50,59-".' => 'agedescription',
+                'Invalid input format for Typical age. Possible input formats separated by commas: "1, 34-45, -50, -59-".' => 'invalidage',
+                'H5P will reach out to the contact person in case there are any issues with the content shared by the publisher. The contact person\'s name or other information will not be published or shared with third parties' => 'contactpersondescription',
+                'The email address will be used by H5P to reach out to the publisher in case of any issues with the content or in case the publisher needs to recover their account. It will not be published or shared with any third parties' => 'emailaddressdescription',
+                'Copyrighted material cannot be shared in the H5P Content Hub. If the content is licensed with a OER friendly license like Creative Commons, please choose the appropriate license. If not this content cannot be shared.' => 'copyrightwarning',
+                'Keywords already exists!' => 'keywordsexists',
+                'Some of these keywords already exist' => 'somekeywordsexists',
             ];
             // @codingStandardsIgnoreEnd
         }
@@ -979,6 +1155,7 @@ class framework implements \H5PFrameworkInterface {
             $id = $DB->insert_record('hvp', $data);
         } else {
             $data['id'] = $content['id'];
+            $data['synced'] = \H5PContentHubSyncStatus::NOT_SYNCED;
             $DB->update_record('hvp', $data);
             $eventtype = 'update';
             $id = $data['id'];
@@ -1112,7 +1289,11 @@ class framework implements \H5PFrameworkInterface {
             hc.year_to,
             hc.changes,
             hc.author_comments,
-            hc.default_language
+            hc.default_language,
+            hc.shared,
+            hc.synced,
+            hc.hub_id,
+            hc.a11y_title
           FROM {hvp} hc
           JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
           WHERE hc.id = ?", array($id)
@@ -1135,6 +1316,9 @@ class framework implements \H5PFrameworkInterface {
             'slug' => $data->slug,
             'embedType' => $data->embed_type,
             'disable' => $data->disable,
+            'shared' => $data->shared,
+            'synced' => $data->synced,
+            'contentHubId' => $data->hub_id,
             'libraryId' => $data->library_id,
             'libraryName' => $data->machine_name,
             'libraryMajorVersion' => $data->major_version,
@@ -1154,7 +1338,8 @@ class framework implements \H5PFrameworkInterface {
             'year_to',
             'changes',
             'author_comments',
-            'default_language'
+            'default_language',
+            'a11y_title'
         ];
 
         $content['metadata'] = \H5PCore::snakeToCamel(
@@ -1660,5 +1845,76 @@ class framework implements \H5PFrameworkInterface {
         );
 
         return !empty($results);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function replaceContentHubMetadataCache($metadata, $lang = 'en') {
+        global $DB;
+
+        // Check if exist in database.
+        $cache = $DB->get_record_sql(
+            'SELECT id
+                   FROM {hvp_content_hub_cache}
+                  WHERE language = ?',
+            array($lang)
+        );
+        if ($cache) {
+            // Update.
+            $DB->execute("UPDATE {hvp_content_hub_cache} SET json = ? WHERE id = ?", array($metadata, $cache->id));
+        } else {
+            // Insert.
+            $DB->insert_record('hvp_content_hub_cache', (object) array(
+                'json'         => $metadata,
+                'language'     => $lang,
+                'last_checked' => time(),
+            ));
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function getContentHubMetadataCache($lang = 'en') {
+        global $DB;
+        $cache = $DB->get_record_sql(
+                'SELECT json
+                   FROM {hvp_content_hub_cache}
+                  WHERE language = ?',
+                array($lang)
+        );
+        return $cache ? $cache->json : null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function getContentHubMetadataChecked($lang = 'en') {
+        global $DB;
+        $cache = $DB->get_record_sql(
+                'SELECT last_checked
+                  FROM {hvp_content_hub_cache}
+                 WHERE language = ?',
+                array($lang)
+        );
+        if ($cache) {
+            $time = new \DateTime();
+            $time->setTimestamp($cache->last_checked);
+            $cache = $time->format("D, d M Y H:i:s \G\M\T");
+        }
+        return $cache;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function setContentHubMetadataChecked($time, $lang = 'en') {
+        global $DB;
+        $DB->execute("UPDATE {hvp_content_hub_cache} SET last_checked = ? WHERE language = ?", array($time, $lang));
     }
 }

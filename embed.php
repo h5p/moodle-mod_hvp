@@ -71,9 +71,6 @@ try {
 $context = context_module::instance($cm->id);
 require_capability('mod/hvp:view', $context);
 
-// Unlock session during embed.
-core\session\manager::write_close();
-
 // Set up view assets.
 $view = new \mod_hvp\view_assets($cm, $course, [
     'disabledownload'   => $disabledownload,
@@ -81,6 +78,9 @@ $view = new \mod_hvp\view_assets($cm, $course, [
 ]);
 $content = $view->getcontent();
 $view->validatecontent();
+
+// Release session while loading the rest of our assets.
+core\session\manager::write_close();
 
 // Configure page.
 $PAGE->set_url(new \moodle_url('/mod/hvp/embed.php', array('id' => $id)));
@@ -91,9 +91,7 @@ $PAGE->set_heading($course->fullname);
 $PAGE->add_body_class('h5p-embed');
 $PAGE->set_pagelayout('embedded');
 $root = \mod_hvp\view_assets::getsiteroot();
-$PAGE->requires->css(new \moodle_url("{$root}/mod/hvp/embed.css"));
-$PAGE->requires->js(new \moodle_url("{$root}/mod/hvp/embed.js"));
-
+$PAGE->requires->js_call_amd('mod_hvp/embed');
 // Add H5P assets to page.
 $view->addassetstopage();
 $view->logviewed();

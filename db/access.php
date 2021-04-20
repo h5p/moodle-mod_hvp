@@ -70,6 +70,17 @@ $capabilities = array(
         'clonepermissionsfrom' => 'mod/hvp:addinstance'
     ),
 
+    'mod/hvp:share' => array(
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+        'clonepermissionsfrom' => 'mod/hvp:addinstance'
+    ),
+
     'mod/hvp:getexport' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
@@ -186,5 +197,11 @@ $capabilities = array(
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => array()
     ),
+
+    'mod/hvp:contenthubregistration' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [], // Only admins by default.
+    ],
 
 );
