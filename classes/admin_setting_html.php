@@ -66,6 +66,11 @@ class admin_setting_html extends admin_setting {
      */
     public function output_html($data, $query = '') {
         global $OUTPUT;
+        $registrationurl = new moodle_url('/mod/hvp/content_hub_registration.php');
+        if ($this->hubinfo === false) {
+          $this->hubinfo = (object) [];
+        }
+        $this->hubinfo->registrationurl = $registrationurl->out(false);
         return $OUTPUT->render_from_template('mod_hvp/content_hub_registration_box', $this->hubinfo);
     }
 }

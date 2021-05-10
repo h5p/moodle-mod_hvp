@@ -2,7 +2,7 @@
     <div class="form-label col-sm-3 text-sm-right"></div>
     <div class="form-setting col-sm-9">
         {{^name}}
-            {{# str }} contenthub:register, mod_hvp {{/str}}
+            {{# str }} contenthub:register, mod_hvp, {{ registrationurl }} {{/str}}
         {{/name}}
         {{#name}}
             <div>
@@ -26,7 +26,7 @@
                     {{/phone}}
                 </div>
                 <div style="margin-top: 1em">
-                    {{# str}} contenthub:changesettings, mod_hvp {{/str}}
+                    {{# str}} contenthub:changesettings, mod_hvp, {{ registrationurl }} {{/str}}
                 </div>
             </div>
         {{/name}}
