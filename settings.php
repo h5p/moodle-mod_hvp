@@ -24,6 +24,11 @@
 // Make sure we are called from an internal Moodle site.
 defined('MOODLE_INTERNAL') || die();
 
+// To avoid phpunit error, do not load anything from this function. It causes conflict with H5P library in Moodle core.
+if (PHPUNIT_TEST) {
+    return;
+}
+
 require_once($CFG->dirroot . '/mod/hvp/lib.php');
 require_once($CFG->dirroot . '/mod/hvp/classes/admin_setting_html.php');
 

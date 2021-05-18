@@ -24,7 +24,12 @@
 
 namespace mod_hvp;
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot . '/mod/hvp/library/h5p-file-storage.interface.php');
+
+// To avoid re-declaration error, which can be happened from phpunit, loading from core_component::classloader.
+// This update works for only phpunit, in case we make another bug from this change.
+if (!PHPUNIT_TEST || !interface_exists('\H5PFileStorage')) {
+    require_once($CFG->dirroot . '/mod/hvp/library/h5p-file-storage.interface.php');
+}
 
 /**
  * The mod_hvp file storage class.
