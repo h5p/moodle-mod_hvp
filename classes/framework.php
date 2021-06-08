@@ -140,10 +140,15 @@ class framework implements \H5PFrameworkInterface {
         }
 
         // Get current language in Moodle.
-        $language = str_replace('_', '-', strtolower(\current_language()));
+        $languageCandidate = str_replace('_', '-', strtolower(\current_language()));
+        while ($languageCandidate != "" && !isset($map[$languageCandidate])) {
+            $parentLanguageString = new \lang_string("parentlanguage", "langconfig", null, $languageCandidate);
+            $parentLanguage = str_replace('_', '-', strtolower($parentLanguageString->out()));
+            if (!$parentLanguage) break;
+        }
 
         // Try to map.
-        return isset($map[$language]) ? $map[$language] : $language;
+        return isset($map[$languageCandidate]) ? $map[$languageCandidate] : $languageCandidate;
     }
 
     /**
