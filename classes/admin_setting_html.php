@@ -71,6 +71,8 @@ class admin_setting_html extends admin_setting {
           $this->hubinfo = (object) [];
         }
         $this->hubinfo->registrationurl = $registrationurl->out(false);
+        $this->hubinfo->register = get_string('contenthub:register', 'hvp');
+        $this->hubinfo->changesettings = get_string('contenthub:changesettings', 'hvp');
         return $OUTPUT->render_from_template('mod_hvp/content_hub_registration_box', $this->hubinfo);
     }
 }
