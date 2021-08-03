@@ -497,6 +497,9 @@ function hvp_upgrade_2020080400() {
 
 function hvp_upgrade_2020080401() {
     global $DB;
+    $DB->execute("UPDATE {hvp}
+                     SET completionpass = 0
+                   WHERE completionpass IS NULL");
     $dbman = $DB->get_manager();
 
     // Changing nullability of field completionpass on table hvp to not null.
