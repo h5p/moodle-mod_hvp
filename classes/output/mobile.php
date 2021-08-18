@@ -27,7 +27,7 @@ class mobile {
         global $DB, $CFG, $OUTPUT, $USER;
 
         $cmid = $args['cmid'];
-        if (!$CFG->allowframembedding) {
+        if (empty($CFG->allowframembedding) && !\core_useragent::is_moodle_app()) {
             $context = \context_system::instance();
             if (has_capability('moodle/site:config', $context)) {
                 $template = 'mod_hvp/iframe_embedding_disabled';
