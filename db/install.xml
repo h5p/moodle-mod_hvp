@@ -58,7 +58,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="results" UNIQUE="false" FIELDS="content_id, user_id" />
+        <INDEX NAME="results" UNIQUE="false" FIELDS="content_id, user_id"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="hvp_content_user_data" COMMENT="Stores user data about the content">
