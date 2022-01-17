@@ -210,22 +210,7 @@ class framework implements \H5PFrameworkInterface {
             'CURLOPT_TIMEOUT'        => 300,
         );
 
-        if ($stream !== null) {
-            // Download file.
-            @set_time_limit(0);
-
-            // Generate local tmp file path.
-            $localfolder = $CFG->tempdir . uniqid('/hvp-');
-            $stream      = $localfolder . '.h5p';
-
-            // Add folder and file paths to H5P Core.
-            $interface = self::instance('interface');
-            $interface->getUploadedH5pFolderPath($localfolder);
-            $interface->getUploadedH5pPath($stream);
-
-            $stream                  = fopen($stream, 'w');
-            $options['CURLOPT_FILE'] = $stream;
-        }
+        @set_time_limit(0);
 
         $curl = new curl();
 
@@ -243,7 +228,23 @@ class framework implements \H5PFrameworkInterface {
         }
 
         if ($stream !== null) {
-            fclose($stream);
+            // Generate local tmp file path.
+            $localfolder = $CFG->tempdir . uniqid('/hvp-');
+            $stream = $localfolder . '.h5p';
+
+            // Add folder and file paths to H5P Core.
+            $interface = self::instance('interface');
+            $interface->getUploadedH5pFolderPath($localfolder);
+            $interface->getUploadedH5pPath($stream);
+
+            $written = file_put_contents($stream, $response);
+
+            if ($written === false) {
+                $response = false;
+            } else {
+                $response = true;
+            }
+
             @chmod($stream, $CFG->filepermissions);
         }
 
