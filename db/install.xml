@@ -75,6 +75,9 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="userdata" UNIQUE="false" FIELDS="user_id, hvp_id, sub_content_id, data_id"/>
+      </INDEXES>
     </TABLE>
     <TABLE NAME="hvp_libraries" COMMENT="Stores information about libraries.">
       <FIELDS>

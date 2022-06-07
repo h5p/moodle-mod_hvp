@@ -565,6 +565,21 @@ function hvp_upgrade_2020112600() {
     }
 }
 
+function hvp_upgrade_2022012001() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp_content_user_data');
+
+    // Define index business (not unique) to be added to enrol_paypal.
+    $index = new xmldb_index('userdata', XMLDB_INDEX_NOTUNIQUE, ['user_id', 'hvp_id', 'sub_content_id', 'data_id']);
+
+    // Conditionally launch add index business.
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
+}
+
 /**
  * Hvp module upgrade function.
  *
@@ -591,6 +606,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2020082800,
         2020091500,
         2020112600,
+        2022012001,
     ];
 
     foreach ($upgrades as $version) {
