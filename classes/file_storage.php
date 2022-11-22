@@ -380,6 +380,8 @@ class file_storage implements \H5PFileStorage {
      */
     // @codingStandardsIgnoreLine
     public function saveFile($file, $contentid, $contextid = null) {
+        global $CFG;
+
         if ($contentid !== 0) {
             // Grab cm context.
             $cm = \get_coursemodule_from_instance('hvp', $contentid);
@@ -388,6 +390,26 @@ class file_storage implements \H5PFileStorage {
         } else if ($contextid === null) {
             // Check for context id in params.
             $contextid = optional_param('contextId', null, PARAM_INT);
+            $context = \context::instance_by_id($contextid);
+        }
+
+        if (!$context) {
+            \H5PCore::ajaxError(get_string('invalidcontext', 'error'));
+            return;
+        }
+
+        $maxsize = get_max_upload_file_size($CFG->maxbytes);
+        // Check size of each uploaded file and scan for viruses.
+        foreach ($_FILES as $uploadedfile) {
+            $filename = clean_param($uploadedfile['name'], PARAM_FILE);
+
+            if (!has_capability('moodle/course:ignorefilesizelimits', $context)) {
+                if ($uploadedfile['size'] > $maxsize) {
+                    \H5PCore::ajaxError(get_string('maxbytesfile', 'error', ['file' => $filename, 'size' => display_size($maxsize)]));
+                    return;
+                }
+            }
+            \core\antivirus\manager::scan_file($uploadedfile['tmp_name'], $filename, true);
         }
 
         // Files not yet related to any activities are stored in a course context
