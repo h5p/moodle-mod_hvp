@@ -30,10 +30,10 @@ $id = required_param('id', PARAM_INT);
 $userid = optional_param('userid', 0, PARAM_INT);
 
 if (! $cm = get_coursemodule_from_id('hvp', $id)) {
-    print_error('invalidcoursemodule');
+    throw new \moodle_exception('invalidcoursemodule');
 }
 if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
-    print_error('coursemisconf');
+    throw new \moodle_exception('coursemisconf');
 }
 require_course_login($course, false, $cm);
 
@@ -53,7 +53,7 @@ $hvp = $DB->get_record_sql(
         array($cm->instance));
 
 if ($hvp === false) {
-    print_error('invalidhvp', 'mod_hvp');
+    throw new \moodle_exception('invalidhvp');
 }
 
 // Redirect to report if a specific user is chosen.
