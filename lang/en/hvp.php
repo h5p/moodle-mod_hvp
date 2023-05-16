@@ -454,6 +454,10 @@ $string['couldnotreadfilefromzip'] = 'Unable to read file from the package: %fil
 $string['couldnotparsejsonfromzip'] = 'Unable to parse JSON from the package: %fileName';
 $string['couldnotparsepostdata'] = 'Could not parse post data.';
 $string['nombstringexteension'] = 'The mbstring PHP extension is not loaded. H5P needs this to function properly';
+$string['invalidhvp'] = 'Invalid H5P activity';
+$string['nohubregistration'] = 'Not registered with H5P Hub';
+$string['invalidtoken'] = 'H5P has received an invalid token. Refresh the page and try again';
+$string['contentnotshared'] = 'H5P activity cannot be shared. Please check your H5P hub registration';
 
 // Messaging api.
 $string['messageprovider:confirmation'] = 'Confirmation of your own H5P submissions';

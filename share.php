@@ -43,7 +43,7 @@ require_capability('mod/hvp:share', $context);
 // Check if Hub registered, if not redirect to hub registration.
 if (empty(get_config('mod_hvp', 'site_uuid')) || empty(get_config('mod_hvp', 'hub_secret'))) {
     if (!has_capability('mod/hvp:contenthubregistration', \context_system::instance())) {
-        print_error('nohubregistration');
+        print_error('nohubregistration', 'mod_hvp');
     }
     redirect(new moodle_url('/mod/hvp/content_hub_registration.php'));
 }
@@ -60,10 +60,10 @@ if ($action) {
     }
     $token = required_param('_token', PARAM_RAW);
     if (!\H5PCore::validToken('share_' . $id, $token)) {
-        print_error('invalidtoken');
+        print_error('invalidtoken', 'mod_hvp');
     }
     if (empty($content['contentHubId']) || $content['shared'] !== '1') {
-        print_error('contentnotshared');
+        print_error('contentnotshared', 'mod_hvp');
     }
 
     $core = \mod_hvp\framework::instance();

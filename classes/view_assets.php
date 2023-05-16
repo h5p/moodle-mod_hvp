@@ -342,7 +342,7 @@ class view_assets {
      */
     public function validatecontent() {
         if ($this->content === null) {
-            print_error('invalidhvp');
+            print_error('invalidhvp', 'mod_hvp');
         }
     }
 
