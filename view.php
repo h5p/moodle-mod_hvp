@@ -58,17 +58,19 @@ $PAGE->requires->css(new moodle_url(\mod_hvp\view_assets::getsiteroot() . '/mod/
 
 // Print page HTML.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(format_string($content['title']));
-echo '<div class="clearer"></div>';
+if ($CFG->branch < 400) {
+    echo $OUTPUT->heading(format_string($content['title']));
+    echo '<div class="clearer"></div>';
 
-// Output introduction.
-if (trim(strip_tags($content['intro'], '<img>'))) {
-    echo $OUTPUT->box_start('mod_introbox', 'hvpintro');
-    echo format_module_intro('hvp', (object) array(
-        'intro'       => $content['intro'],
-        'introformat' => $content['introformat'],
-    ), $cm->id);
-    echo $OUTPUT->box_end();
+    // Output introduction.
+    if (trim(strip_tags($content['intro'], '<img>'))) {
+        echo $OUTPUT->box_start('mod_introbox', 'hvpintro');
+        echo format_module_intro('hvp', (object) array(
+            'intro'       => $content['intro'],
+            'introformat' => $content['introformat'],
+        ), $cm->id);
+        echo $OUTPUT->box_end();
+    }
 }
 
 $hashub = (has_capability('mod/hvp:share', $context) && !empty(get_config('mod_hvp', 'site_uuid')) && !empty(get_config('mod_hvp', 'hub_secret')));

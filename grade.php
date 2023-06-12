@@ -53,7 +53,7 @@ $hvp = $DB->get_record_sql(
         array($cm->instance));
 
 if ($hvp === false) {
-    print_error('invalidhvp');
+    print_error('invalidhvp', 'mod_hvp');
 }
 
 // Redirect to report if a specific user is chosen.
