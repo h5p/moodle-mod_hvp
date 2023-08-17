@@ -58,6 +58,11 @@ $PAGE->requires->css(new moodle_url(\mod_hvp\view_assets::getsiteroot() . '/mod/
 
 // Print page HTML.
 echo $OUTPUT->header();
+
+// Back to course button
+$url = new \moodle_url('/course/view.php',array('id' => $course->id));
+echo html_writer::link($url,'Back to course', array('type' => 'submit', 'class' => 'btn btn-success'));
+
 if ($CFG->branch < 400) {
     echo $OUTPUT->heading(format_string($content['title']));
     echo '<div class="clearer"></div>';
