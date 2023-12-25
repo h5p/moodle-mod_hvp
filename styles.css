@@ -118,13 +118,3 @@ body.h5p-embed #maincontent,
 body.h5p-embed #user-notifications {
     display: none;
 }
-/* Import styles to prevent loading after output in locallib */
-
-@import 'library/styles/font-open-sans.css';
-@import 'library/styles/h5p.css';
-@import 'library/styles/h5p-admin.css';
-@import 'library/styles/h5p-confirmation-dialog.css';
-@import 'library/styles/h5p-core-button.css';
-@import 'library/styles/h5p-hub-registration.css';
-@import 'library/styles/h5p-hub-sharing.css';
-@import 'library/styles/h5p-tooltip.css';

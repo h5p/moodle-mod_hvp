@@ -116,6 +116,7 @@ function hvp_get_core_assets($context) {
     // Add core stylesheets.
     foreach (\H5PCore::$styles as $style) {
         $settings['core']['styles'][] = $relpath . $style . $cachebuster;
+        $PAGE->requires->css(new moodle_url($liburl . $style . $cachebuster));
     }
     // Add core JavaScript.
     foreach (\H5PCore::$scripts as $script) {
