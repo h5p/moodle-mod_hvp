@@ -64,7 +64,6 @@ $basepath = \mod_hvp\view_assets::getsiteroot();
 $PAGE->set_url($pageurl);
 $PAGE->set_title($hvp->title);
 $PAGE->set_heading($COURSE->fullname);
-$PAGE->requires->css(new moodle_url($basepath . '/mod/hvp/xapi-custom-report.css'));
 
 // We have to get grades from gradebook as well.
 $xapiresults = $DB->get_records_sql("
