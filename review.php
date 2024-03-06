@@ -29,10 +29,10 @@ $id     = required_param('id', PARAM_INT);
 $userid = optional_param('user', (int) $USER->id, PARAM_INT);
 
 if (!$cm = get_coursemodule_from_instance('hvp', $id)) {
-    print_error('invalidcoursemodule');
+    throw new \moodle_exception('invalidcoursemodule');
 }
 if (!$course = $DB->get_record('course', ['id' => $cm->course])) {
-    print_error('coursemisconf');
+    throw new \moodle_exception('coursemisconf');
 }
 require_login($course, false, $cm);
 
@@ -53,7 +53,7 @@ $hvp = $DB->get_record_sql(
     [$id]);
 
 if ($hvp === false) {
-    print_error('invalidhvp', 'mod_hvp');
+    throw new \moodle_exception('invalidhvp');
 }
 
 // Set page properties.
