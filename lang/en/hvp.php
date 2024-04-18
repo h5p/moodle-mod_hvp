@@ -63,6 +63,8 @@ $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
 $string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
+$string['reset_hvp_attempts'] = 'Reset user attempts';
+
 // Admin settings.
 $string['displayoptiondownloadnever'] = 'Never';
 $string['displayoptiondownloadalways'] = 'Always';
