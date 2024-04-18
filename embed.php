@@ -72,9 +72,11 @@ $context = context_module::instance($cm->id);
 require_capability('mod/hvp:view', $context);
 
 // Set up view assets.
+// We force the embedtype to be a div because should already be in an iframe when calling embed.php and do not need another
 $view = new \mod_hvp\view_assets($cm, $course, [
     'disabledownload'   => $disabledownload,
-    'disablefullscreen' => $disablefullscreen
+    'disablefullscreen' => $disablefullscreen,
+    'forceembedtype'    => 'div'                             
 ]);
 $content = $view->getcontent();
 $view->validatecontent();
