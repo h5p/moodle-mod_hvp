@@ -83,7 +83,7 @@ class view_assets {
             )
         );
 
-        $this->embedtype = isset($options->forceembedtype) ? $options->forceembedtype : \H5PCore::determineEmbedType(
+        $this->embedtype = isset($options['forceembedtype']) ? $options['forceembedtype'] : \H5PCore::determineEmbedType(
             $this->content['embedType'], $this->content['library']['embedTypes']
         );
 
