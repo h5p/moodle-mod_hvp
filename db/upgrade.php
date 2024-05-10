@@ -568,6 +568,23 @@ function hvp_upgrade_2020112600() {
 }
 
 /**
+ * Rename content_type since it was added as a reserved word in Aurora MySQL version 3.06.0.
+ */
+function hvp_upgrade_2023122501() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    // Rename field content_type on table hvp to contenttype.
+    $table = new xmldb_table('hvp');
+    $field = new xmldb_field('content_type', XMLDB_TYPE_CHAR, '127', null, null, null, null, 'main_library_id');
+
+    // Launch rename field content_type.
+    if ($dbman->field_exists($table, $field)) {
+        $dbman->rename_field($table, $field, 'contenttype');
+    }
+}
+
+/**
  * Hvp module upgrade function.
  *
  * @param string $oldversion The version we are upgrading from
@@ -593,6 +610,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2020082800,
         2020091500,
         2020112600,
+        2023122501,
     ];
 
     foreach ($upgrades as $version) {

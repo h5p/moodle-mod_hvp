@@ -15,7 +15,7 @@
         <FIELD NAME="embed_type" TYPE="char" LENGTH="127" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="disable" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="main_library_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The library we first instanciate for this node"/>
-        <FIELD NAME="content_type" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="Content type as defined in h5p.json"/>
+        <FIELD NAME="contenttype" TYPE="char" LENGTH="127" NOTNULL="false" SEQUENCE="false" COMMENT="Content type as defined in h5p.json"/>
         <FIELD NAME="authors" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="List of authors in json format"/>
         <FIELD NAME="source" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Link to the source, could also be citation"/>
         <FIELD NAME="year_from" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="Start year for copyright"/>
