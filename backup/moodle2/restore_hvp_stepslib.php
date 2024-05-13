@@ -73,6 +73,12 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
         $data->timecreated = $this->apply_date_offset($data->timecreated);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
+        // Allow old backups to work after renaming content_type.
+        if (property_exists($data, 'content_type')) {
+            $data->contenttype = $data->content_type;
+            unset($data->content_type);
+        }
+
         // Insert the hvp record.
         $newitemid = $DB->insert_record('hvp', $data);
         // Immediately after inserting "activity" record, call this.
