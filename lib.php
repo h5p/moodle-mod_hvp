@@ -556,7 +556,7 @@ function hvp_reset_userdata($data) {
     $hvpinstances = $DB->get_records('hvp', ['course' => $data->courseid]);
 
     foreach ($hvpinstances as $hvpinstance) {
-        if (!empty($data->reset_hvp_userdata)) {
+        if (!empty($data->reset_hvp_attempts)) {
             $DB->delete_records('hvp_content_user_data', ['hvp_id' => $hvpinstance->id]);
             $DB->delete_records('hvp_xapi_results', ['content_id' => $hvpinstance->id]);
             // Remove all grades from gradebook.
