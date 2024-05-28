@@ -205,6 +205,11 @@ function hvp_delete_instance($id) {
       'content_id' => $hvp->id
     ));
 
+    // Delete entries in the hvp_content_user_data table.
+    $DB->delete_records('hvp_content_user_data', [
+        'hvp_id' => $hvp->id
+    ]);
+
     // Get library details.
     $library = $DB->get_record_sql(
             "SELECT machine_name AS name, major_version, minor_version
@@ -516,3 +521,73 @@ function mod_hvp_core_calendar_provide_event_action(calendar_event $event, actio
     );
 }
 
+/**
+ * Implementation of the function for printing the form elements that control
+ * whether the course reset functionality affects the hvp activity.
+ *
+ * @param object $mform form passed by reference
+ */
+function hvp_reset_course_form_definition(&$mform): void {
+    $mform->addElement('header', 'hvpactivityheader', get_string('modulenameplural', 'mod_hvp'));
+    $mform->addElement('advcheckbox', 'reset_hvp_attempts', get_string('reset_hvp_attempts', 'mod_hvp'));
+}
+
+/**
+ * Course reset form defaults.
+ *
+ * @param stdClass $course the course object
+ * @return array
+ */
+function hvp_reset_course_form_defaults(stdClass $course): array {
+    return [
+        'reset_hvp_attempts' => 1,
+    ];
+}
+
+/**
+ * This function is used by the reset_course_userdata function in moodlelib.
+ *
+ * @param object $data the data submitted from the reset course.
+ * @return array status array
+ */
+function hvp_reset_userdata($data) {
+    global $DB;
+    $status = [];
+    $hvpinstances = $DB->get_records('hvp', ['course' => $data->courseid]);
+
+    foreach ($hvpinstances as $hvpinstance) {
+        if (!empty($data->reset_hvp_attempts)) {
+            $DB->delete_records('hvp_content_user_data', ['hvp_id' => $hvpinstance->id]);
+            $DB->delete_records('hvp_xapi_results', ['content_id' => $hvpinstance->id]);
+            // Remove all grades from gradebook.
+            if (empty($data->reset_gradebook_grades)) {
+                hvp_reset_gradebook($data->courseid);
+            }
+            $status[] = [
+                'component' => get_string('modulenameplural', 'mod_hvp'),
+                'item' => get_string('reset_hvp_attempts', 'mod_hvp'),
+                'error' => false,
+            ];
+        }
+    }
+    return $status;
+}
+
+/**
+ * Removes all grades from gradebook
+ * @param int $courseid
+ * @param string optional type
+ */
+function hvp_reset_gradebook($courseid, $type='') {
+    global $DB;
+
+    $sql = "SELECT h.*, cm.idnumber as cmidnumber, h.course as courseid
+              FROM {hvp} h, {course_modules} cm, {modules} m
+             WHERE m.name = 'hvp' AND m.id = cm.module AND cm.instance = h.id AND h.course=?";
+
+    if ($activities = $DB->get_records_sql($sql, [$courseid])) {
+        foreach ($activities as $activity) {
+            hvp_grade_item_update($activity, 'reset');
+        }
+    }
+}
