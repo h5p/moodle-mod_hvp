@@ -493,7 +493,7 @@ $string['contenthub:settings:box'] = 'Content Hub Account';
 $string['contenthub:licenseagreementtitle'] = 'End User License Agreement (EULA)';
 $string['contenthub:licenseagreementdescription'] = 'Please read the following agreement before proceeding with the ';
 $string['contenthub:licenseagreementmaintext'] = 'TODO';
-$string['contenthubsearchenable'] = 'Content Hub Account';
+$string['contenthubsearchenable'] = 'Enable shared content in H5P Hub';
 $string['contenthubsearchdescription'] = 'Find and download shared content from H5P Hub.';
 $string['contenthub:register'] = 'Register an account on the H5P Hub <a href="{$a}">here</a>';
 $string['contenthub:changesettings'] = 'Change account settings <a href="{$a}">here</a>';
