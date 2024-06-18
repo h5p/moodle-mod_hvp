@@ -197,7 +197,7 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     $editorajaxtoken = \H5PCore::createToken('editorajax');
 
     $interface = \mod_hvp\framework::instance('interface');
-    $enablecontenthub = ($interface->getOption('hub_is_enabled', "1") ? $interface->getOption('h5p_search_content_hub', "1") : "0") === "1";
+    $enablecontenthub = ($interface->getOption('hub_is_enabled', null) ? $interface->getOption('h5p_search_content_hub', null) : "0") === "1";
 
     $settings['editor'] = array(
       'filesPath' => $filespathbase . 'editor',
