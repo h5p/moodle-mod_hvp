@@ -434,15 +434,25 @@ class mod_hvp_mod_form extends moodleform_mod {
     }
 
     public function add_completion_rules() {
+        global $CFG;
+
         $mform   =& $this->_form;
+
+        // Changes for Moodle 4.3 - MDL-78516.
+        if ($CFG->branch < 403) {
+            $suffix = '';
+        } else {
+            $suffix = $this->get_suffix();
+        }
+
         $items   = array();
         $group   = array();
-        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'hvp'),
+        $group[] = $mform->createElement('advcheckbox', 'completionpass' . $suffix, null, get_string('completionpass', 'hvp'),
             array('group' => 'cpass'));
-        $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
-        $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'hvp'), ' &nbsp; ', false);
-        $mform->addHelpButton('completionpassgroup', 'completionpass', 'hvp');
-        $items[] = 'completionpassgroup';
+        $mform->disabledIf('completionpass' . $suffix, 'completionusegrade', 'notchecked');
+        $mform->addGroup($group, 'completionpassgroup' . $suffix, get_string('completionpass', 'hvp'), ' &nbsp; ', false);
+        $mform->addHelpButton('completionpassgroup' . $suffix, 'completionpass', 'hvp');
+        $items[] = 'completionpassgroup' . $suffix;
 
         return $items;
     }
