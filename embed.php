@@ -87,6 +87,11 @@ $PAGE->set_url(new \moodle_url('/mod/hvp/embed.php', array('id' => $id)));
 $PAGE->set_title(format_string($content['title']));
 $PAGE->set_heading($course->fullname);
 
+// Disable activity header on Moodle 4.0+
+if ($CFG->branch >= 400) {
+    $PAGE->activityheader->disable();
+}
+
 // Embed specific page setup.
 $PAGE->add_body_class('h5p-embed');
 $PAGE->set_pagelayout('embedded');
