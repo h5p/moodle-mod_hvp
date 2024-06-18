@@ -124,8 +124,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configcheckbox(
             'mod_hvp/h5p_search_content_hub', 
-            'Enable shared content in H5P Hub',
-            'Find and download shared content from H5P Hub.', 1));
+            get_string('contenthubsearchenable', 'hvp'),
+            get_string('contenthubsearchdescription', 'hvp'), 1));
     
     // Register on the Content Hub to allow uploading content
     $settings->add(new admin_setting_html(
