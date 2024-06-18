@@ -120,6 +120,14 @@ if ($ADMIN->fulltree) {
         ''
     ));
 
+    // Content Hub on by default for all users
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'mod_hvp/h5p_search_content_hub', 
+            'Enable shared content in H5P Hub',
+            'Find and download shared content from H5P Hub.', 1));
+    
+    // Register on the Content Hub to allow uploading content
     $settings->add(new admin_setting_html(
         'mod_hvp/content_hub_settings_box',
         get_string('contenthub:settings:box', 'hvp'),
