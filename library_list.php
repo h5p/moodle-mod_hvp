@@ -86,6 +86,12 @@ foreach ($libraries as $versions) {
             $restricted = null;
             $restrictedurl = null;
         }
+        // Check if delete button should be enabled
+        if ($usage['content'] === 0 && $usage['libraries'] === 0) {
+            $button = '<button class="btn btn-primary">Delete</button>';
+        } else {
+            $button = '<button class="btn btn-primary" disabled title="Cannot delete, dependencies exist">Delete</button>';
+        }
 
         $settings['libraryList']['listData'][] = array(
             'title' => $library->title . ' (' . \H5PCore::libraryVersion($library) . ')',
@@ -96,7 +102,7 @@ foreach ($libraries as $versions) {
             'numLibraryDependencies' => $usage['libraries'],
             'upgradeUrl' => $upgradeurl,
             'detailsUrl' => null, // Not implemented in Moodle.
-            'deleteUrl' => null // Not implemented in Moodle.
+            'deleteUrl' => $button
         );
 
         $i++;
