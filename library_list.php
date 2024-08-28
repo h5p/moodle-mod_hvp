@@ -81,16 +81,17 @@ foreach ($libraries as $versions) {
                 'restrict' => ($restricted ? 0 : 1),
                 'library_id' => $library->id
             )))->out(false);
+
+            // Generate delete URL
+            $deleteurl = (new moodle_url('/mod/hvp/delete_library_page.php', array(
+                'library_id' => $library->id
+            )))->out(false);
+
         } else {
             $upgradeurl = null;
             $restricted = null;
             $restrictedurl = null;
-        }
-        // Check if delete button should be enabled
-        if ($usage['content'] === 0 && $usage['libraries'] === 0) {
-            $button = '<button class="btn btn-primary">Delete</button>';
-        } else {
-            $button = '<button class="btn btn-primary" disabled title="Cannot delete, dependencies exist">Delete</button>';
+            $deleteurl = null;
         }
 
         $settings['libraryList']['listData'][] = array(
@@ -102,7 +103,7 @@ foreach ($libraries as $versions) {
             'numLibraryDependencies' => $usage['libraries'],
             'upgradeUrl' => $upgradeurl,
             'detailsUrl' => null, // Not implemented in Moodle.
-            'deleteUrl' => $button
+            'deleteUrl' => $deleteurl
         );
 
         $i++;
