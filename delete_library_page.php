@@ -29,6 +29,7 @@ require_once("locallib.php");
 require_login(0, false);
 
 $libraryid = required_param('library_id', PARAM_INT);
+$confirm = optional_param('confirm', 0, PARAM_BOOL);  // Confirmation flag
 $pageurl = new moodle_url('/mod/hvp/delete_library_page.php', array('library_id' => $libraryid));
 $PAGE->set_url($pageurl);
 admin_externalpage_setup('h5plibraries');
@@ -44,18 +45,28 @@ $usage = $core->h5pF->getLibraryUsage($libraryid);
 
 $PAGE->set_heading(get_string('deleteheading', 'hvp', $library->title . ' (' . \H5PCore::libraryVersion($library) . ')'));
 
-if ($usage['content'] === 0 && $usage['libraries'] === 0) {
-    // Delete the library and associated dependencies
-    $DB->delete_records('hvp_libraries', array('id' => $libraryid));
-    $DB->delete_records('hvp_contents_libraries', array('library_id' => $libraryid));
-    $DB->delete_records('hvp_libraries_libraries', array('required_library_id' => $libraryid));
+if ($confirm) {
+    if ($usage['content'] === 0 && $usage['libraries'] === 0) {
+        // Delete the library and associated dependencies
+        $DB->delete_records('hvp_libraries', array('id' => $libraryid));
+        $DB->delete_records('hvp_contents_libraries', array('library_id' => $libraryid));
+        $DB->delete_records('hvp_libraries_libraries', array('required_library_id' => $libraryid));
 
-    redirect(new moodle_url('/mod/hvp/library_list.php'), get_string('librarydeleted', 'hvp'), null, \core\output\notification::NOTIFY_SUCCESS);
+        redirect(new moodle_url('/mod/hvp/library_list.php'), get_string('librarydeleted', 'hvp'), null, \core\output\notification::NOTIFY_SUCCESS);
+    } else {
+        // Library cannot be deleted, show error message
+        echo $OUTPUT->header();
+        echo $OUTPUT->notification(get_string('cannotdeletelibrary', 'hvp'), 'notifyproblem');
+        echo $OUTPUT->continue_button(new moodle_url('/mod/hvp/library_list.php'));
+        echo $OUTPUT->footer();
+    }
 } else {
-    // Library cannot be deleted, show error message
+    // Ask for confirmation
     echo $OUTPUT->header();
-    echo $OUTPUT->notification(get_string('cannotdeletelibrary', 'hvp'), 'notifyproblem');
-    echo $OUTPUT->continue_button(new moodle_url('/mod/hvp/library_list.php'));
+    echo $OUTPUT->confirm(
+        'Are you sure you want to delete this library?',
+        new moodle_url('/mod/hvp/delete_library_page.php', array('library_id' => $libraryid, 'confirm' => 1)),
+        new moodle_url('/mod/hvp/library_list.php')
+    );
     echo $OUTPUT->footer();
 }
-
