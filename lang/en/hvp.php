@@ -454,6 +454,10 @@ $string['couldnotreadfilefromzip'] = 'Unable to read file from the package: %fil
 $string['couldnotparsejsonfromzip'] = 'Unable to parse JSON from the package: %fileName';
 $string['couldnotparsepostdata'] = 'Could not parse post data.';
 $string['nombstringexteension'] = 'The mbstring PHP extension is not loaded. H5P needs this to function properly';
+$string['invalidhvp'] = 'Invalid H5P activity';
+$string['nohubregistration'] = 'Not registered with H5P Hub';
+$string['invalidtoken'] = 'H5P has received an invalid token. Refresh the page and try again';
+$string['contentnotshared'] = 'H5P activity cannot be shared. Please check your H5P hub registration';
 
 // Messaging api.
 $string['messageprovider:confirmation'] = 'Confirmation of your own H5P submissions';
@@ -489,6 +493,8 @@ $string['contenthub:settings:box'] = 'Content Hub Account';
 $string['contenthub:licenseagreementtitle'] = 'End User License Agreement (EULA)';
 $string['contenthub:licenseagreementdescription'] = 'Please read the following agreement before proceeding with the ';
 $string['contenthub:licenseagreementmaintext'] = 'TODO';
+$string['contenthubsearchenable'] = 'Enable shared content in H5P Hub';
+$string['contenthubsearchdescription'] = 'Find and download shared content from H5P Hub.';
 $string['contenthub:register'] = 'Register an account on the H5P Hub <a href="{$a}">here</a>';
 $string['contenthub:changesettings'] = 'Change account settings <a href="{$a}">here</a>';
 $string['contenthub:nopermissions'] = 'You do not have permission to register the site with the content hub.';

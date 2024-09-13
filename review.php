@@ -53,7 +53,7 @@ $hvp = $DB->get_record_sql(
     [$id]);
 
 if ($hvp === false) {
-    print_error('invalidhvp');
+    print_error('invalidhvp', 'mod_hvp');
 }
 
 // Set page properties.
