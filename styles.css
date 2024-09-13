@@ -118,3 +118,149 @@ body.h5p-embed #maincontent,
 body.h5p-embed #user-notifications {
     display: none;
 }
+.content-hub-icon {
+    font-family: h5p!important;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.content-hub-icon:before {
+    content: "\e93b";
+}
+.content-hub-options {
+    font-size: 14px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    color: #333333;
+    box-shadow: 0 4px 4px -4px #e0e0e0;
+    z-index: 1;
+    position: relative;
+    padding: 1em 0;
+}
+.content-hub-options > div {
+    margin-left: 2em;
+    white-space: nowrap;
+}
+.content-hub-options > div:first-child {
+    margin-left: 0;
+    font-weight: bold;
+}
+.content-hub-options > div.content-hub-share {
+    font-weight: normal;
+}
+.content-hub-options > div:first-child > i {
+    margin-right: 0.5em;
+    font-size: 1.25em;
+    vertical-align: middle;
+    display: inline-block;
+}
+.content-hub-options a {
+    color: #186df7;
+}
+.content-hub-options a span {
+    text-decoration: underline;
+}
+.content-hub-options form {
+    margin: 0;
+}
+.content-hub-options .content-hub-sharing {
+    font-size: 0.917em;
+    color: #186df7;
+}
+.content-hub-options .content-hub-sync a:before,
+.content-hub-options .content-hub-unshare a:before,
+.content-hub-options .content-hub-sharing:before {
+    font-family: "h5p";
+    margin-right: 0.5em;
+    font-size: 0.7em;
+    line-height: 1;
+    content: "\e917";
+}
+.content-hub-options .content-hub-unshare a:before {
+    content: "\e916";
+}
+.content-hub-options .content-hub-sharing:before {
+    content: "\e917";
+    display: inline-block;
+    animation: spin 2s linear infinite;
+}
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+body .h5p-result {
+    background: #FFF;
+    border: solid 1px #C9C9C9;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.12);
+    color: #5C5C5C;
+    font-size: 15px;
+    height: auto;
+    margin: 1em 0;
+    padding: 30px;
+}
+
+body .h5p-compound-container {
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+}
+
+body .h5p-reporting-main-title {
+    display: inline-block;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+body .h5p-reporting-main-container {
+    margin: 10px;
+}
+
+body .h5p-reporting-main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    background-color: #F3F3F3;
+    border-bottom: solid 1px #DFDFDF;
+    padding: 0.7em 2em;
+}
+
+body .h5p-reporting-main-score-wrapper {
+    display: inline-block;
+    font-size: 0.95em;
+    font-weight: bold;
+    text-align: right;
+}
+
+body .h5p-reporting-scaled-label,
+body .h5p-reporting-main-score-label {
+    font-weight: normal;
+}
+
+/* Properly formats content after it has been cleaned */
+body .h5p-reporting-main-score-container,
+body .h5p-reporting-main-scaled-container {
+    display: block;
+}
+
+body .h5p-reporting-main-score-label,
+body .h5p-reporting-main-score,
+body .h5p-reporting-score-label,
+body .h5p-reporting-score,
+body .h5p-reporting-scaled-label,
+body .h5p-reporting-scaled-score {
+    display: inline-block;
+}
+
+body .h5p-reporting-main-score {
+    margin-left: 0.4em;
+}
