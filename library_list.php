@@ -81,18 +81,17 @@ foreach ($libraries as $versions) {
                 'restrict' => ($restricted ? 0 : 1),
                 'library_id' => $library->id
             )))->out(false);
-
-            // Generate delete URL
-            $deleteurl = (new moodle_url('/mod/hvp/delete_library_page.php', array(
-                'library_id' => $library->id
-            )))->out(false);
-
         } else {
             $upgradeurl = null;
             $restricted = null;
             $restrictedurl = null;
-            $deleteurl = null;
         }
+
+        // Generate delete URL for all libraries
+            $deleteurl = (new moodle_url('/mod/hvp/delete_library_page.php', array(
+                'library_id' => $library->id
+            )))->out(false);
+
 
         $settings['libraryList']['listData'][] = array(
             'title' => $library->title . ' (' . \H5PCore::libraryVersion($library) . ')',
