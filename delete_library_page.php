@@ -73,11 +73,11 @@ if ($confirm) {
         $DB->delete_records('hvp_libraries_languages', array('library_id' => $library->id));
         $DB->delete_records('hvp_libraries', array('id' => $library->id));
 
-        redirect(new moodle_url('/mod/hvp/library_list.php'), get_string('librarydeleted', 'hvp'), null, \core\output\notification::NOTIFY_SUCCESS);
+        redirect(new moodle_url('/mod/hvp/library_list.php'), get_string('librarydeleted',  'hvp', $library->title . ' (' . \H5PCore::libraryVersion($library) . ')'), null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
         // Library cannot be deleted, show error message
         echo $OUTPUT->header();
-        echo $OUTPUT->notification(get_string('cannotdeletelibrary', 'hvp'), 'notifyproblem');
+        echo $OUTPUT->notification(get_string('cannotdeletelibrary',  'hvp', $library->title . ' (' . \H5PCore::libraryVersion($library) . ')'), 'notifyproblem');
         echo $OUTPUT->continue_button(new moodle_url('/mod/hvp/library_list.php'));
         echo $OUTPUT->footer();
     }
@@ -85,7 +85,7 @@ if ($confirm) {
     // Ask for confirmation
     echo $OUTPUT->header();
     echo $OUTPUT->confirm(
-        'Are you sure you want to delete this library? You will also delete: ' . $usage['libraries'] . ' more libraries',
+        get_string('confirmlibrary',  'hvp', $usage['libraries']),
         new moodle_url('/mod/hvp/delete_library_page.php', array('library_id' => $libraryid, 'confirm' => 1)),
         new moodle_url('/mod/hvp/library_list.php')
     );
