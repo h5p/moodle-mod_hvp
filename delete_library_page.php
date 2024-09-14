@@ -39,18 +39,39 @@ $PAGE->set_title("{$SITE->shortname}: " . get_string('deletelibrary', 'hvp'));
 $core = \mod_hvp\framework::instance();
 global $DB;
 
-// Check if the library exists and has no dependencies
+// Check if the library exists and has no content dependencies
 $library = $DB->get_record('hvp_libraries', array('id' => $libraryid), '*', MUST_EXIST);
 $usage = $core->h5pF->getLibraryUsage($libraryid);
 
 $PAGE->set_heading(get_string('deleteheading', 'hvp', $library->title . ' (' . \H5PCore::libraryVersion($library) . ')'));
 
 if ($confirm) {
-    if ($usage['content'] === 0 && $usage['libraries'] === 0) {
-        // Delete the library and associated dependencies
-        $DB->delete_records('hvp_libraries', array('id' => $libraryid));
-        $DB->delete_records('hvp_contents_libraries', array('library_id' => $libraryid));
-        $DB->delete_records('hvp_libraries_libraries', array('required_library_id' => $libraryid));
+    if ($usage['content'] === 0) {
+        $dependencies = $DB->get_records('hvp_libraries_libraries', array('required_library_id' => $library->id));
+
+        foreach ($dependencies as $dependency) {
+            //Get all dependet libraries
+            $dependentLibrary = $DB->get_record('hvp_libraries', array('id' => $dependency->library_id));
+
+            if ($dependentLibrary) {
+                // Delete dependent library
+                \H5PCore::deleteFileTree($core->h5pF->getH5pPath() . '/libraries/' . "{$dependentLibrary->name}-{$dependentLibrary->major_version}.{$dependentLibrary->minor_version}");
+
+                $DB->delete_records('hvp_libraries_libraries', array('library_id' => $dependentLibrary->id));
+                $DB->delete_records('hvp_libraries_languages', array('library_id' => $dependentLibrary->id));
+                $DB->delete_records('hvp_libraries', array('id' => $dependentLibrary->id));
+            }
+        }
+
+        // Delete inital library
+        $librarybase = $core->h5pF->getH5pPath() . '/libraries/';
+        $libname = "{$library->name}-{$library->major_version}.{$library->minor_version}";
+        \H5PCore::deleteFileTree("{$librarybase}{$libname}");
+
+        // Remove library data from database.
+        $DB->delete_records('hvp_libraries_libraries', array('library_id' => $library->id));
+        $DB->delete_records('hvp_libraries_languages', array('library_id' => $library->id));
+        $DB->delete_records('hvp_libraries', array('id' => $library->id));
 
         redirect(new moodle_url('/mod/hvp/library_list.php'), get_string('librarydeleted', 'hvp'), null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
@@ -64,7 +85,7 @@ if ($confirm) {
     // Ask for confirmation
     echo $OUTPUT->header();
     echo $OUTPUT->confirm(
-        'Are you sure you want to delete this library?',
+        'Are you sure you want to delete this library? You will also delete: ' . $usage['libraries'] . ' more libraries',
         new moodle_url('/mod/hvp/delete_library_page.php', array('library_id' => $libraryid, 'confirm' => 1)),
         new moodle_url('/mod/hvp/library_list.php')
     );
