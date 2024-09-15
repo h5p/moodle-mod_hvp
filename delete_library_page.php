@@ -39,9 +39,12 @@ $PAGE->set_title("{$SITE->shortname}: " . get_string('deletelibrary', 'hvp'));
 $core = \mod_hvp\framework::instance();
 global $DB;
 
-// Check if the library exists and has no content dependencies
+// Check if the library exists and has no dependencies
 $library = $DB->get_record('hvp_libraries', array('id' => $libraryid), '*', MUST_EXIST);
 $usage = $core->h5pF->getLibraryUsage($libraryid);
+$usageNames = $core->h5pF->getLibraryUsageNames($libraryid);
+$usageNamesArray = array_keys($usageNames);
+$usageNamesString = implode(', ', $usageNamesArray);
 
 $PAGE->set_heading(get_string('deleteheading', 'hvp', $library->title . ' (' . \H5PCore::libraryVersion($library) . ')'));
 
@@ -85,7 +88,7 @@ if ($confirm) {
     // Ask for confirmation
     echo $OUTPUT->header();
     echo $OUTPUT->confirm(
-        get_string('confirmlibrary',  'hvp', $usage['libraries']),
+        get_string('confirmlibrary',  'hvp', $usageNamesString),
         new moodle_url('/mod/hvp/delete_library_page.php', array('library_id' => $libraryid, 'confirm' => 1)),
         new moodle_url('/mod/hvp/library_list.php')
     );

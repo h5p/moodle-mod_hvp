@@ -172,7 +172,7 @@ $string['deletelibrary'] = 'Delete H5P library';
 $string['deleteheading'] = 'Delete {$a}';
 $string['cannotdeletelibrary'] = 'Could not delete library {$a}';
 $string['librarydeleted'] = 'You have successfully deleted {$a}';
-$string['confirmlibrary'] = 'Are you sure you want to delete this library? You will also delete {$a} more libraries';
+$string['confirmlibrary'] = 'Are you sure you want to delete this library? You will also delete {$a}';
 
 // Results / report page.
 $string['user'] = 'User';
