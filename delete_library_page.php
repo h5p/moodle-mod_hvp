@@ -53,11 +53,11 @@ if ($confirm) {
         $dependencies = $DB->get_records('hvp_libraries_libraries', array('required_library_id' => $library->id));
 
         foreach ($dependencies as $dependency) {
-            //Get all dependet libraries
+            //Get all dependent libraries
             $dependentLibrary = $DB->get_record('hvp_libraries', array('id' => $dependency->library_id));
 
             if ($dependentLibrary) {
-                // Delete dependent library
+                // Delete dependent libraries
                 \H5PCore::deleteFileTree($core->h5pF->getH5pPath() . '/libraries/' . "{$dependentLibrary->name}-{$dependentLibrary->major_version}.{$dependentLibrary->minor_version}");
 
                 $DB->delete_records('hvp_libraries_libraries', array('library_id' => $dependentLibrary->id));
