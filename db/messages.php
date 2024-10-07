@@ -34,7 +34,7 @@ $messageproviders = array(
     'confirmation' => array(
         'capability' => 'mod/hvp:emailconfirmsubmission',
         'defaults' => array(
-            'airnotifier' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+            'airnotifier' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
         ),
     ),
 );
