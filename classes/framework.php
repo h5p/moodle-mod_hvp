@@ -1917,4 +1917,15 @@ class framework implements \H5PFrameworkInterface {
         global $DB;
         $DB->execute("UPDATE {hvp_content_hub_cache} SET last_checked = ? WHERE language = ?", array($time, $lang));
     }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function resetHubOrganizationData() {
+        global $DB;
+
+        set_config('hub_secret', '', 'mod_hvp');
+        $DB->execute("UPDATE {hvp} SET hub_id = NULL, synced = NULL, shared = 0");
+    }
 }
