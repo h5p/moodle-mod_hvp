@@ -54,8 +54,6 @@ $PAGE->set_heading($course->fullname);
 $view->addassetstopage();
 $view->logviewed();
 
-$PAGE->requires->css(new moodle_url(\mod_hvp\view_assets::getsiteroot() . '/mod/hvp/view.css'));
-
 // Print page HTML.
 echo $OUTPUT->header();
 if ($CFG->branch < 400) {
