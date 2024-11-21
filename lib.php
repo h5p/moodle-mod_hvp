@@ -252,21 +252,11 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
                 return false; // Invalid context.
             }
 
-            // Check permissions.
-            if (!has_capability('mod/hvp:getcachedassets', $context)) {
-                return false;
-            }
-
             $itemid = 0;
             break;
         case 'cachedassets':
             if ($context->contextlevel != CONTEXT_SYSTEM) {
                 return false; // Invalid context.
-            }
-
-            // Check permissions.
-            if (!has_capability('mod/hvp:getcachedassets', $context)) {
-                return false;
             }
 
             $options['cacheability'] = 'public';
