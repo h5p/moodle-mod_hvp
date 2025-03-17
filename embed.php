@@ -42,11 +42,11 @@ if (\mod_hvp\mobile_auth::has_valid_token($userid, $secret)) {
 // Verify course context.
 $cm = get_coursemodule_from_id('hvp', $id);
 if (!$cm) {
-    print_error('invalidcoursemodule');
+    throw new \moodle_exception('invalidcoursemodule');
 }
 $course = $DB->get_record('course', array('id' => $cm->course));
 if (!$course) {
-    print_error('coursemisconf');
+    throw new \moodle_exception('coursemisconf');
 }
 
 try {
