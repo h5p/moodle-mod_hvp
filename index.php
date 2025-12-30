@@ -26,6 +26,10 @@ require_once('../../config.php');
 // Get Course ID.
 $id = optional_param('id', 0, PARAM_INT);
 
+if ($CFG->version > 2025041400) {
+    \core_courseformat\activityoverviewbase::redirect_to_overview_page($id, 'hvp');
+}
+
 // Set URL.
 $url = new \moodle_url('/mod/hvp/index.php', array('id' => $id));
 $PAGE->set_url($url);

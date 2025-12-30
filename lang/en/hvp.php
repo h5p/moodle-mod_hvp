@@ -458,6 +458,7 @@ $string['invalidhvp'] = 'Invalid H5P activity';
 $string['nohubregistration'] = 'Not registered with H5P Hub';
 $string['invalidtoken'] = 'H5P has received an invalid token. Refresh the page and try again';
 $string['contentnotshared'] = 'H5P activity cannot be shared. Please check your H5P hub registration';
+$string['unknown'] = 'Unknown';
 
 // Messaging api.
 $string['messageprovider:confirmation'] = 'Confirmation of your own H5P submissions';
