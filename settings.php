@@ -146,6 +146,7 @@ if ($ADMIN->fulltree) {
         $PAGE->requires->css('/mod/hvp/library/styles/h5p-confirmation-dialog.css');
         $PAGE->requires->css('/mod/hvp/library/styles/h5p.css');
         $PAGE->requires->css('/mod/hvp/library/styles/h5p-core-button.css');
+        $PAGE->requires->css('/mod/hvp/library/styles/h5p-fonts.css');
     }
 
     // Find missing requirements.

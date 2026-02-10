@@ -45,6 +45,7 @@ $PAGE->requires->data_for_js('H5PSettings', $settings, true);
 $PAGE->requires->js(new moodle_url('library/js/h5p-hub-registration.js'), true);
 $PAGE->requires->css(new moodle_url('library/styles/h5p.css'));
 $PAGE->requires->css(new moodle_url('library/styles/h5p-hub-registration.css'));
+$PAGE->requires->css(new moodle_url('library/styles/h5p-fonts.css'));
 
 echo $OUTPUT->header();
 
