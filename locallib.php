@@ -265,6 +265,7 @@ function hvp_admin_add_generic_css_and_js($page, $liburl, $settings = null) {
     $page->requires->data_for_js('H5PAdminIntegration', $settings, true);
     $page->requires->css(new moodle_url($liburl . 'styles/h5p.css' . hvp_get_cache_buster()));
     $page->requires->css(new moodle_url($liburl . 'styles/h5p-admin.css' . hvp_get_cache_buster()));
+    $page->requires->css(new moodle_url($liburl . 'styles/h5p-fonts.css' . hvp_get_cache_buster()));
 
     // Add settings.
     $page->requires->data_for_js('h5p', hvp_get_core_settings(\context_system::instance()), true);
