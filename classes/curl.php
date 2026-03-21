@@ -50,10 +50,10 @@ class curl extends moodlecurl {
     /**
      * @inheritdoc
      */
-    public function put($url, $params = '', $options = array()) {
+    public function put($url, $params = '', $options = array(), $includeuserpwd = true) {
         $options['CURLOPT_CUSTOMREQUEST'] = 'PUT';
         $options['CURLOPT_POSTFIELDS'] = $params;
-        return $this->request($url, $options);
+        return $this->request($url, $options, $includeuserpwd);
     }
 
 }
