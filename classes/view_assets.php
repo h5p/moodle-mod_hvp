@@ -24,6 +24,7 @@
 
 namespace mod_hvp;
 
+use moodle_exception;
 use moodle_url;
 
 defined('MOODLE_INTERNAL') || die();
@@ -342,7 +343,7 @@ class view_assets {
      */
     public function validatecontent() {
         if ($this->content === null) {
-            print_error('invalidhvp', 'mod_hvp');
+            throw new moodle_exception('invalidhvp', 'mod_hvp');
         }
     }
 
