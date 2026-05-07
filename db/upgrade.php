@@ -567,6 +567,14 @@ function hvp_upgrade_2020112600() {
     }
 }
 
+function hvp_upgrade_2026050600() {
+  global $DB;
+  $DB->execute("
+    UPDATE {hvp}
+    SET filtered = NULL
+  ");
+}
+
 /**
  * Hvp module upgrade function.
  *
@@ -593,6 +601,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2020082800,
         2020091500,
         2020112600,
+        2026050600,
     ];
 
     foreach ($upgrades as $version) {

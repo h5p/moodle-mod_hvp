@@ -1570,8 +1570,12 @@ class framework implements \H5PFrameworkInterface {
         $DB->execute("
             UPDATE {hvp}
             SET filtered = null
-            WHERE main_library_id $insql",
-            $inparams
+            WHERE id IN (
+                SELECT DISTINCT cl.hvp_id
+                FROM {hvp_contents_libraries} cl
+                WHERE library_id $insql
+            )",
+          $inparams
         );
     }
 
