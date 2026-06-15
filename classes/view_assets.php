@@ -216,12 +216,14 @@ class view_assets {
     private function getcustomscriptparameters() {
         global $PAGE;
 
+        $scripts = [];
+        $libraries = [];
         $custom_script_parameters = (object)[];
 
         $hvpoutput = $PAGE->get_renderer('mod_hvp');
         $hvpoutput->hvp_alter_scripts(
-            [],
-            [],
+            $scripts,
+            $libraries,
             $this->embedtype,
             $custom_script_parameters,
         );
