@@ -181,6 +181,7 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     $PAGE->requires->js(new moodle_url('/mod/hvp/editor/scripts/h5peditor-editor.js' . $cachebuster), true);
     $PAGE->requires->js(new moodle_url('/mod/hvp/editor/scripts/h5peditor-init.js' . $cachebuster), true);
     $PAGE->requires->js(new moodle_url('/mod/hvp/editor.js' . $cachebuster), true);
+    $PAGE->requires->css(new moodle_url('/mod/hvp/editor.css' . $cachebuster), true);
 
     // Add translations.
     $language = \mod_hvp\framework::get_language();
