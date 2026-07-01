@@ -516,3 +516,35 @@ function mod_hvp_core_calendar_provide_event_action(calendar_event $event, actio
     );
 }
 
+/**
+ * Add a get_coursemodule_info function in case any forum type wants to add 'extra' information
+ * for the course (see resource).
+ *
+ * Given a course_module object, this function returns any "extra" information that may be needed
+ * when printing this activity in a course listing.  See get_array_of_activities() in course/lib.php.
+ *
+ * @param stdClass $coursemodule The coursemodule object (record).
+ * @return cached_cm_info An object on information that the courses
+ *                        will know about (most noticeably, an icon).
+ */
+function hvp_get_coursemodule_info($coursemodule) {
+    global $DB;
+
+    if (!$hvp = $DB->get_record('hvp', array('id' => $coursemodule->instance), '*')) {
+        return null;
+    }
+
+    $info = new cached_cm_info();
+
+    // Populate the custom completion rules as key => value pairs, but only if the completion mode is 'automatic'.
+    if ($coursemodule->completion == COMPLETION_TRACKING_AUTOMATIC) {
+        $info->customdata['customcompletionrules']['completionpass'] = $hvp->completionpass;
+    }
+
+    // Show the description on the course/section page.
+    if ($coursemodule->showdescription) {
+        $info->content = format_module_intro('hvp', $hvp, $coursemodule->id, false);
+    }
+
+    return $info;
+}
