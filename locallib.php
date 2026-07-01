@@ -261,6 +261,7 @@ function hvp_admin_add_generic_css_and_js($page, $liburl, $settings = null) {
         'deleteLibrary' => '',
         'upgradeLibrary' => get_string('upgradelibrarycontent', 'hvp')
     );
+    $settings['extraTableClasses'] = 'table-reboot';
 
     $page->requires->data_for_js('H5PAdminIntegration', $settings, true);
     $page->requires->css(new moodle_url($liburl . 'styles/h5p.css' . hvp_get_cache_buster()));
