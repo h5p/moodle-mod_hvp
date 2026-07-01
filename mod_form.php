@@ -327,6 +327,12 @@ class mod_hvp_mod_form extends moodleform_mod {
             $errors['maximumgrade'] = get_string('maximumgradeerror', 'hvp');
         }
 
+        // Ensure that the pass grade is formated as a numerical value.
+        $data['gradepass'] = unformat_float($data['gradepass'], true);
+        if ($data['gradepass'] === false) {
+            $errors['gradepass'] = get_string('err_numeric', 'core_form');
+        }
+
         if ($data['h5paction'] === 'upload') {
             // Validate uploaded H5P file.
             unset($errors['name']); // Will be set in data_postprocessing().
