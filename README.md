@@ -1,3 +1,15 @@
+# Catalyst fork
+
+This is a fork of the stable version of the h5p plugin. All the various extra bits
+in this fork should be in pull requests for the core plugin but are either waiting
+for review, and have been merged but have not yet been released into the stable
+branch of the plugin.
+
+To see the differences:
+
+https://github.com/h5p/moodle-mod_hvp/compare/stable...catalyst:stable-catalyst
+
+
 # H5P Moodle Plugin
 
 Create and add rich content inside your LMS for free. Some examples of what you
