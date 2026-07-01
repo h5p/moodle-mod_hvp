@@ -138,7 +138,8 @@ class editor_framework implements \H5peditorStorage {
                     $library->title = $details->title;
                     $library->runnable = $details->runnable;
                     $library->restricted = $superuser ? false : ($details->restricted === '1' ? true : false);
-                    $library->metadataSettings = json_decode($details->metadata_settings);
+                    $library->metadataSettings =
+                        is_string($details->metadata_settings) ? json_decode($details->metadata_settings) : null;
                     $librarieswithdetails[] = $library;
                 }
             }
