@@ -867,11 +867,11 @@ class file_storage implements \H5PFileStorage {
      * @return string Relative path
      */
     // @codingStandardsIgnoreLine
-    public function getUpgradeScript($machinename, $majorversion, $minorversion) {
+    public function getUpgradeScript($library) {
         $context = \context_system::instance();
         $fs = get_file_storage();
         $area = 'libraries';
-        $path = "/{$machinename}-{$majorversion}.{$minorversion}/";
+        $path = '/' . \H5PCore::libraryToFolderName($library) . '/';
         $file = 'upgrades.js';
         if ($fs->get_file($context->id, 'mod_hvp', $area, 0, $path, $file)) {
             return "/{$area}{$path}{$file}";
