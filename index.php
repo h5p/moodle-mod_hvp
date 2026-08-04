@@ -88,9 +88,6 @@ if (empty($modinfo->instances['hvp'])) {
         if (!$cm->uservisible || !isset($rawh5ps[$cm->id])) {
             continue; // Not visible or not found.
         }
-        if (!empty($cm->extraclasses)) {
-            $rawh5ps[$cm->id]->extra = $cm->extraclasses;
-        }
         $h5ps[] = $rawh5ps[$cm->id];
     }
 }
