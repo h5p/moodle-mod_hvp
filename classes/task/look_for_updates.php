@@ -23,6 +23,8 @@
 
 namespace mod_hvp\task;
 
+use invalid_response_exception;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -41,7 +43,24 @@ class look_for_updates extends \core\task\scheduled_task {
         // Check to make sure external communications hasn't been disabled.
         if (get_config('mod_hvp', 'hub_is_enabled') || get_config('mod_hvp', 'send_usage_statistics')) {
             $core = \mod_hvp\framework::instance();
-            $core->fetchLibrariesMetadata();
+            $result = $core->fetchLibrariesMetadata();
+
+            if ($result === false) {
+                throw new invalid_response_exception('Could not fetch libraries\' metadata from the H5P Hub');
+            }
+
+            $json = json_decode($result, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new invalid_response_exception('Received malformed response from the H5P Hub');
+            }
+
+            $contenttypes = $json['contentTypes'] ?? null;
+            if (!is_array($contenttypes)) {
+                throw new invalid_response_exception('Received malformed response from the H5P Hub: No contentTypes property found');
+            }
+
+            $numberentries = count($contenttypes);
+            mtrace("{$numberentries} entries for content type libraries fetched");
         }
     }
 }
