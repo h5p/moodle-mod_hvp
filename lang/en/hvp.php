@@ -58,6 +58,13 @@ $string['confirmlabel'] = 'Confirm';
 $string['noh5ps'] = 'There\'s no interactive content available for this course.';
 
 $string['lookforupdates'] = 'Look for H5P updates';
+$string['fetchlibrariesmetadatafailed'] = 'Failed to fetch H5P libraries metadata.';
+$string['fetchlibrariesmetadatafailedlog'] = 'Fetching H5P content types from the Hub failed.';
+$string['fetchlibrariesmetadatasuccesslog'] = 'H5P Hub request completed successfully ({$a} content types in the response).';
+$string['fetchlibrariesmetadataunexpectedlog'] = 'H5P Hub request returned an unexpected response.';
+$string['fetchlibrariesmetadataerrorlog'] = 'H5P Hub error: [code: {$a->code}, message: {$a->message}]';
+$string['fetchlibrariesmetadatainfolog'] = 'H5P Hub notice: {$a}';
+$string['lookforupdatesskippeddisabledlog'] = 'Task skipped: both H5P Hub and usage statistics are disabled.';
 $string['updatelibraries'] = 'Update All Libraries';
 $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
