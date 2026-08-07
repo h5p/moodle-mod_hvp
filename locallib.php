@@ -262,6 +262,7 @@ function hvp_admin_add_generic_css_and_js($page, $liburl, $settings = null) {
         'deleteLibrary' => '',
         'upgradeLibrary' => get_string('upgradelibrarycontent', 'hvp')
     );
+    $settings['extraTableClasses'] = 'table-reboot';
 
     $page->requires->data_for_js('H5PAdminIntegration', $settings, true);
     $page->requires->css(new moodle_url($liburl . 'styles/h5p.css' . hvp_get_cache_buster()));
@@ -411,7 +412,7 @@ function hvp_content_upgrade_progress($libraryid) {
  *                to upgrade script
  */
 function hvp_get_library_upgrade_info($name, $major, $minor) {
-    $library = (object) array(
+    $response = (object) array(
         'name' => $name,
         'version' => (object) array(
             'major' => $major,
@@ -420,17 +421,15 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
     );
 
     $core = \mod_hvp\framework::instance();
-
-    $library->semantics = $core->loadLibrarySemantics($library->name, $library->version->major, $library->version->minor);
-
+    $library = $core->loadLibrary($name, $major, $minor);
     $context = \context_system::instance();
-    $libraryfoldername = "{$library->name}-{$library->version->major}.{$library->version->minor}";
+    $libraryfoldername = \H5PCore::libraryToFolderName($library);
     if (\mod_hvp\file_storage::fileExists($context->id, 'libraries', '/' . $libraryfoldername . '/', 'upgrades.js')) {
         $basepath = \mod_hvp\view_assets::getsiteroot() . '/';
-        $library->upgradesScript = "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/upgrades.js";
+        $response->upgradesScript = "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/upgrades.js";
     }
 
-    return $library;
+    return $response;
 }
 
 /**
@@ -579,7 +578,11 @@ function hvp_send_notification_messages($course, $hvp, $attempt, $context, $cm) 
     // Check for notifications required.
     $notifyfields = 'u.id, u.username, u.idnumber, u.email, u.emailstop, u.lang,
             u.timezone, u.mailformat, u.maildisplay, u.auth, u.suspended, u.deleted, ';
-    $notifyfields .= get_all_user_name_fields(true, 'u');
+    if (class_exists('\core_user\fields')) {
+        $notifyfields .= \core_user\fields::for_name()->get_sql('u', false, '', '', false)->selects;
+    } else {
+        $notifyfields .= get_all_user_name_fields(true, 'u');
+    }
     $groups       = groups_get_all_groups($course->id, $submitter->id, $cm->groupingid);
     if (is_array($groups) && count($groups) > 0) {
         $groups = array_keys($groups);

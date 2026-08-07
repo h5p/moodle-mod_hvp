@@ -295,7 +295,12 @@ class results {
         static $ordered;
 
         if (empty($ordered)) {
-            $available = \get_all_user_name_fields();
+            if (class_exists('\core_user\fields')) {
+                $available = \core_user\fields::get_name_fields();
+            } else {
+                $available = \get_all_user_name_fields();
+            }
+
             $displayname = \fullname((object)$available);
             if (empty($displayname)) {
                 $ordered = array("{$prefix}firstname", "{$prefix}lastname");

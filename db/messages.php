@@ -24,6 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+// For versions of Moodle prior to 4.0, we need to define that constant here.
+if (!defined('MESSAGE_DEFAULT_ENABLED')) {
+    define('MESSAGE_DEFAULT_ENABLED', 0x01);
+}
+
 $messageproviders = array(
     // Notify teacher that a student has submitted an attempt.
     'submission' => array(
