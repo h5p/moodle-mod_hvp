@@ -375,8 +375,13 @@ function hvp_content_upgrade_progress($libraryid) {
         $out->skipped = array();
     }
 
+    $lastid = filter_input(INPUT_POST, 'lastId');
+    if (empty($lastid) || $lastid != intval($lastid)) {
+        $lastid = 0;
+    }
+
     // Get number of contents for this library.
-    $out->left = $interface->getNumContent($libraryid, $skipped);
+    $out->left = $interface->getNumContent($libraryid, $skipped, $lastid);
 
     if ($out->left) {
         $skipquery = empty($skipped) ? '' : " AND id NOT IN ($skipped)";
@@ -388,8 +393,9 @@ function hvp_content_upgrade_progress($libraryid) {
                     a11y_title
                FROM {hvp}
               WHERE main_library_id = ?
+                AND id > ?
                     {$skipquery}
-           ORDER BY name ASC", array($libraryid), 0 , 40
+           ORDER BY id ASC", array($libraryid, $lastid), 0 , 40
         );
 
         foreach ($results as $content) {
