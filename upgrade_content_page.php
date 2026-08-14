@@ -84,7 +84,7 @@ if (count($versions) < 2) {
                                  array('action' => 'getlibrarydataforupgrade')))->out(false) . '&library=',
             'scriptBaseUrl' => (new moodle_url('/mod/hvp/library/js'))->out(false),
             'buster' => hvp_get_cache_buster(),
-            'versions' => true ? [$libraryid => \H5PCore::libraryVersion($versions[$libraryid])] : $upgrades,
+            'versions' => $fixsubcontent ? [$libraryid => \H5PCore::libraryVersion($versions[$libraryid])] : $upgrades,
             'contents' => $numcontents,
             'buttonLabel' => get_string('upgradebuttonlabel', 'hvp'),
             'infoUrl' => (new moodle_url('/mod/hvp/ajax.php', array('action' => 'libraryupgradeprogress',
