@@ -28,6 +28,8 @@ require_once("locallib.php");
 // No guest autologin.
 require_login(0, false);
 
+$fixsubcontent = optional_param('fix_subcontent', false, PARAM_BOOL); // Special fix to re-run upgrade for subcontent only
+
 $pageurl = new moodle_url('/mod/hvp/library_list.php');
 $PAGE->set_url($pageurl);
 
@@ -67,11 +69,13 @@ $settings = array();
 $i = 0;
 foreach ($libraries as $versions) {
     foreach ($versions as $library) {
+        $numContent = $core->h5pF->getNumContent($library->id);
         $usage = $core->h5pF->getLibraryUsage($library->id, $numnotfiltered ? true : false);
         if ($library->runnable) {
             $upgrades = $core->getUpgrades($library, $versions);
-            $upgradeurl = empty($upgrades) ? false : (new moodle_url('/mod/hvp/upgrade_content_page.php', array(
-                'library_id' => $library->id
+            $upgradeurl = ($fixsubcontent ? empty($numContent) : empty($upgrades)) ? false : (new moodle_url('/mod/hvp/upgrade_content_page.php', array(
+                'library_id' => $library->id,
+                'fix_subcontent' => $fixsubcontent
             )))->out(false);
 
             $restricted = (isset($library->restricted) && $library->restricted == 1 ? true : false);
@@ -91,7 +95,7 @@ foreach ($libraries as $versions) {
             'title' => $library->title . ' (' . \H5PCore::libraryVersion($library) . ')',
             'restricted' => $restricted,
             'restrictedUrl' => $restrictedurl,
-            'numContent' => $core->h5pF->getNumContent($library->id),
+            'numContent' => $numContent,
             'numContentDependencies' => $usage['content'] === -1 ? '' : $usage['content'],
             'numLibraryDependencies' => $usage['libraries'],
             'upgradeUrl' => $upgradeurl,

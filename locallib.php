@@ -429,7 +429,7 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
         $response->upgradesScript = "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/upgrades.js";
     }
     $response->semantics = $core->loadLibrarySemantics($name, $major, $minor);
-    
+
     return $response;
 }
 
