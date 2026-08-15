@@ -240,7 +240,7 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
 
         // Define file annotations.
         $context = \context_system::instance();
-        $library->annotate_files('mod_hvp', 'libraries', null, $context->id);
+        $libraries->annotate_files('mod_hvp', 'libraries', null, $context->id);
 
         // Return root element.
         return $libraries;
