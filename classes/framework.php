@@ -916,6 +916,30 @@ class framework implements \H5PFrameworkInterface {
     }
 
     /**
+     * Implements getLibraryUsageNames
+     *
+     * Get the names of dependencies to other libraries
+     *
+     * @param int $id
+     * @return array The array contains the names of the dependet libraries
+     */
+
+    public function getLibraryUsageNames($id) {
+        global $DB;
+
+        // Count the libraries and get their names
+        $librariesNames = $DB->get_records_sql(
+            "SELECT rl.title
+        FROM {hvp_libraries_libraries} ll
+        JOIN {hvp_libraries} rl ON rl.id = ll.library_id
+        WHERE ll.required_library_id = ?", array($id)
+        );
+
+        // Return a list with the library names
+        return $librariesNames;
+    }
+
+    /**
      * Implements getLibraryContentCount
      */
     // @codingStandardsIgnoreLine
