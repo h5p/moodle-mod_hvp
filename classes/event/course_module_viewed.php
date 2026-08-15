@@ -18,24 +18,20 @@
  * The mod_hvp course module viewed event.
  *
  * @package    mod_hvp
- * @copyright  @copyright  2016 Joubel AS <contact@joubel.com>
+ * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_hvp\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_hvp course module viewed event class.
  *
  * @package    mod_hvp
- * @copyright  @copyright  2016 Joubel AS <contact@joubel.com>
+ * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class course_module_viewed extends \core\event\course_module_viewed
-{
-
+class course_module_viewed extends \core\event\course_module_viewed {
     /**
      * Set basic properties for the event.
      */

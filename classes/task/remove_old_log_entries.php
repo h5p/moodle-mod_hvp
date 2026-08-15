@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Defines the task which looks for H5P updates.
  *
@@ -23,8 +24,6 @@
 
 namespace mod_hvp\task;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_hvp look for updates task class
  *
@@ -33,10 +32,12 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class remove_old_log_entries extends \core\task\scheduled_task {
+    #[\Override]
     public function get_name() {
         return get_string('removeoldlogentries', 'mod_hvp');
     }
 
+    #[\Override]
     public function execute() {
         global $DB;
 

@@ -41,13 +41,13 @@ require_once('autoloader.php');
 /**
  * Returns the information on whether the module supports a feature
  *
- * See {@link plugin_supports()} for more info.
+ * See {@see plugin_supports()} for more info.
  *
  * @param string $feature FEATURE_xx constant for requested feature
  * @return mixed true if the feature is supported, null if unknown
  */
 function hvp_supports($feature) {
-    switch($feature) {
+    switch ($feature) {
         case FEATURE_GROUPS:
             return true;
         case FEATURE_GROUPINGS:
@@ -153,9 +153,11 @@ function hvp_save_content($hvp) {
 
         // Make params and library available for core to save.
         $hvp->library = H5PCore::libraryFromString($hvp->h5plibrary);
-        $hvp->library['libraryId'] = $core->h5pF->getLibraryId($hvp->library['machineName'],
-                                                               $hvp->library['majorVersion'],
-                                                               $hvp->library['minorVersion']);
+        $hvp->library['libraryId'] = $core->h5pF->getLibraryId(
+            $hvp->library['machineName'],
+            $hvp->library['majorVersion'],
+            $hvp->library['minorVersion']
+        );
 
         $hvp->id = $core->saveContent((array)$hvp);
         // We need to process the parameters to move any images or files and
@@ -165,9 +167,13 @@ function hvp_save_content($hvp) {
         $params = json_decode($hvp->params);
 
         // Move any uploaded images or files. Determine content dependencies.
-        $editor->processParameters($hvp, $hvp->library, $params,
-                                   isset($oldlib) ? $oldlib : null,
-                                   isset($oldparams) ? $oldparams : null);
+        $editor->processParameters(
+            $hvp,
+            $hvp->library,
+            $params,
+            isset($oldlib) ? $oldlib : null,
+            isset($oldparams) ? $oldparams : null
+        );
     }
 
     return $hvp->id;
@@ -187,7 +193,7 @@ function hvp_delete_instance($id) {
     global $DB;
 
     // Load content record.
-    if (! $hvp = $DB->get_record('hvp', array('id' => "$id"))) {
+    if (! $hvp = $DB->get_record('hvp', ['id' => "$id"])) {
         return false;
     }
 
@@ -196,28 +202,31 @@ function hvp_delete_instance($id) {
 
     // Delete content.
     $h5pstorage = \mod_hvp\framework::instance('storage');
-    $h5pstorage->deletePackage(array('id' => $hvp->id, 'slug' => $hvp->slug, 'coursemodule' => $cm->id));
+    $h5pstorage->deletePackage(['id' => $hvp->id, 'slug' => $hvp->slug, 'coursemodule' => $cm->id]);
 
     // Delete xAPI statements.
-    $DB->delete_records('hvp_xapi_results', array (
-      'content_id' => $hvp->id
-    ));
+    $DB->delete_records('hvp_xapi_results', [
+      'content_id' => $hvp->id,
+    ]);
 
     // Get library details.
     $library = $DB->get_record_sql(
-            "SELECT machine_name AS name, major_version, minor_version
+        "SELECT machine_name AS name, major_version, minor_version
                FROM {hvp_libraries}
               WHERE id = ?",
-            array($hvp->main_library_id)
+        [$hvp->main_library_id]
     );
 
     // Only log event if we found library.
     if ($library) {
         // Log content delete.
         new \mod_hvp\event(
-            'content', 'delete',
-            $hvp->id, $hvp->name,
-            $library->name, $library->major_version . '.' . $library->minor_version
+            'content',
+            'delete',
+            $hvp->id,
+            $hvp->name,
+            $library->name,
+            $library->major_version . '.' . $library->minor_version
         );
     }
 
@@ -240,7 +249,7 @@ function hvp_delete_instance($id) {
  *
  * @return true|false Success
  */
-function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = array()) {
+function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options = []) {
     switch ($filearea) {
         default:
             return false; // Invalid file area.
@@ -295,7 +304,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             $ishub = false;
             $hub = optional_param('hub', null, PARAM_RAW);
             if ($hub) {
-                list($time, $hash) = explode('.', $hub, 2);
+                [$time, $hash] = explode('.', $hub, 2);
                 $time = hvp_base64_decode($time);
                 $hash = hvp_base64_decode($hash);
 
@@ -317,7 +326,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
             $h5pinterface = \mod_hvp\framework::instance('interface');
             $h5pcore = \mod_hvp\framework::instance('core');
 
-            $matches = array();
+            $matches = [];
 
             // Get content id from filename.
             if (!preg_match('/(\d*).h5p$/', $args[0], $matches)) {
@@ -354,7 +363,7 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
     }
 
     $filename = array_pop($args);
-    $filepath = (!$args ? '/' : '/' .implode('/', $args) . '/');
+    $filepath = (!$args ? '/' : '/' . implode('/', $args) . '/');
 
     $fs = get_file_storage();
     $file = $fs->get_file($context->id, 'mod_hvp', $filearea, $itemid, $filepath, $filename);
@@ -379,14 +388,14 @@ function hvp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
  * @param mixed $grades Optional array/object of grade(s); 'reset' means reset grades in gradebook
  * @return int, 0 if ok, error code otherwise
  */
-function hvp_grade_item_update($hvp, $grades=null) {
+function hvp_grade_item_update($hvp, $grades = null) {
     global $CFG;
 
     if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
         require_once($CFG->libdir . '/gradelib.php');
     }
 
-    $params = array('itemname' => $hvp->name, 'idnumber' => $hvp->cmidnumber);
+    $params = ['itemname' => $hvp->name, 'idnumber' => $hvp->cmidnumber];
 
     if (isset($hvp->maximumgrade)) {
         $params['gradetype'] = GRADE_TYPE_VALUE;
@@ -397,12 +406,12 @@ function hvp_grade_item_update($hvp, $grades=null) {
     if (isset($hvp->rawgrade) && isset($hvp->rawgrademax) && $hvp->rawgrademax != 0) {
         // Get max grade Obs: do not try to use grade_get_grades because it
         // requires context which we don't have inside an ajax.
-        $gradeitem = grade_item::fetch(array(
+        $gradeitem = grade_item::fetch([
             'itemtype' => 'mod',
             'itemmodule' => 'hvp',
             'iteminstance' => $hvp->id,
-            'courseid' => $hvp->course
-        ));
+            'courseid' => $hvp->course,
+        ]);
 
         if (isset($gradeitem) && isset($gradeitem->grademax)) {
             $grades->rawgrade = ($hvp->rawgrade / $hvp->rawgrademax) * $gradeitem->grademax;
@@ -425,13 +434,12 @@ function hvp_grade_item_update($hvp, $grades=null) {
  * @param int $userid specific user only, 0 means all
  * @param bool $nullifnone If true and the user has no grade then a grade item with rawgrade == null will be inserted
  */
-function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
-    if ($userid and $nullifnone) {
+function hvp_update_grades($hvp = null, $userid = 0, $nullifnone = true) {
+    if ($userid && $nullifnone) {
         $grade = new stdClass();
         $grade->userid   = $userid;
         $grade->rawgrade = null;
         hvp_grade_item_update($hvp, $grade);
-
     } else {
         hvp_grade_item_update($hvp);
     }
@@ -450,17 +458,17 @@ function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
  */
 function hvp_get_completion_state($course, $cm, $userid, $type) {
     global $DB, $CFG;
-    $hvp = $DB->get_record('hvp', array('id' => $cm->instance), '*', MUST_EXIST);
+    $hvp = $DB->get_record('hvp', ['id' => $cm->instance], '*', MUST_EXIST);
     if (!$hvp->completionpass) {
         return $type;
     }
     // Check for passing grade.
     if ($hvp->completionpass) {
         require_once($CFG->libdir . '/gradelib.php');
-        $item = grade_item::fetch(array('courseid' => $course->id, 'itemtype' => 'mod',
-                'itemmodule' => 'hvp', 'iteminstance' => $cm->instance, 'outcomeid' => null));
+        $item = grade_item::fetch(['courseid' => $course->id, 'itemtype' => 'mod',
+                'itemmodule' => 'hvp', 'iteminstance' => $cm->instance, 'outcomeid' => null]);
         if ($item) {
-            $grades = grade_grade::fetch_users_grades($item, array($userid), false);
+            $grades = grade_grade::fetch_users_grades($item, [$userid], false);
             if (!empty($grades[$userid])) {
                 return $grades[$userid]->is_passed($item);
             }
@@ -507,10 +515,9 @@ function mod_hvp_core_calendar_provide_event_action(calendar_event $event, actio
     }
 
     return $factory->create_instance(
-            get_string('view'),
-            new moodle_url('/mod/hvp/view.php', ['id' => $cm->id]),
-            1,
-            true
+        get_string('view'),
+        new moodle_url('/mod/hvp/view.php', ['id' => $cm->id]),
+        1,
+        true
     );
 }
-

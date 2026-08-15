@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Share H5P Content on the Hub
  *
@@ -20,6 +21,9 @@
  * @copyright  2020 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+// phpcs:disable moodle.Commenting.MissingDocblock.File
+
 require_once("../../config.php");
 require_once("locallib.php");
 
@@ -30,11 +34,11 @@ $id = required_param('id', PARAM_INT);
 // Verify course context.
 $cm = get_coursemodule_from_id('hvp', $id);
 if (!$cm) {
-    print_error('invalidcoursemodule');
+    throw new moodle_exception('invalidcoursemodule', 'mod_hvp');
 }
-$course = $DB->get_record('course', array('id' => $cm->course));
+$course = $DB->get_record('course', ['id' => $cm->course]);
 if (!$course) {
-    print_error('coursemisconf');
+    throw new moodle_exception('coursemisconf');
 }
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
@@ -43,7 +47,7 @@ require_capability('mod/hvp:share', $context);
 // Check if Hub registered, if not redirect to hub registration.
 if (empty(get_config('mod_hvp', 'site_uuid')) || empty(get_config('mod_hvp', 'hub_secret'))) {
     if (!has_capability('mod/hvp:contenthubregistration', \context_system::instance())) {
-        print_error('nohubregistration', 'mod_hvp');
+        throw new moodle_exception('nohubregistration', 'mod_hvp');
     }
     redirect(new moodle_url('/mod/hvp/content_hub_registration.php'));
 }
@@ -60,10 +64,10 @@ if ($action) {
     }
     $token = required_param('_token', PARAM_RAW);
     if (!\H5PCore::validToken('share_' . $id, $token)) {
-        print_error('invalidtoken', 'mod_hvp');
+        throw new moodle_exception('invalidtoken', 'mod_hvp');
     }
     if (empty($content['contentHubId']) || $content['shared'] !== '1') {
-        print_error('contentnotshared', 'mod_hvp');
+        throw new moodle_exception('contentnotshared', 'mod_hvp');
     }
 
     $core = \mod_hvp\framework::instance();
@@ -71,12 +75,12 @@ if ($action) {
         // Sync content already shared on the Hub.
         $exporturl = hvp_create_hub_export_url($cm->id, $content);
         if ($core->hubSyncContent($content['contentHubId'], $exporturl)) {
-            $core->h5pF->updateContentFields($content['id'], array('synced' => \H5PContentHubSyncStatus::WAITING));
+            $core->h5pF->updateContentFields($content['id'], ['synced' => \H5PContentHubSyncStatus::WAITING]);
         }
     } else if ($action === 'unpublish') {
         // Unpublish content already shared on the Hub.
         if ($core->hubUnpublishContent($content['contentHubId'])) {
-            $core->h5pF->updateContentFields($content['id'], array('shared' => 0));
+            $core->h5pF->updateContentFields($content['id'], ['shared' => 0]);
         }
     }
     redirect(new moodle_url('/mod/hvp/view.php', ['id' => $id]));
@@ -87,7 +91,8 @@ $hubcontent = !empty($content['contentHubId']) ? $core->hubRetrieveContent($cont
 if (empty($content['contentHubId'])) {
     // Try to populate with license from content.
     $license        = !empty($content['metadata']['license']) ? $content['metadata']['license'] : null;
-    $licenseversion = !empty($license) && !empty($content['metadata']['licenseVersion']) ? $content['metadata']['licenseVersion'] : null;
+    $licenseversion = !empty($license) && !empty($content['metadata']['licenseVersion']) ? $content['metadata']['licenseVersion'] :
+            null;
     $showcopyrightwarning = false;
 
     if ($license === 'U') {
@@ -110,8 +115,8 @@ if (empty($content['contentHubId'])) {
 $locale   = \mod_hvp\framework::get_language();
 $settings = [
     'token'       => \H5PCore::createToken('share_' . $id),
-    'publishURL'  => (new \moodle_url('/mod/hvp/ajax.php', array('action' => 'share', 'id' => $id)))->out(false),
-    'returnURL'   => (new \moodle_url('/mod/hvp/view.php', array('id' => $id)))->out(false),
+    'publishURL'  => (new \moodle_url('/mod/hvp/ajax.php', ['action' => 'share', 'id' => $id]))->out(false),
+    'returnURL'   => (new \moodle_url('/mod/hvp/view.php', ['id' => $id]))->out(false),
     'l10n'        => $core->getLocalization(),
     'metadata'    => json_decode($core->getUpdatedContentHubMetadataCache($locale)),
     'title'       => html_entity_decode($cm->name, ENT_QUOTES),
@@ -122,7 +127,7 @@ $settings = [
 ];
 
 // Configure page.
-$PAGE->set_url(new \moodle_url('/mod/hvp/share.php', array('id' => $id)));
+$PAGE->set_url(new \moodle_url('/mod/hvp/share.php', ['id' => $id]));
 $PAGE->set_title(format_string($cm->name));
 $PAGE->set_heading($course->fullname);
 

@@ -14,8 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Post installation and migration code.
+ *
+ * @package mod_hvp
+ * @copyright  2016 Joubel AS <contact@joubel.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @return void
+ * @throws coding_exception
+ */
 function xmldb_hvp_install() {
 
     // Try to install all the default content types.
@@ -30,20 +37,19 @@ function xmldb_hvp_install() {
 
     // Print any messages.
     echo '<h3>' . get_string('welcomeheader', 'hvp') . '</h3>' .
-         '<p>' .
-         get_string('welcomegettingstarted', 'hvp', array(
-             'moodle_tutorial' => 'href="https://h5p.org/moodle" target="_blank"',
-             'example_content' => 'href="https://h5p.org/content-types-and-applications" target="_blank"'
-         )) .
-         '</p>' .
-         '<p>' .
-         get_string('welcomecommunity', 'hvp', array(
-             'forums' => 'href="https://h5p.org/forum" target="_blank"'
-         )) .
-         '</p>' .
-         '<p>' . get_string('welcomecontactus', 'hvp',
-            'href="https://h5p.org/contact" target="_blank"') .
-         '</p>';
+        '<p>' .
+        get_string('welcomegettingstarted', 'hvp', [
+            'moodle_tutorial' => 'href="https://h5p.org/moodle" target="_blank"',
+            'example_content' => 'href="https://h5p.org/content-types-and-applications" target="_blank"',
+        ]) .
+        '</p>' .
+        '<p>' .
+        get_string('welcomecommunity', 'hvp', [
+            'forums' => 'href="https://h5p.org/forum" target="_blank"',
+        ]) .
+        '</p>' .
+        '<p>' . get_string('welcomecontactus', 'hvp', 'href="https://h5p.org/contact" target="_blank"') .
+        '</p>';
 
     // Notify of communication with H5P Hub.
     // @codingStandardsIgnoreLine

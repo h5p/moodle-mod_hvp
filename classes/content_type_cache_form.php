@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * \mod_hvp\content_type_cache_form class
  *
@@ -20,6 +21,7 @@
  * @copyright  2017 Joubel AS
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace mod_hvp;
 
 defined('MOODLE_INTERNAL') || die();
@@ -35,7 +37,6 @@ require_once($CFG->libdir . '/formslib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class content_type_cache_form extends \moodleform {
-
     /**
      * Define form elements
      */
@@ -49,11 +50,19 @@ class content_type_cache_form extends \moodleform {
         $dateformatted = $lastupdate ? \userdate($lastupdate) : get_string('ctcacheneverupdated', 'hvp');
 
         // Add last update info.
-        $mform->addElement('static', 'lastupdate',
-            get_string('ctcachelastupdatelabel', 'hvp'), $dateformatted);
+        $mform->addElement(
+            'static',
+            'lastupdate',
+            get_string('ctcachelastupdatelabel', 'hvp'),
+            $dateformatted
+        );
 
-        $mform->addElement('static', 'lastupdatedescription', '',
-            get_string('ctcachedescription', 'hvp'));
+        $mform->addElement(
+            'static',
+            'lastupdatedescription',
+            '',
+            get_string('ctcachedescription', 'hvp')
+        );
 
         // Update cache button.
         $this->add_action_buttons(false, get_string('ctcachebuttonlabel', 'hvp'));

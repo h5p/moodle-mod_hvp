@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Adds data for tracking when content was created and last modified.
  */
@@ -177,7 +175,8 @@ function hvp_upgrade_2016110100() {
 
     foreach ($hvpsresult as $hvp) {
         // Need to re-hash pathname after changing context.
-        $pathnamehash = file_storage::get_pathname_hash($hvp->id,
+        $pathnamehash = file_storage::get_pathname_hash(
+            $hvp->id,
             $component,
             $filearea,
             $hvp->itemid,
@@ -188,11 +187,13 @@ function hvp_upgrade_2016110100() {
         // Double check that hash doesn't exist (avoid duplicate entries).
         if (!$DB->get_field_sql("SELECT contextid FROM {files} WHERE pathnamehash = '{$pathnamehash}'")) {
             // Update context ID and pathname hash for files.
-            $DB->execute("
+            $DB->execute(
+                "
                   UPDATE {files}
                   SET contextid = {$hvp->id},
                       pathnamehash = '{$pathnamehash}'
-                  WHERE pathnamehash = '{$hvp->pathnamehash}'"
+                  WHERE pathnamehash = '{$hvp->pathnamehash}'
+                  "
             );
         }
     }
@@ -340,6 +341,14 @@ function hvp_upgrade_2017060900() {
     }
 }
 
+/**
+ * Hvp module upgrade function.
+ *
+ * @return void
+ * @throws ddl_exception
+ * @throws ddl_field_missing_exception
+ * @throws ddl_table_missing_exception
+ */
 function hvp_upgrade_2018090300() {
     global $DB;
     $dbman = $DB->get_manager();
@@ -365,55 +374,64 @@ function hvp_upgrade_2018090300() {
 
     // Create new metadata fields.
     if (!$dbman->field_exists($table, 'authors')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('authors', XMLDB_TYPE_TEXT, null, null, null, null, null)
         );
     }
 
     if (!$dbman->field_exists($table, 'source')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('source', XMLDB_TYPE_CHAR, '255', null, null, null, null)
         );
     }
 
     if (!$dbman->field_exists($table, 'year_from')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('year_from', XMLDB_TYPE_INTEGER, '4', null, null, null, null)
         );
     }
 
     if (!$dbman->field_exists($table, 'year_to')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('year_to', XMLDB_TYPE_INTEGER, '4', null, null, null, null)
         );
     }
 
     if (!$dbman->field_exists($table, 'license')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('license', XMLDB_TYPE_CHAR, '63', null, null, null, null)
         );
     }
 
     if (!$dbman->field_exists($table, 'license_version')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('license_version', XMLDB_TYPE_CHAR, '15', null, null, null, null)
         );
     }
 
     if (!$dbman->field_exists($table, 'changes')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('changes', XMLDB_TYPE_TEXT, null, null, null, null, null)
         );
     }
 
     if (!$dbman->field_exists($table, 'license_extras')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('license_extras', XMLDB_TYPE_TEXT, null, null, null, null, null)
         );
     }
 
     if (!$dbman->field_exists($table, 'author_comments')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('author_comments', XMLDB_TYPE_TEXT, null, null, null, null, null)
         );
     }
@@ -421,13 +439,15 @@ function hvp_upgrade_2018090300() {
     // Add new libraries fields.
     $table = new xmldb_table('hvp_libraries');
     if (!$dbman->field_exists($table, 'add_to')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('add_to', XMLDB_TYPE_TEXT, null, null, null, null, null)
         );
     }
 
     if (!$dbman->field_exists($table, 'metadata_settings')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('metadata_settings', XMLDB_TYPE_TEXT, null, null, null, null, null)
         );
     }
@@ -475,12 +495,20 @@ function hvp_upgrade_2019030700() {
     $table = new xmldb_table('hvp');
 
     if (!$dbman->field_exists($table, 'default_language')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('default_language', XMLDB_TYPE_CHAR, '32', null, null, null, null)
         );
     }
 }
 
+/**
+ * Hvp module upgrade function.
+ *
+ * @return void
+ * @throws ddl_exception
+ * @throws ddl_table_missing_exception
+ */
 function hvp_upgrade_2020080400() {
     global $DB;
     $dbman = $DB->get_manager();
@@ -495,6 +523,11 @@ function hvp_upgrade_2020080400() {
     }
 }
 
+/**
+ * Hvp module upgrade function.
+ *
+ * @return void
+ */
 function hvp_upgrade_2020080401() {
     global $DB;
     $dbman = $DB->get_manager();
@@ -507,6 +540,13 @@ function hvp_upgrade_2020080401() {
     $dbman->change_field_notnull($table, $field);
 }
 
+/**
+ * Hvp module upgrade function.
+ *
+ * @return void
+ * @throws ddl_exception
+ * @throws ddl_table_missing_exception
+ */
 function hvp_upgrade_2020082800() {
     global $DB;
     $dbman = $DB->get_manager();
@@ -514,7 +554,8 @@ function hvp_upgrade_2020082800() {
     $table = new xmldb_table('hvp');
 
     if (!$dbman->field_exists($table, 'a11y_title')) {
-        $dbman->add_field($table,
+        $dbman->add_field(
+            $table,
             new xmldb_field('a11y_title', XMLDB_TYPE_CHAR, '255', null, null, null, null)
         );
     }
@@ -536,6 +577,13 @@ function hvp_upgrade_2020091500() {
     $dbman->drop_index($table, $oldindex);
 }
 
+/**
+ * Hvp module upgrade function.
+ *
+ * @return void
+ * @throws ddl_exception
+ * @throws ddl_table_missing_exception
+ */
 function hvp_upgrade_2020112600() {
     global $DB;
     $dbman = $DB->get_manager();
@@ -543,7 +591,10 @@ function hvp_upgrade_2020112600() {
     // Add Content Hub fields to main content table.
     $table = new xmldb_table('hvp');
     if (!$dbman->field_exists($table, 'shared')) {
-        $dbman->add_field($table, new xmldb_field('shared', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'completionpass'));
+        $dbman->add_field(
+            $table,
+            new xmldb_field('shared', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'completionpass')
+        );
     }
     if (!$dbman->field_exists($table, 'synced')) {
         $dbman->add_field($table, new xmldb_field('synced', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'shared'));
@@ -567,12 +618,20 @@ function hvp_upgrade_2020112600() {
     }
 }
 
+/**
+ * Hvp module upgrade function.
+ *
+ * @return void
+ * @throws dml_exception
+ */
 function hvp_upgrade_2026050600() {
-  global $DB;
-  $DB->execute("
+    global $DB;
+    $DB->execute(
+        "
     UPDATE {hvp}
     SET filtered = NULL
-  ");
+  "
+    );
 }
 
 /**

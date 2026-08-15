@@ -14,20 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * No setting - just html
  * Note: since admin_setting is not namespaced, this can not be namespaced and put into a class
+ *
+ * @package     mod_hvp
+ * @copyright   2020 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class admin_setting_html extends admin_setting {
-
+    /**
+     * @var array The hub info
+     */
     private $hubinfo;
 
     /**
      * not a setting, just html
      *
-     * @param string $name unique ascii name, either 'mysetting' for settings that in config, or 'myplugin/mysetting' for ones in config_plugins.
+     * @param string $name unique ascii name, either 'mysetting' for settings that in config, or 'myplugin/mysetting' for
+     * ones in config_plugins.
+     * @param string $translation
+     * @param array $hubinfo
      */
     public function __construct($name, $translation, $hubinfo) {
         $this->nosave  = true;
@@ -53,6 +60,8 @@ class admin_setting_html extends admin_setting {
 
     /**
      * Never write settings
+     *
+     * @param array $data
      * @return string Always returns an empty string
      */
     public function write_setting($data) {
@@ -62,13 +71,16 @@ class admin_setting_html extends admin_setting {
 
     /**
      * Returns an HTML string
+     *
+     * @param array $data
+     * @param string $query
      * @return string Returns an HTML string
      */
     public function output_html($data, $query = '') {
         global $OUTPUT;
         $registrationurl = new moodle_url('/mod/hvp/content_hub_registration.php');
         if ($this->hubinfo === false) {
-          $this->hubinfo = (object) [];
+            $this->hubinfo = (object) [];
         }
         $this->hubinfo->registrationurl = $registrationurl->out(false);
         return $OUTPUT->render_from_template('mod_hvp/content_hub_registration_box', $this->hubinfo);

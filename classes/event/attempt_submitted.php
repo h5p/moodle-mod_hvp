@@ -24,21 +24,15 @@
 
 namespace mod_hvp\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_hvp instance list viewed event class.
  *
  * @package    mod_hvp
- * @copyright  @copyright  2016 Joubel AS <contact@joubel.com>
+ * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class attempt_submitted extends \core\event\base
-{
-
-    /**
-     * @inheritDoc
-     */
+class attempt_submitted extends \core\event\base {
+    #[\Override]
     protected function init() {
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;

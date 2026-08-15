@@ -32,7 +32,14 @@ require(__DIR__ . '/../lib.php');
  * @package mod_hvp
  */
 class user_grades {
-
+    /**
+     * Handle the AJAX call
+     *
+     * @return void
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     */
     public static function handle_ajax() {
         global $DB, $USER, $CFG;
 
@@ -61,7 +68,7 @@ class user_grades {
         }
 
         // Get hvp data from content.
-        $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
+        $hvp = $DB->get_record('hvp', ['id' => $cm->instance]);
         if (!$hvp) {
             \H5PCore::ajaxError('No such content');
             http_response_code(404);
@@ -69,9 +76,9 @@ class user_grades {
         }
 
         // Create grade object and set grades.
-        $grade = (object) array(
-            'userid' => $USER->id
-        );
+        $grade = (object) [
+            'userid' => $USER->id,
+        ];
 
         // Set grade using Gradebook API.
         $hvp->cmidnumber = $cm->idnumber;
@@ -82,28 +89,31 @@ class user_grades {
 
         // Get content info for log.
         $content = $DB->get_record_sql(
-                "SELECT c.name AS title, l.machine_name AS name, l.major_version, l.minor_version
+            "SELECT c.name AS title, l.machine_name AS name, l.major_version, l.minor_version
                    FROM {hvp} c
                    JOIN {hvp_libraries} l ON l.id = c.main_library_id
                   WHERE c.id = ?",
-                array($hvp->id)
+            [$hvp->id]
         );
 
-        require_once($CFG->libdir.'/completionlib.php');
+        require_once($CFG->libdir . '/completionlib.php');
 
         // Load Course.
-        $course = $DB->get_record('course', array('id' => $cm->course));
-        $completion = new \completion_info( $course );
+        $course = $DB->get_record('course', ['id' => $cm->course]);
+        $completion = new \completion_info($course);
 
-        if ( $completion->is_enabled( $cm) ) {
+        if ($completion->is_enabled($cm)) {
             $completion->update_state($cm, COMPLETION_COMPLETE);
         }
 
         // Log results set event.
         new \mod_hvp\event(
-                'results', 'set',
-                $hvp->id, $content->title,
-                $content->name, $content->major_version . '.' . $content->minor_version
+            'results',
+            'set',
+            $hvp->id,
+            $content->title,
+            $content->name,
+            $content->major_version . '.' . $content->minor_version
         );
 
         // Trigger Moodle event for async notification messages.
@@ -142,29 +152,34 @@ class user_grades {
         // Update the answer's score.
         $data = (object) [
             'id' => $subcontentid,
-            'raw_score' => $score
+            'raw_score' => $score,
         ];
         $DB->update_record('hvp_xapi_results', $data, false);
 
         // Load freshly updated record.
-        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
+        $answer = $DB->get_record('hvp_xapi_results', ['id' => $subcontentid]);
 
         // Get the sum of all the OEQ scores with the same parent.
-        $totalgradablesscore = intval($DB->get_field_sql(
-            "SELECT SUM(raw_score)
+        $totalgradablesscore = intval(
+            $DB->get_field_sql(
+                "SELECT SUM(raw_score)
             FROM {hvp_xapi_results}
             WHERE parent_id = ?
-            AND additionals = ?", array($answer->parent_id,
-            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
-        ));
+            AND additionals = ?",
+                [
+                    $answer->parent_id,
+                    '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}',
+                ]
+            )
+        );
 
         // Get the original raw score from the main content type.
-        $baseanswer = $DB->get_record('hvp_xapi_results', array(
-            'id' => $answer->parent_id
-        ));
+        $baseanswer = $DB->get_record('hvp_xapi_results', [
+            'id' => $answer->parent_id,
+        ]);
 
         // Get hvp data from content.
-        $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
+        $hvp = $DB->get_record('hvp', ['id' => $cm->instance]);
         if (!$hvp) {
             \H5PCore::ajaxError('No such content');
             http_response_code(404);
@@ -174,19 +189,24 @@ class user_grades {
         // Set grade using Gradebook API.
         $hvp->rawgrade = $baseanswer->raw_score + $totalgradablesscore;
         $hvp->rawgrademax = $baseanswer->max_score;
-        hvp_grade_item_update($hvp, (object) array(
-            'userid' => $answer->user_id
-        ));
+        hvp_grade_item_update($hvp, (object) [
+            'userid' => $answer->user_id,
+        ]);
 
         // Get the num of ungraded OEQ answers.
-        $numungraded = intval($DB->get_field_sql(
-            "SELECT COUNT(*)
+        $numungraded = intval(
+            $DB->get_field_sql(
+                "SELECT COUNT(*)
             FROM {hvp_xapi_results}
             WHERE parent_id = ?
             AND raw_score IS NULL
-            AND additionals = ?", array($answer->parent_id,
-            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
-        ));
+            AND additionals = ?",
+                [
+                    $answer->parent_id,
+                    '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}',
+                ]
+            )
+        );
 
         $response = [
             'score' => $answer->raw_score,
@@ -204,17 +224,22 @@ class user_grades {
 
         // Content parameters.
         $subcontentid = required_param('subcontent_id', PARAM_INT);
-        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
+        $answer = $DB->get_record('hvp_xapi_results', ['id' => $subcontentid]);
 
         // Get the num of ungraded OEQ answers.
-        $numungraded = intval($DB->get_field_sql(
-            "SELECT COUNT(*)
+        $numungraded = intval(
+            $DB->get_field_sql(
+                "SELECT COUNT(*)
             FROM {hvp_xapi_results}
             WHERE parent_id = ?
             AND raw_score IS NULL
-            AND additionals = ?", array($answer->parent_id,
-            '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}')
-        ));
+            AND additionals = ?",
+                [
+                    $answer->parent_id,
+                    '{"extensions":{"https:\/\/h5p.org\/x-api\/h5p-machine-name":"H5P.FreeTextQuestion"}}',
+                ]
+            )
+        );
 
         $response = [
             'score' => $answer->raw_score,
