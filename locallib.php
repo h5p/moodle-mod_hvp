@@ -374,11 +374,7 @@ function hvp_content_upgrade_progress($libraryid) {
     } else {
         $out->skipped = array();
     }
-
-    $lastid = filter_input(INPUT_POST, 'lastId');
-    if (empty($lastid) || $lastid != intval($lastid)) {
-        $lastid = 0;
-    }
+    $lastid = optional_param('lastId', 0, PARAM_INT);
 
     // Get number of contents for this library.
     $out->left = $interface->getNumContent($libraryid, $skipped, $lastid);
