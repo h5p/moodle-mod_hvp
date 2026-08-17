@@ -91,7 +91,7 @@ if (count($versions) < 2) {
                           'library_id' => $libraryid)))->out(false),
             'total' => $numcontents,
             'token' => \H5PCore::createToken('contentupgrade'),
-            'fixSubContent' => !!$fixsubcontent,
+            'fixSubcontent' => !!$fixsubcontent,
         )
     );
 
