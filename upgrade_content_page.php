@@ -29,6 +29,7 @@ require_once("locallib.php");
 require_login(0, false);
 
 $libraryid = required_param('library_id', PARAM_INT);
+$fixsubcontent = optional_param('fix_subcontent', false, PARAM_BOOL); // Special fix to re-run upgrade for subcontent only
 $pageurl = new moodle_url('/mod/hvp/upgrade_content_page.php', array('library_id' => $libraryid));
 $PAGE->set_url($pageurl);
 admin_externalpage_setup('h5plibraries');
@@ -73,7 +74,7 @@ if (count($versions) < 2) {
             'errorTooHighVersion' => get_string('upgradeerrortoohighversion', 'hvp'),
             'errorNotSupported' => get_string('upgradeerrornotsupported', 'hvp'),
             'done' => get_string('upgradedone', 'hvp', $numcontents) .
-                      ' <a href="' . (new moodle_url('/mod/hvp/library_list.php'))->out(false) . '">' .
+                      ' <a href="' . (new moodle_url('/mod/hvp/library_list.php', array('fix_subcontent' => $fixsubcontent)))->out(false) . '">' .
                       get_string('upgradereturn', 'hvp') . '</a>',
             'library' => array(
                 'name' => $library->name,
@@ -83,13 +84,14 @@ if (count($versions) < 2) {
                                  array('action' => 'getlibrarydataforupgrade')))->out(false) . '&library=',
             'scriptBaseUrl' => (new moodle_url('/mod/hvp/library/js'))->out(false),
             'buster' => hvp_get_cache_buster(),
-            'versions' => $upgrades,
+            'versions' => $fixsubcontent ? [$libraryid => \H5PCore::libraryVersion($versions[$libraryid])] : $upgrades,
             'contents' => $numcontents,
             'buttonLabel' => get_string('upgradebuttonlabel', 'hvp'),
             'infoUrl' => (new moodle_url('/mod/hvp/ajax.php', array('action' => 'libraryupgradeprogress',
                           'library_id' => $libraryid)))->out(false),
             'total' => $numcontents,
-            'token' => \H5PCore::createToken('contentupgrade')
+            'token' => \H5PCore::createToken('contentupgrade'),
+            'fixSubcontent' => !!$fixsubcontent,
         )
     );
 

@@ -374,9 +374,10 @@ function hvp_content_upgrade_progress($libraryid) {
     } else {
         $out->skipped = array();
     }
+    $lastid = optional_param('lastId', 0, PARAM_INT);
 
     // Get number of contents for this library.
-    $out->left = $interface->getNumContent($libraryid, $skipped);
+    $out->left = $interface->getNumContent($libraryid, $skipped, $lastid);
 
     if ($out->left) {
         $skipquery = empty($skipped) ? '' : " AND id NOT IN ($skipped)";
@@ -388,8 +389,9 @@ function hvp_content_upgrade_progress($libraryid) {
                     a11y_title
                FROM {hvp}
               WHERE main_library_id = ?
+                AND id > ?
                     {$skipquery}
-           ORDER BY name ASC", array($libraryid), 0 , 40
+           ORDER BY id ASC", array($libraryid, $lastid), 0 , 40
         );
 
         foreach ($results as $content) {
@@ -429,7 +431,7 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
         $response->upgradesScript = "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/upgrades.js";
     }
     $response->semantics = $core->loadLibrarySemantics($name, $major, $minor);
-    
+
     return $response;
 }
 
