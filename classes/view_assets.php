@@ -99,6 +99,16 @@ class view_assets {
     private function getfilteredparameters() {
         global $PAGE;
 
+        // If storing a file the session must be closed before closing the
+        // file with H5P content because file closure might take
+        // substantial time. This will allow other pages to use the session
+        // without waiting on the file operation to finish.
+        //
+        // NOTE: the method framework::messages() must not be called before
+        //       the session is closed.
+        if (empty($this->content["filtered"]))
+            \core\session\manager::write_close();
+
         $safeparameters = $this->core->filterParameters($this->content);
         $decodedparams  = json_decode($safeparameters);
         $hvpoutput      = $PAGE->get_renderer('mod_hvp');
