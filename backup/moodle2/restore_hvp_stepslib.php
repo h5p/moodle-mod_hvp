@@ -64,7 +64,7 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
      * @throws dml_exception
      */
     protected function process_hvp($data) {
-        global $DB;
+        global $CFG, $DB;
 
         $data = (object) $data;
         $data->course = $this->get_courseid();
@@ -77,6 +77,16 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
         $newitemid = $DB->insert_record('hvp', $data);
         // Immediately after inserting "activity" record, call this.
         $this->apply_activity_instance($newitemid);
+
+        // On Moodle 4.0+, migrate hvp completionpass to core completionpassgrade.
+        if ($CFG->branch >= 400 && !empty($data->completionpass)) {
+            $moduleid = $DB->get_field('modules', 'id', ['name' => 'hvp']);
+            $where = [
+                'instance' => $newitemid,
+                'module' => $moduleid,
+            ];
+            $DB->set_field('course_modules', 'completionpassgrade', 1, $where);
+        }
     }
 
     /**
