@@ -47,6 +47,8 @@ require_once('autoloader.php');
  * @return mixed true if the feature is supported, null if unknown
  */
 function hvp_supports($feature) {
+    global $CFG;
+
     switch($feature) {
         case FEATURE_GROUPS:
             return true;
@@ -57,7 +59,8 @@ function hvp_supports($feature) {
         case FEATURE_COMPLETION_TRACKS_VIEWS:
             return true;
         case FEATURE_COMPLETION_HAS_RULES:
-            return true;
+            // Moodle 4.0+ has its own passing grade completion rule.
+            return ($CFG->branch < 400);
         case FEATURE_GRADE_HAS_GRADE:
             return true;
         case FEATURE_GRADE_OUTCOMES:
@@ -450,6 +453,12 @@ function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
  */
 function hvp_get_completion_state($course, $cm, $userid, $type) {
     global $DB, $CFG;
+
+    // On Moodle 4.0+, use the core passing grade rule.
+    if ($CFG->branch >= 400) {
+        return $type;
+    }
+
     $hvp = $DB->get_record('hvp', array('id' => $cm->instance), '*', MUST_EXIST);
     if (!$hvp->completionpass) {
         return $type;

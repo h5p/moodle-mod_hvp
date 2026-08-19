@@ -110,8 +110,12 @@ class mod_hvp_mod_form extends moodleform_mod {
         $mform->removeElement('grade');
 
         // Max grade.
-        $mform->addElement('text', 'maximumgrade', get_string('maximumgrade', 'hvp'));
-        $mform->setType('maximumgrade', PARAM_INT);
+        if ($CFG->branch < 37) {
+            $mform->addElement('text', 'maximumgrade', get_string('maximumgrade', 'hvp'));
+            $mform->setType('maximumgrade', PARAM_INT);
+        } else {
+            $mform->addElement('float', 'maximumgrade', get_string('maximumgrade', 'hvp'));
+        }
         $mform->setDefault('maximumgrade', 10);
 
         // Standard course module settings.
@@ -165,13 +169,17 @@ class mod_hvp_mod_form extends moodleform_mod {
             ));
 
             if (isset($gradeitem) && isset($gradeitem->grademax)) {
-                $defaultvalues['maximumgrade'] = $gradeitem->grademax;
+                if ($CFG->branch < 37) {
+                    $defaultvalues['maximumgrade'] = $gradeitem->grademax;
+                } else {
+                    $defaultvalues['maximumgrade'] = format_float($gradeitem->grademax, $gradeitem->get_decimals());
+                }
             }
         }
     }
 
     public function data_preprocessing(&$defaultvalues) {
-        global $DB;
+        global $CFG, $DB;
         $core = \mod_hvp\framework::instance();
 
         $content = null;
@@ -205,8 +213,8 @@ class mod_hvp_mod_form extends moodleform_mod {
         }
         $defaultvalues['h5pparams'] = json_encode($maincontentdata, true);
 
-        // Completion settings check.
-        if (empty($defaultvalues['completionusegrade'])) {
+        // Completion settings check (Moodle < 4.0).
+        if ($CFG->branch < 400 && empty($defaultvalues['completionusegrade'])) {
             $defaultvalues['completionpass'] = 0; // Forced unchecked.
         }
 
@@ -320,6 +328,8 @@ class mod_hvp_mod_form extends moodleform_mod {
      * @return array
      */
     public function validation($data, $files) {
+        global $CFG;
+
         $errors = parent::validation($data, $files);
 
         // Validate max grade as a non-negative numeric value.
@@ -335,10 +345,11 @@ class mod_hvp_mod_form extends moodleform_mod {
             $this->validate_created($data, $errors);
         }
 
-        if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
+        // Validate the custom completion rule on Moodle versions before 4.0.
+        if ($CFG->branch < 400 && isset($data['completion']) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
             $completionpass = isset($data['completionpass']) ? $data['completionpass'] : $this->current->completionpass;
             // Show an error if require passing grade was selected and the grade to pass was set to 0.
-            if ($completionpass && (empty($data['gradepass']) || grade_floatval($data['gradepass']) == 0)) {
+            if ($completionpass && (empty($data['gradepass']) || grade_floatval(unformat_float($data['gradepass'])) == 0)) {
                 if (isset($data['completionpass'])) {
                     $errors['completionpassgroup'] = get_string('gradetopassnotset', 'hvp');
                 } else {
@@ -438,21 +449,19 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         $mform   =& $this->_form;
 
-        // Changes for Moodle 4.3 - MDL-78516.
-        if ($CFG->branch < 403) {
-            $suffix = '';
-        } else {
-            $suffix = $this->get_suffix();
+        // Moodle 4.0+ provides its own "Require passing grade" completion rule.
+        if ($CFG->branch >= 400) {
+            return [];
         }
 
         $items   = array();
         $group   = array();
-        $group[] = $mform->createElement('advcheckbox', 'completionpass' . $suffix, null, get_string('completionpass', 'hvp'),
+        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'hvp'),
             array('group' => 'cpass'));
-        $mform->disabledIf('completionpass' . $suffix, 'completionusegrade', 'notchecked');
-        $mform->addGroup($group, 'completionpassgroup' . $suffix, get_string('completionpass', 'hvp'), ' &nbsp; ', false);
-        $mform->addHelpButton('completionpassgroup' . $suffix, 'completionpass', 'hvp');
-        $items[] = 'completionpassgroup' . $suffix;
+        $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
+        $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'hvp'), ' &nbsp; ', false);
+        $mform->addHelpButton('completionpassgroup', 'completionpass', 'hvp');
+        $items[] = 'completionpassgroup';
 
         return $items;
     }
