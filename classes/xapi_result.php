@@ -25,15 +25,12 @@
 
 namespace mod_hvp;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class xapi_result handles xapi results and corresponding db operations.
  *
  * @package mod_hvp
  */
 class xapi_result {
-
     /**
      * Handle xapi results endpoint
      */
@@ -41,8 +38,10 @@ class xapi_result {
         // Validate token.
         if (!self::validate_token()) {
             $core = framework::instance();
-            \H5PCore::ajaxError($core->h5pF->t('Invalid security token.'),
-                'INVALID_TOKEN');
+            \H5PCore::ajaxError(
+                $core->h5pF->t('Invalid security token.'),
+                'INVALID_TOKEN'
+            );
             return;
         }
 
@@ -91,7 +90,6 @@ class xapi_result {
     private static function validate_token() {
         $token = required_param('token', PARAM_ALPHANUM);
         return \H5PCore::validToken('xapiresult', $token);
-
     }
 
     /**
@@ -117,7 +115,7 @@ class xapi_result {
         global $DB, $USER;
 
         $xapidata = new \H5PReportXAPIData($xapidata, $parentid);
-        $insertedid = $DB->insert_record('hvp_xapi_results', (object) array(
+        $insertedid = $DB->insert_record('hvp_xapi_results', (object) [
             'content_id' => $contentid,
             'user_id' => $USER->id,
             'parent_id' => $xapidata->getParentID(),
@@ -128,7 +126,7 @@ class xapi_result {
             'additionals' => $xapidata->getAdditionals(),
             'raw_score' => $xapidata->getScoreRaw(),
             'max_score' => $xapidata->getScoreMax(),
-        ));
+        ]);
 
         // Save sub content statements data.
         if ($xapidata->isCompound()) {
@@ -146,9 +144,9 @@ class xapi_result {
     private static function remove_xapi_data($contentid) {
         global $DB, $USER;
 
-        $DB->delete_records('hvp_xapi_results', array(
+        $DB->delete_records('hvp_xapi_results', [
             'content_id' => $contentid,
-            'user_id' => $USER->id
-        ));
+            'user_id' => $USER->id,
+        ]);
     }
 }

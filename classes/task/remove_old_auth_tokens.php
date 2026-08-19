@@ -26,8 +26,6 @@ namespace mod_hvp\task;
 
 use mod_hvp\mobile_auth;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_hvp remove old auth tokens class
  *
@@ -36,17 +34,19 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class remove_old_auth_tokens extends \core\task\scheduled_task {
+    #[\Override]
     public function get_name() {
         return get_string('removeoldmobileauthentries', 'mod_hvp');
     }
 
+    #[\Override]
     public function execute() {
         global $DB;
 
         require_once(__DIR__ . '/../../autoloader.php');
         $deletethreshold = time() - mobile_auth::VALID_TIME;
-        $DB->delete_records_select('hvp_auth', 'created_at < :threshold', array(
+        $DB->delete_records_select('hvp_auth', 'created_at < :threshold', [
             'threshold' => $deletethreshold,
-        ));
+        ]);
     }
 }

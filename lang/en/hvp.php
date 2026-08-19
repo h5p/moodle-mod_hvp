@@ -14,6 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Language file for HVP plugin.
+ *
+ * @package     mod_hvp
+ * @copyright   2013 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+// Let codechecker ignore some sniffs for this file as it is perfectly well ordered, just not alphabetically.
+// phpcs:disable moodle.Files.LangFilesOrdering.UnexpectedComment
+// phpcs:disable moodle.Files.LangFilesOrdering.IncorrectOrder
+
 $string['modulename'] = 'Interactive Content';
 $string['modulename_help'] = 'The H5P activity module enables you to create interactive content such as Interactive Videos, Question Sets, Drag and Drop Questions, Multi-Choice Questions, Presentations and much more.
 

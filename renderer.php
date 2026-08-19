@@ -22,18 +22,13 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The renderer for the hvp module.
  *
  * @copyright   2016 Joubel AS <contact@joubel.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @SuppressWarnings(PHPMD)
  */
 class mod_hvp_renderer extends plugin_renderer_base {
-
     /**
      * Alter which stylesheets are loaded for H5P. This is useful for adding
      * your own custom styles or replacing existing ones.

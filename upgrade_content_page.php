@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Responsible for displaying the content upgrade page
  *
@@ -22,14 +23,14 @@
  */
 
 require_once("../../config.php");
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 require_once("locallib.php");
 
 // No guest autologin.
 require_login(0, false);
 
 $libraryid = required_param('library_id', PARAM_INT);
-$pageurl = new moodle_url('/mod/hvp/upgrade_content_page.php', array('library_id' => $libraryid));
+$pageurl = new moodle_url('/mod/hvp/upgrade_content_page.php', ['library_id' => $libraryid]);
 $PAGE->set_url($pageurl);
 admin_externalpage_setup('h5plibraries');
 $PAGE->set_title("{$SITE->shortname}: " . get_string('upgrade', 'hvp'));
@@ -41,8 +42,8 @@ $results = $DB->get_records_sql('SELECT hl2.id as id, hl2.machine_name as name, 
                                         hl2.minor_version, hl2.patch_version
                                    FROM {hvp_libraries} hl1 JOIN {hvp_libraries} hl2 ON hl1.machine_name = hl2.machine_name
                                   WHERE hl1.id = ?
-                               ORDER BY hl2.title ASC, hl2.major_version ASC, hl2.minor_version ASC', array($libraryid));
-$versions = array();
+                               ORDER BY hl2.title ASC, hl2.major_version ASC, hl2.minor_version ASC', [$libraryid]);
+$versions = [];
 foreach ($results as $result) {
     $versions[$result->id] = $result;
 }
@@ -60,8 +61,8 @@ if (count($versions) < 2) {
     echo $OUTPUT->header();
     echo get_string('upgradenothingtodo', 'hvp');
 } else {
-    $settings = array(
-        'libraryInfo' => array(
+    $settings = [
+        'libraryInfo' => [
             'message' => get_string('upgrademessage', 'hvp', $numcontents),
             'inProgress' => get_string('upgradeinprogress', 'hvp'),
             'error' => get_string('upgradeerror', 'hvp'),
@@ -75,23 +76,28 @@ if (count($versions) < 2) {
             'done' => get_string('upgradedone', 'hvp', $numcontents) .
                       ' <a href="' . (new moodle_url('/mod/hvp/library_list.php'))->out(false) . '">' .
                       get_string('upgradereturn', 'hvp') . '</a>',
-            'library' => array(
+            'library' => [
                 'name' => $library->name,
                 'version' => $library->major_version . '.' . $library->minor_version,
-            ),
-            'libraryBaseUrl' => (new moodle_url('/mod/hvp/ajax.php',
-                                 array('action' => 'getlibrarydataforupgrade')))->out(false) . '&library=',
+            ],
+            'libraryBaseUrl' => (new moodle_url(
+                '/mod/hvp/ajax.php',
+                ['action' => 'getlibrarydataforupgrade']
+            ))->out(false) . '&library=',
             'scriptBaseUrl' => (new moodle_url('/mod/hvp/library/js'))->out(false),
             'buster' => hvp_get_cache_buster(),
             'versions' => $upgrades,
             'contents' => $numcontents,
             'buttonLabel' => get_string('upgradebuttonlabel', 'hvp'),
-            'infoUrl' => (new moodle_url('/mod/hvp/ajax.php', array('action' => 'libraryupgradeprogress',
-                          'library_id' => $libraryid)))->out(false),
+            'infoUrl' => (new moodle_url(
+                '/mod/hvp/ajax.php',
+                ['action' => 'libraryupgradeprogress',
+                'library_id' => $libraryid]
+            ))->out(false),
             'total' => $numcontents,
-            'token' => \H5PCore::createToken('contentupgrade')
-        )
-    );
+            'token' => \H5PCore::createToken('contentupgrade'),
+        ],
+    ];
 
     // Add JavaScripts.
     $liburl = \mod_hvp\view_assets::getsiteroot() . '/mod/hvp/library/';

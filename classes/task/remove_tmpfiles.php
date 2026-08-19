@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Defines the task which removes old tmp files
  *
@@ -23,8 +24,6 @@
 
 namespace mod_hvp\task;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_hvp look for updates task class
  *
@@ -33,18 +32,21 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class remove_tmpfiles extends \core\task\scheduled_task {
+    #[\Override]
     public function get_name() {
         return get_string('removetmpfiles', 'mod_hvp');
     }
 
+    #[\Override]
     public function execute() {
         global $DB;
         $tmpfiles = $DB->get_records_sql(
-                "SELECT f.id
+            "
+                 SELECT f.id
                    FROM {hvp_tmpfiles} tf
                    JOIN {files} f ON f.id = tf.id
                   WHERE f.timecreated < ?",
-                array(time() - 86400)
+            [time() - 86400]
         );
         if (empty($tmpfiles)) {
             return; // Nothing to clean up.
@@ -57,7 +59,7 @@ class remove_tmpfiles extends \core\task\scheduled_task {
             $file->delete();
 
             // Remove tmpfile entry.
-            $DB->delete_records('hvp_tmpfiles', array('id' => $tmpfile->id));
+            $DB->delete_records('hvp_tmpfiles', ['id' => $tmpfile->id]);
         }
     }
 }

@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Embed H5P Content
  *
@@ -20,6 +21,7 @@
  * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once("../../config.php");
 require_once("locallib.php");
 
@@ -42,11 +44,11 @@ if (\mod_hvp\mobile_auth::has_valid_token($userid, $secret)) {
 // Verify course context.
 $cm = get_coursemodule_from_id('hvp', $id);
 if (!$cm) {
-    print_error('invalidcoursemodule');
+    throw new moodle_exception('invalidcoursemodule');
 }
-$course = $DB->get_record('course', array('id' => $cm->course));
+$course = $DB->get_record('course', ['id' => $cm->course]);
 if (!$course) {
-    print_error('coursemisconf');
+    throw new moodle_exception('coursemisconf');
 }
 
 try {
@@ -74,7 +76,7 @@ require_capability('mod/hvp:view', $context);
 // Set up view assets.
 $view = new \mod_hvp\view_assets($cm, $course, [
     'disabledownload'   => $disabledownload,
-    'disablefullscreen' => $disablefullscreen
+    'disablefullscreen' => $disablefullscreen,
 ]);
 $content = $view->getcontent();
 $view->validatecontent();
@@ -83,11 +85,11 @@ $view->validatecontent();
 core\session\manager::write_close();
 
 // Configure page.
-$PAGE->set_url(new \moodle_url('/mod/hvp/embed.php', array('id' => $id)));
+$PAGE->set_url(new \moodle_url('/mod/hvp/embed.php', ['id' => $id]));
 $PAGE->set_title(format_string($content['title']));
 $PAGE->set_heading($course->fullname);
 
-// Disable activity header on Moodle 4.0+
+// Disable activity header on Moodle 4.0+.
 if ($CFG->branch >= 400) {
     $PAGE->activityheader->disable();
 }

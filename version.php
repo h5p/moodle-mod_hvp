@@ -15,8 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package    mod
- * @subpackage hvp
+ * Plugin version and other meta-data are defined here.
+ *
+ * @package    mod_hvp
  * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

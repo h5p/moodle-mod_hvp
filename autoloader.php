@@ -32,7 +32,7 @@ function hvp_autoloader($class) {
     global $CFG;
     static $classmap;
     if (!isset($classmap)) {
-        $classmap = array(
+        $classmap = [
         // Core.
         'H5PCore' => 'library/h5p.classes.php',
         'H5PFrameworkInterface' => 'library/h5p.classes.php',
@@ -70,7 +70,7 @@ function hvp_autoloader($class) {
         'StandardPageProcessor' => 'reporting/type-processors/compound/standard-page-processor.class.php',
 
         // Plugin specific classes are loaded by Moodle.
-        );
+        ];
     }
 
     if (isset($classmap[$class])) {
