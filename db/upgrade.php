@@ -576,6 +576,15 @@ function hvp_upgrade_2026050600() {
 }
 
 /**
+ * Migrate from hvp.completionpass to course_modules.completionpassgrade.
+ *
+ * Note: On Moodle sites < 4.0, the migration will happen when possible.
+ */
+function hvp_upgrade_2026081900() {
+    \mod_hvp\task\migrate_completionpass::migrate();
+}
+
+/**
  * Hvp module upgrade function.
  *
  * @param string $oldversion The version we are upgrading from
@@ -602,6 +611,7 @@ function xmldb_hvp_upgrade($oldversion) {
         2020091500,
         2020112600,
         2026050600,
+        2026081900,
     ];
 
     foreach ($upgrades as $version) {
