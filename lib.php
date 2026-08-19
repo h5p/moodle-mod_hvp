@@ -66,10 +66,22 @@ function hvp_supports($feature) {
             return true;
         case FEATURE_SHOW_DESCRIPTION:
             return true;
-
+        case FEATURE_MOD_PURPOSE:
+            return MOD_PURPOSE_INTERACTIVECONTENT;
+        case FEATURE_MOD_OTHERPURPOSE:
+            return MOD_PURPOSE_ASSESSMENT;
         default:
             return null;
     }
+}
+
+/**
+ * Whether the H5P activity icon is branded and should not be recoloured by the theme.
+ *
+ * @return bool True because H5P has a protected brand icon.
+ */
+function hvp_is_branded(): bool {
+    return true;
 }
 
 /**
