@@ -46,6 +46,18 @@ if ($formdata = $uploadform->get_data()) {
 
 $core = \mod_hvp\framework::instance();
 
+if (optional_param('action', '', PARAM_ALPHA) === 'clearcachedassets') {
+    require_sesskey();
+
+    $systemcontext = \context_system::instance();
+    require_capability('mod/hvp:updatelibraries', $systemcontext);
+
+    $core->h5pF->deleteAllCachedAssets();
+
+    \mod_hvp\framework::messages('info', get_string('clearcachedassetssuccess', 'hvp'));
+    redirect($pageurl);
+}
+
 $hubon = $core->h5pF->getOption('hub_is_enabled', true);
 if ($hubon) {
     // Create content type cache form.
@@ -135,6 +147,29 @@ if ($hubon) {
     echo '<h3>' . get_string('contenttypecacheheader', 'hvp') . '</h3>';
     $ctcacheform->display();
 }
+
+$clearcachedassetsurl = new moodle_url('/mod/hvp/library_list.php', array(
+    'action' => 'clearcachedassets',
+    'sesskey' => sesskey(),
+));
+echo html_writer::start_div('row h5p-admin-header');
+echo html_writer::tag('div', get_string('clearcachedassetsheader', 'hvp'), array('class' => 'col-md-3'));
+echo html_writer::start_div('col-md-9');
+echo html_writer::tag('p', get_string('clearcachedassetsdescription', 'hvp'));
+echo html_writer::link($clearcachedassetsurl, get_string('clearcachedassetsbuttonlabel', 'hvp'), array(
+    'class' => 'btn btn-primary',
+    'role' => 'button',
+    'aria-label' => get_string('clearcachedassetsbuttonlabel', 'hvp'),
+    'data-confirmation' => 'modal',
+    'data-confirmation-type' => 'delete',
+    'data-confirmation-title-str' => '["clearcachedassetsconfirmtitle", "hvp"]',
+    'data-confirmation-content-str' => '["clearcachedassetsconfirmbody", "hvp"]',
+    'data-confirmation-yes-button-str' => '["clearcachedassetsbuttonlabel", "hvp"]',
+    'data-confirmation-no-button-str' => '["cancel", "core"]',
+    'data-confirmation-destination' => $clearcachedassetsurl->out(false),
+));
+echo html_writer::end_div();
+echo html_writer::end_div();
 
 // Upload Form.
 echo '<h3 class="h5p-admin-header">' . get_string('uploadlibraries', 'hvp') . '</h3>';

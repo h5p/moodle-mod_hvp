@@ -118,6 +118,12 @@ $string['ctcachebuttonlabel'] = 'Update content type cache';
 $string['ctcacheneverupdated'] = 'Never';
 $string['ctcachetaskname'] = 'Update content type cache';
 $string['ctcachedescription'] = 'Making sure the content type cache is up to date will ensure that you can view, download and use the latest libraries. This is different from updating the libraries themselves.';
+$string['clearcachedassetsheader'] = 'Cached Assets';
+$string['clearcachedassetsdescription'] = 'Remove all aggregated cached assets. They will be rebuilt on demand when H5P activities are loaded.';
+$string['clearcachedassetsbuttonlabel'] = 'Clear cached assets';
+$string['clearcachedassetsconfirmtitle'] = 'Clear cached assets';
+$string['clearcachedassetsconfirmbody'] = 'Do you really want to clear all cached assets now?';
+$string['clearcachedassetssuccess'] = 'Cached assets were cleared and will be rebuilt on demand.';
 
 // Upload libraries section.
 $string['uploadlibraries'] = 'Upload Libraries';
