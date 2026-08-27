@@ -1513,8 +1513,8 @@ class framework implements \H5PFrameworkInterface {
             'minor_version' => $minorversion
         ));
 
-        if (!$library) {
-            return false;
+        if (empty($library) || !isset($library->id)) {
+            return [];
         }
 
         $librarydata = array(
