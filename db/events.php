@@ -26,13 +26,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$observers = array(
+$observers = [
 
     // Handle attempt submitted event, as a way to send confirmation messages asynchronously.
-    array(
+    [
         'eventname'   => '\mod_hvp\event\attempt_submitted',
         'includefile' => '/mod/hvp/locallib.php',
         'callback'    => 'hvp_attempt_submitted_handler',
-        'internal'    => false
-    ),
-);
+        'internal'    => false,
+    ],
+];

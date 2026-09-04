@@ -26,25 +26,58 @@ namespace mod_hvp;
 
 use moodle_url;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Handles finding and attaching assets for view
  * @package mod_hvp
  */
 class view_assets {
-
+    /**
+     * @var \context_module the current context.
+     */
     private $cm;
+
+    /**
+     * @var \stdClass Course record.
+     */
     private $course;
+    /**
+     * @var \H5PContentValidator|\H5PCore|\H5peditor|\H5PStorage|\H5PValidator|framework
+     */
     private $core;
+    /**
+     * @var array|object|null
+     */
     private $content;
+    /**
+     * @var array
+     */
     private $jsrequires;
+    /**
+     * @var array
+     */
     private $cssrequires;
 
+    /**
+     * @var array
+     */
     protected $settings;
+    /**
+     * @var string
+     */
     protected $embedtype;
+    /**
+     * @var array
+     */
     protected $files;
 
+    /**
+     * The constructor
+     *
+     * @param \context_module $cm
+     * @param \stdClass $course
+     * @param array $options
+     * @throws \dml_exception
+     */
     public function __construct($cm, $course, $options = []) {
         $this->cm          = $cm;
         $this->course      = $course;
@@ -66,25 +99,26 @@ class view_assets {
         // Add JavaScript settings for this content.
         $cid                                  = 'cid-' . $this->content['id'];
         $root = self::getsiteroot();
-        $this->settings['contents'][ $cid ]   = array(
+        $this->settings['contents'][$cid]   = [
             'library'         => \H5PCore::libraryToString($this->content['library']),
             'jsonContent'     => $this->getfilteredparameters(),
             'fullScreen'      => $this->content['library']['fullscreen'],
-            'exportUrl'       => $this->getexportsettings($displayoptions[ \H5PCore::DISPLAY_OPTION_DOWNLOAD ]),
-            'embedCode'       => $this->getembedcode($displayoptions[ \H5PCore::DISPLAY_OPTION_EMBED ]),
-            'resizeCode'      => $this->getresizecode($displayoptions[ \H5PCore::DISPLAY_OPTION_EMBED ]),
+            'exportUrl'       => $this->getexportsettings($displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD]),
+            'embedCode'       => $this->getembedcode($displayoptions[\H5PCore::DISPLAY_OPTION_EMBED]),
+            'resizeCode'      => $this->getresizecode($displayoptions[\H5PCore::DISPLAY_OPTION_EMBED]),
             'title'           => $this->content['title'],
             'displayOptions'  => $displayoptions,
             'url'             => "{$root}/mod/hvp/view.php?id={$this->cm->id}",
             'contentUrl'      => "{$root}/pluginfile.php/{$context->id}/mod_hvp/content/{$this->content['id']}",
             'metadata'        => $this->content['metadata'],
-            'contentUserData' => array(
-                0 => content_user_data::load_pre_loaded_user_data($this->content['id'])
-            )
-        );
+            'contentUserData' => [
+                0 => content_user_data::load_pre_loaded_user_data($this->content['id']),
+            ],
+        ];
 
         $this->embedtype = isset($options->forceembedtype) ? $options->forceembedtype : \H5PCore::determineEmbedType(
-            $this->content['embedType'], $this->content['library']['embedTypes']
+            $this->content['embedType'],
+            $this->content['library']['embedTypes']
         );
 
         $this->files = $this->getdependencyfiles();
@@ -116,20 +150,21 @@ class view_assets {
     /**
      * Export path for settings
      *
-     * @param $downloadenabled
+     * @param bool $downloadenabled
      *
      * @return string
      */
     private function getexportsettings($downloadenabled) {
         global $CFG;
 
-        if ( ! $downloadenabled || (isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === false)) {
+        if (!$downloadenabled || (isset($CFG->mod_hvp_export) && $CFG->mod_hvp_export === false)) {
             return '';
         }
 
         $modulecontext = \context_module::instance($this->cm->id);
         $slug          = $this->content['slug'] ? $this->content['slug'] . '-' : '';
-        $url           = \moodle_url::make_pluginfile_url($modulecontext->id,
+        $url           = \moodle_url::make_pluginfile_url(
+            $modulecontext->id,
             'mod_hvp',
             'exports',
             '',
@@ -143,12 +178,12 @@ class view_assets {
     /**
      * Embed code for settings
      *
-     * @param $embedenabled
+     * @param bool $embedenabled
      *
      * @return string
      */
     private function getembedcode($embedenabled) {
-        if ( ! $embedenabled) {
+        if (!$embedenabled) {
             return '';
         }
 
@@ -168,12 +203,12 @@ class view_assets {
     /**
      * Resizing script for settings
      *
-     * @param $embedenabled
+     * @param bool $embedenabled
      *
      * @return string
      */
     private function getresizecode($embedenabled) {
-        if ( ! $embedenabled) {
+        if (!$embedenabled) {
             return '';
         }
 
@@ -237,11 +272,16 @@ class view_assets {
         } else {
             // JavaScripts and stylesheets will be loaded through h5p.js.
             $cid                                           = 'cid-' . $this->content['id'];
-            $this->settings['contents'][ $cid ]['scripts'] = $this->core->getAssetsUrls($this->files['scripts']);
-            $this->settings['contents'][ $cid ]['styles']  = $this->core->getAssetsUrls($this->files['styles']);
+            $this->settings['contents'][$cid]['scripts'] = $this->core->getAssetsUrls($this->files['scripts']);
+            $this->settings['contents'][$cid]['styles']  = $this->core->getAssetsUrls($this->files['styles']);
         }
     }
 
+    /**
+     * Get the content
+     *
+     * @return array|object|null
+     */
     public function getcontent() {
         return $this->content;
     }
@@ -260,8 +300,10 @@ class view_assets {
      */
     public function logh5pviewedevent() {
         new event(
-            'content', null,
-            $this->content['id'], $this->content['title'],
+            'content',
+            null,
+            $this->content['id'],
+            $this->content['title'],
             $this->content['library']['name'],
             $this->content['library']['majorVersion'] . '.' . $this->content['library']['minorVersion']
         );
@@ -279,10 +321,10 @@ class view_assets {
      * Allows observers to act on viewed event
      */
     public function triggermoduleviewedevent() {
-        $event = event\course_module_viewed::create(array(
+        $event = event\course_module_viewed::create([
             'objectid' => $this->cm->instance,
-            'context'  => \context_module::instance($this->cm->id)
-        ));
+            'context'  => \context_module::instance($this->cm->id),
+        ]);
         $event->add_record_snapshot('course_modules', $this->cm);
         $event->trigger();
     }
@@ -342,7 +384,7 @@ class view_assets {
      */
     public function validatecontent() {
         if ($this->content === null) {
-            print_error('invalidhvp', 'mod_hvp');
+            throw new moodle_exception('invalidhvp', 'mod_hvp');
         }
     }
 

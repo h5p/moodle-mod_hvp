@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Defines the task which looks for H5P updates.
  *
@@ -23,41 +24,41 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$tasks = array(
-    array(
+$tasks = [
+    [
         'classname' => 'mod_hvp\task\look_for_updates',
         'blocking' => 0,
         'minute' => 'R',
         'hour' => 'R',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
+        'month' => '*',
+    ],
+    [
         'classname' => 'mod_hvp\task\remove_tmpfiles',
         'blocking' => 0,
         'minute' => 'R',
         'hour' => 'R',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
+        'month' => '*',
+    ],
+    [
         'classname' => 'mod_hvp\task\remove_old_log_entries',
         'blocking' => 0,
         'minute' => 'R',
         'hour' => 'R',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
-    ),
-    array(
+        'month' => '*',
+    ],
+    [
         'classname' => 'mod_hvp\task\remove_old_auth_tokens',
         'blocking' => 0,
         'minute' => 'R',
         'hour' => '*',
         'day' => '*',
         'dayofweek' => '*',
-        'month' => '*'
-    )
-);
+        'month' => '*',
+    ],
+];

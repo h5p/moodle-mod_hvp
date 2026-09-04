@@ -23,6 +23,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -32,7 +34,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_hvp_activity_structure_step extends restore_activity_structure_step {
-
     /**
      * Defines restore element's structure
      *
@@ -40,7 +41,7 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
      * @throws base_step_exception
      */
     protected function define_structure() {
-        $paths = array();
+        $paths = [];
         $userinfo = $this->get_setting_value('userinfo');
 
         // Restore activities.
@@ -58,7 +59,7 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
     /**
      * Process H5P, inserting the record into the database.
      *
-     * @param $data
+     * @param array $data
      *
      * @throws base_step_exception
      * @throws dml_exception
@@ -82,7 +83,7 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
     /**
      * Process and inserts content user data.
      *
-     * @param $data
+     * @param array $data
      *
      * @throws dml_exception
      */
@@ -115,7 +116,6 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_hvp_libraries_structure_step extends restore_activity_structure_step {
-
     /**
      * Determines if library should be restored.
      *
@@ -164,7 +164,7 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
      * @return array
      */
     protected function define_structure() {
-        $paths = array();
+        $paths = [];
 
         // Restore libraries first.
         $paths[] = new restore_path_element('hvp_library', '/hvp_libraries/library');
@@ -182,7 +182,7 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
     /**
      * Process and insert library record.
      *
-     * @param $data
+     * @param array $data
      *
      * @throws dml_exception
      * @throws restore_step_exception
@@ -217,7 +217,7 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
     /**
      * Process and inserts translations for library.
      *
-     * @param $data
+     * @param array $data
      *
      * @throws dml_exception
      */
@@ -233,8 +233,10 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
                FROM {hvp_libraries_languages}
               WHERE library_id = ?
                 AND language_code = ?',
-              array($data->library_id,
-                    $data->language_code)
+            [
+                $data->library_id,
+                $data->language_code,
+            ]
         );
 
         if (empty($translation)) {
@@ -246,7 +248,7 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
     /**
      * Process and inserts library dependencies.
      *
-     * @param $data
+     * @param  array $data
      *
      * @throws dml_exception
      */
@@ -294,7 +296,7 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
     /**
      * Cache to reduce queries.
      *
-     * @param $library
+     * @param array $library
      * @param null $set
      *
      * @return mixed
@@ -306,7 +308,7 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
 
         $key = $library->machine_name . ' ' . $library->major_version . '.' . $library->minor_version;
         if (is_null($keytoid)) {
-            $keytoid = array();
+            $keytoid = [];
         }
         if ($set !== null) {
             $keytoid[$key] = $set;
@@ -317,9 +319,11 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
                   WHERE machine_name = ?
                     AND major_version = ?
                     AND minor_version = ?',
-                  array($library->machine_name,
-                        $library->major_version,
-                        $library->minor_version)
+                [
+                    $library->machine_name,
+                    $library->major_version,
+                    $library->minor_version,
+                ]
             );
 
             // Non existing = false.
@@ -333,8 +337,8 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
      * Keep track of missing dependencies since libraries aren't inserted
      * in any special order
      *
-     * @param $oldid
-     * @param $newid
+     * @param int $oldid
+     * @param int $newid
      * @param null $setmissing
      *
      * @throws dml_exception
@@ -344,7 +348,7 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
         global $DB;
 
         if (is_null($missingdeps)) {
-            $missingdeps = array();
+            $missingdeps = [];
         }
 
         if ($setmissing !== null) {
@@ -359,8 +363,10 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
                        FROM {hvp_libraries_libraries}
                       WHERE library_id = ?
                         AND required_library_id = ?',
-                      array($missingdep->library_id,
-                            $missingdep->required_library_id)
+                    [
+                        $missingdep->library_id,
+                        $missingdep->required_library_id,
+                    ]
                 );
                 if (empty($dependency)) {
                     $DB->insert_record('hvp_libraries_libraries', $missingdep);

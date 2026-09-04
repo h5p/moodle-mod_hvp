@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * View H5P Content
  *
@@ -20,6 +21,7 @@
  * @copyright  2016 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once("../../config.php");
 require_once("locallib.php");
 
@@ -30,11 +32,11 @@ $id = required_param('id', PARAM_INT);
 // Verify course context.
 $cm = get_coursemodule_from_id('hvp', $id);
 if (!$cm) {
-    print_error('invalidcoursemodule');
+    throw new moodle_exception('invalidcoursemodule');
 }
-$course = $DB->get_record('course', array('id' => $cm->course));
+$course = $DB->get_record('course', ['id' => $cm->course]);
 if (!$course) {
-    print_error('coursemisconf');
+    throw new moodle_exception('coursemisconf');
 }
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
@@ -46,7 +48,7 @@ $content = $view->getcontent();
 $view->validatecontent();
 
 // Configure page.
-$PAGE->set_url(new \moodle_url('/mod/hvp/view.php', array('id' => $id)));
+$PAGE->set_url(new \moodle_url('/mod/hvp/view.php', ['id' => $id]));
 $PAGE->set_title(format_string($content['title']));
 $PAGE->set_heading($course->fullname);
 
@@ -65,20 +67,21 @@ if ($CFG->branch < 400) {
     // Output introduction.
     if (trim(strip_tags($content['intro'], '<img>'))) {
         echo $OUTPUT->box_start('mod_introbox', 'hvpintro');
-        echo format_module_intro('hvp', (object) array(
+        echo format_module_intro('hvp', (object) [
             'intro'       => $content['intro'],
             'introformat' => $content['introformat'],
-        ), $cm->id);
+        ], $cm->id);
         echo $OUTPUT->box_end();
     }
 }
 
-$hashub = (has_capability('mod/hvp:share', $context) && !empty(get_config('mod_hvp', 'site_uuid')) && !empty(get_config('mod_hvp', 'hub_secret')));
+$hashub = (has_capability('mod/hvp:share', $context) && !empty(get_config('mod_hvp', 'site_uuid')) &&
+    !empty(get_config('mod_hvp', 'hub_secret')));
 $isshared = $content['shared'] === '1';
-$huboptionsdata = array(
+$huboptionsdata = [
   'id' => $id,
-  'isshared' => $isshared
-);
+  'isshared' => $isshared,
+];
 
 // Update Hub status for content before printing out messages.
 if ($hashub && $isshared) {

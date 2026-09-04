@@ -25,8 +25,6 @@
 
 namespace mod_hvp;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class content_user_data handles user data and corresponding db operations.
  *
@@ -35,7 +33,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class content_user_data {
-
     /**
      * Retrieves ajax parameters for content and update or delete
      * user data depending on params.
@@ -72,12 +69,12 @@ class content_user_data {
     /**
      * Stores content user data
      *
-     * @param $contentid
-     * @param $subcontentid
-     * @param $dataid
-     * @param $data
-     * @param $preload
-     * @param $invalidate
+     * @param int $contentid
+     * @param int $subcontentid
+     * @param int $dataid
+     * @param array $data
+     * @param bool $preload
+     * @param bool $invalidate
      *
      * @throws \coding_exception
      * @throws \dml_exception
@@ -122,9 +119,9 @@ class content_user_data {
     /**
      * Return existing content user data
      *
-     * @param $contentid
-     * @param $subcontentid
-     * @param $dataid
+     * @param int $contentid
+     * @param int $subcontentid
+     * @param int $dataid
      *
      * @throws \dml_exception
      */
@@ -137,9 +134,9 @@ class content_user_data {
     /**
      * Get user data for content.
      *
-     * @param $contentid
-     * @param $subcontentid
-     * @param $dataid
+     * @param int $contentid
+     * @param int $subcontentid
+     * @param int $dataid
      *
      * @return mixed
      * @throws \dml_exception
@@ -147,12 +144,14 @@ class content_user_data {
     public static function get_user_data($contentid, $subcontentid, $dataid) {
         global $DB, $USER;
 
-        $result = $DB->get_record('hvp_content_user_data', array(
+        $result = $DB->get_record(
+            'hvp_content_user_data',
+            [
                 'user_id' => $USER->id,
                 'hvp_id' => $contentid,
                 'sub_content_id' => $subcontentid,
-                'data_id' => $dataid
-            )
+                'data_id' => $dataid,
+            ],
         );
 
         return $result;
@@ -161,12 +160,12 @@ class content_user_data {
     /**
      * Save user data for specific content in database.
      *
-     * @param $contentid
-     * @param $subcontentid
-     * @param $dataid
-     * @param $preload
-     * @param $invalidate
-     * @param $data
+     * @param int $contentid
+     * @param int $subcontentid
+     * @param int $dataid
+     * @param bool $preload
+     * @param bool $invalidate
+     * @param array $data
      *
      * @throws \dml_exception
      */
@@ -181,15 +180,15 @@ class content_user_data {
         $invalidate = ($invalidate === '0' || $invalidate === 0) ? 0 : 1;
 
         // New data to be inserted.
-        $newdata = (object)array(
+        $newdata = (object)[
             'user_id' => $USER->id,
             'hvp_id' => $contentid,
             'sub_content_id' => $subcontentid,
             'data_id' => $dataid,
             'data' => $data,
             'preloaded' => $preload,
-            'delete_on_content_change' => $invalidate
-        );
+            'delete_on_content_change' => $invalidate,
+        ];
 
         // Does not exist.
         if ($update === false) {
@@ -207,27 +206,27 @@ class content_user_data {
     /**
      * Delete user data with specific content from database
      *
-     * @param $contentid
-     * @param $subcontentid
-     * @param $dataid
+     * @param int $contentid
+     * @param int $subcontentid
+     * @param int $dataid
      *
      * @throws \dml_exception
      */
     public static function delete_user_data($contentid, $subcontentid, $dataid) {
         global $DB, $USER;
 
-        $DB->delete_records('hvp_content_user_data', array(
+        $DB->delete_records('hvp_content_user_data', [
             'user_id' => $USER->id,
             'hvp_id' => $contentid,
             'sub_content_id' => $subcontentid,
-            'data_id' => $dataid
-        ));
+            'data_id' => $dataid,
+        ]);
     }
 
     /**
      * Load user data for specific content
      *
-     * @param $contentid
+     * @param int $contentid
      *
      * @return array User data for specific content if found, else null
      * @throws \dml_exception
@@ -235,16 +234,16 @@ class content_user_data {
     public static function load_pre_loaded_user_data($contentid) {
         global $DB, $USER;
 
-        $preloadeduserdata = array(
-            'state' => '{}'
-        );
+        $preloadeduserdata = [
+            'state' => '{}',
+        ];
 
-        $results = $DB->get_records('hvp_content_user_data', array(
+        $results = $DB->get_records('hvp_content_user_data', [
             'user_id' => $USER->id,
             'hvp_id' => $contentid,
             'sub_content_id' => 0,
-            'preloaded' => 1
-        ));
+            'preloaded' => 1,
+        ]);
 
         // Get data for data ids.
         foreach ($results as $contentuserdata) {

@@ -27,8 +27,6 @@ namespace mod_hvp;
 
 use curl as moodlecurl;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Override Moodle's curl class to provide proper PUT support.
  *
@@ -37,23 +35,17 @@ defined('MOODLE_INTERNAL') || die();
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class curl extends moodlecurl {
-
-    /**
-     * @inheritdoc
-     */
-    public function post($url, $params = '', $options = array()) {
+    #[\Override]
+    public function post($url, $params = '', $options = []) {
         $options['CURLOPT_POST'] = 1;
         $options['CURLOPT_POSTFIELDS'] = $params;
         return $this->request($url, $options);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function put($url, $params = '', $options = array()) {
+    #[\Override]
+    public function put($url, $params = '', $options = []) {
         $options['CURLOPT_CUSTOMREQUEST'] = 'PUT';
         $options['CURLOPT_POSTFIELDS'] = $params;
         return $this->request($url, $options);
     }
-
 }

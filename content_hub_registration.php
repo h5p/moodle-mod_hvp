@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Responsible for displaying the content upgrade page
  *
@@ -20,10 +21,11 @@
  * @copyright  2020 Joubel AS <contact@joubel.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 use mod_hvp\content_hub_service;
 
 require_once("../../config.php");
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 require_once("locallib.php");
 
 global $PAGE, $SITE, $OUTPUT, $CFG;

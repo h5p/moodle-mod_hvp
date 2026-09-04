@@ -14,15 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace mod_hvp\output;
+/**
+ * Mobile implementation for H5P.
+ *
+ * @package    mod_hvp
+ * @copyright  2018 Joubel AS <contact@joubel.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-defined('MOODLE_INTERNAL') || die();
+namespace mod_hvp\output;
 
 use context_module;
 use mod_hvp;
 
-class mobile {
-
+/**
+ * Mobile output class for the Moodle App.
+ *
+ * @package   mod_hvp
+ * @copyright 2018 Joubel AS <contact@joubel.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */class mobile {
+    /**
+     * Mobile course module view
+     *
+     * @param array $args Incoming app args.
+     * @return array
+     */
     public static function mobile_course_view($args) {
         global $DB, $CFG, $OUTPUT, $USER;
 
@@ -34,65 +51,65 @@ class mobile {
             } else {
                 $template = 'mod_hvp/contact_site_administrator';
             }
-            return array(
-                'templates' => array(
-                    array(
+            return [
+                'templates' => [
+                    [
                         'id' => 'noiframeembedding',
-                        'html' => $OUTPUT->render_from_template($template, [])
-                    )
-                )
-            );
+                        'html' => $OUTPUT->render_from_template($template, []),
+                    ],
+                ],
+            ];
         }
 
         // Verify course context.
         $cm = get_coursemodule_from_id('hvp', $cmid);
         if (!$cm) {
-            print_error('invalidcoursemodule');
+            throw new moodle_exception('invalidcoursemodule');
         }
-        $course = $DB->get_record('course', array('id' => $cm->course));
+        $course = $DB->get_record('course', ['id' => $cm->course]);
         if (!$course) {
-            print_error('coursemisconf');
+            throw new moodle_exception('coursemisconf');
         }
         require_course_login($course, false, $cm, true, true);
         $context = context_module::instance($cm->id);
         require_capability('mod/hvp:view', $context);
 
-        list($token, $secret) = mod_hvp\mobile_auth::create_embed_auth_token();
+        [$token, $secret] = mod_hvp\mobile_auth::create_embed_auth_token();
 
         // Store secret in database.
-        $auth             = $DB->get_record('hvp_auth', array(
+        $auth             = $DB->get_record('hvp_auth', [
             'user_id' => $USER->id,
-        ));
+        ]);
         $currenttimestamp = time();
         if ($auth) {
-            $DB->update_record('hvp_auth', array(
+            $DB->update_record('hvp_auth', [
                 'id'         => $auth->id,
                 'secret'     => $token,
                 'created_at' => $currenttimestamp,
-            ));
+            ]);
         } else {
-            $DB->insert_record('hvp_auth', array(
+            $DB->insert_record('hvp_auth', [
                 'user_id'    => $USER->id,
                 'secret'     => $token,
-                'created_at' => $currenttimestamp
-            ));
+                'created_at' => $currenttimestamp,
+            ]);
         }
 
         $data = [
             'cmid'    => $cmid,
             'wwwroot' => $CFG->wwwroot,
             'user_id' => $USER->id,
-            'secret'  => urlencode($secret)
+            'secret'  => urlencode($secret),
         ];
 
-        return array(
-            'templates'  => array(
-                array(
+        return [
+            'templates'  => [
+                [
                     'id'   => 'main',
                     'html' => $OUTPUT->render_from_template('mod_hvp/mobile_view_page', $data),
-                ),
-            ),
+                ],
+            ],
             'javascript' => file_get_contents($CFG->dirroot . '/mod/hvp/library/js/h5p-resizer.js'),
-        );
+        ];
     }
 }

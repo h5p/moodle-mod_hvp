@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Internal library of functions for module hvp
  *
@@ -33,7 +34,7 @@ require_once('autoloader.php');
 /**
  * Get array with settings for hvp core
  *
- * @param \context_course|\context_module [$context]
+ * @param \context_course|\context_module $context
  * @return array Settings
  */
 function hvp_get_core_settings($context) {
@@ -43,7 +44,7 @@ function hvp_get_core_settings($context) {
     $basepath = \mod_hvp\view_assets::getsiteroot() . '/';
 
     // Check permissions and generate ajax paths.
-    $ajaxpaths = array();
+    $ajaxpaths = [];
     $savefreq = false;
     $ajaxpath = "{$basepath}mod/hvp/ajax.php?contextId={$context->instanceid}&token=";
     if ($context->contextlevel == CONTEXT_MODULE && has_capability('mod/hvp:saveresults', $context)) {
@@ -61,7 +62,7 @@ function hvp_get_core_settings($context) {
 
     $core = \mod_hvp\framework::instance('core');
 
-    $settings = array(
+    $settings = [
         'baseUrl' => $basepath,
         'url' => "{$basepath}pluginfile.php/{$context->instanceid}/mod_hvp",
         // NOTE: Separate context from content URL !
@@ -70,11 +71,11 @@ function hvp_get_core_settings($context) {
         'ajax' => $ajaxpaths,
         'saveFreq' => $savefreq,
         'siteUrl' => $CFG->wwwroot,
-        'l10n' => array('H5P' => $core->getLocalization()),
-        'user' => array(
+        'l10n' => ['H5P' => $core->getLocalization()],
+        'user' => [
             'name' => $USER->firstname . ' ' . $USER->lastname,
-            'mail' => $USER->email
-        ),
+            'mail' => $USER->email,
+        ],
         'hubIsEnabled' => get_config('mod_hvp', 'hub_is_enabled') ? true : false,
         'reportingIsEnabled' => true,
         'crossorigin' => isset($CFG->mod_hvp_crossorigin) ? $CFG->mod_hvp_crossorigin : null,
@@ -82,8 +83,8 @@ function hvp_get_core_settings($context) {
         'crossoriginCacheBuster' => isset($CFG->mod_hvp_crossoriginCacheBuster) ? $CFG->mod_hvp_crossoriginCacheBuster : null,
         'libraryConfig' => $core->h5pF->getLibraryConfig(),
         'pluginCacheBuster' => hvp_get_cache_buster(),
-        'libraryUrl' => $basepath . 'mod/hvp/library/js'
-    );
+        'libraryUrl' => $basepath . 'mod/hvp/library/js',
+    ];
 
     return $settings;
 }
@@ -99,12 +100,12 @@ function hvp_get_core_assets($context) {
 
     // Get core settings.
     $settings = \hvp_get_core_settings($context);
-    $settings['core'] = array(
-        'styles' => array(),
-        'scripts' => array()
-    );
-    $settings['loadedJs'] = array();
-    $settings['loadedCss'] = array();
+    $settings['core'] = [
+        'styles' => [],
+        'scripts' => [],
+    ];
+    $settings['loadedJs'] = [];
+    $settings['loadedCss'] = [];
 
     // Make sure files are reloaded for each plugin update.
     $cachebuster = \hvp_get_cache_buster();
@@ -152,10 +153,10 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     $settings = \hvp_get_core_assets($context);
 
     // Use jQuery and styles from core.
-    $assets = array(
+    $assets = [
         'css' => $settings['core']['styles'],
-        'js' => $settings['core']['scripts']
-    );
+        'js' => $settings['core']['scripts'],
+    ];
 
     // Use relative URL to support both http and https.
     $url = \mod_hvp\view_assets::getsiteroot() . '/mod/hvp/';
@@ -198,15 +199,17 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
     $editorajaxtoken = \H5PCore::createToken('editorajax');
 
     $interface = \mod_hvp\framework::instance('interface');
-    $enablecontenthub = ($interface->getOption('hub_is_enabled', null) ? $interface->getOption('h5p_search_content_hub', null) : "0") === "1";
+    $enablecontenthub = (
+        $interface->getOption('hub_is_enabled', null) ? $interface->getOption('h5p_search_content_hub', null) : "0"
+        ) === "1";
 
-    $settings['editor'] = array(
+    $settings['editor'] = [
       'filesPath' => $filespathbase . 'editor',
-      'fileIcon' => array(
+      'fileIcon' => [
         'path' => $url . 'editor/images/binary-file.png',
         'width' => 50,
         'height' => 50,
-      ),
+      ],
       'ajaxPath' => "{$url}ajax.php?contextId={$context->id}&token={$editorajaxtoken}&action=",
       'libraryUrl' => $url . 'editor/',
       'copyrightSemantics' => $contentvalidator->getCopyrightSemantics(),
@@ -220,7 +223,7 @@ function hvp_add_editor_assets($id = null, $mformid = null) {
         'contentSearchUrl' => \H5PHubEndpoints::createURL(\H5PHubEndpoints::CONTENT) . '/search',
       ],
       'enableContentHub' => $enablecontenthub,
-    );
+    ];
 
     if ($id !== null) {
         $settings['editor']['nodeVersionId'] = $id;
@@ -252,16 +255,16 @@ function hvp_admin_add_generic_css_and_js($page, $liburl, $settings = null) {
     }
 
     if ($settings === null) {
-        $settings = array();
+        $settings = [];
     }
 
     $settings['containerSelector'] = '#h5p-admin-container';
-    $settings['l10n'] = array(
+    $settings['l10n'] = [
         'NA' => get_string('notapplicable', 'hvp'),
         'viewLibrary' => '',
         'deleteLibrary' => '',
-        'upgradeLibrary' => get_string('upgradelibrarycontent', 'hvp')
-    );
+        'upgradeLibrary' => get_string('upgradelibrarycontent', 'hvp'),
+    ];
     $settings['extraTableClasses'] = 'table-reboot';
 
     $page->requires->data_for_js('H5PAdminIntegration', $settings, true);
@@ -287,22 +290,21 @@ function hvp_get_cache_buster() {
 /**
  * Restrict access to a given content type.
  *
- * @param int $library_id
+ * @param int $libraryid
  * @param bool $restrict
  */
 function hvp_restrict_library($libraryid, $restrict) {
     global $DB;
-    $DB->update_record('hvp_libraries', (object) array(
+    $DB->update_record('hvp_libraries', (object) [
         'id' => $libraryid,
-        'restricted' => $restrict ? 1 : 0
-    ));
+        'restricted' => $restrict ? 1 : 0,
+    ]);
 }
 
 /**
  * Handle content upgrade progress
  *
- * @method hvp_content_upgrade_progress
- * @param  int $library_id
+ * @param  int $libraryid
  * @return object An object including the json content for the H5P instances
  *                (maximum 40) that should be upgraded.
  */
@@ -318,9 +320,9 @@ function hvp_content_upgrade_progress($libraryid) {
     }
 
     // Get the library we're upgrading to.
-    $tolibrary = $DB->get_record('hvp_libraries', array(
-        'id' => $tolibraryid
-    ));
+    $tolibrary = $DB->get_record('hvp_libraries', [
+        'id' => $tolibraryid,
+    ]);
     if (!$tolibrary) {
         print get_string('upgradelibrarymissing', 'hvp');
         return;
@@ -328,9 +330,9 @@ function hvp_content_upgrade_progress($libraryid) {
 
     // Prepare response.
     $out = new stdClass();
-    $out->params = array();
+    $out->params = [];
     $out->token = \H5PCore::createToken('contentupgrade');
-    $out->metadata = array();
+    $out->metadata = [];
 
     // Prepare our interface.
     $interface = \mod_hvp\framework::instance('interface');
@@ -342,22 +344,25 @@ function hvp_content_upgrade_progress($libraryid) {
         $params = json_decode($params);
         foreach ($params as $id => $param) {
             $upgraded = json_decode($param);
-            $metadata = isset($upgraded->metadata) ? $upgraded->metadata : array();
+            $metadata = isset($upgraded->metadata) ? $upgraded->metadata : [];
 
-            $fields = array_merge(\H5PMetadata::toDBArray($metadata, false, false), array(
+            $fields = array_merge(\H5PMetadata::toDBArray($metadata, false, false), [
                 'id' => $id,
                 'main_library_id' => $tolibrary->id,
                 'json_content' => json_encode($upgraded->params),
-                'filtered' => ''
-            ));
+                'filtered' => '',
+            ]);
 
             $DB->update_record('hvp', $fields);
 
             // Log content upgrade successful.
             new \mod_hvp\event(
-                'content', 'upgrade',
-                $id, $DB->get_field_sql("SELECT name FROM {hvp} WHERE id = ?", array($id)),
-                $tolibrary->machine_name, $tolibrary->major_version . '.' . $tolibrary->minor_version
+                'content',
+                'upgrade',
+                $id,
+                $DB->get_field_sql("SELECT name FROM {hvp} WHERE id = ?", [$id]),
+                $tolibrary->machine_name,
+                $tolibrary->major_version . '.' . $tolibrary->minor_version
             );
         }
     }
@@ -372,7 +377,7 @@ function hvp_content_upgrade_progress($libraryid) {
         }
         $skipped = implode(',', $out->skipped);
     } else {
-        $out->skipped = array();
+        $out->skipped = [];
     }
 
     // Get number of contents for this library.
@@ -389,7 +394,10 @@ function hvp_content_upgrade_progress($libraryid) {
                FROM {hvp}
               WHERE main_library_id = ?
                     {$skipquery}
-           ORDER BY name ASC", array($libraryid), 0 , 40
+           ORDER BY name ASC",
+            [$libraryid],
+            0,
+            40
         );
 
         foreach ($results as $content) {
@@ -404,7 +412,6 @@ function hvp_content_upgrade_progress($libraryid) {
 /**
  * Gets the information needed when content is upgraded
  *
- * @method hvp_get_library_upgrade_info
  * @param  string $name
  * @param  int $major
  * @param  int $minor
@@ -412,13 +419,13 @@ function hvp_content_upgrade_progress($libraryid) {
  *                to upgrade script
  */
 function hvp_get_library_upgrade_info($name, $major, $minor) {
-    $response = (object) array(
+    $response = (object) [
         'name' => $name,
-        'version' => (object) array(
+        'version' => (object) [
             'major' => $major,
-            'minor' => $minor
-        )
-    );
+            'minor' => $minor,
+        ],
+    ];
 
     $core = \mod_hvp\framework::instance();
     $library = $core->loadLibrary($name, $major, $minor);
@@ -429,7 +436,7 @@ function hvp_get_library_upgrade_info($name, $major, $minor) {
         $response->upgradesScript = "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/upgrades.js";
     }
     $response->semantics = $core->loadLibrarySemantics($name, $major, $minor);
-    
+
     return $response;
 }
 
@@ -479,10 +486,10 @@ function hvp_require_view_results_permission($userid, $context, $redirectcontent
  * Sends notification messages to the interested parties that assign the role capability
  *
  * @param object $recipient user object of the intended recipient
- * @param $submitter
+ * @param object $submitter user object of the sender
  * @param object $a associative array of replaceable fields for the templates
  *
- * @return int|false as for {@link message_send()}.
+ * @return int|false as for {@see message_send()}.
  * @throws coding_exception
  */
 function hvp_send_notification($recipient, $submitter, $a) {
@@ -513,10 +520,11 @@ function hvp_send_notification($recipient, $submitter, $a) {
 /**
  * Sends a confirmation message to the student confirming that the attempt was processed.
  *
+ * @param object $recipient the user to send the message to
  * @param object $a useful information that can be used in the message
  *      subject and body.
  *
- * @return int|false as for {@link message_send()}.
+ * @return int|false as for {@see message_send()}.
  * @throws coding_exception
  */
 function hvp_send_confirmation($recipient, $a) {
@@ -562,11 +570,11 @@ function hvp_send_notification_messages($course, $hvp, $attempt, $context, $cm) 
     global $CFG, $DB;
 
     // Do nothing if required objects not present.
-    if (empty($course) or empty($hvp) or empty($attempt) or empty($context)) {
+    if (empty($course) || empty($hvp) || empty($attempt) || empty($context)) {
         throw new coding_exception('$course, $hvp, $attempt, $context and $cm must all be set.');
     }
 
-    $submitter = $DB->get_record('user', array('id' => $attempt->userid), '*', MUST_EXIST);
+    $submitter = $DB->get_record('user', ['id' => $attempt->userid], '*', MUST_EXIST);
 
     // Check for confirmation required.
     $sendconfirm        = false;
@@ -595,8 +603,19 @@ function hvp_send_notification_messages($course, $hvp, $attempt, $context, $cm) 
     } else {
         $groups = '';
     }
-    $userstonotify = get_users_by_capability($context, 'mod/hvp:emailnotifysubmission',
-        $notifyfields, '', '', '', $groups, $notifyexcludeusers, false, false, true);
+    $userstonotify = get_users_by_capability(
+        $context,
+        'mod/hvp:emailnotifysubmission',
+        $notifyfields,
+        '',
+        '',
+        '',
+        $groups,
+        $notifyexcludeusers,
+        false,
+        false,
+        true
+    );
 
     if (empty($userstonotify) && !$sendconfirm) {
         return true; // Nothing to do.
@@ -649,18 +668,18 @@ function hvp_send_notification_messages($course, $hvp, $attempt, $context, $cm) 
  * Callback for the attempt_submitted event.
  * Sends out notification messages.
  *
- * @param $event
+ * @param array $event
  *
  * @throws coding_exception
  * @throws dml_exception
  */
 function hvp_attempt_submitted_handler($event) {
     global $DB, $PAGE;
-    $course  = $DB->get_record('course', array('id' => $event->courseid));
+    $course  = $DB->get_record('course', ['id' => $event->courseid]);
     $cm      = get_coursemodule_from_id('hvp', $event->get_context()->instanceid, $event->courseid);
-    $hvp     = $DB->get_record('hvp', array('id' => $cm->instance));
+    $hvp     = $DB->get_record('hvp', ['id' => $cm->instance]);
     $attempt = (object) [
-        'userid' => $event->userid
+        'userid' => $event->userid,
     ];
     $context = context_module::instance($cm->id);
     $PAGE->set_context($context);
@@ -671,7 +690,7 @@ function hvp_attempt_submitted_handler($event) {
 /**
  * Check and update content hub status for shared content.
  *
- * @param $content
+ * @param array $content
  */
 function hvp_update_hub_status($content) {
     $synced = intval($content['synced']);
@@ -684,18 +703,20 @@ function hvp_update_hub_status($content) {
     $core = \mod_hvp\framework::instance();
     $newstate = $core->getHubContentStatus($content['contentHubId'], $synced);
     if ($newstate !== false) {
-        $core->h5pF->updateContentFields($content['id'], array('synced' => $newstate));
+        $core->h5pF->updateContentFields($content['id'], ['synced' => $newstate]);
 
         return $newstate;
     }
 
     return false;
 }
-
 /**
  * Create URL for Content Hub to download content
  *
- * @param $content
+ * @param int $cmid
+ * @param array $content
+ * @return string
+ * @throws dml_exception
  */
 function hvp_create_hub_export_url($cmid, $content) {
     // Create URL.

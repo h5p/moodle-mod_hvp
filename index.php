@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Form for creating new H5P Content
  *
@@ -27,13 +28,13 @@ require_once('../../config.php');
 $id = optional_param('id', 0, PARAM_INT);
 
 // Set URL.
-$url = new \moodle_url('/mod/hvp/index.php', array('id' => $id));
+$url = new \moodle_url('/mod/hvp/index.php', ['id' => $id]);
 $PAGE->set_url($url);
 
 // Load Course.
-$course = $DB->get_record('course', array('id' => $id));
+$course = $DB->get_record('course', ['id' => $id]);
 if (!$course) {
-    print_error('invalidcourseid');
+    throw new moodle_exception('invalidcourseid');
 }
 
 // Require login.
@@ -42,9 +43,7 @@ $PAGE->set_pagelayout('incourse');
 $coursecontext = context_course::instance($course->id);
 
 // Trigger instances list viewed event.
-$params = array(
-    'context' => context_course::instance($course->id)
-);
+$params = ['context' => context_course::instance($course->id)];
 $event = \mod_hvp\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
@@ -72,7 +71,7 @@ $rawh5ps = $DB->get_records_sql("SELECT cm.id AS coursemodule,
                                  AND md.name = 'hvp'
                                  AND md.id = cm.module
                                  AND hl.id = h.main_library_id
-                             ", array($course->id));
+                             ", [$course->id]);
 if (!$rawh5ps) {
     notice(get_string('noh5ps', 'mod_hvp'), "../../course/view.php?id={$course->id}");
     die;
@@ -99,13 +98,13 @@ if (empty($modinfo->instances['hvp'])) {
 $table = new html_table();
 $table->attributes['class'] = 'generaltable mod_index';
 
-$table->head = array();
-$table->align = array();
+$table->head = [];
+$table->align = [];
 
 $usesections = course_format_uses_sections($course->format);
 if ($usesections) {
     // Section name.
-    $table->head[] = get_string('sectionname', 'format_'.$course->format);
+    $table->head[] = get_string('sectionname', 'format_' . $course->format);
     $table->align[] = 'center';
 }
 

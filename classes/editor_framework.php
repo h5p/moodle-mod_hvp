@@ -30,6 +30,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../autoloader.php');
 
+// phpcs:disable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
+
 /**
  * Moodle's implementation of the H5P Editor framework interface.
  * Makes it possible for the editor's core library to communicate with the
@@ -40,7 +42,6 @@ require_once(__DIR__ . '/../autoloader.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class editor_framework implements \H5peditorStorage {
-
     /**
      * Load language file(JSON) from database.
      * This is used to translate the editor fields(title, description etc.)
@@ -51,7 +52,6 @@ class editor_framework implements \H5peditorStorage {
      * @param string $lang Language code
      * @return string Translation in JSON format
      */
-    // @codingStandardsIgnoreLine
     public function getLanguage($name, $major, $minor, $lang) {
         global $DB;
 
@@ -64,12 +64,13 @@ class editor_framework implements \H5peditorStorage {
                 AND hl.major_version = ?
                 AND hl.minor_version = ?
                 AND hlt.language_code = ?
-            ", array(
+            ",
+            [
                 $name,
                 $major,
                 $minor,
-                $lang
-            )
+                $lang,
+            ]
         );
     }
 
@@ -79,14 +80,13 @@ class editor_framework implements \H5peditorStorage {
      *
      * @param int $fileid
      */
-    // @codingStandardsIgnoreLine
     public function keepFile($fileid) {
         global $DB;
 
         // Remove from tmpfiles.
-        $DB->delete_records('hvp_tmpfiles', array(
-            'id' => $fileid
-        ));
+        $DB->delete_records('hvp_tmpfiles', [
+            'id' => $fileid,
+        ]);
     }
 
     /**
@@ -102,21 +102,22 @@ class editor_framework implements \H5peditorStorage {
      * @param array $libraries List of library names + version to load info for
      * @return array List of all libraries loaded
      */
-    // @codingStandardsIgnoreLine
     public function getLibraries($libraries = null) {
         global $DB;
 
         $contextid = required_param('contextId', PARAM_RAW);
-        $superuser = has_capability('mod/hvp:userestrictedlibraries',
-            \context::instance_by_id($contextid));
+        $superuser = has_capability(
+            'mod/hvp:userestrictedlibraries',
+            \context::instance_by_id($contextid)
+        );
 
         if ($libraries !== null) {
             // Get details for the specified libraries only.
-            $librarieswithdetails = array();
+            $librarieswithdetails = [];
             foreach ($libraries as $library) {
                 // Look for library.
                 $details = $DB->get_record_sql(
-                        "SELECT title,
+                    "SELECT title,
                                 runnable,
                                 restricted,
                                 tutorial_url,
@@ -126,11 +127,12 @@ class editor_framework implements \H5peditorStorage {
                             AND major_version = ?
                             AND minor_version = ?
                             AND semantics IS NOT NULL
-                        ", array(
-                            $library->name,
-                            $library->majorVersion,
-                            $library->minorVersion
-                        )
+                        ",
+                    [
+                        $library->name,
+                        $library->majorVersion,
+                        $library->minorVersion,
+                    ]
                 );
                 if ($details) {
                     // Library found, add details to list.
@@ -149,9 +151,9 @@ class editor_framework implements \H5peditorStorage {
         }
 
         // Load all libraries.
-        $libraries = array();
+        $libraries = [];
         $librariesresult = $DB->get_records_sql(
-                "SELECT id,
+            "SELECT id,
                         machine_name AS name,
                         title,
                         major_version,
@@ -174,7 +176,7 @@ class editor_framework implements \H5peditorStorage {
             $library->minorVersion = (int) $library->minor_version;
             unset($library->minor_version);
             if (!empty($library->tutorial_url)) {
-               $library->tutorialUrl = $library->tutorial_url;
+                $library->tutorialUrl = $library->tutorial_url;
             }
             unset($library->tutorial_url);
 
@@ -185,9 +187,11 @@ class editor_framework implements \H5peditorStorage {
             foreach ($libraries as $key => $existinglibrary) {
                 if ($library->name === $existinglibrary->name) {
                     // Found library with same name, check versions.
-                    if ( ( $library->majorVersion === $existinglibrary->majorVersion &&
-                           $library->minorVersion > $existinglibrary->minorVersion ) ||
-                         ( $library->majorVersion > $existinglibrary->majorVersion ) ) {
+                    if (
+                        ($library->majorVersion === $existinglibrary->majorVersion &&
+                            $library->minorVersion > $existinglibrary->minorVersion) ||
+                        ($library->majorVersion > $existinglibrary->majorVersion)
+                    ) {
                         // This is a newer version.
                         $existinglibrary->isOld = true;
                     } else {
@@ -217,17 +221,16 @@ class editor_framework implements \H5peditorStorage {
      *  List of libraries indexed by machineName with objects as values. The objects
      *  have majorVersion and minorVersion as properties.
      */
-    // @codingStandardsIgnoreLine
     public function alterLibraryFiles(&$files, $libraries) {
         global $PAGE;
 
         // Refactor dependency list.
-        $librarylist = array();
+        $librarylist = [];
         foreach ($libraries as $dependency) {
-            $librarylist[$dependency['machineName']] = array(
+            $librarylist[$dependency['machineName']] = [
                 'majorVersion' => $dependency['majorVersion'],
-                'minorVersion' => $dependency['minorVersion']
-            );
+                'minorVersion' => $dependency['minorVersion'],
+            ];
         }
 
         $contextid = required_param('contextId', PARAM_INT);
@@ -251,7 +254,6 @@ class editor_framework implements \H5peditorStorage {
      * @return bool|object Returns false if saving failed or an object with path
      * of the directory and file that is temporarily saved
      */
-    // @codingStandardsIgnoreLine
     public static function saveFileTemporarily($data, $movefile = false) {
         global $CFG;
 
@@ -277,10 +279,10 @@ class editor_framework implements \H5peditorStorage {
         $interface->getUploadedH5pFolderPath($directory);
         $interface->getUploadedH5pPath($directory . DIRECTORY_SEPARATOR . $filename);
 
-        return (object) array(
+        return (object) [
             'dir' => $directory,
-            'fileName' => $filename
-        );
+            'fileName' => $filename,
+        ];
     }
 
     /**
@@ -290,7 +292,6 @@ class editor_framework implements \H5peditorStorage {
      * @param int $file Id of file that should be cleaned up
      * @param int|null $contentid Content id of file
      */
-    // @codingStandardsIgnoreLine
     public static function markFileForCleanup($file, $contentid = null) {
         global $DB;
 
@@ -300,9 +301,9 @@ class editor_framework implements \H5peditorStorage {
         }
 
         // Track temporary files for later cleanup.
-        $DB->insert_record_raw('hvp_tmpfiles', array(
-            'id' => $file
-        ), false, false, true);
+        $DB->insert_record_raw('hvp_tmpfiles', [
+            'id' => $file,
+        ], false, false, true);
     }
 
     /**
@@ -310,7 +311,6 @@ class editor_framework implements \H5peditorStorage {
      *
      * @param string $filepath Path to file or directory
      */
-    // @codingStandardsIgnoreLine
     public static function removeTemporarilySavedFiles($filepath) {
         if (is_dir($filepath)) {
             \H5PCore::deleteFileTree($filepath);
@@ -322,14 +322,14 @@ class editor_framework implements \H5peditorStorage {
     /**
      * Load a list of available language codes from the database.
      *
-     * @param string $machineName The machine readable name of the library(content type)
-     * @param int $majorVersion Major part of version number
-     * @param int $minorVersion Minor part of version number
+     * @param string $machinename The machine readable name of the library(content type)
+     * @param int $majorversion Major part of version number
+     * @param int $minorversion Minor part of version number
      *
      * @return array List of possible language codes
      * @throws \dml_exception
      */
-    public function getAvailableLanguages($machineName, $majorVersion, $minorVersion) {
+    public function getAvailableLanguages($machinename, $majorversion, $minorversion) {
         global $DB;
 
         $sql = "SELECT language_code
@@ -340,13 +340,13 @@ class editor_framework implements \H5peditorStorage {
                    AND hl.major_version = :major
                    AND hl.minor_version = :minor";
 
-        $results = $DB->get_records_sql($sql, array(
-            'machinename' => $machineName,
-            'major'       => $majorVersion,
-            'minor'       => $minorVersion,
-        ));
+        $results = $DB->get_records_sql($sql, [
+            'machinename' => $machinename,
+            'major'       => $majorversion,
+            'minor'       => $minorversion,
+        ]);
 
-        $codes = array('en'); // Semantics is 'en' by default.
+        $codes = ['en']; // Semantics is 'en' by default.
         foreach ($results as $result) {
             $codes[] = $result->language_code;
         }

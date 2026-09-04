@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Administration settings definitions for the hvp module.
  *
@@ -36,8 +37,14 @@ $ADMIN->add('modsettings', $modltifolder);
 $settings->visiblename = new lang_string('settings', 'mod_hvp');
 // Add the Libraries admin menu entry.
 $ADMIN->add('modhvpfolder', $settings);
-$ADMIN->add('modhvpfolder', new admin_externalpage('h5plibraries',
-    get_string('libraries', 'hvp'), new moodle_url('/mod/hvp/library_list.php')));
+$ADMIN->add(
+    'modhvpfolder',
+    new admin_externalpage(
+        'h5plibraries',
+        get_string('libraries', 'hvp'),
+        new moodle_url('/mod/hvp/library_list.php')
+    )
+);
 
 if ($ADMIN->fulltree) {
     // Make sure core is loaded.
@@ -47,49 +54,77 @@ if ($ADMIN->fulltree) {
 
     // Content state.
     $settings->add(
-            new admin_setting_configcheckbox('mod_hvp/enable_save_content_state',
-                    get_string('enablesavecontentstate', 'hvp'),
-                    get_string('enablesavecontentstate_help', 'hvp'), 0));
+        new admin_setting_configcheckbox(
+            'mod_hvp/enable_save_content_state',
+            get_string('enablesavecontentstate', 'hvp'),
+            get_string('enablesavecontentstate_help', 'hvp'),
+            0
+        )
+    );
     $settings->add(
-            new admin_setting_configtext('mod_hvp/content_state_frequency',
-                    get_string('contentstatefrequency', 'hvp'),
-                    get_string('contentstatefrequency_help', 'hvp'), 30, PARAM_INT));
+        new admin_setting_configtext(
+            'mod_hvp/content_state_frequency',
+            get_string('contentstatefrequency', 'hvp'),
+            get_string('contentstatefrequency_help', 'hvp'),
+            30,
+            PARAM_INT
+        )
+    );
 
     $PAGE->requires->js('/mod/hvp/library/js/jquery.js', true);
     $PAGE->requires->js('/mod/hvp/library/js/h5p-display-options.js', true);
 
     // Send usage statistics.
     $settings->add(
-        new admin_setting_configcheckbox('mod_hvp/send_usage_statistics',
+        new admin_setting_configcheckbox(
+            'mod_hvp/send_usage_statistics',
             get_string('sendusagestatistics', 'hvp'),
-            get_string('sendusagestatistics_help', 'hvp',
-                'href="https://h5p.org/tracking-the-usage-of-h5p" target="_blank"'),
-            1)
+            get_string(
+                'sendusagestatistics_help',
+                'hvp',
+                'href="https://h5p.org/tracking-the-usage-of-h5p" target="_blank"'
+            ),
+            1
+        )
     );
 
-    $choices = array(
+    $choices = [
         H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptiondownloadnever', 'hvp'),
         H5PDisplayOptionBehaviour::ALWAYS_SHOW => get_string('displayoptiondownloadalways', 'hvp'),
         H5PDisplayOptionBehaviour::CONTROLLED_BY_PERMISSIONS => get_string('displayoptiondownloadpermission', 'hvp'),
         H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_ON => get_string('displayoptionauthoron', 'hvp'),
-        H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_OFF => get_string('displayoptionauthoroff', 'hvp')
-    );
+        H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_OFF => get_string('displayoptionauthoroff', 'hvp'),
+    ];
 
-    $embedchoices = array(
+    $embedchoices = [
         H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptionnevershow', 'hvp'),
         H5PDisplayOptionBehaviour::ALWAYS_SHOW => get_string('displayoptionalwaysshow', 'hvp'),
         H5PDisplayOptionBehaviour::CONTROLLED_BY_PERMISSIONS => get_string('displayoptionpermissionsembed', 'hvp'),
         H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_ON => get_string('displayoptionauthoron', 'hvp'),
-        H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_OFF => get_string('displayoptionauthoroff', 'hvp')
-    );
+        H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_OFF => get_string('displayoptionauthoroff', 'hvp'),
+    ];
 
     // Display options for H5P frame.
     $settings->add(new admin_setting_heading('mod_hvp/display_options', get_string('displayoptions', 'hvp'), ''));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/frame', get_string('enableframe', 'hvp'), '', 1));
-    $settings->add(new admin_setting_configselect('mod_hvp/export', get_string('enabledownload', 'hvp'), '',
-                                                  H5PDisplayOptionBehaviour::ALWAYS_SHOW, $choices));
-    $settings->add(new admin_setting_configselect('mod_hvp/embed', get_string('enableembed', 'hvp'), '',
-                                                  H5PDisplayOptionBehaviour::ALWAYS_SHOW, $embedchoices));
+    $settings->add(
+        new admin_setting_configselect(
+            'mod_hvp/export',
+            get_string('enabledownload', 'hvp'),
+            '',
+            H5PDisplayOptionBehaviour::ALWAYS_SHOW,
+            $choices
+        )
+    );
+    $settings->add(
+        new admin_setting_configselect(
+            'mod_hvp/embed',
+            get_string('enableembed', 'hvp'),
+            '',
+            H5PDisplayOptionBehaviour::ALWAYS_SHOW,
+            $embedchoices
+        )
+    );
     $settings->add(new admin_setting_configcheckbox('mod_hvp/copyright', get_string('enablecopyright', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/icon', get_string('enableabout', 'hvp'), '', 1));
 
@@ -98,9 +133,13 @@ if ($ADMIN->fulltree) {
 
     // LRS.
     $settings->add(
-            new admin_setting_configcheckbox('mod_hvp/enable_lrs_content_types',
-                    get_string('enabledlrscontenttypes', 'hvp'),
-                    get_string('enabledlrscontenttypes_help', 'hvp'), 0));
+        new admin_setting_configcheckbox(
+            'mod_hvp/enable_lrs_content_types',
+            get_string('enabledlrscontenttypes', 'hvp'),
+            get_string('enabledlrscontenttypes_help', 'hvp'),
+            0
+        )
+    );
 
     // Use H5P Hub.
     $settings->add(
@@ -120,14 +159,17 @@ if ($ADMIN->fulltree) {
         ''
     ));
 
-    // Content Hub on by default for all users
+    // Content Hub on by default for all users.
     $settings->add(
         new admin_setting_configcheckbox(
-            'mod_hvp/h5p_search_content_hub', 
+            'mod_hvp/h5p_search_content_hub',
             get_string('contenthubsearchenable', 'hvp'),
-            get_string('contenthubsearchdescription', 'hvp'), 1));
-    
-    // Register on the Content Hub to allow uploading content
+            get_string('contenthubsearchdescription', 'hvp'),
+            1
+        )
+    );
+
+    // Register on the Content Hub to allow uploading content.
     $settings->add(new admin_setting_html(
         'mod_hvp/content_hub_settings_box',
         get_string('contenthub:settings:box', 'hvp'),
@@ -152,15 +194,15 @@ if ($ADMIN->fulltree) {
     // Find missing requirements.
     $errors = $core->checkSetupErrorMessage()->errors;
 
-    $PAGE->requires->data_for_js('H5PDisableHubData', array(
+    $PAGE->requires->data_for_js('H5PDisableHubData', [
         'selector' => '#id_s_mod_hvp_hub_is_enabled',
         'overlaySelector' => '#adminsettings',
         'header' => get_string('confirmdialogheader', 'hvp'),
         'confirmLabel' => get_string('confirmlabel', 'hvp'),
         'cancelLabel' => get_string('cancellabel', 'hvp'),
         'confirmationDialogMsg' => get_string('disablehubconfirmationmsg', 'hvp'),
-        'errors' => $errors
-    ));
+        'errors' => $errors,
+    ]);
 }
 
 // Prevent Moodle from adding settings block in standard location.

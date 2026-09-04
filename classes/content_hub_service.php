@@ -13,12 +13,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 namespace mod_hvp;
 
 use Exception;
 use moodle_url;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Service for communicating with the content hub
@@ -28,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class content_hub_service {
-
     /**
      * Get settings for content hub registration UI
      *

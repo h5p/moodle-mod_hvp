@@ -23,7 +23,6 @@
  */
 
 namespace mod_hvp;
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * The mod_hvp file storage class.
@@ -34,12 +33,23 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class results {
-
-    // Type specific inputs.
+    /** @var Type specific inputs. */
     protected $contentid;
 
-    // Generic result inputs.
-    protected $offset, $limit, $orderby, $orderdir, $filters;
+    /** @var Generic result inputs. */
+    protected $offset;
+
+    /** @var Max number of items to display on one page. */
+    protected $limit;
+
+    /** @var Field to order by. */
+    protected $orderby;
+
+    /** @var Direction to order in. */
+    protected $orderdir;
+
+    /** @var List of fields to filter results on. */
+    protected $filters;
 
     /**
      * Start handling results by filtering input parameters.
@@ -74,7 +84,7 @@ class results {
         $this->orderdir = optional_param('sortDir', 0, PARAM_INT);
 
         // List of fields to filter results on.
-        $this->filters = optional_param_array('filters', array(), PARAM_RAW_TRIMMED);
+        $this->filters = optional_param_array('filters', [], PARAM_RAW_TRIMMED);
     }
 
     /**
@@ -107,29 +117,29 @@ class results {
 
         header('Cache-Control: no-cache');
         header('Content-type: application/json');
-        print json_encode(array(
+        print json_encode([
             'num' => $this->get_results_num(),
-            'rows' => $rows
-        ));
+            'rows' => $rows,
+        ]);
     }
 
     /**
      * Constructs human readable results
      *
-     * @param $results
-     * @param $course
+     * @param array $results
+     * @param int $course
      *
      * @return array
      */
     private function get_human_readable_results($results, $course) {
         // Make data readable for humans.
-        $rows = array();
+        $rows = [];
         foreach ($results as $result) {
             $userlink = \html_writer::link(
-                new \moodle_url('/user/view.php', array(
+                new \moodle_url('/user/view.php', [
                     'id' => $result->id,
-                    'course' => $course
-                )),
+                    'course' => $course,
+                ]),
                 \fullname($result)
             );
 
@@ -138,12 +148,13 @@ class results {
             // Check if result has xAPI data.
             if ($result->xapiid) {
                 $reviewlink = \html_writer::link(
-                    new \moodle_url('/mod/hvp/review.php',
-                        array(
+                    new \moodle_url(
+                        '/mod/hvp/review.php',
+                        [
                             'id' => $this->contentid,
                             'course' => $course,
-                            'user' => $result->id
-                        )
+                            'user' => $result->id,
+                        ]
                     ),
                     get_string('viewreportlabel', 'hvp')
                 );
@@ -151,13 +162,13 @@ class results {
                 $reviewlink = get_string('reportnotsupported', 'hvp');
             }
 
-            $rows[] = array(
+            $rows[] = [
                 $userlink,
                 $result->rawgrade === null ? '—' : (int) $result->rawgrade,
                 $result->rawgrade === null ? '—' : (int) $result->rawgrademax,
                 empty($result->timemodified) ? '—' : date('Y/m/d – H:i', $result->timemodified),
-                $reviewlink
-            );
+                $reviewlink,
+            ];
         }
 
         return $rows;
@@ -172,10 +183,10 @@ class results {
      * @throws \coding_exception
      * @return array
      */
-    protected function get_results($uid=null) {
+    protected function get_results($uid = null) {
         // Add extra fields, joins and where for the different result lists.
         if ($this->contentid !== 0) {
-            list($fields, $join, $where, $order, $args) = $this->get_content_sql($uid);
+            [$fields, $join, $where, $order, $args] = $this->get_content_sql($uid);
         } else {
             throw new \coding_exception('missing content_id');
         }
@@ -204,7 +215,8 @@ class results {
         $from = $this->get_from_sql();
 
         // Execute query and get results.
-        return $this->get_sql_results("
+        return $this->get_sql_results(
+            "
                 SELECT u.id,
                        i.id AS gradeitemid,
                        g.id AS gradeid,
@@ -218,9 +230,11 @@ class results {
                   {$where}
                   {$groupby}
                   {$orderby}
-                ", $args,
-                $this->offset,
-                $this->limit);
+                ",
+            $args,
+            $this->offset,
+            $this->limit,
+        );
     }
 
     /**
@@ -232,7 +246,7 @@ class results {
     protected function get_results_num() {
         global $DB;
 
-        list(, $join, $where, , $args) = $this->get_content_sql();
+        [, $join, $where, , $args] = $this->get_content_sql();
         $where[] = "i.itemtype = 'mod'";
         $where[] = "i.itemmodule = 'hvp'";
         $where = 'WHERE ' . implode(' AND ', $where);
@@ -303,7 +317,7 @@ class results {
 
             $displayname = \fullname((object)$available);
             if (empty($displayname)) {
-                $ordered = array("{$prefix}firstname", "{$prefix}lastname");
+                $ordered = ["{$prefix}firstname", "{$prefix}lastname"];
             } else {
                 // Find fields in order.
                 foreach ($available as $key => $value) {
@@ -324,14 +338,14 @@ class results {
      * @param int $uid Only get users with this id
      * @return array $fields, $join, $where, $order, $args
      */
-    protected function get_content_sql($uid=null) {
+    protected function get_content_sql($uid = null) {
         global $DB;
 
         $usernamefields = implode(', ', self::get_ordered_user_name_fields());
         $fields = " {$usernamefields}, ";
         $join = "";
-        $where = array("i.iteminstance = ?");
-        $args = array($this->contentid);
+        $where = ["i.iteminstance = ?"];
+        $args = [$this->contentid];
 
         // Only get entries with own user id.
         if (isset($uid)) {
@@ -340,12 +354,12 @@ class results {
         }
 
         if (isset($this->filters[0])) {
-            $keywordswhere = array();
+            $keywordswhere = [];
 
             // Split up keywords using whitespace and comma.
             foreach (preg_split("/[\s,]+/", $this->filters[0]) as $keyword) {
                 // Search all user name fields.
-                $usernamewhere = array();
+                $usernamewhere = [];
                 foreach (self::get_ordered_user_name_fields() as $usernamefield) {
                     $usernamewhere[] = $DB->sql_like($usernamefield, '?', false);
                     $args[] = '%' . $keyword . '%';
@@ -362,12 +376,12 @@ class results {
                 $where[] = '(' . implode(' AND ', $keywordswhere) . ')';
             }
         }
-        $order = array((object) array(
+        $order = [(object) [
             'name' => 'u.firstname',
-            'reverse' => true
-        ));
+            'reverse' => true,
+        ]];
 
-        return array($fields, $join, $where, $order, $args);
+        return [$fields, $join, $where, $order, $args];
     }
 
     /**
@@ -375,6 +389,8 @@ class results {
      *
      * @param string $query
      * @param array $args Used for placeholders
+     * @param int $limitfrom
+     * @param int $limitnum
      * @return array
      */
     protected function get_sql_results($query, $args, $limitfrom = 0, $limitnum = 0) {

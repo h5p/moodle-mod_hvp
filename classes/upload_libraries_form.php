@@ -37,7 +37,6 @@ require_once("$CFG->libdir/formslib.php");
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class upload_libraries_form extends \moodleform {
-
     /**
      * Define form elements
      */
@@ -48,24 +47,31 @@ class upload_libraries_form extends \moodleform {
         $mform = $this->_form;
 
         // Add File Picker.
-        $mform->addElement('filepicker', 'h5pfile', get_string('h5pfile', 'hvp'), null,
-                   array('maxbytes' => $CFG->maxbytes, 'accepted_types' => '*.h5p'));
+        $mform->addElement(
+            'filepicker',
+            'h5pfile',
+            get_string('h5pfile', 'hvp'),
+            null,
+            ['maxbytes' => $CFG->maxbytes, 'accepted_types' => '*.h5p']
+        );
 
         // Add options.
-        $mform->addElement('checkbox',
+        $mform->addElement(
+            'checkbox',
             'onlyupdate',
             get_string('options', 'hvp'),
             get_string('onlyupdate', 'hvp'),
-            array('group' => 1)
+            ['group' => 1]
         );
         $mform->setType('onlyupdate', PARAM_BOOL);
         $mform->setDefault('onlyupdate', false);
 
-        $mform->addElement('checkbox',
+        $mform->addElement(
+            'checkbox',
             'disablefileextensioncheck',
             '',
             get_string('disablefileextensioncheck', 'hvp'),
-            array('group' => 1)
+            ['group' => 1]
         );
         $mform->setType('disablefileextensioncheck', PARAM_BOOL);
         $mform->setDefault('disablefileextensioncheck', false);
@@ -102,7 +108,7 @@ class upload_libraries_form extends \moodleform {
      */
     public function validation($data, $files) {
         global $CFG;
-        $errors = array();
+        $errors = [];
 
         // Check for file.
         if (empty($data['h5pfile'])) {

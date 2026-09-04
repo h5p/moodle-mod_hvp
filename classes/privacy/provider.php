@@ -16,19 +16,21 @@
 
 /**
  * Privacy Subsystem implementation for H5P.
+ *
+ * @package    mod_hvp
+ * @copyright  2018 Joubel AS <contact@joubel.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_hvp\privacy;
 
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\deletion_criteria;
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\local\request\userlist;
-use \core_privacy\local\metadata\collection;
-
-defined('MOODLE_INTERNAL') || die();
+use core_privacy\local\request\writer;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\deletion_criteria;
+use core_privacy\local\request\approved_userlist;
+use core_privacy\local\request\userlist;
+use core_privacy\local\metadata\collection;
 
 /**
  * Privacy Subsystem implementation for H5P.
@@ -39,7 +41,6 @@ class provider implements
     \core_privacy\local\request\core_userlist_provider,
     // This plugin currently implements the original plugin_provider interface.
     \core_privacy\local\request\plugin\provider {
-
     use \core_privacy\local\legacy_polyfill;
 
     /**
@@ -49,7 +50,7 @@ class provider implements
      *
      * @return collection The array of metadata
      */
-    public static function _get_metadata(collection $items) {
+    public static function get_metadata(collection $items) {
         // Stores files using the Moodle file api.
         $items->add_subsystem_link(
             'core_files',
@@ -65,16 +66,18 @@ class provider implements
         );
 
         // Content user data table.
-        $items->add_database_table('hvp_content_user_data', [
-            'id'                       => 'privacy:metadata:hvp_content_user_data:id',
-            'user_id'                  => 'privacy:metadata:hvp_content_user_data:user_id',
-            'hvp_id'                   => 'privacy:metadata:hvp_content_user_data:hvp_id',
-            'sub_content_id'           => 'privacy:metadata:hvp_content_user_data:sub_content_id',
-            'data_id'                  => 'privacy:metadata:hvp_content_user_data:data_id',
-            'data'                     => 'privacy:metadata:hvp_content_user_data:data',
-            'preloaded'                => 'privacy:metadata:hvp_content_user_data:preloaded',
-            'delete_on_content_change' => 'privacy:metadata:hvp_content_user_data:delete_on_content_change',
-        ],
+        $items->add_database_table(
+            'hvp_content_user_data',
+            [
+                'id' => 'privacy:metadata:hvp_content_user_data:id',
+                'user_id' => 'privacy:metadata:hvp_content_user_data:user_id',
+                'hvp_id' => 'privacy:metadata:hvp_content_user_data:hvp_id',
+                'sub_content_id' => 'privacy:metadata:hvp_content_user_data:sub_content_id',
+                'data_id' => 'privacy:metadata:hvp_content_user_data:data_id',
+                'data' => 'privacy:metadata:hvp_content_user_data:data',
+                'preloaded' => 'privacy:metadata:hvp_content_user_data:preloaded',
+                'delete_on_content_change' => 'privacy:metadata:hvp_content_user_data:delete_on_content_change',
+            ],
             'privacy:metadata:hvp_content_user_data'
         );
 
@@ -117,7 +120,7 @@ class provider implements
      *
      * @return contextlist $contextlist The contextlist containing the list of contexts used in this plugin.
      */
-    public static function _get_contexts_for_userid($userid) {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         $contextlist = new contextlist();
 
         // Context for content_user_data.
@@ -134,10 +137,10 @@ class provider implements
                 AND d.user_id = :userid
         ";
 
-        $cudparams = array(
+        $cudparams = [
             'contextlevel' => CONTEXT_MODULE,
             'userid'       => $userid,
-        );
+        ];
 
         $contextlist->add_from_sql($cudsql, $cudparams);
 
@@ -155,10 +158,10 @@ class provider implements
                 AND x.user_id = :userid
         ";
 
-        $xapiparams = array(
+        $xapiparams = [
             'contextlevel' => CONTEXT_MODULE,
             'userid'       => $userid,
-        );
+        ];
 
         $contextlist->add_from_sql($xapisql, $xapiparams);
 
@@ -176,7 +179,7 @@ class provider implements
      *
      * @param approved_contextlist $contextlist The approved contexts to export information for.
      */
-    public static function _export_user_data(approved_contextlist $contextlist) {
+    public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
 
         if (!count($contextlist)) {
@@ -185,7 +188,7 @@ class provider implements
 
         $user   = $contextlist->get_user();
         $userid = $user->id;
-        list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
+        [$contextsql, $contextparams] = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
         $cud = self::get_exportable_content_user_data($contextsql, $contextparams, $userid);
         $xapi = self::get_exportable_xapi_results($contextsql, $contextparams, $userid);
@@ -217,9 +220,9 @@ class provider implements
     /**
      * Get exportable content user data for a given context and user
      *
-     * @param $contextsql
-     * @param $contextparams
-     * @param $userid
+     * @param string $contextsql
+     * @param array $contextparams
+     * @param int $userid
      *
      * @return array Exportable and writable content user data
      * @throws \dml_exception
@@ -263,9 +266,9 @@ class provider implements
     /**
      * Get exportable xapi results from context and user id
      *
-     * @param $contextsql
-     * @param $contextparams
-     * @param $userid
+     * @param string $contextsql
+     * @param array $contextparams
+     * @param int $userid
      *
      * @return array Exportable and writable xapi results
      * @throws \dml_exception
@@ -305,7 +308,7 @@ class provider implements
         $xapiresult = $DB->get_recordset_sql($xapisql, $xapiparams);
         $xapi       = [];
         foreach ($xapiresult as $record) {
-            $h5pxapi = (object) array();
+            $h5pxapi = (object) [];
             if (!empty($record->content_id)) {
                 $h5pxapi->content_id = $record->content_id;
             }
@@ -344,7 +347,7 @@ class provider implements
     /**
      * Get exportable H5P events from user id
      *
-     * @param $userid
+     * @param int $userid
      *
      * @return object Exportable and writable H5P events
      * @throws \dml_exception
@@ -379,7 +382,7 @@ class provider implements
      *
      * @param \context $context The specific context to delete data for.
      */
-    public static function _delete_data_for_all_users_in_context(\context $context) {
+    public static function delete_data_for_all_users_in_context(\context $context) {
         global $DB;
 
         if ($context->contextlevel == CONTEXT_USER) {
@@ -411,7 +414,7 @@ class provider implements
      *
      * @param approved_contextlist $contextlist The approved contexts and user information to delete information for.
      */
-    public static function _delete_data_for_user(approved_contextlist $contextlist) {
+    public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
 
         $count = $contextlist->count();
@@ -499,7 +502,7 @@ class provider implements
 
         // Prepare SQL to gather all completed IDs.
         $userids = $userlist->get_userids();
-        list($insql, $inparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        [$insql, $inparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
 
         $inparams['hvpid'] = $cm->instance;
 
@@ -514,6 +517,5 @@ class provider implements
             "hvp_id = :hvpid AND user_id $insql",
             $inparams
         );
-
     }
 }
