@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * View all results for H5P Content
  *
@@ -29,10 +30,10 @@ $id     = required_param('id', PARAM_INT);
 $userid = optional_param('user', (int) $USER->id, PARAM_INT);
 
 if (!$cm = get_coursemodule_from_instance('hvp', $id)) {
-    print_error('invalidcoursemodule');
+    throw new moodle_exception('invalidcoursemodule');
 }
 if (!$course = $DB->get_record('course', ['id' => $cm->course])) {
-    print_error('coursemisconf');
+    throw new moodle_exception('coursemisconf');
 }
 require_login($course, false, $cm);
 
@@ -50,10 +51,11 @@ $hvp = $DB->get_record_sql(
            FROM {hvp} h
            JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
           WHERE h.id = ?",
-    [$id]);
+    [$id]
+);
 
 if ($hvp === false) {
-    print_error('invalidhvp', 'mod_hvp');
+    throw new moodle_exception('invalidhvp', 'mod_hvp');
 }
 
 // Set page properties.
@@ -67,14 +69,16 @@ $PAGE->set_heading($COURSE->fullname);
 $PAGE->requires->css(new moodle_url($basepath . '/mod/hvp/xapi-custom-report.css'));
 
 // We have to get grades from gradebook as well.
-$xapiresults = $DB->get_records_sql("
+$xapiresults = $DB->get_records_sql(
+    "
     SELECT x.*, i.grademax
     FROM {hvp_xapi_results} x
     JOIN {grade_items} i ON i.iteminstance = x.content_id
     WHERE x.user_id = ?
     AND x.content_id = ?
     AND i.itemtype = 'mod'
-    AND i.itemmodule = 'hvp'", [$userid, $id]
+    AND i.itemmodule = 'hvp'",
+    [$userid, $id]
 );
 
 if (!$xapiresults) {
@@ -159,10 +163,10 @@ $setsubcontentendpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->inst
     \H5PCore::createToken('result') . '&action=updatesubcontentscore';
 $getsubcontentendpoint = "{$basepath}/mod/hvp/ajax.php?contextId={$context->instanceid}&token=" .
     \H5PCore::createToken('result') . '&action=getsubcontentscore';
-$datatosend = array(
+$datatosend = [
   'setSubContentEndpoint' => $setsubcontentendpoint,
   'getSubContentEndpoint' => $getsubcontentendpoint,
-);
+];
 $PAGE->requires->data_for_js('data_for_page', $datatosend, true);
 
 $renderer = $PAGE->get_renderer('mod_hvp');

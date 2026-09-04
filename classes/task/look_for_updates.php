@@ -24,10 +24,12 @@ namespace mod_hvp\task;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class look_for_updates extends \core\task\scheduled_task {
+    #[\Override]
     public function get_name() {
         return get_string('lookforupdates', 'mod_hvp');
     }
 
+    #[\Override]
     public function execute() {
         // Check to make sure external communications have not been disabled.
         if (!get_config('mod_hvp', 'hub_is_enabled') && !get_config('mod_hvp', 'send_usage_statistics')) {

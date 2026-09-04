@@ -34,169 +34,169 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
-    'mod/hvp:view' => array(
+    'mod/hvp:view' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'student' => CAP_ALLOW,
-            'guest' => CAP_ALLOW
-        )
-    ),
+            'guest' => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/hvp:addinstance' => array(
+    'mod/hvp:addinstance' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ),
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+        'clonepermissionsfrom' => 'moodle/course:manageactivities',
+    ],
 
-    'mod/hvp:manage' => array(
+    'mod/hvp:manage' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ),
-        'clonepermissionsfrom' => 'mod/hvp:addinstance'
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+        'clonepermissionsfrom' => 'mod/hvp:addinstance',
+    ],
 
-    'mod/hvp:share' => array(
+    'mod/hvp:share' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ),
-        'clonepermissionsfrom' => 'mod/hvp:addinstance'
-    ),
+            'manager' => CAP_ALLOW,
+        ],
+        'clonepermissionsfrom' => 'mod/hvp:addinstance',
+    ],
 
-    'mod/hvp:getexport' => array(
+    'mod/hvp:getexport' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW
-        )
-    ),
-
-    'mod/hvp:getembedcode' => array(
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW
-        )
-    ),
-
-    'mod/hvp:saveresults' => array(
-        'riskbitmask' => RISK_SPAM,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
-            'student' => CAP_ALLOW
-        )
-    ),
-
-    'mod/hvp:savecontentuserdata' => array(
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
-            'student' => CAP_ALLOW
-        )
-    ),
+        ],
+    ],
 
-    'mod/hvp:viewresults' => array(
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
-            'student' => CAP_ALLOW
-        )
-    ),
-
-    'mod/hvp:viewallresults' => array(
+    'mod/hvp:getembedcode' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW
-        )
-    ),
+            'teacher' => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/hvp:restrictlibraries' => array(
+    'mod/hvp:saveresults' => [
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'student' => CAP_ALLOW,
+        ],
+    ],
+
+    'mod/hvp:savecontentuserdata' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
+        ],
+    ],
+
+    'mod/hvp:viewresults' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'student' => CAP_ALLOW,
+        ],
+    ],
+
+    'mod/hvp:viewallresults' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+        ],
+    ],
+
+    'mod/hvp:restrictlibraries' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-          'manager' => CAP_ALLOW
-        )
-    ),
+        'archetypes' => [
+          'manager' => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/hvp:userestrictedlibraries' => array(
+    'mod/hvp:userestrictedlibraries' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW
-        )
-    ),
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/hvp:updatelibraries' => array(
+    'mod/hvp:updatelibraries' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW
-        )
-    ),
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/hvp:getcachedassets' => array(
+    'mod/hvp:getcachedassets' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'student' => CAP_ALLOW,
             'user' => CAP_ALLOW,
-            'guest' => CAP_ALLOW
-        )
-    ),
+            'guest' => CAP_ALLOW,
+        ],
+    ],
 
-    'mod/hvp:installrecommendedh5plibraries' => array(
+    'mod/hvp:installrecommendedh5plibraries' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-          'manager' => CAP_ALLOW
-        )
-    ),
+        'archetypes' => [
+          'manager' => CAP_ALLOW,
+        ],
+    ],
 
     // Receive a confirmation message of own h5p submission.
-    'mod/hvp:emailconfirmsubmission' => array(
+    'mod/hvp:emailconfirmsubmission' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array()
-    ),
+        'archetypes' => [],
+    ],
 
     // Receive a notification message of other peoples' h5p submissions.
-    'mod/hvp:emailnotifysubmission' => array(
+    'mod/hvp:emailnotifysubmission' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array()
-    ),
+        'archetypes' => [],
+    ],
 
     'mod/hvp:contenthubregistration' => [
         'captype' => 'write',
@@ -204,4 +204,4 @@ $capabilities = array(
         'archetypes' => [], // Only admins by default.
     ],
 
-);
+];

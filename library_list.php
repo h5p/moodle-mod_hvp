@@ -63,7 +63,7 @@ $numnotfiltered = $core->h5pF->getNumNotFiltered();
 $libraries = $core->h5pF->loadLibraries();
 
 // Add settings for each library.
-$settings = array();
+$settings = [];
 $i = 0;
 foreach ($libraries as $versions) {
     foreach ($versions as $library) {

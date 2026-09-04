@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Responsible for handling AJAX requests related to H5P.
  *
@@ -31,8 +32,7 @@ require_once("locallib.php");
 require_login();
 
 $action = required_param('action', PARAM_ALPHA);
-switch($action) {
-
+switch ($action) {
     /*
      * Handle user data reporting
      *
@@ -58,7 +58,6 @@ switch($action) {
      *  - token
      */
     case 'restrictlibrary':
-
         // Check permissions.
         $context = \context_system::instance();
         if (!has_capability('mod/hvp:restrictlibraries', $context)) {
@@ -78,13 +77,13 @@ switch($action) {
         hvp_restrict_library($libraryid, $restrict);
         header('Cache-Control: no-cache');
         header('Content-Type: application/json');
-        echo json_encode(array(
-            'url' => (new moodle_url('/mod/hvp/ajax.php', array(
+        echo json_encode([
+            'url' => (new moodle_url('/mod/hvp/ajax.php', [
                 'action' => 'restrict_library',
                 'token' => \H5PCore::createToken('library_' . $libraryid),
                 'restrict' => ($restrict === '1' ? 0 : 1),
-                'library_id' => $libraryid
-            )))->out(false)));
+                'library_id' => $libraryid,
+            ]))->out(false)]);
         break;
 
     /*
@@ -96,7 +95,6 @@ switch($action) {
      *  - library (Format: /<machine-name>/<major-version>/<minor-version>)
      */
     case 'getlibrarydataforupgrade':
-
         // Check permissions.
         $context = \context_system::instance();
         if (!has_capability('mod/hvp:updatelibraries', $context)) {
@@ -231,13 +229,24 @@ switch($action) {
         $language = optional_param('default-language', null, PARAM_RAW);
 
         if (!empty($name)) {
-            $editor->ajax->action(H5PEditorEndpoints::SINGLE_LIBRARY, $name,
-                $major, $minor, framework::get_language(), '', '', $language);
+            $editor->ajax->action(
+                H5PEditorEndpoints::SINGLE_LIBRARY,
+                $name,
+                $major,
+                $minor,
+                framework::get_language(),
+                '',
+                '',
+                $language
+            );
 
             new \mod_hvp\event(
-                    'library', null,
-                    null, null,
-                    $name, $major . '.' . $minor
+                'library',
+                null,
+                null,
+                null,
+                $name,
+                $major . '.' . $minor
             );
         } else {
             $editor->ajax->action(H5PEditorEndpoints::LIBRARIES);
@@ -417,7 +426,7 @@ switch($action) {
             break;
         }
 
-        $data = array(
+        $data = [
             'title'                => required_param('title', PARAM_RAW),
             'language'             => required_param('language', PARAM_RAW),
             'license'              => required_param('license', PARAM_RAW),
@@ -431,7 +440,7 @@ switch($action) {
             'remove_screenshots'   => optional_param_array('remove_screenshots', null, PARAM_RAW),
             'remove_icon'          => optional_param('remove_icon', null, PARAM_RAW),
             'age'                  => optional_param('age', null, PARAM_RAW),
-        );
+        ];
 
         // Load content.
         $core = \mod_hvp\framework::instance();
@@ -462,10 +471,10 @@ switch($action) {
         $data['size'] = empty($size) ? -1 : $size;
 
         // Add the icon and any screenshots.
-        $files = array(
+        $files = [
             'icon' => !empty($_FILES['icon']) ? $_FILES['icon'] : null,
             'screenshots' => !empty($_FILES['screenshots']) ? $_FILES['screenshots'] : null,
-        );
+        ];
 
         try {
             $isedit = !empty($content['contentHubId']);
@@ -476,9 +485,9 @@ switch($action) {
             }
             $result = $core->hubPublishContent($data, $files, $isedit ? $content['contentHubId'] : null);
 
-            $fields = array(
+            $fields = [
                 'shared' => 1, // Content is always shared after sharing or editing.
-            );
+            ];
             if (!$isedit) {
                 $fields['hub_id'] = $result->content->id;
                 // Sync will not happen on 'edit info', only for 'publish' or 'sync'.

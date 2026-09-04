@@ -24,16 +24,34 @@
  */
 
 namespace mod_hvp;
-defined('MOODLE_INTERNAL') || die();
 
+/**
+ * The mod_hvp event class
+ */
 class event extends \H5PEventBase {
+    /**
+     * @var The user
+     */
     private $user;
 
-     /**
-      * @inheritdoc
-      */
-    public function __construct($type, $subtype = null, $contentid = null,
-        $contenttitle = null, $libraryname = null, $libraryversion = null) {
+    /**
+     * Constructor
+     *
+     * @param string $type Name of event type
+     * @param string $subtype Name of event sub type
+     * @param string $contentid Identifier for content affected by the event
+     * @param string $contenttitle Content title (makes it easier to know which content was deleted etc.)
+     * @param string $libraryname Name of the library affected by the event
+     * @param string $libraryversion Library version
+     */
+    public function __construct(
+        $type,
+        $subtype = null,
+        $contentid = null,
+        $contenttitle = null,
+        $libraryname = null,
+        $libraryversion = null
+    ) {
         global $USER;
 
         // Track the who initiated the event.
@@ -59,10 +77,7 @@ class event extends \H5PEventBase {
         return $DB->insert_record('hvp_events', $data);
     }
 
-    /**
-     * @inheritdoc
-     */
-    // @codingStandardsIgnoreLine
+    #[\Override]
     protected function saveStats() {
         global $DB;
         $type = $this->type . ' ' . $this->sub_type;
@@ -74,24 +89,24 @@ class event extends \H5PEventBase {
               WHERE type = ?
                 AND library_name = ?
                 AND library_version = ?",
-            array($type, $this->library_name, $this->library_version)
+            [$type, $this->library_name, $this->library_version]
         );
 
         if ($id === false) {
             // No counter found, insert new one.
-            $DB->insert_record('hvp_counters', array(
+            $DB->insert_record('hvp_counters', [
                 'type' => $type,
                 'library_name' => $this->library_name,
                 'library_version' => $this->library_version,
-                'num' => 1
-            ));
+                'num' => 1,
+            ]);
         } else {
             // Update num+1.
             $DB->execute(
                 "UPDATE {hvp_counters}
                     SET num = num + 1
                   WHERE id = ?",
-                array($id)
+                [$id]
             );
         }
     }

@@ -23,6 +23,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -32,7 +34,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_hvp_activity_structure_step extends backup_activity_structure_step {
-
     /**
      * Defines backup element's structure
      *
@@ -46,7 +47,7 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
         $userinfo = $this->get_setting_value('userinfo');
 
         // Define each element separated.
-        $hvp = new backup_nested_element('hvp', array('id'), array(
+        $hvp = new backup_nested_element('hvp', ['id'], [
             'name',
             'machine_name',
             'major_version',
@@ -69,20 +70,20 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
             'timemodified',
             'authors',
             'license',
-            'completionpass'
-        ));
+            'completionpass',
+        ]);
 
         // User data.
         $entries = new backup_nested_element('content_user_data');
-        $contentuserdata = new backup_nested_element('entry', array(
+        $contentuserdata = new backup_nested_element('entry', [
             'user_id', // Annotated.
-            'sub_content_id'
-            ), array(
+            'sub_content_id',
+            ], [
             'data_id',
             'data',
             'preloaded',
             'delete_on_content_change',
-        ));
+        ]);
 
         // Build the tree.
 
@@ -119,11 +120,11 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
                  h.completionpass
           FROM {hvp} h
               JOIN {hvp_libraries} hl ON hl.id = h.main_library_id
-              WHERE h.id = ?', array(backup::VAR_ACTIVITYID));
+              WHERE h.id = ?', [backup::VAR_ACTIVITYID]);
 
         // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
-            $contentuserdata->set_source_table('hvp_content_user_data', array('hvp_id' => backup::VAR_PARENTID));
+            $contentuserdata->set_source_table('hvp_content_user_data', ['hvp_id' => backup::VAR_PARENTID]);
         }
 
         // Define id annotations.
@@ -153,7 +154,6 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_hvp_libraries_structure_step extends backup_structure_step {
-
     /**
      * Determines if backup step should be executed
      *
@@ -186,7 +186,7 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
     protected function define_structure() {
         // Libraries.
         $libraries = new backup_nested_element('hvp_libraries');
-        $library = new backup_nested_element('library', array('id'), array(
+        $library = new backup_nested_element('library', ['id'], [
             'title',
             'machine_name',
             'major_version',
@@ -202,24 +202,24 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
             'restricted',
             'tutorial_url',
             'add_to',
-            'metadata'
-        ));
+            'metadata',
+        ]);
 
         // Library translations.
         $translations = new backup_nested_element('translations');
-        $translation = new backup_nested_element('translation', array(
-            'language_code'
-        ), array(
-            'language_json'
-        ));
+        $translation = new backup_nested_element('translation', [
+            'language_code',
+        ], [
+            'language_json',
+        ]);
 
         // Library dependencies.
         $dependencies = new backup_nested_element('dependencies');
-        $dependency = new backup_nested_element('dependency', array(
-            'required_library_id'
-        ), array(
-            'dependency_type'
-        ));
+        $dependency = new backup_nested_element('dependency', [
+            'required_library_id',
+        ], [
+            'dependency_type',
+        ]);
 
         // Build the tree.
         $libraries->add_child($library);
@@ -232,11 +232,11 @@ class backup_hvp_libraries_structure_step extends backup_structure_step {
 
         // Define sources.
 
-        $library->set_source_table('hvp_libraries', array());
+        $library->set_source_table('hvp_libraries', []);
 
-        $translation->set_source_table('hvp_libraries_languages', array('library_id' => backup::VAR_PARENTID));
+        $translation->set_source_table('hvp_libraries_languages', ['library_id' => backup::VAR_PARENTID]);
 
-        $dependency->set_source_table('hvp_libraries_libraries', array('library_id' => backup::VAR_PARENTID));
+        $dependency->set_source_table('hvp_libraries_libraries', ['library_id' => backup::VAR_PARENTID]);
 
         // Define file annotations.
         $context = \context_system::instance();

@@ -24,10 +24,17 @@
 
 namespace mod_hvp;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Mobile authentication helpers
+ *
+ * @package    mod_hvp
+ * @copyright  2019 Joubel AS
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mobile_auth {
-
+    /**
+     * Token validity
+     */
     const VALID_TIME = 60;
 
     /**
@@ -56,7 +63,7 @@ class mobile_auth {
 
         return [
             hash('md5', 'embed_auth' . $validfor . $secret),
-            $secret
+            $secret,
         ];
     }
 
@@ -72,8 +79,8 @@ class mobile_auth {
     public static function validate_embed_auth_token($token, $secret) {
         $timefactor = self::get_time_factor();
         // Splitting into two halves and allowing both allows for fractions roundup in the time factor.
-        list($generatedtoken) = self::create_embed_auth_token($secret, $timefactor);
-        list($generatedtoken2) = self::create_embed_auth_token($secret, $timefactor - 1);
+        [$generatedtoken] = self::create_embed_auth_token($secret, $timefactor);
+        [$generatedtoken2] = self::create_embed_auth_token($secret, $timefactor - 1);
         return $token === $generatedtoken || $token === $generatedtoken2;
     }
 
@@ -81,7 +88,7 @@ class mobile_auth {
      * Check if provided user_id and token are valid for authenticating the user
      *
      * @param string $userid
-     * @param string $token
+     * @param string $secret
      *
      * @return bool True if token and user_id is valid
      * @throws \dml_exception
@@ -93,9 +100,9 @@ class mobile_auth {
             return false;
         }
 
-        $auth = $DB->get_record('hvp_auth', array(
+        $auth = $DB->get_record('hvp_auth', [
             'user_id' => $userid,
-        ));
+        ]);
         if (!$auth) {
             return false;
         }
@@ -104,9 +111,9 @@ class mobile_auth {
 
         // Cleanup user's token when used.
         if ($isvalid) {
-            $DB->delete_records('hvp_auth', array(
-                'user_id' => $userid
-            ));
+            $DB->delete_records('hvp_auth', [
+                'user_id' => $userid,
+            ]);
         }
 
         return $isvalid;

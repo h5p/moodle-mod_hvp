@@ -38,7 +38,6 @@ require_once(__DIR__ . '/../autoloader.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class editor_ajax implements \H5PEditorAjaxInterface {
-
     /**
      * Gets latest library versions that exists locally
      *
@@ -63,14 +62,16 @@ class editor_ajax implements \H5PEditorAjaxInterface {
             AND hl1.major_version = hl2.major_version
             GROUP BY hl2.machine_name, hl2.major_version";
 
-        return $DB->get_records_sql("
+        return $DB->get_records_sql(
+            "
             SELECT hl4.id, hl4.machine_name, hl4.title, hl4.major_version,
                 hl4.minor_version, hl4.patch_version, hl4.has_icon, hl4.restricted
             FROM {hvp_libraries} hl4
             JOIN ({$maxminorversionsql}) hl3
             ON hl4.machine_name = hl3.machine_name
             AND hl4.major_version = hl3.major_version
-            AND hl4.minor_version = hl3.minor_version"
+            AND hl4.minor_version = hl3.minor_version
+            "
         );
     }
 
@@ -92,7 +93,7 @@ class editor_ajax implements \H5PEditorAjaxInterface {
                 "SELECT id, is_recommended
                    FROM {hvp_libraries_hub_cache}
                   WHERE machine_name = ?",
-                array($machinename)
+                [$machinename]
             );
         }
 
@@ -109,14 +110,16 @@ class editor_ajax implements \H5PEditorAjaxInterface {
     public function getAuthorsRecentlyUsedLibraries() {
         global $DB;
         global $USER;
-        $recentlyused = array();
+        $recentlyused = [];
 
         $results = $DB->get_records_sql(
             "SELECT library_name, max(created_at) AS max_created_at
             FROM {hvp_events}
            WHERE type='content' AND sub_type = 'create' AND user_id = ?
         GROUP BY library_name
-        ORDER BY max_created_at DESC", array($USER->id));
+        ORDER BY max_created_at DESC",
+            [$USER->id]
+        );
 
         foreach ($results as $row) {
             $recentlyused[] = $row->library_name;
@@ -141,18 +144,19 @@ class editor_ajax implements \H5PEditorAjaxInterface {
      * Get translations for a language for a list of libraries
      *
      * @param array $libraries An array of libraries, in the form "<machineName> <majorVersion>.<minorVersion>
-     * @param string $language_code
+     * @param string $languagecode
      *
      * @return array
      * @throws \dml_exception
      */
-    public function getTranslations($libraries, $language_code) {
+    // @codingStandardsIgnoreLine
+    public function getTranslations($libraries, $languagecode) {
         global $DB;
 
-        $translations = array();
+        $translations = [];
 
         foreach ($libraries as $library) {
-            $parsedLib = \H5PCore::libraryFromString($library);
+            $parsedlib = \H5PCore::libraryFromString($library);
 
             $sql         = "
                     SELECT language_json
@@ -163,12 +167,15 @@ class editor_ajax implements \H5PEditorAjaxInterface {
                       lib.major_version = :major_version AND
                       lib.minor_version = :minor_version AND
                       lang.language_code = :language_code";
-            $translation = $DB->get_field_sql($sql, array(
-                'machine_name'  => $parsedLib['machineName'],
-                'major_version' => $parsedLib['majorVersion'],
-                'minor_version' => $parsedLib['minorVersion'],
-                'language_code' => $language_code,
-            ));
+            $translation = $DB->get_field_sql(
+                $sql,
+                [
+                    'machine_name' => $parsedlib['machineName'],
+                    'major_version' => $parsedlib['majorVersion'],
+                    'minor_version' => $parsedlib['minorVersion'],
+                    'language_code' => $languagecode,
+                ]
+            );
 
             if ($translation !== false) {
                 $translations[$library] = $translation;
