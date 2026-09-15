@@ -34,6 +34,14 @@ defined('MOODLE_INTERNAL') || die();
 class restore_hvp_activity_structure_step extends restore_activity_structure_step {
 
     /**
+     * Keeps track of the old parent_id of every restored xAPI result so it can
+     * be remapped to the new id once all results have been restored.
+     *
+     * @var array
+     */
+    protected $xapiresultparents = array();
+
+    /**
      * Defines restore element's structure
      *
      * @return array
@@ -49,6 +57,9 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
         if ($userinfo) {
             // Restore content state.
             $paths[] = new restore_path_element('content_user_data', '/activity/hvp/content_user_data/entry');
+
+            // Restore xAPI results.
+            $paths[] = new restore_path_element('xapi_result', '/activity/hvp/xapi_results/xapi_result');
         }
 
         // Return the paths wrapped into standard activity structure.
@@ -97,14 +108,58 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
     }
 
     /**
+     * Process and inserts an xAPI result.
+     *
+     * The parent_id is a self-reference to another hvp_xapi_results record, so
+     * it cannot be remapped here (the parent may not have been restored yet).
+     * It is stored and remapped in after_execute().
+     *
+     * @param $data
+     *
+     * @throws dml_exception
+     */
+    protected function process_xapi_result($data) {
+        global $DB;
+
+        $data = (object) $data;
+        $oldid = $data->id;
+        unset($data->id);
+
+        $data->user_id = $this->get_mappingid('user', $data->user_id);
+        $data->content_id = $this->get_new_parentid('hvp');
+
+        // Remember the original parent_id so it can be remapped afterwards.
+        $oldparentid = $data->parent_id;
+        $data->parent_id = null;
+
+        $newid = $DB->insert_record('hvp_xapi_results', $data);
+        $this->set_mapping('hvp_xapi_result', $oldid, $newid);
+
+        if (!empty($oldparentid)) {
+            $this->xapiresultparents[$newid] = $oldparentid;
+        }
+    }
+
+    /**
      * Additional work that needs to be done after steps executions.
      */
     protected function after_execute() {
+        global $DB;
+
         // Add files for intro field.
         $this->add_related_files('mod_hvp', 'intro', null);
 
         // Add hvp related files.
         $this->add_related_files('mod_hvp', 'content', 'hvp');
+
+        // Now that all xAPI results have been restored, remap the parent_id of
+        // sub content results to the new record ids.
+        foreach ($this->xapiresultparents as $newid => $oldparentid) {
+            $newparentid = $this->get_mappingid('hvp_xapi_result', $oldparentid);
+            if ($newparentid) {
+                $DB->set_field('hvp_xapi_results', 'parent_id', $newparentid, ['id' => $newid]);
+            }
+        }
     }
 }
 
