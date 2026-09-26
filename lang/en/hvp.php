@@ -19,7 +19,7 @@ $string['modulename_help'] = 'The H5P activity module enables you to create inte
 
 In addition to being an authoring tool for rich content, H5P enables you to import and export H5P files for effective reuse and sharing of content.
 
-User interactions and scores are tracked using xAPI and are available through the Moodle Gradebook.
+User interactions and scores are tracked using xAPI and are available through the Moodle Gradebook. Note that it is currently possible for people with programming skills to cheat in H5P interactions and obtain the full score without knowing the correct answers. H5Ps must not be used for exams or similar.
 
 You add interactive H5P content by creating content using the built-in authoring tool or uploading H5P files found on other H5P enabled sites.';
 $string['modulename_link'] = 'https://h5p.org/moodle-more-help';
@@ -58,11 +58,22 @@ $string['confirmlabel'] = 'Confirm';
 $string['noh5ps'] = 'There\'s no interactive content available for this course.';
 
 $string['lookforupdates'] = 'Look for H5P updates';
+$string['fetchlibrariesmetadatafailed'] = 'Failed to fetch H5P libraries metadata.';
+$string['fetchlibrariesmetadatafailedlog'] = 'Fetching H5P content types from the Hub failed.';
+$string['fetchlibrariesmetadatasuccesslog'] = 'H5P Hub request completed successfully ({$a} content types in the response).';
+$string['fetchlibrariesmetadataunexpectedlog'] = 'H5P Hub request returned an unexpected response.';
+$string['fetchlibrariesmetadataerrorlog'] = 'H5P Hub error: [code: {$a->code}, message: {$a->message}]';
+$string['fetchlibrariesmetadatainfolog'] = 'H5P Hub notice: {$a}';
+$string['lookforupdatesskippeddisabledlog'] = 'Task skipped: both H5P Hub and usage statistics are disabled.';
 $string['updatelibraries'] = 'Update All Libraries';
 $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
+$string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
 // Admin settings.
+$string['displayoptiondownloadnever'] = 'Never';
+$string['displayoptiondownloadalways'] = 'Always';
+$string['displayoptiondownloadpermission'] = 'Only if user has permissions to export H5P';
 $string['displayoptionnevershow'] = 'Never show';
 $string['displayoptionalwaysshow'] = 'Always show';
 $string['displayoptionpermissions'] = 'Show only if user has permissions to export H5P';
@@ -71,7 +82,7 @@ $string['displayoptionauthoron'] = 'Controlled by author, default is on';
 $string['displayoptionauthoroff'] = 'Controlled by author, default is off';
 $string['displayoptions'] = 'Display Options';
 $string['enableframe'] = 'Display action bar and frame';
-$string['enabledownload'] = 'Download button';
+$string['enabledownload'] = 'Allow download';
 $string['enableembed'] = 'Embed button';
 $string['enablecopyright'] = 'Copyright button';
 $string['enableabout'] = 'About H5P button';
@@ -159,6 +170,9 @@ $string['upgradenothingtodo'] = "There's no content instances to upgrade.";
 $string['upgradebuttonlabel'] = 'Upgrade';
 $string['upgradeinvalidtoken'] = 'Error: Invalid security token!';
 $string['upgradelibrarymissing'] = 'Error: Your library is missing!';
+$string['upgradeerrormissinglibrary'] = 'Missing required library %lib.';
+$string['upgradeerrortoohighversion'] = 'Parameters contain %used while only %supported or earlier are supported.';
+$string['upgradeerrornotsupported'] = 'Parameters contain %used which is not supported.';
 
 // Results / report page.
 $string['user'] = 'User';
@@ -181,6 +195,9 @@ $string['reportingscorelabel'] = 'Score:';
 $string['reportingscaledscorelabel'] = 'Gradebook score:';
 $string['reportingscoredelimiter'] = 'out of';
 $string['reportingscaledscoredelimiter'] = ',';
+$string['reportingquestionsremaininglabel'] = 'questions remaining to grade';
+$string['reportsubmitgradelabel'] = 'Submit grade';
+$string['noanswersubmitted'] = 'This user hasn\'t submitted an answer to the H5P yet';
 
 // Editor.
 $string['javascriptloading'] = 'Waiting for JavaScript...';
@@ -194,6 +211,8 @@ $string['nosuchlibrary'] = 'No such library';
 $string['noparameters'] = 'No parameters';
 $string['invalidparameters'] = 'Invalid Parameters';
 $string['missingcontentuserdata'] = 'Error: Could not find content user data';
+$string['olduploadoldcontent'] = "You're trying to upload content of an older version of H5P. Please upgrade the content on the server it originated from and try to upload again or turn on the H5P Hub to have this server upgrade it for your automaticall.";
+$string['anunexpectedsave'] = 'Something unexpected happened. We were unable to save this content.';
 
 $string['maximumgrade'] = 'Maximum grade';
 $string['maximumgradeerror'] = 'Please enter a valid positive integer as the max points available for this activity';
@@ -213,8 +232,13 @@ $string['hvp:userestrictedlibraries'] = 'Use restricted H5P content types';
 $string['hvp:updatelibraries'] = 'Install new H5P content types or update existing ones';
 $string['hvp:getcachedassets'] = 'Required for viewing H5P activities';
 $string['hvp:installrecommendedh5plibraries'] = 'Install new safe H5P content types recommended by H5P.org';
+$string['hvp:emailconfirmsubmission'] = 'Get a confirmation message when submitting';
+$string['hvp:emailnotifysubmission'] = 'Get a notification message when an attempt is submitted';
+$string['hvp:contenthubregistration'] = 'Register site with the H5P Content Hub';
+$string['hvp:share'] = 'Share content on the H5P OER Hub';
 
 // Capabilities error messages.
+$string['nopermissiontogettranslations'] = 'You do not have permissions to retrieve translations';
 $string['nopermissiontoupgrade'] = 'You do not have permission to upgrade libraries.';
 $string['nopermissiontorestrict'] = 'You do not have permission to restrict libraries.';
 $string['nopermissiontosavecontentuserdata'] = 'You do not have permission to save content user data.';
@@ -223,6 +247,7 @@ $string['nopermissiontoviewresult'] = 'You do not have permission to view result
 $string['nopermissiontouploadfiles'] = 'You do not have permission to upload files here.';
 $string['nopermissiontouploadcontent'] = 'You do not have permission to upload content here.';
 $string['nopermissiontoviewcontenttypes'] = 'You do not have permission to view the content types.';
+$string['nopermissiontoviewcontenthubcache'] = 'You do not have permission to view the metadata for the content hub.';
 
 // Editor translations.
 $string['noziparchive'] = 'Your PHP version does not support ZipArchive.';
@@ -249,8 +274,13 @@ $string['invalidlibrarydata'] = 'Invalid data provided for {$a->%property} in {$
 $string['invalidlibraryproperty'] = 'Can\'t read the property {$a->%property} in {$a->%library}';
 $string['missinglibraryproperty'] = 'The required property {$a->%property} is missing from {$a->%library}';
 $string['invalidlibraryoption'] = 'Illegal option {$a->%option} in {$a->%library}';
-$string['addedandupdatelibraries'] = 'Added {$a->%new} new H5P libraries and updated {$a->%old} old.';
+$string['addedandupdatedss'] = 'Added {$a->%new} new H5P library and updated {$a->%old} old one.';
+$string['addedandupdatedsp'] = 'Added {$a->%new} new H5P library and updated {$a->%old} old ones.';
+$string['addedandupdatedps'] = 'Added {$a->%new} new H5P libraries and updated {$a->%old} old one.';
+$string['addedandupdatedpp'] = 'Added {$a->%new} new H5P libraries and updated {$a->%old} old ones.';
+$string['addednewlibrary'] = 'Added {$a->%new} new H5P library.';
 $string['addednewlibraries'] = 'Added {$a->%new} new H5P libraries.';
+$string['updatedlibrary'] = 'Updated {$a->%old} H5P library.';
 $string['updatedlibraries'] = 'Updated {$a->%old} H5P libraries.';
 $string['missingdependency'] = 'Missing dependency {$a->@dep} required by {$a->@lib}.';
 $string['invalidstring'] = 'Provided string is not valid according to regexp in semantics. (value: \"{$a->%value}\", regexp: \"{$a->%regexp}\")';
@@ -338,3 +368,245 @@ $string['licenseV1'] = 'Version 1';
 $string['licenseCC010'] = 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication';
 $string['licenseCC010U'] = 'CC0 1.0 Universal';
 $string['licenseversion'] = 'License Version';
+$string['creativecommons'] = 'Creative Commons';
+$string['ccattribution'] = 'Attribution (CC BY)';
+$string['ccattributionsa'] = 'Attribution-ShareAlike (CC BY-SA)';
+$string['ccattributionnd'] = 'Attribution-NoDerivs (CC BY-ND)';
+$string['ccattributionnc'] = 'Attribution-NonCommercial (CC BY-NC)';
+$string['ccattributionncsa'] = 'Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)';
+$string['ccattributionncnd'] = 'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)';
+$string['ccpdd'] = 'Public Domain Dedication (CC0)';
+$string['ccpdm'] = 'Public Domain Mark (PDM)';
+$string['yearsfrom'] = 'Years (from)';
+$string['yearsto'] = 'Years (to)';
+$string['authorname'] = "Author's name";
+$string['authorrole'] = "Author's role";
+$string['editor'] = 'Editor';
+$string['licensee'] = 'Licensee';
+$string['originator'] = 'Originator';
+$string['additionallicenseinfo'] = 'Any additional information about the license';
+$string['licenseextras'] = 'License Extras';
+$string['changelog'] = 'Changelog';
+$string['contenttype'] = 'Content Type';
+$string['question'] = 'Question';
+$string['date'] = 'Date';
+$string['changedby'] = 'Changed by';
+$string['changedescription'] = 'Description of change';
+$string['changeplaceholder'] = 'Photo cropped, text changed, etc.';
+$string['additionalinfo'] = 'Additional Information';
+$string['authorcomments'] = 'Author comments';
+$string['authorcommentsdescription'] = 'Comments for the editor of the content (This text will not be published as a part of copyright info)';
+
+// Embed.
+$string['embedloginfailed'] = 'You do not have access to this content. Try logging in.';
+
+// Privacy.
+$string['privacy:metadata:core_files'] = 'The H5P activity stores files which have been uploaded as part of H5P content.';
+$string['privacy:metadata:core_grades'] = 'The H5P activity stores grades of users that have answered H5P content.';
+
+$string['privacy:metadata:hvp_content_user_data'] = 'Describes the current state that content is in for a user. Used to restore content to a previous state.';
+$string['privacy:metadata:hvp_content_user_data:id'] = 'The ID of the content user data relationship.';
+$string['privacy:metadata:hvp_content_user_data:user_id'] = 'The ID of the user that the data belongs to.';
+$string['privacy:metadata:hvp_content_user_data:hvp_id'] = 'The ID of the H5P content that the data belongs to.';
+$string['privacy:metadata:hvp_content_user_data:sub_content_id'] = 'Sub-content of H5P, 0 if this is not sub-content.';
+$string['privacy:metadata:hvp_content_user_data:data_id'] = 'Data type identifier.';
+$string['privacy:metadata:hvp_content_user_data:data'] = 'User data that was stored.';
+$string['privacy:metadata:hvp_content_user_data:preloaded'] = 'Flag determining if data should be pre-loaded into content.';
+$string['privacy:metadata:hvp_content_user_data:delete_on_content_change'] = 'Flag determining if data should be deleted when content changes.';
+
+$string['privacy:metadata:hvp_events'] = 'Keeps track of logged H5P events.';
+$string['privacy:metadata:hvp_events:id'] = 'The unique ID of the event.';
+$string['privacy:metadata:hvp_events:user_id'] = 'The ID of the user that performed the action.';
+$string['privacy:metadata:hvp_events:created_at'] = 'The time that the event was created.';
+$string['privacy:metadata:hvp_events:type'] = 'The type of event.';
+$string['privacy:metadata:hvp_events:sub_type'] = 'The sub-type of event, or action of event.';
+$string['privacy:metadata:hvp_events:content_id'] = 'The content ID that the action was performed on, 0 if new or no content.';
+$string['privacy:metadata:hvp_events:content_title'] = 'Title of the content.';
+$string['privacy:metadata:hvp_events:library_name'] = 'The library the event affected.';
+$string['privacy:metadata:hvp_events:library_version'] = 'The library version the event affected.';
+
+$string['privacy:metadata:hvp_xapi_results'] = 'Stores xAPI events in H5P content.';
+$string['privacy:metadata:hvp_xapi_results:id'] = 'The unique ID of the xAPI event.';
+$string['privacy:metadata:hvp_xapi_results:content_id'] = 'The ID of the content the event was performed on.';
+$string['privacy:metadata:hvp_xapi_results:user_id'] = 'The ID of the user that performed the action.';
+$string['privacy:metadata:hvp_xapi_results:parent_id'] = 'The ID of the parent of the content that this event was performed on. Null if it has no parent.';
+$string['privacy:metadata:hvp_xapi_results:interaction_type'] = 'The type of interaction.';
+$string['privacy:metadata:hvp_xapi_results:description'] = 'The description, task or question of the content that action was performed on.';
+$string['privacy:metadata:hvp_xapi_results:correct_responses_pattern'] = 'The correct answer pattern.';
+$string['privacy:metadata:hvp_xapi_results:response'] = 'The response the user sent in.';
+$string['privacy:metadata:hvp_xapi_results:additionals'] = 'Additional information that the H5P can send in.';
+$string['privacy:metadata:hvp_xapi_results:raw_score'] = 'Achieved score for the event.';
+$string['privacy:metadata:hvp_xapi_results:max_score'] = 'Max achievable score for the event.';
+
+// Reuse.
+$string['reuse'] = 'Reuse';
+$string['reusecontent'] = 'Reuse Content';
+$string['reusedescription'] = 'Reuse this content.';
+$string['contentcopied'] = 'Content is copied to the clipboard';
+
+// Offline.
+$string['connectionlost'] = 'Connection lost. Results will be stored and sent when you regain connection.';
+$string['connectionreestablished'] = 'Connection reestablished.';
+$string['resubmitscores'] = 'Attempting to submit stored results.';
+$string['offlinedialogheader'] = 'Your connection to the server was lost';
+$string['offlinedialogbody'] = 'We were unable to send information about your completion of this task. Please check your internet connection.';
+$string['offlinedialogretrymessage'] = 'Retrying in :num....';
+$string['offlinedialogretrybuttonlabel'] = 'Retry now';
+$string['offlinesuccessfulsubmit'] = 'Successfully submitted results.';
+
+// Error messages.
+$string['fileexceedsmaxsize'] = 'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)';
+$string['unpackedfilesexceedsmaxsize'] = 'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)';
+$string['couldnotreadfilefromzip'] = 'Unable to read file from the package: %fileName';
+$string['couldnotparsejsonfromzip'] = 'Unable to parse JSON from the package: %fileName';
+$string['couldnotparsepostdata'] = 'Could not parse post data.';
+$string['nombstringexteension'] = 'The mbstring PHP extension is not loaded. H5P needs this to function properly';
+$string['invalidhvp'] = 'Invalid H5P activity';
+$string['nohubregistration'] = 'Not registered with H5P Hub';
+$string['invalidtoken'] = 'H5P has received an invalid token. Refresh the page and try again';
+$string['contentnotshared'] = 'H5P activity cannot be shared. Please check your H5P hub registration';
+
+// Messaging api.
+$string['messageprovider:confirmation'] = 'Confirmation of your own H5P submissions';
+$string['messageprovider:submission'] = 'Notification of H5P submissions';
+$string['emailnotifysubject'] = '{$a->studentname} has completed {$a->hvpname}';
+$string['emailnotifybody'] = 'Hi {$a->username},
+
+{$a->studentname} has completed \'{$a->hvpname}\' ({$a->hvpurl}) in course \'{$a->coursename}\'.
+
+You can review this attempt at {$a->hvpreporturl}.';
+$string['emailnotifysmall'] = '{$a->studentname} has completed {$a->hvpname}. See {$a->hvpreporturl}';
+$string['emailconfirmbody'] = 'Hi {$a->username},
+
+Thank you for submitting your answers to \'{$a->hvpname}\' in course \'{$a->coursename}\'.
+
+This message confirms that your answers have been saved.
+
+You can access this H5P at {$a->hvpurl}.';
+$string['emailconfirmsmall'] = 'Thank you for submitting your answers to \'{$a->hvpname}\'';
+$string['emailconfirmsubject'] = 'Submission confirmation: {$a->hvpname}';
+
+$string['completionpass'] = 'Require passing grade';
+$string['completionpassdesc'] = 'Student must achieve a passing grade to complete this activity';
+$string['completionpass_help'] = 'If enabled, this activity is considered complete when the student receives a pass grade (as specified in the Grade section of the H5P activity settings) or higher.';
+$string['gradetopassnotset'] = 'This H5P activity does not yet have a grade to pass set. It may be set in the Grade section of the H5P activity settings.';
+$string['gradetopassmustbeset'] = 'Grade to pass cannot be zero as this H5P activity has its completion method set to require passing grade. Please set a non-zero value.';
+$string['gradeheading'] = 'Results for {$a}';
+$string['assistivetechnologieslabel'] = 'Assistive Technologies label';
+
+// Content hub.
+$string['contenthub:settings:heading'] = 'H5P Hub Account Settings';
+$string['contenthub:settings:box'] = 'Content Hub Account';
+$string['contenthub:licenseagreementtitle'] = 'End User License Agreement (EULA)';
+$string['contenthub:licenseagreementdescription'] = 'Please read the following agreement before proceeding with the ';
+$string['contenthub:licenseagreementmaintext'] = 'TODO';
+$string['contenthubsearchenable'] = 'Enable shared content in H5P Hub';
+$string['contenthubsearchdescription'] = 'Find and download shared content from H5P Hub.';
+$string['contenthub:register'] = 'Register an account on the H5P Hub <a href="{$a}">here</a>';
+$string['contenthub:changesettings'] = 'Change account settings <a href="{$a}">here</a>';
+$string['contenthub:nopermissions'] = 'You do not have permission to register the site with the content hub.';
+$string['contentissyncing'] = 'Content is being synced.';
+$string['noexport'] = 'Missing export file.';
+$string['contentnotshared'] = 'Content is not shared on the Hub.';
+$string['contenthuboptions'] = 'H5P OER Hub Options';
+$string['contenthubeditsharing'] = 'Edit sharing info';
+$string['contenthubsyncchanges'] = 'Sync changes';
+$string['contenthubsharinginprogress'] = 'Sharing...';
+$string['contenthubunshare'] = 'Unshare';
+$string['contenthubshare'] = 'Share on H5P Hub';
+$string['maintitle'] = 'Sharing <strong>:title</strong>';
+$string['editinfotitle'] = 'Edit info for <strong>:title</strong>';
+$string['cancel'] = 'Cancel';
+$string['back'] = 'Back';
+$string['next'] = 'Next';
+$string['reviewinfo'] = 'Review info';
+$string['share'] = 'Share';
+$string['savechanges'] = 'Save changes';
+$string['registeronhub'] = 'Register on the H5P Hub';
+$string['requiredinfo'] = 'Required Info';
+$string['optionalinfo'] = 'Optional Info';
+$string['reviewandshare'] = 'Review & Share';
+$string['reviewandsave'] = 'Review & Save';
+$string['shared'] = 'Shared';
+$string['currentstep'] = 'Step :step of :total';
+$string['sharingnote'] = 'All content details can be edited after sharing';
+$string['licensedescription'] = 'Select a license for your content';
+$string['licenseversiondescription'] = 'Select a license version';
+$string['disciplinelabel'] = 'Disciplines';
+$string['disciplinedescription'] = 'You can select multiple disciplines';
+$string['disciplinelimitreachedmessage'] = 'You can select up to :numDisciplines disciplines';
+$string['searchplaceholder'] = 'Type to search for disciplines';
+$string['in'] = 'in';
+$string['dropdownbutton'] = 'Dropdown button';
+$string['removechip'] = 'Remove :chip from the list';
+$string['keywordsplaceholder'] = 'Add keywords';
+$string['keywords'] = 'Keywords';
+$string['keywordsdescription'] = 'You can add multiple keywords separated by commas. Press "Enter" or "Add" to confirm keywords';
+$string['alttext'] = 'Alt text';
+$string['reviewmessage'] = 'Please review the info below before you share';
+$string['subcontentwarning'] = 'Sub-content (images, questions etc.) will be shared under :license unless otherwise specified in the authoring tool';
+$string['disciplines'] = 'Disciplines';
+$string['shortdescription'] = 'Short description';
+$string['longdescription'] = 'Long description';
+$string['icon'] = 'Icon';
+$string['screenshots'] = 'Screenshots';
+$string['helpchoosinglicense'] = 'Help me choose a license';
+$string['sharefailed'] = 'Share failed.';
+$string['editingfailed'] = 'Editing failed.';
+$string['sharetryagain'] = 'Something went wrong, please try to share again.';
+$string['pleasewait'] = 'Please wait...';
+$string['language'] = 'Language';
+$string['level'] = 'Level';
+$string['shortdescriptionplaceholder'] = 'Short description of your content';
+$string['longdescriptionplaceholder'] = 'Long description of your content';
+$string['description'] = 'Description';
+$string['icondescription'] = '640x480px. If not selected content will use category icon';
+$string['screenshotsdescription'] = 'Add up to five screenshots of your content';
+$string['submitted'] = 'Submitted!';
+$string['isnowsubmitted'] = 'Is now submitted to H5P Hub';
+$string['changehasbeensubmitted'] = 'A change has been submited for';
+$string['contentavailable'] = 'Your content will normally be available in the Hub within one business day.';
+$string['contentupdatesoon'] = 'Your content will update soon';
+$string['contentlicensetitle'] = 'Content License Info';
+$string['licensedialogdescription'] = 'Click on a specific license to get info about proper usage';
+$string['publisherfieldtitle'] = 'Publisher';
+$string['publisherfielddescription'] = 'This will display as the "Publisher name" on shared content';
+$string['emailaddress'] = 'Email Address';
+$string['publisherdescription'] = 'Publisher description';
+$string['publisherdescriptiontext'] = 'This will be displayed under "Publisher info" on shared content';
+$string['contactperson'] = 'Contact Person';
+$string['phone'] = 'Phone';
+$string['address'] = 'Address';
+$string['city'] = 'City';
+$string['zip'] = 'Zip';
+$string['country'] = 'Country';
+$string['logouploadtext'] = 'Organization logo or avatar';
+$string['acceptterms'] = 'I accept the <a href=":url" target="_blank">terms of use</a>';
+$string['successfullyregistred'] = 'You have successfully registered an account on the H5P Hub';
+$string['successfullyregistreddescription'] = 'Your account details can be changed';
+$string['accountdetailslinktext'] = 'here';
+$string['registrationtitle'] = 'H5P Hub Registration';
+$string['registrationfailed'] = 'An error occurred';
+$string['registrationfaileddescription'] = 'We were not able to create an account at this point. Something went wrong. Try again later.';
+$string['maxlength'] = ':length is the maximum number of characters';
+$string['keywordexists'] = 'Keyword already exists!';
+$string['licensedetails'] = 'License details';
+$string['remove'] = 'Remove';
+$string['removeimage'] = 'Remove image';
+$string['cancelpublishconfirmationdialogtitle'] = 'Cancel sharing';
+$string['cancelpublishconfirmationdialogdescription'] = 'Are you sure you want to cancel the sharing process?';
+$string['cancelpublishconfirmationdialogcancelbuttontext'] = 'No';
+$string['cancelpublishconfirmationdialogconfirmbuttontext'] = 'Yes';
+$string['add'] = 'Add';
+$string['updateregistrationonhub'] = 'Save account settings';
+$string['successfullyupdated'] = 'Your H5P Hub account settings have successfully been changed';
+
+// Content hub.
+$string['age'] = 'Typical age';
+$string['agedescription'] = 'The target audience of this content. Possible input formats separated by commas: "1,34-45,-50,59-".';
+$string['invalidage'] = 'Invalid input format for Typical age. Possible input formats separated by commas: "1, 34-45, -50, -59-".';
+$string['contactpersondescription'] = 'H5P will reach out to the contact person in case there are any issues with the content shared by the publisher. The contact person\'s name or other information will not be published or shared with third parties';
+$string['emailaddressdescription'] = 'The email address will be used by H5P to reach out to the publisher in case of any issues with the content or in case the publisher needs to recover their account. It will not be published or shared with any third parties';
+$string['copyrightwarning'] = 'Copyrighted material cannot be shared in the H5P Content Hub. If the content is licensed with a OER friendly license like Creative Commons, please choose the appropriate license. If not this content cannot be shared.';
+$string['keywordsexists'] = 'Keywords already exists!';
+$string['somekeywordsexists'] = 'Some of these keywords already exist';

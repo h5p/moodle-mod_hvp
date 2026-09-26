@@ -27,9 +27,18 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Structure step to restore one H5P activity
+ *
+ * @copyright   2018 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_hvp_activity_structure_step extends restore_activity_structure_step {
 
+    /**
+     * Defines restore element's structure
+     *
+     * @return array
+     * @throws base_step_exception
+     */
     protected function define_structure() {
         $paths = array();
         $userinfo = $this->get_setting_value('userinfo');
@@ -46,6 +55,14 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
         return $this->prepare_activity_structure($paths);
     }
 
+    /**
+     * Process H5P, inserting the record into the database.
+     *
+     * @param $data
+     *
+     * @throws base_step_exception
+     * @throws dml_exception
+     */
     protected function process_hvp($data) {
         global $DB;
 
@@ -62,6 +79,13 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
         $this->apply_activity_instance($newitemid);
     }
 
+    /**
+     * Process and inserts content user data.
+     *
+     * @param $data
+     *
+     * @throws dml_exception
+     */
     protected function process_content_user_data($data) {
         global $DB;
 
@@ -72,6 +96,9 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
         $DB->insert_record('hvp_content_user_data', $data);
     }
 
+    /**
+     * Additional work that needs to be done after steps executions.
+     */
     protected function after_execute() {
         // Add files for intro field.
         $this->add_related_files('mod_hvp', 'intro', null);
@@ -83,9 +110,18 @@ class restore_hvp_activity_structure_step extends restore_activity_structure_ste
 
 /**
  * Structure step to restore H5P libraries
+ *
+ * @copyright   2018 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_hvp_libraries_structure_step extends restore_activity_structure_step {
 
+    /**
+     * Determines if library should be restored.
+     *
+     * @return bool
+     * @throws backup_step_exception
+     */
     protected function execute_condition() {
         static $librariesrestored;
 
@@ -122,6 +158,11 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
         return false;
     }
 
+    /**
+     * Defines how library should be restored.
+     *
+     * @return array
+     */
     protected function define_structure() {
         $paths = array();
 
@@ -138,6 +179,14 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
         return $this->prepare_activity_structure($paths);
     }
 
+    /**
+     * Process and insert library record.
+     *
+     * @param $data
+     *
+     * @throws dml_exception
+     * @throws restore_step_exception
+     */
     protected function process_hvp_library($data) {
         global $DB;
 
@@ -165,6 +214,13 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
         $this->update_missing_dependencies($oldid, $libraryid);
     }
 
+    /**
+     * Process and inserts translations for library.
+     *
+     * @param $data
+     *
+     * @throws dml_exception
+     */
     protected function process_hvp_library_translation($data) {
         global $DB;
 
@@ -187,6 +243,13 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
         }
     }
 
+    /**
+     * Process and inserts library dependencies.
+     *
+     * @param $data
+     *
+     * @throws dml_exception
+     */
     protected function process_hvp_library_dependency($data) {
         global $DB;
 
@@ -217,6 +280,11 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
         }
     }
 
+    /**
+     * Additional work that is executed after library restoration steps.
+     *
+     * @throws dml_exception
+     */
     protected function after_execute() {
         // Add files for libraries.
         $context = \context_system::instance();
@@ -225,6 +293,12 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
 
     /**
      * Cache to reduce queries.
+     *
+     * @param $library
+     * @param null $set
+     *
+     * @return mixed
+     * @throws dml_exception
      */
     public static function get_library_id(&$library, $set = null) {
         static $keytoid;
@@ -258,6 +332,12 @@ class restore_hvp_libraries_structure_step extends restore_activity_structure_st
     /**
      * Keep track of missing dependencies since libraries aren't inserted
      * in any special order
+     *
+     * @param $oldid
+     * @param $newid
+     * @param null $setmissing
+     *
+     * @throws dml_exception
      */
     private function update_missing_dependencies($oldid, $newid, $setmissing = null) {
         static $missingdeps;

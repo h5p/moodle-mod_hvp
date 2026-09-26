@@ -28,8 +28,10 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/hvp/backup/moodle2/restore_hvp_stepslib.php'); // Because it exists (must).
 
 /**
- * hvp restore task that provides all the settings and steps to perform one
- * complete restore of the activity
+ * Hvp restore task that provides all the settings and steps to perform one complete restore of the activity.
+ *
+ * @copyright   2018 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_hvp_activity_task extends restore_activity_task {
 
@@ -72,6 +74,7 @@ class restore_hvp_activity_task extends restore_activity_task {
 
         $rules[] = new restore_decode_rule('HVPVIEWBYID', '/mod/hvp/view.php?id=$1', 'course_module');
         $rules[] = new restore_decode_rule('HVPINDEX', '/mod/hvp/index.php?id=$1', 'course');
+        $rules[] = new restore_decode_rule('HVPEMBEDBYID', '/mod/hvp/embed.php?id=$1', 'course_module');
 
         return $rules;
     }

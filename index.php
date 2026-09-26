@@ -128,6 +128,7 @@ foreach ($h5ps as $h5p) {
 
     // Activity name.
     $attrs = ($h5p->visible ? '' : ' class="dimmed"');
+    $h5p->name = format_string($h5p->name);
     $row[] = "<a href=\"view.php?id={$h5p->coursemodule}\"{$attrs}>{$h5p->name}</a>";
 
     // Activity type.

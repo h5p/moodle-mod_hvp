@@ -28,8 +28,7 @@ global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Form to update the content type cache that mirrors the available
- * libraries in the H5P hub.
+ * Form to update the content type cache that mirrors the available libraries in the H5P hub.
  *
  * @package    mod_hvp
  * @copyright  2017 Joubel AS

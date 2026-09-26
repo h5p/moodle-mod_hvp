@@ -27,7 +27,7 @@ require_once("locallib.php");
 global $DB, $PAGE, $USER, $COURSE;
 
 $id = required_param('id', PARAM_INT);
-$userid = optional_param('userid', (int)$USER->id, PARAM_INT);
+$userid = optional_param('userid', 0, PARAM_INT);
 
 if (! $cm = get_coursemodule_from_id('hvp', $id)) {
     print_error('invalidcoursemodule');
@@ -39,7 +39,6 @@ require_course_login($course, false, $cm);
 
 // Check permission.
 $context = \context_module::instance($cm->id);
-hvp_require_view_results_permission($userid, $context, $cm->id);
 
 // Load H5P Content.
 $hvp = $DB->get_record_sql(
@@ -54,8 +53,20 @@ $hvp = $DB->get_record_sql(
         array($cm->instance));
 
 if ($hvp === false) {
-    print_error('invalidhvp');
+    print_error('invalidhvp', 'mod_hvp');
 }
+
+// Redirect to report if a specific user is chosen.
+if ($userid) {
+    redirect(new moodle_url('/mod/hvp/review.php',
+        array(
+            'id'     => $hvp->id,
+            'course' => $course->id,
+            'user'   => $userid
+        ))
+    );
+}
+hvp_require_view_results_permission((int)$USER->id, $context, $cm->id);
 
 // Log content result view.
 new \mod_hvp\event(
@@ -67,7 +78,7 @@ new \mod_hvp\event(
 // Set page properties.
 $pageurl = new moodle_url('/mod/hvp/grade.php', array('id' => $hvp->id));
 $PAGE->set_url($pageurl);
-$title = "Results for {$hvp->title}";
+$title = get_string('gradeheading', 'hvp', $hvp->title);
 $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
 
@@ -75,17 +86,18 @@ $PAGE->set_heading($course->fullname);
 $dataviewid = 'h5p-results';
 
 // Add required assets for data views.
-$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/jquery.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/h5p-utils.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/h5p-data-view.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->httpswwwroot . '/mod/hvp/dataviews.js'), true);
-$PAGE->requires->css(new moodle_url($CFG->httpswwwroot . '/mod/hvp/styles.css'));
+$root = \mod_hvp\view_assets::getsiteroot();
+$PAGE->requires->js(new moodle_url($root . '/mod/hvp/library/js/jquery.js'), true);
+$PAGE->requires->js(new moodle_url($root . '/mod/hvp/library/js/h5p-utils.js'), true);
+$PAGE->requires->js(new moodle_url($root . '/mod/hvp/library/js/h5p-data-view.js'), true);
+$PAGE->requires->js(new moodle_url($root . '/mod/hvp/dataviews.js'), true);
+$PAGE->requires->css(new moodle_url($root . '/mod/hvp/styles.css'));
 
 // Add JavaScript settings to data views.
 $settings = array(
     'dataViews' => array(
         "{$dataviewid}" => array(
-            'source' => "{$CFG->httpswwwroot}/mod/hvp/ajax.php?action=results&content_id={$hvp->id}",
+            'source' => "{$root}/mod/hvp/ajax.php?action=results&content_id={$hvp->id}",
             'headers' => array(
                 (object) array(
                     'text' => get_string('user', 'hvp'),

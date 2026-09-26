@@ -54,7 +54,7 @@ class file_storage implements \H5PFileStorage {
             'component' => 'mod_hvp',
             'filearea' => 'libraries',
             'itemid' => 0,
-            'filepath' => '/' . \H5PCore::libraryToString($library, true) . '/',
+            'filepath' => '/' . \H5PCore::libraryToFolderName($library) . '/',
         );
 
         // Remove any old existing library files.
@@ -148,7 +148,7 @@ class file_storage implements \H5PFileStorage {
      */
     // @codingStandardsIgnoreLine
     public function exportLibrary($library, $target) {
-        $folder = \H5PCore::libraryToString($library, true);
+        $folder = \H5PCore::libraryToFolderName($library);
         $context = \context_system::instance();
         self::exportFileTree("{$target}/{$folder}", $context->id, 'libraries', "/{$folder}/");
     }
@@ -380,6 +380,8 @@ class file_storage implements \H5PFileStorage {
      */
     // @codingStandardsIgnoreLine
     public function saveFile($file, $contentid, $contextid = null) {
+        global $CFG;
+
         if ($contentid !== 0) {
             // Grab cm context.
             $cm = \get_coursemodule_from_instance('hvp', $contentid);
@@ -388,6 +390,26 @@ class file_storage implements \H5PFileStorage {
         } else if ($contextid === null) {
             // Check for context id in params.
             $contextid = optional_param('contextId', null, PARAM_INT);
+            $context = \context::instance_by_id($contextid);
+        }
+
+        if (!$context) {
+            \H5PCore::ajaxError(get_string('invalidcontext', 'error'));
+            return;
+        }
+
+        $maxsize = get_max_upload_file_size($CFG->maxbytes);
+        // Check size of each uploaded file and scan for viruses.
+        foreach ($_FILES as $uploadedfile) {
+            $filename = clean_param($uploadedfile['name'], PARAM_FILE);
+
+            if (!has_capability('moodle/course:ignorefilesizelimits', $context)) {
+                if ($uploadedfile['size'] > $maxsize) {
+                    \H5PCore::ajaxError(get_string('maxbytesfile', 'error', ['file' => $filename, 'size' => display_size($maxsize)]));
+                    return;
+                }
+            }
+            \core\antivirus\manager::scan_file($uploadedfile['tmp_name'], $filename, true);
         }
 
         // Files not yet related to any activities are stored in a course context
@@ -402,12 +424,7 @@ class file_storage implements \H5PFileStorage {
             'filename' => $file->getName()
         );
         $fs = get_file_storage();
-        $filedata = $file->getData();
-        if ($filedata) {
-            $storedfile = $fs->create_file_from_string($record, $filedata);
-        } else {
-            $storedfile = $fs->create_file_from_pathname($record, $_FILES['file']['tmp_name']);
-        }
+        $storedfile = $fs->create_file_from_pathname($record, $_FILES['file']['tmp_name']);
 
         return $storedfile->get_id();
     }
@@ -426,7 +443,11 @@ class file_storage implements \H5PFileStorage {
         // Determine source file area and item id.
         if ($fromid === 'editor') {
             $sourcefilearea = 'editor';
-            $sourceitemid   = empty($tocontent->instance) ? \context_course::instance($tocontent->course) : \context_module::instance($tocontent->coursemodule);
+            if (empty($tocontent->instance)) {
+                $sourceitemid = \context_course::instance($tocontent->course);
+            } else {
+                $sourceitemid = \context_module::instance($tocontent->coursemodule);
+            }
         } else {
             $sourcefilearea = 'content';
             $sourceitemid   = $fromid;
@@ -606,7 +627,7 @@ class file_storage implements \H5PFileStorage {
     // @codingStandardsIgnoreLine
     private function getFile($filearea, $itemid, $file) {
         if ($filearea === 'editor') {
-            // Itemid is actually cm or course context
+            // Itemid is actually cm or course context.
             $context = $itemid;
             $itemid = 0;
         } else if (is_object($itemid)) {
@@ -720,8 +741,6 @@ class file_storage implements \H5PFileStorage {
 
         // Get h5p and content json.
         $contentsource = $source . DIRECTORY_SEPARATOR . 'content';
-        $h5pjson = file_get_contents($source . DIRECTORY_SEPARATOR . 'h5p.json');
-        $contentjson = file_get_contents($contentsource . DIRECTORY_SEPARATOR . 'content.json');
 
         // Move all temporary content files to editor.
         $contentfiles = array_diff(scandir($contentsource), array('.', '..', 'content.json'));
@@ -733,10 +752,7 @@ class file_storage implements \H5PFileStorage {
             }
         }
 
-        return (object) array(
-            'h5pJson' => $h5pjson,
-            'contentJson' => $contentjson
-        );
+        // TODO: Return list of all files so they can be marked as temporary. JI-366.
     }
 
     /**
@@ -826,5 +842,71 @@ class file_storage implements \H5PFileStorage {
             }
         }
         closedir($dir);
+    }
+
+    /**
+     * Check if the library has a presave.js in the root folder
+     *
+     * @param string $libraryname
+     * @param string $developmentpath
+     *
+     * @return bool
+     */
+    // @codingStandardsIgnoreLine
+    public function hasPresave($libraryname, $developmentpath = null) {
+        // TODO: Implement.
+        return false;
+    }
+
+    /**
+     * Check if upgrades script exist for library.
+     *
+     * @param string $machineName
+     * @param int $majorVersion
+     * @param int $minorVersion
+     * @return string Relative path
+     */
+    // @codingStandardsIgnoreLine
+    public function getUpgradeScript($library) {
+        $context = \context_system::instance();
+        $fs = get_file_storage();
+        $area = 'libraries';
+        $path = '/' . \H5PCore::libraryToFolderName($library) . '/';
+        $file = 'upgrades.js';
+        if ($fs->get_file($context->id, 'mod_hvp', $area, 0, $path, $file)) {
+            return "/{$area}{$path}{$file}";
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Store the given stream into the given file.
+     *
+     * @param string $path
+     * @param string $file
+     * @param resource $stream
+     *
+     * @return bool
+     */
+    // @codingStandardsIgnoreLine
+    public function saveFileFromZip($path, $file, $stream) {
+        $filepath = $path . '/' . $file;
+
+        // Make sure the directory exists first.
+        $matches = array();
+        preg_match('/(.+)\/[^\/]*$/', $filepath, $matches);
+        // Recursively make directories.
+        if (!file_exists($matches[1])) {
+            mkdir($matches[1], 0777, true);
+        }
+
+        // Store in local storage folder.
+        return file_put_contents($filepath, $stream);
+    }
+
+    // @codingStandardIgnoreLine
+    public function deleteLibrary($library) {
+        // TODO: Implement deleteLibrary() method.
     }
 }

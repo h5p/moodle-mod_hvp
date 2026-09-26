@@ -1,4 +1,5 @@
-(function ($) {
+/* global H5PDataView */
+(function($) {
 
     /**
    * Creates a new dataview.
@@ -13,7 +14,7 @@
    * @param {Element} wrapper Where in the DOM should the dataview be appended
    * @param {function} loaded Callback for when the dataview is ready
    */
-    var createDataView = function (dataView, wrapper, loaded) {
+    var createDataView = function(dataView, wrapper, loaded) {
         new H5PDataView(
         wrapper,
         dataView.source,
@@ -27,7 +28,7 @@
     };
 
     // Create data views when page is done loading.
-    $(document).ready(function () {
+    $(document).ready(function() {
         for (var id in H5PIntegration.dataViews) {
             if (!H5PIntegration.dataViews.hasOwnProperty(id)) {
                 continue;

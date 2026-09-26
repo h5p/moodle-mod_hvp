@@ -129,9 +129,13 @@ class upload_libraries_form extends \moodleform {
         // Validate package.
         $h5pvalidator = \mod_hvp\framework::instance('validator');
         if (!$h5pvalidator->isValidPackage(true, isset($data['onlyupdate']))) {
-            $infomessages      = implode('<br/>', \mod_hvp\framework::messages('info'));
-            $errormessages     = implode('<br/>', \mod_hvp\framework::messages('error'));
-            $errors['h5pfile'] = ($errormessages ? $errormessages . '<br/>' : '') . $infomessages;
+            // Errors while validating the package.
+            $errors = array_map(function ($message) {
+                return $message->message;
+            }, framework::messages('error'));
+
+            $messages = array_merge(framework::messages('info'), $errors);
+            $errors['h5pfile'] = implode('<br/>', $messages);
         }
         return $errors;
     }

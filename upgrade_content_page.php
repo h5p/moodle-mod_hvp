@@ -69,6 +69,9 @@ if (count($versions) < 2) {
             'errorScript' => get_string('upgradeerrorscript', 'hvp'),
             'errorContent' => get_string('upgradeerrorcontent', 'hvp'),
             'errorParamsBroken' => get_string('upgradeerrorparamsbroken', 'hvp'),
+            'errorLibrary' => get_string('upgradeerrormissinglibrary', 'hvp'),
+            'errorTooHighVersion' => get_string('upgradeerrortoohighversion', 'hvp'),
+            'errorNotSupported' => get_string('upgradeerrornotsupported', 'hvp'),
             'done' => get_string('upgradedone', 'hvp', $numcontents) .
                       ' <a href="' . (new moodle_url('/mod/hvp/library_list.php'))->out(false) . '">' .
                       get_string('upgradereturn', 'hvp') . '</a>',
@@ -91,7 +94,7 @@ if (count($versions) < 2) {
     );
 
     // Add JavaScripts.
-    $liburl = $CFG->httpswwwroot . '/mod/hvp/library/';
+    $liburl = \mod_hvp\view_assets::getsiteroot() . '/mod/hvp/library/';
     hvp_admin_add_generic_css_and_js($PAGE, $liburl, $settings);
     $PAGE->requires->js(new moodle_url($liburl . 'js/h5p-version.js' . hvp_get_cache_buster()), true);
     $PAGE->requires->js(new moodle_url($liburl . 'js/h5p-content-upgrade.js' . hvp_get_cache_buster()), true);

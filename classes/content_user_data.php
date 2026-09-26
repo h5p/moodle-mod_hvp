@@ -31,6 +31,8 @@ defined('MOODLE_INTERNAL') || die();
  * Class content_user_data handles user data and corresponding db operations.
  *
  * @package mod_hvp
+ * @copyright   2018 Joubel AS <contact@joubel.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class content_user_data {
 
@@ -39,6 +41,7 @@ class content_user_data {
      * user data depending on params.
      *
      * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function handle_ajax() {
         // Query String Parameters.
@@ -65,6 +68,7 @@ class content_user_data {
         }
     }
 
+
     /**
      * Stores content user data
      *
@@ -74,26 +78,31 @@ class content_user_data {
      * @param $data
      * @param $preload
      * @param $invalidate
+     *
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     private static function store_data($contentid, $subcontentid, $dataid, $data, $preload, $invalidate) {
-        global $DB;
-
         // Validate token.
         if (!\H5PCore::validToken('contentuserdata', required_param('token', PARAM_RAW))) {
             \H5PCore::ajaxError(get_string('invalidtoken', 'hvp'));
             return;
         }
 
-        // Load course module for content to get context
-        $cm = get_coursemodule_from_instance('hvp', $contentid);
-        if (!$cm) {
-            \H5PCore::ajaxError('No such content');
-            http_response_code(404);
-            return;
+        if ($contentid === 0) {
+            $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
+        } else {
+            // Load course module for content to get context.
+            $cm = get_coursemodule_from_instance('hvp', $contentid);
+            if (!$cm) {
+                \H5PCore::ajaxError('No such content');
+                http_response_code(404);
+                return;
+            }
+            $context = \context_module::instance($cm->id);
         }
 
         // Check permissions.
-        $context = \context_module::instance($cm->id);
         if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
             \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
             http_response_code(403);
@@ -116,6 +125,8 @@ class content_user_data {
      * @param $contentid
      * @param $subcontentid
      * @param $dataid
+     *
+     * @throws \dml_exception
      */
     private static function fetch_existing_data($contentid, $subcontentid, $dataid) {
         // Fetch user data.
@@ -131,6 +142,7 @@ class content_user_data {
      * @param $dataid
      *
      * @return mixed
+     * @throws \dml_exception
      */
     public static function get_user_data($contentid, $subcontentid, $dataid) {
         global $DB, $USER;
@@ -155,6 +167,8 @@ class content_user_data {
      * @param $preload
      * @param $invalidate
      * @param $data
+     *
+     * @throws \dml_exception
      */
     public static function save_user_data($contentid, $subcontentid, $dataid, $preload, $invalidate, $data) {
         global $DB, $USER;
@@ -196,6 +210,8 @@ class content_user_data {
      * @param $contentid
      * @param $subcontentid
      * @param $dataid
+     *
+     * @throws \dml_exception
      */
     public static function delete_user_data($contentid, $subcontentid, $dataid) {
         global $DB, $USER;
@@ -212,12 +228,16 @@ class content_user_data {
      * Load user data for specific content
      *
      * @param $contentid
-     * @return mixed User data for specific content if found, else null
+     *
+     * @return array User data for specific content if found, else null
+     * @throws \dml_exception
      */
     public static function load_pre_loaded_user_data($contentid) {
         global $DB, $USER;
 
-        $preloadeduserdata = array();
+        $preloadeduserdata = array(
+            'state' => '{}'
+        );
 
         $results = $DB->get_records('hvp_content_user_data', array(
             'user_id' => $USER->id,

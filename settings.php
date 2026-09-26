@@ -25,11 +25,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/hvp/lib.php');
+require_once($CFG->dirroot . '/mod/hvp/classes/admin_setting_html.php');
 
 global $PAGE;
-
-// Make sure core is loaded.
-$core = \mod_hvp\framework::instance('core');
 
 // Redefine the H5P admin menu entry to be expandable.
 $modltifolder = new admin_category('modhvpfolder', new lang_string('pluginname', 'mod_hvp'), $module->is_enabled() === false);
@@ -42,6 +40,9 @@ $ADMIN->add('modhvpfolder', new admin_externalpage('h5plibraries',
     get_string('libraries', 'hvp'), new moodle_url('/mod/hvp/library_list.php')));
 
 if ($ADMIN->fulltree) {
+    // Make sure core is loaded.
+    $core = \mod_hvp\framework::instance('core');
+
     // Settings is stored on the global $CFG object.
 
     // Content state.
@@ -67,9 +68,9 @@ if ($ADMIN->fulltree) {
     );
 
     $choices = array(
-        H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptionnevershow', 'hvp'),
-        H5PDisplayOptionBehaviour::ALWAYS_SHOW => get_string('displayoptionalwaysshow', 'hvp'),
-        H5PDisplayOptionBehaviour::CONTROLLED_BY_PERMISSIONS => get_string('displayoptionpermissions', 'hvp'),
+        H5PDisplayOptionBehaviour::NEVER_SHOW => get_string('displayoptiondownloadnever', 'hvp'),
+        H5PDisplayOptionBehaviour::ALWAYS_SHOW => get_string('displayoptiondownloadalways', 'hvp'),
+        H5PDisplayOptionBehaviour::CONTROLLED_BY_PERMISSIONS => get_string('displayoptiondownloadpermission', 'hvp'),
         H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_ON => get_string('displayoptionauthoron', 'hvp'),
         H5PDisplayOptionBehaviour::CONTROLLED_BY_AUTHOR_DEFAULT_OFF => get_string('displayoptionauthoroff', 'hvp')
     );
@@ -111,6 +112,28 @@ if ($ADMIN->fulltree) {
         )
     );
 
+    // Content Hub.
+    $hubinfo = $core->hubAccountInfo();
+    $settings->add(new admin_setting_heading(
+        'mod_hvp/content_hub_settings',
+        get_string('contenthub:settings:heading', 'hvp'),
+        ''
+    ));
+
+    // Content Hub on by default for all users
+    $settings->add(
+        new admin_setting_configcheckbox(
+            'mod_hvp/h5p_search_content_hub', 
+            get_string('contenthubsearchenable', 'hvp'),
+            get_string('contenthubsearchdescription', 'hvp'), 1));
+    
+    // Register on the Content Hub to allow uploading content
+    $settings->add(new admin_setting_html(
+        'mod_hvp/content_hub_settings_box',
+        get_string('contenthub:settings:box', 'hvp'),
+        $hubinfo
+    ));
+
     // Load js for disable hub confirmation dialog functionality.
     $PAGE->requires->js('/mod/hvp/library/js/jquery.js', true);
     $PAGE->requires->js('/mod/hvp/library/js/h5p-event-dispatcher.js', true);
@@ -123,10 +146,10 @@ if ($ADMIN->fulltree) {
         $PAGE->requires->css('/mod/hvp/library/styles/h5p-confirmation-dialog.css');
         $PAGE->requires->css('/mod/hvp/library/styles/h5p.css');
         $PAGE->requires->css('/mod/hvp/library/styles/h5p-core-button.css');
+        $PAGE->requires->css('/mod/hvp/library/styles/h5p-fonts.css');
     }
 
     // Find missing requirements.
-    $core = \mod_hvp\framework::instance('core');
     $errors = $core->checkSetupErrorMessage()->errors;
 
     $PAGE->requires->data_for_js('H5PDisableHubData', array(

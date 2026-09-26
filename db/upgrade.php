@@ -340,6 +340,241 @@ function hvp_upgrade_2017060900() {
     }
 }
 
+function hvp_upgrade_2018090300() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp');
+
+    // Remove old, unused metadata fields.
+    if ($dbman->field_exists($table, 'author')) {
+        $dbman->drop_field($table, new xmldb_field('author'));
+    }
+
+    if ($dbman->field_exists($table, 'license')) {
+        $dbman->drop_field($table, new xmldb_field('license'));
+    }
+
+    if ($dbman->field_exists($table, 'meta_keywords')) {
+        $dbman->drop_field($table, new xmldb_field('meta_keywords'));
+    }
+
+    if ($dbman->field_exists($table, 'meta_description')) {
+        $dbman->drop_field($table, new xmldb_field('meta_description'));
+    }
+
+    // Create new metadata fields.
+    if (!$dbman->field_exists($table, 'authors')) {
+        $dbman->add_field($table,
+            new xmldb_field('authors', XMLDB_TYPE_TEXT, null, null, null, null, null)
+        );
+    }
+
+    if (!$dbman->field_exists($table, 'source')) {
+        $dbman->add_field($table,
+            new xmldb_field('source', XMLDB_TYPE_CHAR, '255', null, null, null, null)
+        );
+    }
+
+    if (!$dbman->field_exists($table, 'year_from')) {
+        $dbman->add_field($table,
+            new xmldb_field('year_from', XMLDB_TYPE_INTEGER, '4', null, null, null, null)
+        );
+    }
+
+    if (!$dbman->field_exists($table, 'year_to')) {
+        $dbman->add_field($table,
+            new xmldb_field('year_to', XMLDB_TYPE_INTEGER, '4', null, null, null, null)
+        );
+    }
+
+    if (!$dbman->field_exists($table, 'license')) {
+        $dbman->add_field($table,
+            new xmldb_field('license', XMLDB_TYPE_CHAR, '63', null, null, null, null)
+        );
+    }
+
+    if (!$dbman->field_exists($table, 'license_version')) {
+        $dbman->add_field($table,
+            new xmldb_field('license_version', XMLDB_TYPE_CHAR, '15', null, null, null, null)
+        );
+    }
+
+    if (!$dbman->field_exists($table, 'changes')) {
+        $dbman->add_field($table,
+            new xmldb_field('changes', XMLDB_TYPE_TEXT, null, null, null, null, null)
+        );
+    }
+
+    if (!$dbman->field_exists($table, 'license_extras')) {
+        $dbman->add_field($table,
+            new xmldb_field('license_extras', XMLDB_TYPE_TEXT, null, null, null, null, null)
+        );
+    }
+
+    if (!$dbman->field_exists($table, 'author_comments')) {
+        $dbman->add_field($table,
+            new xmldb_field('author_comments', XMLDB_TYPE_TEXT, null, null, null, null, null)
+        );
+    }
+
+    // Add new libraries fields.
+    $table = new xmldb_table('hvp_libraries');
+    if (!$dbman->field_exists($table, 'add_to')) {
+        $dbman->add_field($table,
+            new xmldb_field('add_to', XMLDB_TYPE_TEXT, null, null, null, null, null)
+        );
+    }
+
+    if (!$dbman->field_exists($table, 'metadata_settings')) {
+        $dbman->add_field($table,
+            new xmldb_field('metadata_settings', XMLDB_TYPE_TEXT, null, null, null, null, null)
+        );
+    }
+}
+
+
+/**
+ * Adds authentication table
+ *
+ * @throws ddl_exception
+ */
+function hvp_upgrade_2019022600() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    // Add auth table.
+    $table = new xmldb_table('hvp_auth');
+
+    // Add fields.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('user_id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('created_at', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('secret', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL, null, null);
+
+    // Add keys and index.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+    $table->add_index('user_id', XMLDB_INDEX_UNIQUE, ['user_id']);
+
+    // Create table if it does not exist.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+}
+
+/**
+ * Add default language to content
+ *
+ * @throws ddl_exception
+ * @throws ddl_table_missing_exception
+ */
+function hvp_upgrade_2019030700() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp');
+
+    if (!$dbman->field_exists($table, 'default_language')) {
+        $dbman->add_field($table,
+            new xmldb_field('default_language', XMLDB_TYPE_CHAR, '32', null, null, null, null)
+        );
+    }
+}
+
+function hvp_upgrade_2020080400() {
+    global $DB;
+    $dbman = $DB->get_manager();
+    // Define field completionscorerequired to be added to hvp.
+    $table = new xmldb_table('hvp');
+    // Conditionally launch add field completionscorerequired.
+    if (!$dbman->field_exists($table, 'completionpass')) {
+        $dbman->add_field(
+            $table,
+            new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, null, null, 0, 'timemodified')
+        );
+    }
+}
+
+function hvp_upgrade_2020080401() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    // Changing nullability of field completionpass on table hvp to not null.
+    $table = new xmldb_table('hvp');
+    $field = new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'timemodified');
+
+    // Launch change of nullability for field completionpass.
+    $dbman->change_field_notnull($table, $field);
+}
+
+function hvp_upgrade_2020082800() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    $table = new xmldb_table('hvp');
+
+    if (!$dbman->field_exists($table, 'a11y_title')) {
+        $dbman->add_field($table,
+            new xmldb_field('a11y_title', XMLDB_TYPE_CHAR, '255', null, null, null, null)
+        );
+    }
+}
+
+/**
+ * Drop old unused unique index, add nonunique index.
+ */
+function hvp_upgrade_2020091500() {
+    global $DB;
+    $dbman = $DB->get_manager();
+    $table = new xmldb_table('hvp_xapi_results');
+    $index = new xmldb_index('results', XMLDB_INDEX_NOTUNIQUE, ['content_id', 'user_id']);
+    if (!$dbman->index_exists($table, $index)) {
+        $dbman->add_index($table, $index);
+    }
+
+    $oldindex = new xmldb_index('result', XMLDB_INDEX_UNIQUE, ['id', 'content_id', 'user_id']);
+    $dbman->drop_index($table, $oldindex);
+}
+
+function hvp_upgrade_2020112600() {
+    global $DB;
+    $dbman = $DB->get_manager();
+
+    // Add Content Hub fields to main content table.
+    $table = new xmldb_table('hvp');
+    if (!$dbman->field_exists($table, 'shared')) {
+        $dbman->add_field($table, new xmldb_field('shared', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, 0, 'completionpass'));
+    }
+    if (!$dbman->field_exists($table, 'synced')) {
+        $dbman->add_field($table, new xmldb_field('synced', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'shared'));
+    }
+    if (!$dbman->field_exists($table, 'hub_id')) {
+        $dbman->add_field($table, new xmldb_field('hub_id', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'synced'));
+    }
+
+    // Create table for caching content hub metadata.
+    $table = new xmldb_table('hvp_content_hub_cache');
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('language', XMLDB_TYPE_CHAR, '31', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('json', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+    $table->add_field('last_checked', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+    $table->add_index('language', XMLDB_INDEX_UNIQUE, ['language']);
+
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+}
+
+function hvp_upgrade_2026050600() {
+  global $DB;
+  $DB->execute("
+    UPDATE {hvp}
+    SET filtered = NULL
+  ");
+}
+
 /**
  * Hvp module upgrade function.
  *
@@ -358,6 +593,15 @@ function xmldb_hvp_upgrade($oldversion) {
         2017040500,
         2017050900,
         2017060900,
+        2018090300,
+        2019022600,
+        2019030700,
+        2020080400,
+        2020080401,
+        2020082800,
+        2020091500,
+        2020112600,
+        2026050600,
     ];
 
     foreach ($upgrades as $version) {

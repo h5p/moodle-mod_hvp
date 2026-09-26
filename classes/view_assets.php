@@ -24,6 +24,8 @@
 
 namespace mod_hvp;
 
+use moodle_url;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -43,9 +45,7 @@ class view_assets {
     protected $embedtype;
     protected $files;
 
-    public function __construct($cm, $course, $forceembedtype = null) {
-        global $CFG;
-
+    public function __construct($cm, $course, $options = []) {
         $this->cm          = $cm;
         $this->course      = $course;
         $this->core        = framework::instance();
@@ -56,9 +56,16 @@ class view_assets {
 
         $context        = \context_module::instance($this->cm->id);
         $displayoptions = $this->core->getDisplayOptionsForView($this->content['disable'], $context->instanceid);
+        if (isset($options['disabledownload']) && $options['disabledownload']) {
+            $displayoptions[\H5PCore::DISPLAY_OPTION_DOWNLOAD] = false;
+        }
+        if (isset($options['disablefullscreen']) && $options['disablefullscreen']) {
+            $this->settings['fullscreenDisabled'] = true;
+        }
 
         // Add JavaScript settings for this content.
         $cid                                  = 'cid-' . $this->content['id'];
+        $root = self::getsiteroot();
         $this->settings['contents'][ $cid ]   = array(
             'library'         => \H5PCore::libraryToString($this->content['library']),
             'jsonContent'     => $this->getfilteredparameters(),
@@ -68,14 +75,15 @@ class view_assets {
             'resizeCode'      => $this->getresizecode($displayoptions[ \H5PCore::DISPLAY_OPTION_EMBED ]),
             'title'           => $this->content['title'],
             'displayOptions'  => $displayoptions,
-            'url'             => "{$CFG->httpswwwroot}/mod/hvp/view.php?id={$this->cm->id}",
-            'contentUrl'      => "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp/content/{$this->content['id']}",
+            'url'             => "{$root}/mod/hvp/view.php?id={$this->cm->id}",
+            'contentUrl'      => "{$root}/pluginfile.php/{$context->id}/mod_hvp/content/{$this->content['id']}",
+            'metadata'        => $this->content['metadata'],
             'contentUserData' => array(
                 0 => content_user_data::load_pre_loaded_user_data($this->content['id'])
             )
         );
 
-        $this->embedtype = isset($forceembedtype) ? $forceembedtype : \H5PCore::determineEmbedType(
+        $this->embedtype = isset($options->forceembedtype) ? $options->forceembedtype : \H5PCore::determineEmbedType(
             $this->content['embedType'], $this->content['library']['embedTypes']
         );
 
@@ -140,16 +148,21 @@ class view_assets {
      * @return string
      */
     private function getembedcode($embedenabled) {
-        global $CFG;
-
         if ( ! $embedenabled) {
             return '';
         }
 
-        $embedurl = new \moodle_url("{$CFG->httpswwwroot}/mod/hvp/embed.php?id={$this->cm->id}");
+        $root = self::getsiteroot();
+        $embedurl = new \moodle_url("{$root}/mod/hvp/embed.php?id={$this->cm->id}");
+        $title = isset($this->content['metadata']['a11yTitle'])
+            ? $this->content['metadata']['a11yTitle']
+            : (isset($this->content['metadata']['title'])
+                ? $this->content['metadata']['title']
+                : ''
+            );
 
         return "<iframe src=\"{$embedurl->out()}\" width=\":w\" height=\":h\" frameborder=\"0\" " .
-               "allowfullscreen=\"allowfullscreen\"></iframe>";
+               "allowfullscreen=\"allowfullscreen\" title=\"{$title}\"></iframe>";
     }
 
     /**
@@ -160,13 +173,11 @@ class view_assets {
      * @return string
      */
     private function getresizecode($embedenabled) {
-        global $CFG;
-
         if ( ! $embedenabled) {
             return '';
         }
 
-        $resizeurl = new \moodle_url($CFG->httpswwwroot . '/mod/hvp/library/js/h5p-resizer.js');
+        $resizeurl = new \moodle_url(self::getsiteroot() . '/mod/hvp/library/js/h5p-resizer.js');
 
         return "<script src=\"{$resizeurl->out()}\" charset=\"UTF-8\"></script>";
     }
@@ -194,8 +205,6 @@ class view_assets {
      * Generates assets depending on embed type
      */
     private function generateassets() {
-        global $CFG;
-
         if ($this->embedtype === 'div') {
             $context = \context_system::instance();
             $hvppath = "/pluginfile.php/{$context->id}/mod_hvp";
@@ -210,7 +219,7 @@ class view_assets {
                     $url = $hvppath . $url;
                 }
                 $this->settings['loadedJs'][] = $url;
-                $this->jsrequires[]           = new \moodle_url($isexternal ? $url : $CFG->httpswwwroot . $url);
+                $this->jsrequires[]           = new \moodle_url($isexternal ? $url : self::getsiteroot() . $url);
             }
 
             // Schedule stylesheets for loading through Moodle.
@@ -223,7 +232,7 @@ class view_assets {
                     $url = $hvppath . $url;
                 }
                 $this->settings['loadedCss'][] = $url;
-                $this->cssrequires[]           = new \moodle_url($isexternal ? $url : $CFG->httpswwwroot . $url);
+                $this->cssrequires[]           = new \moodle_url($isexternal ? $url : self::getsiteroot() . $url);
             }
         } else {
             // JavaScripts and stylesheets will be loaded through h5p.js.
@@ -283,7 +292,7 @@ class view_assets {
      * Adds js assets to current page
      */
     public function addassetstopage() {
-        global $PAGE, $CFG;
+        global $PAGE;
 
         foreach ($this->jsrequires as $script) {
             $PAGE->requires->js($script, true);
@@ -297,7 +306,7 @@ class view_assets {
         $PAGE->requires->data_for_js('H5PIntegration', $this->settings, true);
 
         // Add xAPI collector script.
-        $PAGE->requires->js(new \moodle_url($CFG->httpswwwroot . '/mod/hvp/xapi-collector.js'), true);
+        $PAGE->requires->js(new \moodle_url(self::getsiteroot() . '/mod/hvp/xapi-collector.js'), true);
     }
 
     /**
@@ -307,6 +316,13 @@ class view_assets {
         if ($this->embedtype === 'div') {
             echo "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
         } else {
+            $title = isset($this->content['metadata']['a11yTitle'])
+                ? $this->content['metadata']['a11yTitle']
+                : (isset($this->content['metadata']['title'])
+                    ? $this->content['metadata']['title']
+                    : ''
+                );
+
             echo "<div class=\"h5p-iframe-wrapper\">" .
                  "<iframe id=\"h5p-iframe-{$this->content['id']}\"" .
                  " class=\"h5p-iframe\"" .
@@ -314,7 +330,8 @@ class view_assets {
                  " style=\"height:1px\"" .
                  " src=\"about:blank\"" .
                  " frameBorder=\"0\"" .
-                 " scrolling=\"no\">" .
+                 " scrolling=\"no\"" .
+                 " title=\"{$title}\">" .
                  "</iframe>" .
                  "</div>";
         }
@@ -325,7 +342,22 @@ class view_assets {
      */
     public function validatecontent() {
         if ($this->content === null) {
-            print_error('invalidhvp');
+            print_error('invalidhvp', 'mod_hvp');
         }
+    }
+
+    /**
+     * Gets the site root absolute address
+     *
+     * @return string Root address for the site
+     */
+    public static function getsiteroot() {
+        global $CFG;
+        // In Moodle 3.4 version wwwroot is always the same as httpswwwroot.
+        if ($CFG->version < 2017111300) {
+            return $CFG->httpswwwroot;
+        }
+
+        return $CFG->wwwroot;
     }
 }

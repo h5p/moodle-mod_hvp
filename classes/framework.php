@@ -55,10 +55,18 @@ class framework implements \H5PFrameworkInterface {
         if (!isset($interface)) {
             $interface = new \mod_hvp\framework();
 
-            $fs = new \mod_hvp\file_storage();
+            // Support alternate file storage class defined in $CFG.
+            if (!empty($CFG->mod_hvp_file_storage_class)) {
+                $fsclass = $CFG->mod_hvp_file_storage_class;
+            } else {
+                $fsclass = '\mod_hvp\file_storage';
+            }
+
+            $fs = new $fsclass();
 
             $context = \context_system::instance();
-            $url = "{$CFG->httpswwwroot}/pluginfile.php/{$context->id}/mod_hvp";
+            $root = view_assets::getsiteroot();
+            $url = "{$root}/pluginfile.php/{$context->id}/mod_hvp";
 
             $language = self::get_language();
 
@@ -156,25 +164,112 @@ class framework implements \H5PFrameworkInterface {
      * @inheritdoc
      */
     // @codingStandardsIgnoreLine
-    public function fetchExternalData($url, $data = null, $blocking = true, $stream = null) {
+    public function fetchExternalData($url, $data = null, $blocking = true, $stream = null, $alldata = false, $headers = array(), $files = array(), $method = 'POST') {
         global $CFG;
+
+        if (!empty($files)) {
+            $curldata = array();
+            foreach ($data as $key => $value) {
+                if (empty($value)) {
+                    continue; // Skip empty values.
+                }
+                if (is_array($value)) {
+                    foreach ($value as $i => $subvalue) {
+                        $curldata["{$key}[{$i}]"] = $subvalue;
+                    }
+                } else {
+                    $curldata[$key] = $value;
+                }
+            }
+
+            foreach ($files as $name => $file) {
+                if ($file === null) {
+                    continue;
+                } else if (is_array($file['name'])) {
+                    // Array of files uploaded (multiple).
+                    for ($i = 0; $i < count($file['name']); $i ++) {
+                        $curldata["{$name}[{$i}]"] = new \CurlFile($file['tmp_name'][$i], $file['type'][$i], $file['name'][$i]);
+                    }
+                } else {
+                    // Single file.
+                    $curldata[$name] = new \CurlFile($file['tmp_name'], $file['type'], $file['name']);
+                }
+            }
+        } else if (!empty($data)) {
+            // Application/x-www-form-urlencoded.
+            $curldata = format_postdata_for_curlcall($data);
+        }
+
+        $options = array(
+            'CURLOPT_SSL_VERIFYPEER' => true,
+            'CURLOPT_CONNECTTIMEOUT' => 20,
+            'CURLOPT_FOLLOWLOCATION' => 1,
+            'CURLOPT_MAXREDIRS'      => 5,
+            'CURLOPT_RETURNTRANSFER' => true,
+            'CURLOPT_NOBODY'         => false,
+            'CURLOPT_TIMEOUT'        => 300,
+        );
 
         if ($stream !== null) {
             // Download file.
             @set_time_limit(0);
 
             // Generate local tmp file path.
-            $localfolder = $CFG->tempdir . uniqid('/hvp-');
-            $stream = $localfolder . '.h5p';
+            $localfolder = make_temp_directory(uniqid('hvp-'));
+            $localpath = $localfolder . '.h5p';
 
             // Add folder and file paths to H5P Core.
             $interface = self::instance('interface');
             $interface->getUploadedH5pFolderPath($localfolder);
-            $interface->getUploadedH5pPath($stream);
+            $interface->getUploadedH5pPath($localpath);
+
+            $stream = fopen($localpath, 'w');
+            $options['CURLOPT_FILE'] = $stream;
         }
 
-        $response = download_file_content($url, null, $data, false, 300, 20, false, $stream);
-        return ($response === false ? null : $response);
+        $curl = new curl();
+
+        // Massage headers to work with curl.
+        foreach ($headers as $key => $value) {
+            $curl->setHeader(is_numeric($key) ? $value : "$key: $value");
+        }
+
+        if (empty($data) || $method === 'GET') {
+            $response = $curl->get($url, array(), $options);
+        } else if ($method === 'POST') {
+            $response = $curl->post($url, $curldata, $options);
+        } else if ($method === 'PUT') {
+            $response = $curl->put($url, $curldata, $options);
+        }
+
+        if ($stream !== null) {
+            fclose($stream);
+            @chmod($localpath, $CFG->filepermissions);
+        }
+
+        $errorno = $curl->get_errno();
+        // Error handling.
+        if ($errorno) {
+            if ($alldata) {
+                $response = null;
+            } else {
+                $this->setErrorMessage($response, 'failed-fetching-external-data');
+
+                return false;
+            }
+        }
+
+        if ($alldata) {
+            $info = $curl->get_info();
+
+            return [
+                'status'  => intval($info['http_code']),
+                'data'    => empty($response) ? null : $response,
+                'headers' => $curl->get_raw_response(),
+            ];
+        } else {
+            return $response;
+        }
     }
 
     /**
@@ -196,11 +291,12 @@ class framework implements \H5PFrameworkInterface {
      * Implements setErrorMessage
      *
      * @param string $message translated error message
+     * @param string $code
      */
     // @codingStandardsIgnoreLine
-    public function setErrorMessage($message) {
+    public function setErrorMessage($message, $code = null) {
         if ($message !== null) {
-            self::messages('error', $message);
+            self::messages('error', $message, $code);
         }
     }
 
@@ -219,9 +315,10 @@ class framework implements \H5PFrameworkInterface {
      *
      * @param string $type Type of messages, e.g. 'info' or 'error'
      * @param string $newmessage Optional
+     * @param string $code
      * @return array Array of stored messages
      */
-    public static function messages($type, $newmessage = null) {
+    public static function messages($type, $newmessage = null, $code = null) {
         static $m = 'mod_hvp_messages';
 
         if ($newmessage === null) {
@@ -234,7 +331,17 @@ class framework implements \H5PFrameworkInterface {
             return $messages;
         }
 
-        $_SESSION[$m][$type][] = $newmessage;
+        // We expect to get out an array of strings when getting info
+        // and an array of objects when getting errors for consistency across platforms.
+        // This implementation should be improved for consistency across the data type returned here.
+        if ($type === 'error') {
+            $_SESSION[$m][$type][] = (object)array(
+                'code' => $code,
+                'message' => $newmessage
+            );
+        } else {
+            $_SESSION[$m][$type][] = $newmessage;
+        }
     }
 
     /**
@@ -247,8 +354,17 @@ class framework implements \H5PFrameworkInterface {
     public static function printMessages($type, $messages) {
         global $OUTPUT;
         foreach ($messages as $message) {
-            print $OUTPUT->notification($message, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
+            $out = $type === 'error' ? $message->message : $message;
+            print $OUTPUT->notification($out, ($type === 'error' ? 'notifyproblem' : 'notifymessage'));
         }
+    }
+
+    /**
+     * Implements getMessages
+     */
+    // @codingStandardsIgnoreLine
+    public function getMessages($type) {
+        return self::messages($type);
     }
 
     /**
@@ -285,8 +401,13 @@ class framework implements \H5PFrameworkInterface {
                 "Can't read the property %property in %library" => 'invalidlibraryproperty',
                 'The required property %property is missing from %library' => 'missinglibraryproperty',
                 'Illegal option %option in %library' => 'invalidlibraryoption',
-                'Added %new new H5P libraries and updated %old old.' => 'addedandupdatelibraries',
+                'Added %new new H5P library and updated %old old one.' => 'addedandupdatedss',
+                'Added %new new H5P library and updated %old old ones.' => 'addedandupdatedsp',
+                'Added %new new H5P libraries and updated %old old one.' => 'addedandupdatedps',
+                'Added %new new H5P libraries and updated %old old ones.' => 'addedandupdatedpp',
+                'Added %new new H5P library.' => 'addednewlibrary',
                 'Added %new new H5P libraries.' => 'addednewlibraries',
+                'Updated %old H5P library.' =>  'updatedlibrary',
                 'Updated %old H5P libraries.' => 'updatedlibraries',
                 'Missing dependency @dep required by @lib.' => 'missingdependency',
                 'Provided string is not valid according to regexp in semantics. (value: \"%value\", regexp: \"%regexp\")' => 'invalidstring',
@@ -318,6 +439,7 @@ class framework implements \H5PFrameworkInterface {
                 'Public Domain' => 'pd',
                 'Public Domain Dedication and Licence' => 'pddl',
                 'Public Domain Mark' => 'pdm',
+                'Public Domain Mark (PDM)' => 'pdm',
                 'Copyright' => 'copyrightstring',
                 'Unable to create directory.' => 'unabletocreatedir',
                 'Unable to get field type.' => 'unabletogetfieldtype',
@@ -396,8 +518,161 @@ class framework implements \H5PFrameworkInterface {
                 'CC0 1.0 Universal (CC0 1.0) Public Domain Dedication' => 'licenseCC010',
                 'CC0 1.0 Universal' => 'licenseCC010U',
                 'License Version' => 'licenseversion',
+                'Creative Commons' => 'creativecommons',
+                'Attribution' => 'ccattribution',
+                'Attribution (CC BY)' => 'ccattribution',
+                'Attribution-ShareAlike' => 'ccattributionsa',
+                'Attribution-ShareAlike (CC BY-SA)' => 'ccattributionsa',
+                'Attribution-NoDerivs' => 'ccattributionnd',
+                'Attribution-NoDerivs (CC BY-ND)' => 'ccattributionnd',
+                'Attribution-NonCommercial' => 'ccattributionnc',
+                'Attribution-NonCommercial (CC BY-NC)' => 'ccattributionnc',
+                'Attribution-NonCommercial-ShareAlike' => 'ccattributionncsa',
+                'Attribution-NonCommercial-ShareAlike (CC BY-NC-SA)' => 'ccattributionncsa',
+                'Attribution-NonCommercial-NoDerivs' => 'ccattributionncnd',
+                'Attribution-NonCommercial-NoDerivs (CC BY-NC-ND)' => 'ccattributionncnd',
+                'Public Domain Dedication' => 'ccpdd',
+                'Public Domain Dedication (CC0)' => 'ccpdd',
+                'Years (from)' => 'yearsfrom',
+                'Years (to)' => 'yearsto',
+                "Author's name" => 'authorname',
+                "Author's role" => 'authorrole',
+                'Editor' => 'editor',
+                'Licensee' => 'licensee',
+                'Originator' => 'originator',
+                'Any additional information about the license' => 'additionallicenseinfo',
+                'License Extras' => 'licenseextras',
+                'Changelog' => 'changelog',
+                'Content Type' => 'contenttype',
+                'Question' => 'question',
+                'Date' => 'date',
+                'Changed by' => 'changedby',
+                'Description of change' => 'changedescription',
+                'Photo cropped, text changed, etc.' => 'changeplaceholder',
+                'Additional Information' => 'additionalinfo',
+                'Author comments' => 'authorcomments',
+                'Comments for the editor of the content (This text will not be published as a part of copyright info)' => 'authorcommentsdescription',
+                'Reuse' => 'reuse',
+                'Reuse Content' => 'reusecontent',
+                'Reuse this content.' => 'reusedescription',
+                'Content is copied to the clipboard' => 'contentcopied',
+                'Connection lost. Results will be stored and sent when you regain connection.' => 'connectionlost',
+                'Connection reestablished.' => 'connectionreestablished',
+                'Attempting to submit stored results.' => 'resubmitscores',
+                'Your connection to the server was lost' => 'offlinedialogheader',
+                'We were unable to send information about your completion of this task. Please check your internet connection.' => 'offlinedialogbody',
+                'Retrying in :num....' => 'offlinedialogretrymessage',
+                'Retry now' => 'offlinedialogretrybuttonlabel',
+                'Successfully submitted results.' => 'offlinesuccessfulsubmit',
+                'Sharing <strong>:title</strong>' => 'maintitle',
+                'Edit info for <strong>:title</strong>' => 'editinfotitle',
+                'Back' => 'back',
+                'Next' => 'next',
+                'Review info' => 'reviewinfo',
+                'Share' => 'share',
+                'Save changes' => 'savechanges',
+                'Register on the H5P Hub' => 'registeronhub',
+                'Required Info' => 'requiredinfo',
+                'Optional Info' => 'optionalinfo',
+                'Review & Share' => 'reviewandshare',
+                'Review & Save' => 'reviewandsave',
+                'Shared' => 'shared',
+                'Step :step of :total' => 'currentstep',
+                'All content details can be edited after sharing' => 'sharingnote',
+                'Select a license for your content' => 'licensedescription',
+                'Select a license version' => 'licenseversiondescription',
+                'Disciplines' => 'disciplinelabel',
+                'You can select multiple disciplines' => 'disciplinedescription',
+                'You can select up to :numDisciplines disciplines' => 'disciplinelimitreachedmessage',
+                'Type to search for disciplines' =>'searchplaceholder',
+                'in' => 'in',
+                'Dropdown button' => 'dropdownbutton',
+                'Remove :chip from the list' => 'removechip',
+                'Add keywords' => 'keywordsplaceholder',
+                'Keywords' => 'keywords',
+                'You can add multiple keywords separated by commas. Press "Enter" or "Add" to confirm keywords' => 'keywordsdescription',
+                'Alt text' => 'alttext',
+                'Please review the info below before you share' => 'reviewmessage',
+                'Sub-content (images, questions etc.) will be shared under :license unless otherwise specified in the authoring tool' => 'subcontentwarning',
+                'Disciplines' => 'disciplines',
+                'Short description' => 'shortdescription',
+                'Long description' => 'longdescription',
+                'Icon' => 'icon',
+                'Screenshots' => 'screenshots',
+                'Help me choose a license' => 'helpchoosinglicense',
+                'Share failed.' => 'sharefailed',
+                'Editing failed.' => 'editingfailed',
+                'Something went wrong, please try to share again.' => 'sharetryagain',
+                'Please wait...' => 'pleasewait',
+                'Language' => 'language',
+                'Level' => 'level',
+                'Short description of your content' => 'shortdescriptionplaceholder',
+                'Long description of your content' => 'longdescriptionplaceholder',
+                'Description' => 'description',
+                '640x480px. If not selected content will use category icon' => 'icondescription',
+                'Add up to five screenshots of your content' => 'screenshotsdescription',
+                'Submitted!' => 'submitted',
+                'Is now submitted to H5P Hub' => 'isnowsubmitted',
+                'A change has been submited for' => 'changehasbeensubmitted',
+                'Your content will normally be available in the Hub within one business day.' => 'contentavailable',
+                'Your content will update soon' => 'contentupdatesoon',
+                'Content License Info' => 'contentlicensetitle',
+                'Click on a specific license to get info about proper usage' => 'licensedialogdescription',
+                'Publisher' => 'publisherfieldtitle',
+                'This will display as the "Publisher name" on shared content' => 'publisherfielddescription',
+                'Email Address' => 'emailaddress',
+                'Publisher description' => 'publisherdescription',
+                'This will be displayed under "Publisher info" on shared content' => 'publisherdescriptiontext',
+                'Contact Person' => 'contactperson',
+                'Phone' => 'phone',
+                'Address' => 'address',
+                'City' => 'city',
+                'Zip' => 'zip',
+                'Country' => 'country',
+                'Organization logo or avatar' => 'logouploadtext',
+                'I accept the <a href=":url" target="_blank">terms of use</a>' => 'acceptterms',
+                'You have successfully registered an account on the H5P Hub' => 'successfullyregistred',
+                'You account details can be changed' => 'successfullyregistreddescription',
+                'here' => 'accountdetailslinktext',
+                'H5P Hub Registration' => 'registrationtitle',
+                'An error occurred' => 'registrationfailed',
+                'We were not able to create an account at this point. Something went wrong. Try again later.' => 'registrationfaileddescription',
+                ':length is the maximum number of characters' => 'maxlength',
+                'Keyword already exists!' => 'keywordexists',
+                'License details' => 'licensedetails',
+                'Remove' => 'remove',
+                'Remove image' => 'removeimage',
+                'Cancel sharing' => 'cancelpublishconfirmationdialogtitle',
+                'Are you sure you want to cancel the sharing process?' => 'cancelpublishconfirmationdialogdescription',
+                'No' => 'cancelpublishconfirmationdialogcancelbuttontext',
+                'Yes' => 'cancelpublishconfirmationdialogconfirmbuttontext',
+                'Add' => 'add',
+                'Save account settings' => 'updateregistrationonhub',
+                'Your H5P Hub account settings have successfully been changed' => 'successfullyupdated',
+                'One of the files inside the package exceeds the maximum file size allowed. (%file %used > %max)' => 'fileexceedsmaxsize',
+                'The total size of the unpacked files exceeds the maximum size allowed. (%used > %max)' => 'unpackedfilesexceedsmaxsize',
+                'Unable to read file from the package: %fileName' => 'couldnotreadfilefromzip',
+                'Unable to parse JSON from the package: %fileName' => 'couldnotparsejsonfromzip',
+                'Could not parse post data.' => 'couldnotparsepostdata',
+                'The mbstring PHP extension is not loaded. H5P needs this to function properly' => 'nombstringexteension',
+                'Assistive Technologies label' => 'assistivetechnologieslabel',
+                'Typical age' => 'age',
+                'The target audience of this content. Possible input formats separated by commas: "1,34-45,-50,59-".' => 'agedescription',
+                'Invalid input format for Typical age. Possible input formats separated by commas: "1, 34-45, -50, -59-".' => 'invalidage',
+                'H5P will reach out to the contact person in case there are any issues with the content shared by the publisher. The contact person\'s name or other information will not be published or shared with third parties' => 'contactpersondescription',
+                'The email address will be used by H5P to reach out to the publisher in case of any issues with the content or in case the publisher needs to recover their account. It will not be published or shared with any third parties' => 'emailaddressdescription',
+                'Copyrighted material cannot be shared in the H5P Content Hub. If the content is licensed with a OER friendly license like Creative Commons, please choose the appropriate license. If not this content cannot be shared.' => 'copyrightwarning',
+                'Keywords already exists!' => 'keywordsexists',
+                'Some of these keywords already exist' => 'somekeywordsexists',
             ];
             // @codingStandardsIgnoreEnd
+        }
+
+        // Some strings such as error messages are not translatable, in this case use message
+        // directly instead of crashing
+        // @see https://github.com/h5p/h5p-php-library/commit/2bd972168e7b22aaeea2dd13682ced9cf8233452#diff-5ca86cd0514d58be6708beff914aba66R1296.
+        if (!isset($translationsmap[$message])) {
+            return $message;
         }
 
         return get_string($translationsmap[$message], 'hvp', $replacements);
@@ -418,9 +693,8 @@ class framework implements \H5PFrameworkInterface {
      */
     // @codingStandardsIgnoreLine
     public function getLibraryFileUrl($libraryfoldername, $fileName) {
-        global $CFG;
         $context  = \context_system::instance();
-        $basepath = $CFG->httpswwwroot . '/';
+        $basepath = view_assets::getsiteroot() . '/';
         return "{$basepath}pluginfile.php/{$context->id}/mod_hvp/libraries/{$libraryfoldername}/{$fileName}";
     }
 
@@ -725,6 +999,8 @@ class framework implements \H5PFrameworkInterface {
             'drop_library_css' => $droplibrarycss,
             'semantics' => $librarydata['semantics'],
             'has_icon' => $librarydata['hasIcon'],
+            'metadata_settings' => $librarydata['metadataSettings'],
+            'add_to' => isset($librarydata['addTo']) ? json_encode($librarydata['addTo']) : null,
         );
 
         if ($new) {
@@ -855,8 +1131,8 @@ class framework implements \H5PFrameworkInterface {
             $content['disable'] = \H5PCore::DISABLE_NONE;
         }
 
-        $data = array(
-            'name' => $content['name'],
+        $data = array_merge(\H5PMetadata::toDBArray($content['metadata'], false), array(
+            'name' => isset($content['metadata']->title) ? $content['metadata']->title : $content['name'],
             'course' => $content['course'],
             'intro' => $content['intro'],
             'introformat' => $content['introformat'],
@@ -865,8 +1141,12 @@ class framework implements \H5PFrameworkInterface {
             'main_library_id' => $content['library']['libraryId'],
             'filtered' => '',
             'disable' => $content['disable'],
-            'timemodified' => time()
-        );
+            'timemodified' => time(),
+        ));
+
+        if (isset($content[ 'completionpass'])) {
+            $data[ 'completionpass' ] = $content[ 'completionpass' ];
+        }
 
         if (!isset($content['id'])) {
             $data['slug'] = '';
@@ -875,6 +1155,7 @@ class framework implements \H5PFrameworkInterface {
             $id = $DB->insert_record('hvp', $data);
         } else {
             $data['id'] = $content['id'];
+            $data['synced'] = \H5PContentHubSyncStatus::NOT_SYNCED;
             $DB->update_record('hvp', $data);
             $eventtype = 'update';
             $id = $data['id'];
@@ -981,25 +1262,42 @@ class framework implements \H5PFrameworkInterface {
     public function loadContent($id) {
         global $DB;
 
-        $data = $DB->get_record_sql(
-                "SELECT hc.id
-                      , hc.name
-                      , hc.intro
-                      , hc.introformat
-                      , hc.json_content
-                      , hc.filtered
-                      , hc.slug
-                      , hc.embed_type
-                      , hc.disable
-                      , hl.id AS library_id
-                      , hl.machine_name
-                      , hl.major_version
-                      , hl.minor_version
-                      , hl.embed_types
-                      , hl.fullscreen
-                FROM {hvp} hc
-                JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
-                WHERE hc.id = ?", array($id));
+        $data = $DB->get_record_sql("
+          SELECT
+            hc.id,
+            hc.name,
+            hc.intro,
+            hc.introformat,
+            hc.json_content,
+            hc.filtered,
+            hc.slug,
+            hc.embed_type,
+            hc.disable,
+            hl.id AS library_id,
+            hl.machine_name,
+            hl.major_version,
+            hl.minor_version,
+            hl.embed_types,
+            hl.fullscreen,
+            hc.name as title,
+            hc.authors,
+            hc.source,
+            hc.license,
+            hc.license_version,
+            hc.license_extras,
+            hc.year_from,
+            hc.year_to,
+            hc.changes,
+            hc.author_comments,
+            hc.default_language,
+            hc.shared,
+            hc.synced,
+            hc.hub_id,
+            hc.a11y_title
+          FROM {hvp} hc
+          JOIN {hvp_libraries} hl ON hl.id = hc.main_library_id
+          WHERE hc.id = ?", array($id)
+        );
 
         // Return null if not found.
         if ($data === false) {
@@ -1018,12 +1316,45 @@ class framework implements \H5PFrameworkInterface {
             'slug' => $data->slug,
             'embedType' => $data->embed_type,
             'disable' => $data->disable,
+            'shared' => $data->shared,
+            'synced' => $data->synced,
+            'contentHubId' => $data->hub_id,
             'libraryId' => $data->library_id,
             'libraryName' => $data->machine_name,
             'libraryMajorVersion' => $data->major_version,
             'libraryMinorVersion' => $data->minor_version,
             'libraryEmbedTypes' => $data->embed_types,
             'libraryFullscreen' => $data->fullscreen,
+        );
+
+        $metadatafields = [
+            'title',
+            'authors',
+            'source',
+            'license',
+            'license_version',
+            'license_extras',
+            'year_from',
+            'year_to',
+            'changes',
+            'author_comments',
+            'default_language',
+            'a11y_title'
+        ];
+
+        $content['metadata'] = \H5PCore::snakeToCamel(
+            array_reduce($metadatafields, function ($array, $field) use ($data) {
+                if (isset($data->$field)) {
+                    $value = $data->$field;
+                    // Decode json fields.
+                    if (in_array($field, ['authors', 'changes'])) {
+                        $value = json_decode($data->$field);
+                    }
+
+                    $array[$field] = $value;
+                }
+                return $array;
+            }, [])
         );
 
         return $content;
@@ -1182,6 +1513,10 @@ class framework implements \H5PFrameworkInterface {
             'minor_version' => $minorversion
         ));
 
+        if (!$library) {
+            return false;
+        }
+
         $librarydata = array(
             'libraryId' => $library->id,
             'machineName' => $library->machine_name,
@@ -1218,12 +1553,30 @@ class framework implements \H5PFrameworkInterface {
 
     /**
      * Implements clearFilteredParameters().
+     *
+     * @param array $libraryids array of library ids
+     *
+     * @throws \dml_exception
+     * @throws \coding_exception
      */
     // @codingStandardsIgnoreLine
-    public function clearFilteredParameters($libraryid) {
+    public function clearFilteredParameters($libraryids) {
         global $DB;
+        if (empty($libraryids)) {
+            return;
+        }
 
-        $DB->execute("UPDATE {hvp} SET filtered = null WHERE main_library_id = ?", array($libraryid));
+        list($insql, $inparams) = $DB->get_in_or_equal($libraryids);
+        $DB->execute("
+            UPDATE {hvp}
+            SET filtered = null
+            WHERE id IN (
+                SELECT DISTINCT cl.hvp_id
+                FROM {hvp_contents_libraries} cl
+                WHERE library_id $insql
+            )",
+          $inparams
+        );
     }
 
     /**
@@ -1243,11 +1596,12 @@ class framework implements \H5PFrameworkInterface {
      * Implements getNumContent().
      */
     // @codingStandardsIgnoreLine
-    public function getNumContent($libraryid) {
+    public function getNumContent($libraryid, $skip = NULL) {
         global $DB;
+        $skipquery = empty($skip) ? '' : " AND id NOT IN ($skip)";
 
         return (int) $DB->get_field_sql(
-                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?",
+                "SELECT COUNT(id) FROM {hvp} WHERE main_library_id = ?{$skipquery}",
                 array($libraryid));
     }
 
@@ -1258,7 +1612,7 @@ class framework implements \H5PFrameworkInterface {
     public function isContentSlugAvailable($slug) {
         global $DB;
 
-        return !$DB->get_field_sql("SELECT slug FROM {hvp} WHERE slug = ?", array($slug));
+        return !$DB->get_records_sql("SELECT id, slug FROM {hvp} WHERE slug = ?", array($slug));
     }
 
     /**
@@ -1359,15 +1713,16 @@ class framework implements \H5PFrameworkInterface {
     public function hasPermission($permission, $cmid = null) {
         switch ($permission) {
             case \H5PPermission::DOWNLOAD_H5P:
+            case \H5PPermission::COPY_H5P:
                 $cmcontext = \context_module::instance($cmid);
                 return has_capability('mod/hvp:getexport', $cmcontext);
             case \H5PPermission::CREATE_RESTRICTED:
-                return has_capability('mod/hvp:userestrictedlibraries', $this->getAJAXCourseContext());
+                return has_capability('mod/hvp:userestrictedlibraries', $this->getajaxcoursecontext());
             case \H5PPermission::UPDATE_LIBRARIES:
                 $context = \context_system::instance();
                 return has_capability('mod/hvp:updatelibraries', $context);
             case \H5PPermission::INSTALL_RECOMMENDED:
-                return has_capability('mod/hvp:installrecommendedh5plibraries', $this->getAJAXCourseContext());
+                return has_capability('mod/hvp:installrecommendedh5plibraries', $this->getajaxcoursecontext());
             case \H5PPermission::EMBED_H5P:
                 $cmcontext = \context_module::instance($cmid);
                 return has_capability('mod/hvp:getembedcode', $cmcontext);
@@ -1375,7 +1730,12 @@ class framework implements \H5PFrameworkInterface {
         return false;
     }
 
-    private function getAJAXCourseContext() {
+    /**
+     * Gets course context in AJAX
+     *
+     * @return bool|\context|\context_course
+     */
+    private function getajaxcoursecontext() {
         $context = \context::instance_by_id(required_param('contextId', PARAM_RAW));
         if ($context->contextlevel === CONTEXT_COURSE) {
             return $context;
@@ -1421,5 +1781,159 @@ class framework implements \H5PFrameworkInterface {
                 'owner'             => $ct->owner
             ), false, true);
         }
+    }
+
+    /**
+     * Implements loadAddons
+     */
+    // @codingStandardsIgnoreLine
+    public function loadAddons() {
+        global $DB;
+        $addons = array();
+
+        $records = $DB->get_records_sql(
+                "SELECT l1.id AS library_id,
+                        l1.machine_name,
+                        l1.major_version,
+                        l1.minor_version,
+                        l1.patch_version,
+                        l1.add_to,
+                        l1.preloaded_js,
+                        l1.preloaded_css
+                   FROM {hvp_libraries} l1
+              LEFT JOIN {hvp_libraries} l2
+                     ON l1.machine_name = l2.machine_name
+                    AND (l1.major_version < l2.major_version
+                         OR (l1.major_version = l2.major_version
+                             AND l1.minor_version < l2.minor_version))
+                  WHERE l1.add_to IS NOT NULL
+                    AND l2.machine_name IS NULL");
+
+        // NOTE: These are treated as library objects but are missing the following properties:
+        // title, embed_types, drop_library_css, fullscreen, runnable, semantics, has_icon.
+
+        // Extract num from records.
+        foreach ($records as $addon) {
+            $addons[] = \H5PCore::snakeToCamel($addon);
+        }
+
+        return $addons;
+    }
+
+    /**
+     * Implements getLibraryConfig
+     */
+    // @codingStandardsIgnoreLine
+    public function getLibraryConfig($libraries = null) {
+        global $CFG;
+        return (isset($CFG->mod_hvp_library_config) ? $CFG->mod_hvp_library_config : null);
+    }
+
+    /**
+     * Implements libraryHasUpgrade
+     */
+    // @codingStandardsIgnoreLine
+    public function libraryHasUpgrade($library) {
+        global $DB;
+
+        $results = $DB->get_records_sql(
+            "SELECT id
+                  FROM {hvp_libraries}
+                  WHERE machine_name = ?
+                  AND (major_version > ?
+                       OR (major_version = ? AND minor_version > ?))",
+            array(
+                $library['machineName'],
+                $library['majorVersion'],
+                $library['majorVersion'],
+                $library['minorVersion']
+            ),
+            0,
+            1
+        );
+
+        return !empty($results);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function replaceContentHubMetadataCache($metadata, $lang = 'en') {
+        global $DB;
+
+        // Check if exist in database.
+        $cache = $DB->get_record_sql(
+            'SELECT id
+                   FROM {hvp_content_hub_cache}
+                  WHERE language = ?',
+            array($lang)
+        );
+        if ($cache) {
+            // Update.
+            $DB->execute("UPDATE {hvp_content_hub_cache} SET json = ? WHERE id = ?", array($metadata, $cache->id));
+        } else {
+            // Insert.
+            $DB->insert_record('hvp_content_hub_cache', (object) array(
+                'json'         => $metadata,
+                'language'     => $lang,
+                'last_checked' => time(),
+            ));
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function getContentHubMetadataCache($lang = 'en') {
+        global $DB;
+        $cache = $DB->get_record_sql(
+                'SELECT json
+                   FROM {hvp_content_hub_cache}
+                  WHERE language = ?',
+                array($lang)
+        );
+        return $cache ? $cache->json : null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function getContentHubMetadataChecked($lang = 'en') {
+        global $DB;
+        $cache = $DB->get_record_sql(
+                'SELECT last_checked
+                  FROM {hvp_content_hub_cache}
+                 WHERE language = ?',
+                array($lang)
+        );
+        if ($cache) {
+            $time = new \DateTime();
+            $time->setTimestamp($cache->last_checked);
+            $cache = $time->format("D, d M Y H:i:s \G\M\T");
+        }
+        return $cache;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function setContentHubMetadataChecked($time, $lang = 'en') {
+        global $DB;
+        $DB->execute("UPDATE {hvp_content_hub_cache} SET last_checked = ? WHERE language = ?", array($time, $lang));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    // @codingStandardsIgnoreLine
+    public function resetHubOrganizationData() {
+        global $DB;
+
+        set_config('hub_secret', '', 'mod_hvp');
+        $DB->execute("UPDATE {hvp} SET hub_id = NULL, synced = NULL, shared = 0");
     }
 }
