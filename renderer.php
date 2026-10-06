@@ -33,7 +33,6 @@ defined('MOODLE_INTERNAL') || die();
  * @SuppressWarnings(PHPMD)
  */
 class mod_hvp_renderer extends plugin_renderer_base {
-
     /**
      * Alter which stylesheets are loaded for H5P. This is useful for adding
      * your own custom styles or replacing existing ones.
@@ -43,6 +42,17 @@ class mod_hvp_renderer extends plugin_renderer_base {
      * @param string $embedtype Possible values: div, iframe, external, editor
      */
     public function hvp_alter_styles(&$scripts, $libraries, $embedtype) {
+        $customcss = \core\di::get(\mod_hvp\custom_css::class);
+        if (trim($customcss->get_css()) === '') {
+            return;
+        }
+        $scripts[] = (object) [
+            'path' => \moodle_url::routed_path('/mod_hvp/custom.css')->out(false),
+            // The hash-based version both busts the cache when the setting changes, and is
+            // reused as the ETag by the route controller serving this URL, so the two always
+            // stay in sync (see \mod_hvp\custom_css::get_hash()).
+            'version' => '?v=' . $customcss->get_hash(),
+        ];
     }
 
     /**

@@ -93,6 +93,16 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('mod_hvp/copyright', get_string('enablecopyright', 'hvp'), '', 1));
     $settings->add(new admin_setting_configcheckbox('mod_hvp/icon', get_string('enableabout', 'hvp'), '', 1));
 
+    $settings->add(new admin_setting_configtextarea(
+        'mod_hvp/customcss',
+        get_string('customcss', 'hvp'),
+        get_string('customcss_desc', 'hvp'),
+        '',
+        PARAM_RAW,
+        80,
+        15
+    ));
+
     // Content Types header.
     $settings->add(new admin_setting_heading('mod_hvp/hub_settings', get_string('hubsettingsheader', 'hvp'), ''));
 
