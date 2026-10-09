@@ -116,12 +116,18 @@ function hvp_get_core_assets($context) {
     // Add core stylesheets.
     foreach (\H5PCore::$styles as $style) {
         $settings['core']['styles'][] = $relpath . $style . $cachebuster;
-        $PAGE->requires->css(new moodle_url($liburl . $style . $cachebuster));
+        if(!$PAGE->requires->is_head_done()){
+            // Only add stylesheets to the header if the header content has not yet been printed
+            $PAGE->requires->css(new moodle_url($liburl . $style . $cachebuster));
+        }
     }
     // Add core JavaScript.
     foreach (\H5PCore::$scripts as $script) {
         $settings['core']['scripts'][] = $relpath . $script . $cachebuster;
-        $PAGE->requires->js(new moodle_url($liburl . $script . $cachebuster), true);
+        if(!$PAGE->requires->is_head_done()){
+            // Only add scripts to the header if the header content has not yet been printed
+            $PAGE->requires->js(new moodle_url($liburl . $script . $cachebuster), true);
+        }
     }
 
     return $settings;
