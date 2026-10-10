@@ -69,6 +69,7 @@ $string['updatelibraries'] = 'Update All Libraries';
 $string['removetmpfiles'] = 'Remove old H5P temporary files';
 $string['removeoldlogentries'] = 'Remove old H5P log entries';
 $string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
+$string['migratecompletionpass'] = 'Migrate H5P passing grade completion settings';
 
 // Admin settings.
 $string['displayoptiondownloadnever'] = 'Never';
