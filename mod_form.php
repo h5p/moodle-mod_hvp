@@ -157,12 +157,13 @@ class mod_hvp_mod_form extends moodleform_mod {
             && isset($defaultvalues) && isset($defaultvalues['course'])) {
 
             // Get the gradeitem and set maxgrade.
-            $gradeitem = grade_item::fetch(array(
+            $gradeitem = grade_item::fetch([
                 'itemtype' => 'mod',
                 'itemmodule' => 'hvp',
                 'iteminstance' => $content['id'],
-                'courseid' => $defaultvalues['course']
-            ));
+                'courseid' => $defaultvalues['course'],
+                'outcomeid' => null,
+            ]);
 
             if (isset($gradeitem) && isset($gradeitem->grademax)) {
                 $defaultvalues['maximumgrade'] = $gradeitem->grademax;
