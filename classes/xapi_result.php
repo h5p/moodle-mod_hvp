@@ -26,6 +26,7 @@
 namespace mod_hvp;
 
 defined('MOODLE_INTERNAL') || die();
+require_once (__DIR__ . '/../lib.php');
 
 /**
  * Class xapi_result handles xapi results and corresponding db operations.
@@ -38,6 +39,8 @@ class xapi_result {
      * Handle xapi results endpoint
      */
     public static function handle_ajax() {
+        global $DB, $USER;
+
         // Validate token.
         if (!self::validate_token()) {
             $core = framework::instance();
@@ -78,6 +81,10 @@ class xapi_result {
 
         // Store results.
         self::store_xapi_data($cm->instance, $xapijson);
+
+        $hvp = $DB->get_record('hvp', array('id' => $cm->instance));
+        // Set grade using Gradebook API.
+        hvp_update_grades($hvp, $USER->id);
 
         // Successfully inserted xAPI result.
         \H5PCore::ajaxSuccess();
