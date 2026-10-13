@@ -438,35 +438,42 @@ function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
 }
 
 /**
- * Obtains the automatic completion state for this H5P activity on any conditions
- * in settings, such as if a certain grade is achieved.
+ * Add a get_coursemodule_info function in case any H5P activity type wants to add 'extra' information
+ * for the course (see resource).
  *
- * @param object $course Course
- * @param object $cm Course-module
- * @param int $userid User ID
- * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
- * @return bool True if completed, false if not. (If no conditions, then return
- *   value depends on comparison type)
+ * Given a course_module object, this function returns any "extra" information that may be needed
+ * when printing this activity in a course listing. See get_array_of_activities() in course/lib.php.
+ *
+ * This is also used to register the custom completion rules with the course module, so that the
+ * {@see \mod_hvp\completion\custom_completion} class can evaluate them.
+ *
+ * @param stdClass $coursemodule The coursemodule object (record).
+ * @return cached_cm_info|false An object on information that the courses will know about
+ *     (most noticeably, an icon), or false if the activity does not exist.
  */
-function hvp_get_completion_state($course, $cm, $userid, $type) {
-    global $DB, $CFG;
-    $hvp = $DB->get_record('hvp', array('id' => $cm->instance), '*', MUST_EXIST);
-    if (!$hvp->completionpass) {
-        return $type;
+function hvp_get_coursemodule_info($coursemodule) {
+    global $DB;
+
+    $dbparams = ['id' => $coursemodule->instance];
+    $fields = 'id, name, intro, introformat, completionpass';
+    if (!$hvp = $DB->get_record('hvp', $dbparams, $fields)) {
+        return false;
     }
-    // Check for passing grade.
-    if ($hvp->completionpass) {
-        require_once($CFG->libdir . '/gradelib.php');
-        $item = grade_item::fetch(array('courseid' => $course->id, 'itemtype' => 'mod',
-                'itemmodule' => 'hvp', 'iteminstance' => $cm->instance, 'outcomeid' => null));
-        if ($item) {
-            $grades = grade_grade::fetch_users_grades($item, array($userid), false);
-            if (!empty($grades[$userid])) {
-                return $grades[$userid]->is_passed($item);
-            }
-        }
+
+    $result = new cached_cm_info();
+    $result->name = $hvp->name;
+
+    if ($coursemodule->showdescription) {
+        // Convert intro to html. Do not filter cached version, filters run at display time.
+        $result->content = format_module_intro('hvp', $hvp, $coursemodule->id, false);
     }
-    return false;
+
+    // Populate the custom completion rules as key => value pairs, but only if the completion mode is 'automatic'.
+    if ($coursemodule->completion == COMPLETION_TRACKING_AUTOMATIC) {
+        $result->customdata['customcompletionrules']['completionpass'] = $hvp->completionpass;
+    }
+
+    return $result;
 }
 
 /**
