@@ -1652,6 +1652,42 @@ class framework implements \H5PFrameworkInterface {
             $DB->delete_records('hvp_libraries_cachedassets', array('hash' => $key->hash));
         }
 
+        // Reset the global cached assets rev. This unfortunately also busts the caches for all other libraries,
+        // which is suboptimal. However, this guarantees that the assets that will be built on demand are in fact
+        // being used by the client browser instead of browser-side cached assets from before in the case that the
+        // cached assets did not change.
+        $revmanager = \core\di::get(\mod_hvp\local\cached_assets_rev_manager::class);
+        $revmanager->invalidate_global_cached_assets_rev();
+
+        return $hashes;
+    }
+
+    /**
+     * Delete all cached assets (DB mappings + files) and invalidate the global revision.
+     *
+     * @return string[] array of deleted cached asset hashes
+     */
+    public function deleteAllCachedAssets(): array {
+        global $DB;
+
+        $results = $DB->get_records_sql(
+                'SELECT DISTINCT hash
+                   FROM {hvp_libraries_cachedassets}');
+
+        $hashes = [];
+        foreach ($results as $record) {
+            $hashes[] = $record->hash;
+        }
+
+        $DB->delete_records('hvp_libraries_cachedassets');
+
+        $core = self::instance('core');
+        // There is no interface method for deleting all cached assets, so we pass all existing hashes.
+        $core->fs->deleteCachedAssets($hashes);
+
+        $revmanager = \core\di::get(\mod_hvp\local\cached_assets_rev_manager::class);
+        $revmanager->invalidate_global_cached_assets_rev();
+
         return $hashes;
     }
 
