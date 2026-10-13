@@ -425,13 +425,26 @@ function hvp_grade_item_update($hvp, $grades=null) {
  * @param int $userid specific user only, 0 means all
  * @param bool $nullifnone If true and the user has no grade then a grade item with rawgrade == null will be inserted
  */
-function hvp_update_grades($hvp=null, $userid=0, $nullifnone=true) {
-    if ($userid and $nullifnone) {
+function hvp_update_grades($hvp = null, $userid = 0, $nullifnone = true) {
+    if ($userid && $nullifnone) {
+        // First, check if a grade exist in plugin table history before setting to null.
+        $rawgrade = null;
+
+        // Fix recover grades for re-enrol user.
+        if ($hvp != null) {
+            // Get history from table hvp_xapi_results. If it exist, return rawgrade value.
+            $record = $DB->get_record('hvp_xapi_results', ['user_id' => $userid, 'content_id' => $hvp->id]);
+            if ($record) {
+                // To force hvp_grade_item_update($hvp, $grade) to recalculate proper scaled grade and import as final grade.
+                $hvp->rawgrade = $record->raw_score;
+                $hvp->rawgrademax = $record->max_score;
+            }
+        }
+
         $grade = new stdClass();
         $grade->userid   = $userid;
-        $grade->rawgrade = null;
+        $grade->rawgrade = $rawgrade;
         hvp_grade_item_update($hvp, $grade);
-
     } else {
         hvp_grade_item_update($hvp);
     }
