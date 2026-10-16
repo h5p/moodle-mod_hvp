@@ -135,9 +135,25 @@ class user_grades {
             return;
         }
 
+        // Check permission.
+        $context = \context_module::instance($cm->id);
+        if (!has_capability('mod/hvp:manage', $context)) {
+            \H5PCore::ajaxError(get_string('nopermissiontosaveresult', 'hvp'));
+            http_response_code(403);
+            return;
+        }
+
         // Content parameters.
         $subcontentid = required_param('subcontent_id', PARAM_INT);
         $score = required_param('score', PARAM_INT);
+        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
+
+        // Make sure subcontent actually belongs to the contextId
+        if (!$answer || (int) $answer->content_id !== (int) $cm->instance) {
+            \H5PCore::ajaxError('Result not found');
+            http_response_code(404);
+            return;
+        }
 
         // Update the answer's score.
         $data = (object) [
@@ -145,9 +161,6 @@ class user_grades {
             'raw_score' => $score
         ];
         $DB->update_record('hvp_xapi_results', $data, false);
-
-        // Load freshly updated record.
-        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
 
         // Get the sum of all the OEQ scores with the same parent.
         $totalgradablesscore = intval($DB->get_field_sql(
@@ -189,7 +202,7 @@ class user_grades {
         ));
 
         $response = [
-            'score' => $answer->raw_score,
+            'score' => $score,
             'maxScore' => $answer->max_score,
             'totalUngraded' => $numungraded,
         ];
@@ -200,11 +213,37 @@ class user_grades {
      * Fetch score/maxScore for ungraded item + number of ungraded items.
      */
     public static function return_subcontent_grade() {
-        global $DB;
+        global $DB, $USER;
 
         // Content parameters.
         $subcontentid = required_param('subcontent_id', PARAM_INT);
         $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
+
+        if (!$answer) {
+            \H5PCore::ajaxError('Result not found');
+            http_response_code(404);
+            return;
+        }
+
+        $cm = get_coursemodule_from_instance(
+            'hvp',
+            $answer->content_id
+        );
+        if (!$cm) {
+            \H5PCore::ajaxError('Activity not found');
+            http_response_code(404);
+            return;
+        }
+
+        $isowner = ((int) $answer->user_id === (int) $USER->id);
+        $context = \context_module::instance($cm->id);
+        $canViewAll = has_capability('mod/hvp:manage', $context);
+
+        if (!$isowner && !$canViewAll) {
+            \H5PCore::ajaxError('Access denied');
+            http_response_code(403);
+            return;
+        }
 
         // Get the num of ungraded OEQ answers.
         $numungraded = intval($DB->get_field_sql(
