@@ -162,7 +162,7 @@ class view_assets {
             );
 
         return "<iframe src=\"{$embedurl->out()}\" width=\":w\" height=\":h\" frameborder=\"0\" " .
-               "allowfullscreen=\"allowfullscreen\" title=\"{$title}\"></iframe>";
+               "allowfullscreen=\"allowfullscreen\" title=\"" . s($title) . "\"></iframe>";
     }
 
     /**
@@ -331,7 +331,7 @@ class view_assets {
                  " src=\"about:blank\"" .
                  " frameBorder=\"0\"" .
                  " scrolling=\"no\"" .
-                 " title=\"{$title}\">" .
+                 " title=\"" . s($title) . "\">" .
                  "</iframe>" .
                  "</div>";
         }
