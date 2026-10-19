@@ -150,7 +150,7 @@ class user_grades {
 
         // Make sure subcontent actually belongs to the contextId
         if (!$answer || (int) $answer->content_id !== (int) $cm->instance) {
-            \H5PCore::ajaxError('Result not found');
+            \H5PCore::ajaxError('No such content');
             http_response_code(404);
             return;
         }
