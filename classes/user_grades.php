@@ -237,7 +237,7 @@ class user_grades {
 
         $isowner = ((int) $answer->user_id === (int) $USER->id);
         $context = \context_module::instance($cm->id);
-        $canViewAll = has_capability('mod/hvp:manage', $context);
+        $canViewAll = has_capability('mod/hvp:viewallresults', $context);
 
         if (!$isowner && !$canViewAll) {
             \H5PCore::ajaxError('Access denied');
