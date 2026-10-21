@@ -146,8 +146,17 @@ class user_grades {
         ];
         $DB->update_record('hvp_xapi_results', $data, false);
 
+        // Check permissions.
+        $context = \context_module::instance($cm->id);
+        require_capability('mod/hvp:viewresults', $context);
+
         // Load freshly updated record.
-        $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
+        $answer = $DB->get_record('hvp_xapi_results', ['id' => $subcontentid]);
+        if ((int) $answer->content_id !== (int) $cm->instance) {
+            \H5PCore::ajaxError('Invalid sub-content');
+            http_response_code(404);
+            return;
+        }
 
         // Get the sum of all the OEQ scores with the same parent.
         $totalgradablesscore = intval($DB->get_field_sql(
@@ -202,9 +211,23 @@ class user_grades {
     public static function return_subcontent_grade() {
         global $DB;
 
+        $failmessage = 'Failed to fetch the subcontent score';
+
         // Content parameters.
         $subcontentid = required_param('subcontent_id', PARAM_INT);
         $answer = $DB->get_record('hvp_xapi_results', array('id' => $subcontentid));
+
+        if (!$answer) {
+            self::return_failed_response($failmessage, 404);
+            return;
+        }
+
+        $cm = get_coursemodule_from_instance('hvp', $answer->content_id);
+
+        if (!$cm || !has_capability('mod/hvp:viewresults', \context_module::instance($cm->instance))) {
+            self::return_failed_response($failmessage, 404);
+            return;
+        }
 
         // Get the num of ungraded OEQ answers.
         $numungraded = intval($DB->get_field_sql(
@@ -222,5 +245,16 @@ class user_grades {
             'totalUngraded' => $numungraded,
         ];
         \H5PCore::ajaxSuccess($response);
+    }
+
+    /**
+     * Return a failed response with a given message and HTTP code.
+     *
+     * @param string $message The error message to return.
+     * @param int $httpcode The HTTP response code.
+     */
+    protected static function return_failed_response(string $message = 'Response failed', int $httpcode = 404) {
+        \H5PCore::ajaxError($message);
+        http_response_code($httpcode);
     }
 }

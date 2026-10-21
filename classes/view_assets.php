@@ -154,12 +154,7 @@ class view_assets {
 
         $root = self::getsiteroot();
         $embedurl = new \moodle_url("{$root}/mod/hvp/embed.php?id={$this->cm->id}");
-        $title = isset($this->content['metadata']['a11yTitle'])
-            ? $this->content['metadata']['a11yTitle']
-            : (isset($this->content['metadata']['title'])
-                ? $this->content['metadata']['title']
-                : ''
-            );
+        $title = $this->get_title_from_metadata();
 
         return "<iframe src=\"{$embedurl->out()}\" width=\":w\" height=\":h\" frameborder=\"0\" " .
                "allowfullscreen=\"allowfullscreen\" title=\"{$title}\"></iframe>";
@@ -316,13 +311,7 @@ class view_assets {
         if ($this->embedtype === 'div') {
             echo "<div class=\"h5p-content\" data-content-id=\"{$this->content['id']}\"></div>";
         } else {
-            $title = isset($this->content['metadata']['a11yTitle'])
-                ? $this->content['metadata']['a11yTitle']
-                : (isset($this->content['metadata']['title'])
-                    ? $this->content['metadata']['title']
-                    : ''
-                );
-
+            $title = $this->get_title_from_metadata();
             echo "<div class=\"h5p-iframe-wrapper\">" .
                  "<iframe id=\"h5p-iframe-{$this->content['id']}\"" .
                  " class=\"h5p-iframe\"" .
@@ -359,5 +348,21 @@ class view_assets {
         }
 
         return $CFG->wwwroot;
+    }
+
+    /**
+     * Gets the title from the content metadata, preferring the a11yTitle if available.
+     *
+     * @return string The title extracted from the metadata, sanitised for output.
+     */
+    protected function get_title_from_metadata(): string {
+        $metadata = $this->content['metadata'];
+        $title = '';
+        if (isset($metadata['a11yTitle'])) {
+            $title = $metadata['a11yTitle'];
+        } else if (isset($metadata['title'])) {
+            $title = $metadata['title'];
+        }
+        return s($title);
     }
 }
