@@ -103,6 +103,10 @@ $string['contentstatefrequency'] = 'Save content state frequency';
 $string['contentstatefrequency_help'] = 'In seconds, how often do you wish the user to auto save their progress. Increase this number if you\'re having issues with many ajax requests';
 $string['enabledlrscontenttypes'] = 'Enable LRS dependent content types';
 $string['enabledlrscontenttypes_help'] = 'Makes it possible to use content types that rely upon a Learning Record Store to function properly, like the Questionnaire content type.';
+$string['contentuserdata_limit'] = 'Content user data limit per user per activity (MiB)';
+$string['contentuserdata_limit_desc'] = 'Maximum combined size of saved H5P user data for each user and activity.';
+$string['contentuserdata_rows_limit'] = 'Maximum saved data rows per user per activity';
+$string['contentuserdata_rows_limit_desc'] = 'Maximum number of saved H5P user-data records per student per activity.';
 
 // Admin menu.
 $string['contenttypecacheheader'] = 'Content Type Cache';
@@ -465,6 +469,8 @@ $string['invalidhvp'] = 'Invalid H5P activity';
 $string['nohubregistration'] = 'Not registered with H5P Hub';
 $string['invalidtoken'] = 'H5P has received an invalid token. Refresh the page and try again';
 $string['contentnotshared'] = 'H5P activity cannot be shared. Please check your H5P hub registration';
+$string['contentuserdata_limit_exceeded'] = 'This activity has reached its saved data storage limit. Your latest changes could not be saved.';
+$string['contentuserdata_rows_limit_exceeded'] = 'This activity has reached the maximum number of saved data entries allowed for your account.';
 
 // Messaging api.
 $string['messageprovider:confirmation'] = 'Confirmation of your own H5P submissions';
