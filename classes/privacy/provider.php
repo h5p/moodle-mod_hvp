@@ -511,7 +511,7 @@ class provider implements
 
         $DB->delete_records_select(
             'hvp_xapi_results',
-            "hvp_id = :hvpid AND user_id $insql",
+            "content_id = :hvpid AND user_id $insql",
             $inparams
         );
 
