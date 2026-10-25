@@ -113,7 +113,6 @@ if ($ADMIN->fulltree) {
     );
 
     // Content Hub.
-    $hubinfo = $core->hubAccountInfo();
     $settings->add(new admin_setting_heading(
         'mod_hvp/content_hub_settings',
         get_string('contenthub:settings:heading', 'hvp'),
@@ -127,11 +126,12 @@ if ($ADMIN->fulltree) {
             get_string('contenthubsearchenable', 'hvp'),
             get_string('contenthubsearchdescription', 'hvp'), 1));
     
-    // Register on the Content Hub to allow uploading content
-    $settings->add(new admin_setting_html(
-        'mod_hvp/content_hub_settings_box',
-        get_string('contenthub:settings:box', 'hvp'),
-        $hubinfo
+    // Content Hub account info. Loaded asynchronously by the Check API, so no request
+    // is made while building the admin tree.
+    $settings->add(new admin_setting_check(
+        'mod_hvp/content_hub_account_check',
+        new \mod_hvp\check\hub_account(),
+        true
     ));
 
     // Load js for disable hub confirmation dialog functionality.
