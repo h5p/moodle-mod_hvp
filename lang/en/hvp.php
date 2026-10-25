@@ -610,3 +610,7 @@ $string['emailaddressdescription'] = 'The email address will be used by H5P to r
 $string['copyrightwarning'] = 'Copyrighted material cannot be shared in the H5P Content Hub. If the content is licensed with a OER friendly license like Creative Commons, please choose the appropriate license. If not this content cannot be shared.';
 $string['keywordsexists'] = 'Keywords already exists!';
 $string['somekeywordsexists'] = 'Some of these keywords already exist';
+$string['hubaccountcheck:name'] = 'H5P Content Hub Account';
+$string['hubaccountcheck:registered'] = 'Registered with the H5P Content Hub as {$a}';
+$string['hubaccountcheck:unregistered'] = 'This site is not registered with the H5P Content Hub';
+$string['hubaccountcheck:error'] = 'Unable to retrieve the H5P Content Hub account information';

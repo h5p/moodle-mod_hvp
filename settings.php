@@ -25,7 +25,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/hvp/lib.php');
-require_once($CFG->dirroot . '/mod/hvp/classes/admin_setting_html.php');
 
 global $PAGE;
 
@@ -113,7 +112,6 @@ if ($ADMIN->fulltree) {
     );
 
     // Content Hub.
-    $hubinfo = $core->hubAccountInfo();
     $settings->add(new admin_setting_heading(
         'mod_hvp/content_hub_settings',
         get_string('contenthub:settings:heading', 'hvp'),
@@ -128,11 +126,25 @@ if ($ADMIN->fulltree) {
             get_string('contenthubsearchdescription', 'hvp'), 1));
     
     // Register on the Content Hub to allow uploading content
-    $settings->add(new admin_setting_html(
-        'mod_hvp/content_hub_settings_box',
-        get_string('contenthub:settings:box', 'hvp'),
-        $hubinfo
-    ));
+    // The account info is loaded asynchronously as it requires a request to the hub.
+    if (class_exists('admin_setting_check')) {
+        $settings->add(new admin_setting_check(
+            'mod_hvp/content_hub_settings_box',
+            new \mod_hvp\check\hub_account(),
+            true
+        ));
+    } else {
+        // Older Moodle versions have no async checks, so keep the original synchronous behaviour.
+        // This fallback, along with classes/admin_setting_html.php and its template, should eventually be
+        // removed once the minimum supported Moodle version has admin_setting_check.
+        require_once($CFG->dirroot . '/mod/hvp/classes/admin_setting_html.php');
+        $hubinfo = $core->hubAccountInfo();
+        $settings->add(new admin_setting_html(
+            'mod_hvp/content_hub_settings_box',
+            get_string('contenthub:settings:box', 'hvp'),
+            $hubinfo
+        ));
+    }
 
     // Load js for disable hub confirmation dialog functionality.
     $PAGE->requires->js('/mod/hvp/library/js/jquery.js', true);

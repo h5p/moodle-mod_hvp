@@ -1,0 +1,52 @@
+{{!
+    @template mod_hvp/hub_account_info
+
+    H5P Content Hub account details, rendered as the details of a check result.
+
+    Example context (json):
+    {
+        "name": "Example org",
+        "logo": "http://example.com/logo.png",
+        "contactPerson": "Jane Doe",
+        "email": "jane@example.com",
+        "address": "1 Example St",
+        "zip": "1234",
+        "city": "Sydney",
+        "country": "Australia",
+        "phone": "555 1234",
+        "registrationurl": "http://example.com/mod/hvp/content_hub_registration.php"
+    }
+}}
+<div style="margin-bottom: 1em;">
+    <div>
+        {{^name}}
+            {{# str }} contenthub:register, mod_hvp, {{ registrationurl }} {{/str}}
+        {{/name}}
+        {{#name}}
+            <div>
+                <img src="{{logo}}" style="max-width: 5em; display: inline-block; vertical-align: top;" />
+                <div style="display: inline-block">
+                    <div>{{name}}</div>
+                    {{#contactPerson}}
+                        <div>{{contactPerson}}</div>
+                    {{/contactPerson}}
+                    {{#email}}
+                        <div>{{email}}</div>
+                    {{/email}}
+                    <div>
+                        {{address}} {{zip}} {{city}}
+                    </div>
+                    {{#country}}
+                        <div>{{country}}</div>
+                    {{/country}}
+                    {{#phone}}
+                        <div>{{phone}}</div>
+                    {{/phone}}
+                </div>
+                <div style="margin-top: 1em">
+                    {{# str}} contenthub:changesettings, mod_hvp, {{ registrationurl }} {{/str}}
+                </div>
+            </div>
+        {{/name}}
+    </div>
+</div>

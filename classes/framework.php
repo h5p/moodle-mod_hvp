@@ -202,7 +202,7 @@ class framework implements \H5PFrameworkInterface {
 
         $options = array(
             'CURLOPT_SSL_VERIFYPEER' => true,
-            'CURLOPT_CONNECTTIMEOUT' => 20,
+            'CURLOPT_CONNECTTIMEOUT' => 5,
             'CURLOPT_FOLLOWLOCATION' => 1,
             'CURLOPT_MAXREDIRS'      => 5,
             'CURLOPT_RETURNTRANSFER' => true,

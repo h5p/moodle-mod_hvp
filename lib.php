@@ -514,3 +514,12 @@ function mod_hvp_core_calendar_provide_event_action(calendar_event $event, actio
     );
 }
 
+
+/**
+ * Adds the H5P Content Hub account check to the security checks report.
+ *
+ * @return \core\check\check[]
+ */
+function mod_hvp_security_checks() {
+    return [new \mod_hvp\check\hub_account()];
+}
