@@ -102,10 +102,13 @@ class content_user_data {
             $context = \context_module::instance($cm->id);
         }
 
+        $canSave = has_capability('mod/hvp:savecontentuserdata', $context);
+        $canManage = has_capability('mod/hvp:manage', $context);
+        $writeToState = $dataid === 'state' && $subcontentid === 0;
         // Check permissions.
-        if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
-            \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
+        if (!$canSave || (!$canManage && !$writeToState)) {
             http_response_code(403);
+            \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
             return;
         }
 
@@ -189,50 +192,34 @@ class content_user_data {
         if ($limitmb === false || $limitmb === null || $limitmb === '') {
             $limitmb = 1;
         }
-        $limitbytes = (int) $limitmb * 1024 * 1024; // convert to bytes
 
-        // Fetch user row limit from config. If not set, default to 20
-        $rowlimit = get_config('mod_hvp', 'content_user_data_rows_limit');
-        if ($rowlimit === false || $rowlimit === null || $rowlimit === '') {
-            $rowlimit = 20;
+        $limitbytes = (int) $limitmb * 1024 * 1024;
+        if ($limitbytes <= 0 || strlen($data) > $limitbytes) {
+            return 'size_exceeded';
         }
-        $rowlimit = max(0, (int) $rowlimit);
-
 
         // Determine if we should update or insert.
         $update = self::get_user_data($contentid, $subcontentid, $dataid);
 
-        // Get amount of rows and total size
-        $stats = $DB->get_record_sql(
-            "SELECT COUNT(*) AS rowcount,
-                    COALESCE(SUM(OCTET_LENGTH(data)), 0) AS totalbytes
-            FROM {hvp_content_user_data}
-            WHERE user_id = :userid
-                AND hvp_id = :hvp",
-            array(
-                'userid' => $USER->id,
-                'hvp' => $contentid,
-            )
-        );
+        // Only count rows when inserting a new record, and not part of the global flags
+        // Always allow autosave of state
+        if ($update === false && !($dataid === 'state' && $subcontentid === 0)) {
+            $rowlimit = get_config('mod_hvp', 'content_user_data_rows_limit');
+            if ($rowlimit === false || $rowlimit === null || $rowlimit === '') {
+                $rowlimit = 20;
+            }
 
-        $rowcount = (int) $stats->rowcount;
-        $currentbytes = (int) $stats->totalbytes;
+            $rowlimit = max(0, (int) $rowlimit);
+            $rowcount = $DB->count_records('hvp_content_user_data', array(
+                'user_id' => $USER->id,
+                'hvp_id' => $contentid,
+            ));
 
-        // An update replaces an existing value; do not count the old value twice.
-        if ($update !== false) {
-            $currentbytes -= strlen($update->data);
-        } else {
-            // Only a new record consumes an additional row.
             if ($rowcount >= $rowlimit) {
                 return 'rows_exceeded';
             }
         }
 
-        $newbytes = strlen($data);
-        // Reject this write if it would exceed the total quota.
-        if ($limitbytes <= 0 || $currentbytes + $newbytes > $limitbytes) {
-            return 'size_exceeded';
-        }
 
         // Wash values to ensure 0 or 1.
         $preload = ($preload === '0' || $preload === 0) ? 0 : 1;
