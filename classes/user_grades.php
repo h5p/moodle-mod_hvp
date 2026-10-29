@@ -240,8 +240,8 @@ class user_grades {
         $canViewAll = has_capability('mod/hvp:viewallresults', $context);
 
         if (!$isowner && !$canViewAll) {
-            \H5PCore::ajaxError('Access denied');
             http_response_code(403);
+            \H5PCore::ajaxError('Access denied');
             return;
         }
 
