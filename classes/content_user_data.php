@@ -102,10 +102,13 @@ class content_user_data {
             $context = \context_module::instance($cm->id);
         }
 
+        $canSave = has_capability('mod/hvp:savecontentuserdata', $context);
+        $canManage = has_capability('mod/hvp:manage', $context);
+        $writeToState = $dataid === 'state' && $subcontentid === 0;
         // Check permissions.
-        if (!has_capability('mod/hvp:savecontentuserdata', $context)) {
-            \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
+        if (!$canSave || (!$canManage && !$writeToState)) {
             http_response_code(403);
+            \H5PCore::ajaxError(get_string('nopermissiontosavecontentuserdata', 'hvp'));
             return;
         }
 
@@ -114,7 +117,18 @@ class content_user_data {
             self::delete_user_data($contentid, $subcontentid, $dataid);
         } else {
             // Save user data.
-            self::save_user_data($contentid, $subcontentid, $dataid, $preload, $invalidate, $data);
+            $result = self::save_user_data($contentid, $subcontentid, $dataid, $preload, $invalidate, $data);
+
+            if ($result === 'size_exceeded') {
+                http_response_code(413);
+                \H5PCore::ajaxError(get_string('contentuserdata_limit_exceeded', 'hvp'));
+                return;
+            }
+            else if ($result === 'rows_exceeded') {
+                http_response_code(403);
+                \H5PCore::ajaxError(get_string('contentuserdata_rows_limit_exceeded', 'hvp'));
+                return;
+            }
         }
         \H5PCore::ajaxSuccess();
     }
@@ -173,8 +187,39 @@ class content_user_data {
     public static function save_user_data($contentid, $subcontentid, $dataid, $preload, $invalidate, $data) {
         global $DB, $USER;
 
+        // Fetch user limit from config. If not set, default to 1 MB
+        $limitmb = get_config('mod_hvp', 'content_user_data_limit');
+        if ($limitmb === false || $limitmb === null || $limitmb === '') {
+            $limitmb = 1;
+        }
+
+        $limitbytes = (int) $limitmb * 1024 * 1024;
+        if ($limitbytes <= 0 || strlen($data) > $limitbytes) {
+            return 'size_exceeded';
+        }
+
         // Determine if we should update or insert.
         $update = self::get_user_data($contentid, $subcontentid, $dataid);
+
+        // Only count rows when inserting a new record, and not part of the global flags
+        // Always allow autosave of state
+        if ($update === false && !($dataid === 'state' && $subcontentid === 0)) {
+            $rowlimit = get_config('mod_hvp', 'content_user_data_rows_limit');
+            if ($rowlimit === false || $rowlimit === null || $rowlimit === '') {
+                $rowlimit = 20;
+            }
+
+            $rowlimit = max(0, (int) $rowlimit);
+            $rowcount = $DB->count_records('hvp_content_user_data', array(
+                'user_id' => $USER->id,
+                'hvp_id' => $contentid,
+            ));
+
+            if ($rowcount >= $rowlimit) {
+                return 'rows_exceeded';
+            }
+        }
+
 
         // Wash values to ensure 0 or 1.
         $preload = ($preload === '0' || $preload === 0) ? 0 : 1;
@@ -202,6 +247,7 @@ class content_user_data {
             // Update old data.
             $DB->update_record('hvp_content_user_data', $newdata);
         }
+        return true; // Successfully inserted or updated a record
     }
 
     /**

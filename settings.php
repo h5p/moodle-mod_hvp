@@ -54,6 +54,15 @@ if ($ADMIN->fulltree) {
             new admin_setting_configtext('mod_hvp/content_state_frequency',
                     get_string('contentstatefrequency', 'hvp'),
                     get_string('contentstatefrequency_help', 'hvp'), 30, PARAM_INT));
+    // Content user data storage limit.
+    $settings->add(
+            new admin_setting_configtext('mod_hvp/content_user_data_limit',
+                get_string('contentuserdata_limit', 'hvp'),
+                get_string('contentuserdata_limit_desc', 'hvp'), 1, PARAM_INT));
+    $settings->add(
+            new admin_setting_configtext('mod_hvp/content_user_data_rows_limit',
+                get_string('contentuserdata_rows_limit', 'hvp'),
+                get_string('contentuserdata_rows_limit_desc', 'hvp'), 20, PARAM_INT));
 
     $PAGE->requires->js('/mod/hvp/library/js/jquery.js', true);
     $PAGE->requires->js('/mod/hvp/library/js/h5p-display-options.js', true);
