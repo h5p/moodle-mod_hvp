@@ -281,7 +281,9 @@ class provider implements
             h.name,
             x.content_id,
             x.parent_id,
+            x.interaction_type,
             x.description,
+            x.correct_responses_pattern,
             x.response,
             x.additionals,
             x.raw_score,
@@ -314,8 +316,16 @@ class provider implements
                 $h5pxapi->parent_id = $record->parent_id;
             }
 
+            if (!empty($record->interaction_type)) {
+                $h5pxapi->interaction_type = $record->interaction_type;
+            }
+
             if (!empty($record->description)) {
                 $h5pxapi->description = $record->description;
+            }
+
+            if (!empty($record->correct_responses_pattern)) {
+                $h5pxapi->correct_responses_pattern = $record->correct_responses_pattern;
             }
 
             if (!empty($record->response)) {
@@ -326,11 +336,11 @@ class provider implements
                 $h5pxapi->additionals = $record->additionals;
             }
 
-            if (!empty($record->raw_score)) {
+            if ($record->raw_score !== null) {
                 $h5pxapi->raw_score = $record->raw_score;
             }
 
-            if (!empty($record->max_score)) {
+            if ($record->max_score !== null) {
                 $h5pxapi->max_score = $record->max_score;
             }
 
