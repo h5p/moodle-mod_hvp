@@ -40,12 +40,17 @@ class look_for_updates extends \core\task\scheduled_task {
 
         if ($result === false) {
             mtrace(get_string('fetchlibrariesmetadatafailedlog', 'mod_hvp'));
-        } else if (is_object($result)) {
-            $librariescount = 0;
-            if (isset($result->libraries) && is_array($result->libraries)) {
-                $librariescount = count($result->libraries);
+        } else if (is_string($result)) {
+            $decoded = json_decode($result);
+            if (is_object($decoded)) {
+                $librariescount = 0;
+                if (isset($decoded->libraries) && is_array($decoded->libraries)) {
+                    $librariescount = count($decoded->libraries);
+                }
+                mtrace(get_string('fetchlibrariesmetadatasuccesslog', 'mod_hvp', $librariescount));
+            } else {
+                mtrace(get_string('fetchlibrariesmetadataunexpectedlog', 'mod_hvp'));
             }
-            mtrace(get_string('fetchlibrariesmetadatasuccesslog', 'mod_hvp', $librariescount));
         } else {
             mtrace(get_string('fetchlibrariesmetadataunexpectedlog', 'mod_hvp'));
         }
