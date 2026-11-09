@@ -71,6 +71,8 @@ $string['removeoldlogentries'] = 'Remove old H5P log entries';
 $string['removeoldmobileauthentries'] = 'Remove old H5P mobile auth entries';
 
 // Admin settings.
+$string['customcss'] = 'Custom CSS';
+$string['customcss_desc'] = 'CSS applied to H5P content. Leave empty to disable. Care: If H5P is being included in a page without iframe this CSS will affect the whole Moodle page on which the H5P content is being rendered.';
 $string['displayoptiondownloadnever'] = 'Never';
 $string['displayoptiondownloadalways'] = 'Always';
 $string['displayoptiondownloadpermission'] = 'Only if user has permissions to export H5P';
