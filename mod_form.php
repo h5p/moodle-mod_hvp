@@ -456,4 +456,23 @@ class mod_hvp_mod_form extends moodleform_mod {
 
         return $items;
     }
+
+    /**
+     * Called during validation. Indicates whether a custom completion rule is selected.
+     *
+     * @param array $data Input data (not yet validated).
+     * @return bool True if one or more rules is enabled, false if none are.
+     */
+    public function completion_rule_enabled($data) {
+        global $CFG;
+
+        // Changes for Moodle 4.3 - MDL-78516.
+        if ($CFG->branch < 403) {
+            $suffix = '';
+        } else {
+            $suffix = $this->get_suffix();
+        }
+
+        return !empty($data['completionpass' . $suffix]);
+    }
 }
