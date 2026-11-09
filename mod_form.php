@@ -55,7 +55,7 @@ class mod_hvp_mod_form extends moodleform_mod {
             array('maxbytes' => $COURSE->maxbytes, 'accepted_types' => '*'));
 
         // Editor placeholder.
-        if ($CFG->theme == 'boost' || in_array('boost', $PAGE->theme->parents)) {
+        if (($CFG->theme == 'boost' || $COURSE->theme == 'boost') || in_array('boost', $PAGE->theme->parents)) {
             $h5peditor   = [];
             $h5peditor[] = $mform->createElement('html',
                                                  '<div class="h5p-editor">' . get_string('javascriptloading', 'hvp') . '</div>');
