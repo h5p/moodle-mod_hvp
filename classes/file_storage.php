@@ -238,6 +238,8 @@ class file_storage implements \H5PFileStorage {
     public function cacheAssets(&$files, $key) {
         $context = \context_system::instance();
         $fs = get_file_storage();
+        $revmanager = \core\di::get(\mod_hvp\local\cached_assets_rev_manager::class);
+        $cachebuster = $revmanager->get_global_cached_assets_buster();
 
         foreach ($files as $type => $assets) {
             if (empty($assets)) {
@@ -285,7 +287,7 @@ class file_storage implements \H5PFileStorage {
             $fs->create_file_from_string($fileinfo, $content);
             $files[$type] = array((object) array(
                 'path' => "/cachedassets/{$key}.{$ext}",
-                'version' => ''
+                'version' => $cachebuster
             ));
         }
     }
@@ -301,6 +303,8 @@ class file_storage implements \H5PFileStorage {
     public function getCachedAssets($key) {
         $context = \context_system::instance();
         $fs = get_file_storage();
+        $revmanager = \core\di::get(\mod_hvp\local\cached_assets_rev_manager::class);
+        $cachebuster = $revmanager->get_global_cached_assets_buster();
 
         $files = array();
 
@@ -308,7 +312,7 @@ class file_storage implements \H5PFileStorage {
         if ($js) {
             $files['scripts'] = array((object) array(
                 'path' => "/cachedassets/{$key}.js",
-                'version' => ''
+                'version' => $cachebuster
             ));
         }
 
@@ -316,7 +320,7 @@ class file_storage implements \H5PFileStorage {
         if ($css) {
             $files['styles'] = array((object) array(
                 'path' => "/cachedassets/{$key}.css",
-                'version' => ''
+                'version' => $cachebuster
             ));
         }
 
