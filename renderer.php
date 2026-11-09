@@ -52,8 +52,9 @@ class mod_hvp_renderer extends plugin_renderer_base {
      * @param object $scripts List of JavaScripts that will be loaded
      * @param array $libraries Array of libraries indexed by the library's machineName
      * @param string $embedtype Possible values: div, iframe, external, editor
+     * @param object|null $custom_script_parameters Custom parameters to pass to scripts
      */
-    public function hvp_alter_scripts(&$scripts, $libraries, $embedtype) {
+    public function hvp_alter_scripts(&$scripts, $libraries, $embedtype, &$custom_script_parameters = null) {
     }
 
     /**

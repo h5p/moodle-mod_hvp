@@ -44,6 +44,7 @@ class view_assets {
     protected $settings;
     protected $embedtype;
     protected $files;
+    protected $custom_script_parameters;
 
     public function __construct($cm, $course, $options = []) {
         $this->cm          = $cm;
@@ -88,6 +89,12 @@ class view_assets {
         );
 
         $this->files = $this->getdependencyfiles();
+
+        $this->custom_script_parameters = $this->getcustomscriptparameters();
+        if (is_object($this->custom_script_parameters) && !empty((array) $this->custom_script_parameters)) {
+            $this->settings['customScriptParameters'] = $this->custom_script_parameters;
+        }
+
         $this->generateassets();
     }
 
@@ -199,6 +206,29 @@ class view_assets {
         $hvpoutput->hvp_alter_styles($files['styles'], $preloadeddeps, $this->embedtype);
 
         return $files;
+    }
+
+    /**
+     * Retrives custom script parameters that the alter_scripts hook might set.
+     *
+     * @return object Custom script parameters as set by the hook
+     */
+    private function getcustomscriptparameters() {
+        global $PAGE;
+
+        $scripts = [];
+        $libraries = [];
+        $custom_script_parameters = (object)[];
+
+        $hvpoutput = $PAGE->get_renderer('mod_hvp');
+        $hvpoutput->hvp_alter_scripts(
+            $scripts,
+            $libraries,
+            $this->embedtype,
+            $custom_script_parameters,
+        );
+
+        return $custom_script_parameters;
     }
 
     /**
