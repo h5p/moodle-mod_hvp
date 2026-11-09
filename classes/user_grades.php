@@ -25,7 +25,7 @@ namespace mod_hvp;
 
 defined('MOODLE_INTERNAL') || die();
 
-require(__DIR__ . '/../lib.php');
+require_once(__DIR__ . '/../lib.php');
 
 /**
  * Handles grade storage for users
