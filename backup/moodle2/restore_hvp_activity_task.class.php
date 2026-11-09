@@ -25,7 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
 require_once($CFG->dirroot . '/mod/hvp/backup/moodle2/restore_hvp_stepslib.php'); // Because it exists (must).
+require_once($CFG->dirroot . '/mod/hvp/backup/moodle2/restore_decode_rule_h5p_url.class.php');
 
 /**
  * Hvp restore task that provides all the settings and steps to perform one complete restore of the activity.
@@ -75,6 +77,7 @@ class restore_hvp_activity_task extends restore_activity_task {
         $rules[] = new restore_decode_rule('HVPVIEWBYID', '/mod/hvp/view.php?id=$1', 'course_module');
         $rules[] = new restore_decode_rule('HVPINDEX', '/mod/hvp/index.php?id=$1', 'course');
         $rules[] = new restore_decode_rule('HVPEMBEDBYID', '/mod/hvp/embed.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule_h5p_url('HVPRESIZER', '/mod/hvp/library/js/h5p-resizer.js', []);
 
         return $rules;
     }

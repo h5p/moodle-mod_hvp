@@ -85,6 +85,10 @@ class backup_hvp_activity_task extends backup_activity_task {
         $search = "/(".$base."\/mod\/hvp\/embed.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@HVPEMBEDBYID*$2@$', $content);
 
+        // Link to hvp resizer script
+        $search = "/(".$base."\/mod\/hvp\/library\/js\/h5p-resizer.js)/";
+        $content = preg_replace($search,'$@HVPRESIZER@$', $content);
+
         return $content;
     }
 }
