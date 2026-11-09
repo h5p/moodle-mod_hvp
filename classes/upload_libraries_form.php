@@ -69,11 +69,18 @@ class upload_libraries_form extends \moodleform {
         );
         $mform->setType('disablefileextensioncheck', PARAM_BOOL);
         $mform->setDefault('disablefileextensioncheck', false);
-
-        $notification = $OUTPUT->notification(
-            get_string('disablefileextensioncheckwarning', 'hvp'),
-            'notifymessage'
-        );
+        if (!empty($CFG->mod_hvp_forcefileextensioncheck)) {
+            $mform->freeze('disablefileextensioncheck');
+            $notification = $OUTPUT->notification(
+                get_string('disablefileextensioncheckoverride', 'hvp'),
+                'notifymessage'
+            );
+        } else {
+            $notification = $OUTPUT->notification(
+                get_string('disablefileextensioncheckwarning', 'hvp'),
+                'notifymessage'
+            );
+        }
         $mform->addElement('static', '', '', $notification);
 
         // Upload button.
