@@ -84,10 +84,27 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
             'delete_on_content_change',
         ));
 
+        // xAPI results.
+        $xapiresults = new backup_nested_element('xapi_results');
+        $xapiresult = new backup_nested_element('xapi_result', ['id'], [
+            'user_id', // Annotated.
+            'parent_id',
+            'interaction_type',
+            'description',
+            'correct_responses_pattern',
+            'response',
+            'additionals',
+            'raw_score',
+            'max_score',
+        ]);
+
         // Build the tree.
 
         $hvp->add_child($entries);
         $entries->add_child($contentuserdata);
+
+        $hvp->add_child($xapiresults);
+        $xapiresults->add_child($xapiresult);
 
         // Define sources.
 
@@ -124,10 +141,15 @@ class backup_hvp_activity_structure_step extends backup_activity_structure_step 
         // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
             $contentuserdata->set_source_table('hvp_content_user_data', array('hvp_id' => backup::VAR_PARENTID));
+
+            // The content_id of the xAPI results equals the hvp record id.
+            // Order it by id so parent rows are backed up before their children.
+            $xapiresult->set_source_table('hvp_xapi_results', ['content_id' => backup::VAR_PARENTID], 'id ASC');
         }
 
         // Define id annotations.
         $contentuserdata->annotate_ids('user', 'user_id');
+        $xapiresult->annotate_ids('user', 'user_id');
         // In an ideal world we would use the main_library_id and annotate that
         // but since we cannot know the required dependencies of the content
         // without parsing json_content and crawling the libraries_libraries
