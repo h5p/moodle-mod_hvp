@@ -418,6 +418,10 @@ $string['privacy:metadata:hvp_content_user_data:data'] = 'User data that was sto
 $string['privacy:metadata:hvp_content_user_data:preloaded'] = 'Flag determining if data should be pre-loaded into content.';
 $string['privacy:metadata:hvp_content_user_data:delete_on_content_change'] = 'Flag determining if data should be deleted when content changes.';
 
+$string['privacy:metadata:hvp_auth'] = 'Stores temporary mobile authentication records.';
+$string['privacy:metadata:hvp_auth:user_id'] = 'The ID of the user being authenticated.';
+$string['privacy:metadata:hvp_auth:created_at'] = 'The time the authentication record was created.';
+$string['privacy:metadata:hvp_auth:secret'] = 'The temporary token verifier used for mobile authentication.';
 $string['privacy:metadata:hvp_events'] = 'Keeps track of logged H5P events.';
 $string['privacy:metadata:hvp_events:id'] = 'The unique ID of the event.';
 $string['privacy:metadata:hvp_events:user_id'] = 'The ID of the user that performed the action.';

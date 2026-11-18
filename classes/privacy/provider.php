@@ -78,6 +78,13 @@ class provider implements
             'privacy:metadata:hvp_content_user_data'
         );
 
+        // Mobile authentication records.
+        $items->add_database_table('hvp_auth', [
+            'user_id' => 'privacy:metadata:hvp_auth:user_id',
+            'created_at' => 'privacy:metadata:hvp_auth:created_at',
+            'secret' => 'privacy:metadata:hvp_auth:secret',
+        ], 'privacy:metadata:hvp_auth');
+
         // Events table.
         $items->add_database_table('hvp_events', [
             'id'              => 'privacy:metadata:hvp_events:id',
@@ -118,6 +125,8 @@ class provider implements
      * @return contextlist $contextlist The contextlist containing the list of contexts used in this plugin.
      */
     public static function _get_contexts_for_userid($userid) {
+        global $DB;
+
         $contextlist = new contextlist();
 
         // Context for content_user_data.
@@ -166,6 +175,11 @@ class provider implements
         // H5P events are not tied to instance ids, thus we cannot determine
         // their context ids, they are considered to be user level context
         // actions.
+        // Events and mobile authentication are user-level data, including without activity data.
+        if ($DB->record_exists('hvp_events', ['user_id' => $userid]) ||
+                $DB->record_exists('hvp_auth', ['user_id' => $userid])) {
+            $contextlist->add_user_context($userid);
+        }
 
         return $contextlist;
     }
@@ -192,12 +206,33 @@ class provider implements
 
         // Export data with context.
         foreach ($contextlist->get_contexts() as $context) {
+            if ($context->contextlevel == CONTEXT_USER && $context->instanceid == $userid) {
+                $h5pevents = self::get_exportable_events($userid);
+                if (!empty($h5pevents->events)) {
+                    writer::with_context($context)->export_data(['H5PEvents'], $h5pevents);
+                }
+
+                $auth = $DB->get_record('hvp_auth', ['user_id' => $userid], 'user_id, created_at');
+                if ($auth) {
+                    writer::with_context($context)->export_data(['H5PAuth'], $auth);
+                }
+                continue;
+            }
+            if ($context->contextlevel != CONTEXT_MODULE) {
+                continue;
+            }
+
+            $cm = get_coursemodule_from_id('hvp', $context->instanceid);
+            if (!$cm) {
+                continue;
+            }
+
             $h5pdata = \core_privacy\local\request\helper::get_context_data($context, $contextlist->get_user());
             \core_privacy\local\request\helper::export_context_files($context, $contextlist->get_user());
 
             // Add content user data.
-            if (!empty($cud[$context->id]) && !empty($cud[$context->id]->data)) {
-                $h5pdata->contentuserdata = $cud[$context->id]->data;
+            if (!empty($cud[$context->id])) {
+                $h5pdata->contentuserdata = $cud[$context->id];
             }
 
             // Add xAPI data.
@@ -207,11 +242,6 @@ class provider implements
 
             writer::with_context($context)->export_data([], $h5pdata);
         }
-
-        // Write H5PEvents to subcontext of the user context.
-        $usercontext = \context_user::instance($userid);
-        $h5pevents = self::get_exportable_events($userid);
-        writer::with_context($usercontext)->export_data(['H5PEvents'], $h5pevents);
     }
 
     /**
@@ -233,7 +263,11 @@ class provider implements
             cm.id as cmid,
             h.id,
             h.name,
-            cud.data
+            cud.sub_content_id,
+            cud.data_id,
+            cud.data,
+            cud.preloaded,
+            cud.delete_on_content_change
           FROM {context} c
             INNER JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
             INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
@@ -241,6 +275,7 @@ class provider implements
             INNER JOIN {hvp_content_user_data} cud ON cud.hvp_id = h.id
           WHERE cud.user_id = :userid
           AND c.id {$contextsql}
+          ORDER BY cud.id
         ";
 
         $cudparams = [
@@ -253,7 +288,13 @@ class provider implements
         $cudresult = $DB->get_recordset_sql($cudsql, $cudparams);
         $cud       = [];
         foreach ($cudresult as $record) {
-            $cud[$record->contextid] = $record;
+            $cud[$record->contextid][] = (object) [
+                'sub_content_id' => $record->sub_content_id,
+                'data_id' => $record->data_id,
+                'data' => $record->data,
+                'preloaded' => $record->preloaded,
+                'delete_on_content_change' => $record->delete_on_content_change,
+            ];
         }
         $cudresult->close();
 
@@ -281,7 +322,9 @@ class provider implements
             h.name,
             x.content_id,
             x.parent_id,
+            x.interaction_type,
             x.description,
+            x.correct_responses_pattern,
             x.response,
             x.additionals,
             x.raw_score,
@@ -293,6 +336,7 @@ class provider implements
             INNER JOIN {hvp_xapi_results} x ON x.content_id = h.id
           WHERE x.user_id = :userid
             AND c.id {$contextsql}
+          ORDER BY x.id
         ";
 
         $xapiparams = [
@@ -306,31 +350,39 @@ class provider implements
         $xapi       = [];
         foreach ($xapiresult as $record) {
             $h5pxapi = (object) array();
-            if (!empty($record->content_id)) {
+            if (isset($record->content_id)) {
                 $h5pxapi->content_id = $record->content_id;
             }
 
-            if (!empty($record->parent_id)) {
+            if (isset($record->parent_id)) {
                 $h5pxapi->parent_id = $record->parent_id;
             }
 
-            if (!empty($record->description)) {
+            if (isset($record->interaction_type)) {
+                $h5pxapi->interaction_type = $record->interaction_type;
+            }
+
+            if (isset($record->description)) {
                 $h5pxapi->description = $record->description;
             }
 
-            if (!empty($record->response)) {
+            if (isset($record->correct_responses_pattern)) {
+                $h5pxapi->correct_responses_pattern = $record->correct_responses_pattern;
+            }
+
+            if (isset($record->response)) {
                 $h5pxapi->response = $record->response;
             }
 
-            if (!empty($record->additionals)) {
+            if (isset($record->additionals)) {
                 $h5pxapi->additionals = $record->additionals;
             }
 
-            if (!empty($record->raw_score)) {
+            if (isset($record->raw_score)) {
                 $h5pxapi->raw_score = $record->raw_score;
             }
 
-            if (!empty($record->max_score)) {
+            if (isset($record->max_score)) {
                 $h5pxapi->max_score = $record->max_score;
             }
 
@@ -383,8 +435,7 @@ class provider implements
         global $DB;
 
         if ($context->contextlevel == CONTEXT_USER) {
-            // Delete all H5P events.
-            $DB->delete_records('hvp_events');
+            self::delete_user_context_data($context->instanceid);
             return;
         } else if ($context->contextlevel != CONTEXT_MODULE) {
             return;
@@ -421,6 +472,14 @@ class provider implements
 
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
+            if ($context->contextlevel == CONTEXT_USER && $context->instanceid == $userid) {
+                self::delete_user_context_data($userid);
+                continue;
+            }
+            if ($context->contextlevel != CONTEXT_MODULE) {
+                continue;
+            }
+
             $cm = get_coursemodule_from_id('hvp', $context->instanceid);
 
             if (!$cm) {
@@ -439,11 +498,18 @@ class provider implements
                 'user_id'    => $userid,
             ]);
         }
+    }
 
-        // Delete H5P events.
-        $DB->delete_records('hvp_events', [
-            'user_id' => $userid,
-        ]);
+    /**
+     * Delete the user-level records belonging to one user.
+     *
+     * @param int $userid The owner of the approved user context.
+     */
+    protected static function delete_user_context_data($userid) {
+        global $DB;
+
+        $DB->delete_records('hvp_events', ['user_id' => $userid]);
+        $DB->delete_records('hvp_auth', ['user_id' => $userid]);
     }
 
     /**
@@ -453,6 +519,13 @@ class provider implements
      */
     public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
+        if ($context->contextlevel == CONTEXT_USER) {
+            foreach (['hvp_events', 'hvp_auth'] as $table) {
+                $userlist->add_from_sql('user_id', "SELECT user_id FROM {{$table}} WHERE user_id = :userid",
+                    ['userid' => $context->instanceid]);
+            }
+            return;
+        }
         if (!is_a($context, \context_module::class)) {
             return;
         }
@@ -492,26 +565,35 @@ class provider implements
     public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
         $context = $userlist->get_context();
+        if ($context->contextlevel == CONTEXT_USER) {
+            if (in_array($context->instanceid, $userlist->get_userids())) {
+                self::delete_user_context_data($context->instanceid);
+            }
+            return;
+        }
         if (!is_a($context, \context_module::class)) {
             return;
         }
         $cm = get_coursemodule_from_id('hvp', $context->instanceid);
 
-        // Prepare SQL to gather all completed IDs.
         $userids = $userlist->get_userids();
+        if (!$cm || empty($userids)) {
+            return;
+        }
+
         list($insql, $inparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
 
-        $inparams['hvpid'] = $cm->instance;
+        $inparams['activityid'] = $cm->instance;
 
         $DB->delete_records_select(
             'hvp_content_user_data',
-            "hvp_id = :hvpid AND user_id $insql",
+            "hvp_id = :activityid AND user_id $insql",
             $inparams
         );
 
         $DB->delete_records_select(
             'hvp_xapi_results',
-            "hvp_id = :hvpid AND user_id $insql",
+            "content_id = :activityid AND user_id $insql",
             $inparams
         );
 
